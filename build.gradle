@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+}
+
+group = 'guru.qa'
+
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+}
+
+subprojects {
+    ext {
+        dockerHubName = "qaguru"
+
+        lombokVersion = '1.18.34'
+        springKafkaVersion = '3.2.2'
+        postgresDriverVersion = '42.7.3'
+        flywayVersion = '10.17.1'
+        springVaultVersion = '4.1.3'
+        springGrpcVersion = '3.1.0.RELEASE'
+        springGraphqlDateTimeVersion = '6.0.0'
+        openApiVersion = '2.6.0'
+        jakartaJaxbVersion = '4.0.5'
+        wsdl4jVersion = '1.6.3'
+        thumbnailatorVersion = '0.4.20'
+
+        dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
+                ? "arm64v8/eclipse-temurin:21-jdk"
+                : "eclipse-temurin:21-jdk"
+        dockerArch = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
+                ? "arm64"
+                : "amd64"
+    }
+}

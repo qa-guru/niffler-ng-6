@@ -1,0 +1,134 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: niffler-userdata
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 10
+      maximum-pool-size: 30
+      idle-timeout: 10000
+      max-lifetime: 1000
+      auto-commit: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: public
+    locations: classpath:db/migration/niffler-userdata
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    generate-ddl: true
+    open-in-view: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.ws: INFO
+    org.springframework.boot.autoconfigure: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  autoconfigure:
+    exclude:
+      - 'org.springframework.cloud.vault.config.VaultAutoConfiguration'
+      - 'org.springframework.cloud.vault.config.VaultObservationAutoConfiguration'
+      - 'org.springframework.cloud.vault.config.VaultReactiveAutoConfiguration'
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/niffler-userdata'
+    username: postgres
+    password: secret
+niffler-userdata:
+  base-uri: 'http://127.0.0.1:8089'
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  autoconfigure:
+    exclude:
+      - 'org.springframework.cloud.vault.config.VaultAutoConfiguration'
+      - 'org.springframework.cloud.vault.config.VaultObservationAutoConfiguration'
+      - 'org.springframework.cloud.vault.config.VaultReactiveAutoConfiguration'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: 'jdbc:postgresql://niffler-all-db:5432/niffler-userdata'
+    username: postgres
+    password: secret
+niffler-userdata:
+  base-uri: 'http://userdata.niffler.dc:8089'
+---
+spring:
+  config:
+    activate:
+      on-profile: 'prod'
+    import: vault://
+  cloud:
+    vault:
+      authentication: TOKEN
+      host: vault.qa.guru
+      uri: https://vault.qa.guru
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+  kafka:
+    bootstrap-servers: ${kafka.url}
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+niffler-userdata:
+  base-uri: ${niffler-userdata.url}
+---
+spring:
+  config:
+    activate:
+      on-profile: 'staging'
+    import: vault://
+  cloud:
+    vault:
+      authentication: TOKEN
+      host: vault.qa.guru
+      uri: https://vault.qa.guru
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+  kafka:
+    bootstrap-servers: ${kafka.url}
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+niffler-userdata:
+  base-uri: ${niffler-userdata.url}
+---

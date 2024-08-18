@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/currentUser?username=dima"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "id": "{{randomValue type='UUID'}}",
+      "username": "{{request.query.username}}",
+      "firstname": "null",
+      "surname": null,
+      "fullname": "Dmitrii Tuchs",
+      "currency": "RUB",
+      "photo": null
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

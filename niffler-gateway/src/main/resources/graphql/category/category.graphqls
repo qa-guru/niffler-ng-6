@@ -1,0 +1,11 @@
+type Category {
+    id: ID!
+    category: String!
+    username: String!
+    archived: Boolean!
+}
+
+input CreateCategoryInput {
+    category: String!
+    archived: Boolean!
+}

@@ -280,6 +280,7 @@ export const SpendingForm: FC<SpendingFormInterface> = ({id, isEdit}) => {
                                 marginRight: 3,
                                 width: "100%",
                             }}
+                            id="cancel"
                             color="secondary"
                             variant="contained"
                             onClick={onCancel}
@@ -290,6 +291,7 @@ export const SpendingForm: FC<SpendingFormInterface> = ({id, isEdit}) => {
                         sx={{
                             width: "100%",
                         }}
+                        id="save"
                         type="submit"
                         color="primary"
                         variant="contained"

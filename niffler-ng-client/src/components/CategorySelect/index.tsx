@@ -65,6 +65,7 @@ export const CategorySelect: FC<CategorySelectInterface> = ({
             <FormControl sx={{width: "100%"}}>
                 <TextField
                     name="category"
+                    id="category"
                     value={selectedCategory}
                     onChange={(e) => onSelectCategory(e.target.value)}
                     onKeyDown={handlePressEnter}

@@ -99,6 +99,7 @@ confluentinc/cp-zookeeper  7.3.2            6fe5551964f5   7 years ago     451MB
 ```posh
 docker volume create pgdata
 ```
+
 #### 4. Запустить БД, zookeeper и kafka 3-мя последовательными командами:
 
 Запустив скрипт (Для Windows необходимо использовать bash terminal: gitbash, cygwin или wsl)
@@ -132,6 +133,7 @@ docker run --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 -p 2181:2181 -d conflu
 
 docker run --name=kafka -e KAFKA_BROKER_ID=1 -e KAFKA_ZOOKEEPER_CONNECT=$(docker inspect zookeeper --format="{{ .NetworkSettings.IPAddress }}"):2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -e KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1 -e KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1 -p 9092:9092 -d confluentinc/cp-kafka:7.3.2
 ```
+
 [Про IP zookeeper](https://github.com/confluentinc/cp-docker-images/issues/801#issuecomment-692085103)
 
 Если вы используете Windows и контейнер с БД не стартует с ошибкой в логе:
@@ -191,6 +193,7 @@ User-MacBook-Pro niffler % cd niffler-ng-client-gql
 User-MacBook-Pro niffler-ng-client % npm i
 User-MacBook-Pro niffler-ng-client % npm run build:dev
 ```
+
 Если требуется dev режим (вы собираетесь править frontend и на лету видеть изменения), запускаем командой `npm run dev`
 
 #### 3. Прописать run конфигурацию для всех сервисов niffler-* - Active profiles local
@@ -279,7 +282,6 @@ User-MacBook-Pro  niffler % bash docker-compose-dev.sh gql
 OpenAPI (Swagger) сервиса niffler-gateway доступен по адресу: http://gateway.niffler.dc:8090/swagger-ui/index.html
 GraphiQL интерфейс сервиса niffler-gateway доступен по адресу: http://gateway.niffler.dc:8090/graphiql
 WSDL сервиса niffler-userdata доступен по адресу: http://localhost:8089/ws/userdata.wsdl
-
 
 Если при выполнении скрипта `docker-compose-dev.sh` вы получили ошибку:
 

@@ -4,7 +4,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,19 +11,15 @@ import java.sql.Statement;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
 public class CategoryDaoJdbc implements CategoryDao {
 
   private static final Config CFG = Config.getInstance();
 
-  private final Connection connection;
-
-  public CategoryDaoJdbc(Connection connection) {
-    this.connection = connection;
-  }
-
   @Override
   public CategoryEntity create(CategoryEntity category) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "INSERT INTO category (username, name, archived) " +
             "VALUES (?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS
@@ -52,7 +47,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
   @Override
   public Optional<CategoryEntity> findCategoryById(UUID id) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
       ps.setObject(1, id);

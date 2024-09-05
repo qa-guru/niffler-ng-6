@@ -24,7 +24,7 @@ public class UserEntity implements Serializable {
   public static UserEntity fromJson(UserJson json) {
     UserEntity ue = new UserEntity();
     ue.setId(json.id());
-    ue.setUsername(json.username());
+    ue.setUsername(null);
     ue.setCurrency(json.currency());
     ue.setFirstname(json.firstname());
     ue.setSurname(json.surname());

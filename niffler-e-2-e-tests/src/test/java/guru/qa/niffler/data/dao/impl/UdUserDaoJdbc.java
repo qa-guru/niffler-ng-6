@@ -1,27 +1,25 @@
 package guru.qa.niffler.data.dao.impl;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
 public class UdUserDaoJdbc implements UdUserDao {
 
-  private final Connection connection;
-
-  public UdUserDaoJdbc(Connection connection) {
-    this.connection = connection;
-  }
+  private static final Config CFG = Config.getInstance();
 
   @Override
   public UserEntity create(UserEntity user) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "INSERT INTO \"user\" (username, currency) VALUES (?, ?)",
         PreparedStatement.RETURN_GENERATED_KEYS)) {
       ps.setString(1, user.getUsername());
@@ -44,7 +42,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findById(UUID id) {
-    try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
       ps.setObject(1, id);
 
       ps.execute();

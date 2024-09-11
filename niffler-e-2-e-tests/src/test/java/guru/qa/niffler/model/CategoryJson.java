@@ -2,11 +2,9 @@ package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.UUID;
-
 public record CategoryJson(
     @JsonProperty("id")
-    UUID id,
+    String id,
     @JsonProperty("name")
     String name,
     @JsonProperty("username")

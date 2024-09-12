@@ -30,7 +30,10 @@ public class ProfileWebTest {
         ProfilePage profilePage = new ProfilePage();
         profilePage.clickArchiveButton()
                 .clickArchiveButtonSubmit()
-                .shouldBeVisibleSuccessMessage();
+                .shouldBeVisibleSuccessMessage()
+                .clickShowArchivedButton()
+                .shouldForCategoryName(category.name());
+        ;
     }
 
     @Category(

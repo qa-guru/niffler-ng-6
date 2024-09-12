@@ -46,15 +46,13 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (!category.archived()) {
-            CategoryJson archivedCategory = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            );
-            spendApiClient.updateCategory(archivedCategory);
-        }
+        CategoryJson archivedCategory = new CategoryJson(
+                category.id(),
+                category.name(),
+                category.username(),
+                true
+        );
+        spendApiClient.updateCategory(archivedCategory);
     }
 
     @Override

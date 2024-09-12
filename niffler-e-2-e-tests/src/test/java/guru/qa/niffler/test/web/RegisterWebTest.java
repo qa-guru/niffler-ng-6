@@ -10,43 +10,43 @@ import org.junit.jupiter.api.Test;
 public class RegisterWebTest {
     RegisterPage registerPage = new RegisterPage();
     private static final Config CFG = Config.getInstance();
-    private static final String REGISTERED_USER_NAME = "duck";
+    final String REGISTERED_USER_NAME = "duck";
+    final String EXPECTED_REGISTRATION_MESSAGE = "Congratulations! You've registered!";
+    final String USERNAME_ALREADY_EXISTS_ERROR_TEXT = "Username `duck` already exists";
+    final String PASSWORDS_NOT_EQUAL_ERROR_TEXT = "Passwords should be equal";
     Faker faker = new Faker();
     String password = faker.internet().password(3, 12);
-    final String expected = "Congratulations! You've registered!";
-    final String alreadyExistsUserNameErrorText = "Username `duck` already exists";
-    final String errorIfPasswordAndConfirmPasswordAreNotEqual = "Passwords should be equal";
 
     @Test
     void shouldRegisterNewUser() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .createNewAccount();
+                .submitCreateNewAccount();
         registerPage.setUsername(faker.name().username())
                 .setPassword(password)
                 .setPasswordSubmit(password)
                 .submitRegistration()
-                .checkSuccessRegisterNewUser(expected);
+                .checkSuccessRegisterNewUser(EXPECTED_REGISTRATION_MESSAGE);
     }
 
     @Test
     void shouldNotRegisterUserWithExistingUsername() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .createNewAccount();
+                .submitCreateNewAccount();
         registerPage.setUsername(REGISTERED_USER_NAME)
                 .setPassword(password)
                 .setPasswordSubmit(password)
                 .submitRegistration()
-                .checkFormErrorText(alreadyExistsUserNameErrorText);
+                .checkFormErrorText(USERNAME_ALREADY_EXISTS_ERROR_TEXT);
     }
 
     @Test
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .createNewAccount();
+                .submitCreateNewAccount();
         registerPage.setUsername(faker.name().username())
                 .setPassword(faker.internet().password(3, 12))
                 .setPasswordSubmit(faker.internet().password(3, 12))
                 .submitRegistration()
-                .checkFormErrorText(errorIfPasswordAndConfirmPasswordAreNotEqual);
+                .checkFormErrorText(PASSWORDS_NOT_EQUAL_ERROR_TEXT);
     }
 }

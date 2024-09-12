@@ -11,10 +11,18 @@ public class MainPage {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement statisticsHeader = $(".css-giaux5");
     private final SelenideElement historyOfSpendingHeader = $(".css-uxhuts");
+    private final SelenideElement personIcon = $("[data-testid='PersonIcon']");
+    private final SelenideElement profileLink = $("a.nav-link[href='/profile']");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
+    }
+
+    public ProfilePage goToProfile() {
+        personIcon.click();
+        profileLink.click();
+        return new ProfilePage();
     }
 
     public void checkThatTableContainsSpending(String spendingDescription) {

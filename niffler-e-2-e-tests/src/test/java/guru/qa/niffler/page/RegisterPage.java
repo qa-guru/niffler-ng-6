@@ -35,11 +35,11 @@ public class RegisterPage {
         return new RegisterPage();
     }
 
-    public void checkSuccessRegisterNewUser(String value){
+    public void checkSuccessRegisterNewUser(String value) {
         successRegisterMessage.shouldHave(text(value)).shouldBe(visible);
     }
 
-    public void checkFormErrorText(String value){
+    public void checkFormErrorText(String value) {
         formError.shouldHave(text(value)).shouldBe(visible);
     }
 }

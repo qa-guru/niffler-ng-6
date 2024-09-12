@@ -12,4 +12,8 @@ public class DataGenerator {
     public static String genUsername() {
         return faker.name().username();
     }
+
+    public static String genCategory() {
+        return faker.commerce().department();
+    }
 }

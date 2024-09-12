@@ -79,7 +79,7 @@ public class SpendApiClient {
         assertEquals(202, response.code());
     }
 
-    public CategoryJson addCategory(CategoryJson category) {
+    public CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = spendApi.addCategory(category)

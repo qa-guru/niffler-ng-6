@@ -1,7 +1,6 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Condition.text;
@@ -15,7 +14,7 @@ public class ProfilePage {
     private final SelenideElement successArchiveMessage = $(".MuiAlert-message .MuiTypography-body1");
     private final SelenideElement showArchiveSwitcher = $(".MuiFormControlLabel-root");
 
-    public ProfilePage clickArchiveButtonByCategory(String categoryName) {
+    public ProfilePage clickArchiveCategoryByName(String categoryName) {
         categoryList
                 .findBy(text(categoryName))
                 .parent()
@@ -24,7 +23,7 @@ public class ProfilePage {
         return this;
     }
 
-    public ProfilePage clickUnarchiveButtonByCategory(String categoryName) {
+    public ProfilePage clickUnarchiveCategoryByName(String categoryName) {
         categoryList
                 .findBy(text(categoryName))
                 .parent()

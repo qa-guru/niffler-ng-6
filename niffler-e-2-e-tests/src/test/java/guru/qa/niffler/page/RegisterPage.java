@@ -47,6 +47,7 @@ public class RegisterPage {
 
     public void checkMessageThatUsernameAlreadyExist(String username) {
         String usernameAlreadyExistMessage = String.format("Username `%s` already exists", username);
+        System.out.println(usernameAlreadyExistMessage);
         errorMessage.shouldHave(text(usernameAlreadyExistMessage)).shouldBe(visible);
     }
 

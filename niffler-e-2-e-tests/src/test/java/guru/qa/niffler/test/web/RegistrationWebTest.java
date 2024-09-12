@@ -60,7 +60,7 @@ public class RegistrationWebTest extends BaseWebTest {
                     .clickSignUpButton();
         });
         step("Отображается сообщение, что выбранный username уже существует", () -> {
-            page.registerPage.checkMessageThatUsernameAlreadyExist(username);
+            page.registerPage.checkMessageThatUsernameAlreadyExist(earlieRegisterUserName);
         });
     }
 

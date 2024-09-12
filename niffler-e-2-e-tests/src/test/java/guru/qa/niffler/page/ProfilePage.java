@@ -1,6 +1,5 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
@@ -66,7 +65,6 @@ public class ProfilePage {
                 .parent()
                 .$(archivedCategoryLocator)
                 .click();
-        archiveButton.click();
         return this;
     }
 

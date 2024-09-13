@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.mifmif.common.regex.Main;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -28,8 +29,18 @@ public class MainPage {
     return this;
   }
 
-  public MainPage checkSpendingHeader(String title) {
-    spendingHeader.shouldHave(text(title));
-    return this;
-  }
+    public MainPage checkSpendingHeader(String title) {
+        spendingHeader.shouldHave(text(title));
+        return this;
+    }
+
+    public MainPage clickToMenuButton() {
+        menuButton.click();
+        return this;
+    }
+
+    public ProfilePage clickToProfileButton() {
+        profileButton.click();
+        return new ProfilePage();
+    }
 }

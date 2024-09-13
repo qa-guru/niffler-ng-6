@@ -11,7 +11,6 @@ public class RegisterPage {
     private final SelenideElement passwordSubmitInput = $("#passwordSubmit");
     private final SelenideElement successRegisterMessage = $(".form__paragraph_success");
     private final SelenideElement submitButton = $("button[type='submit']");
-    private final SelenideElement loginLink = $(".form__link");
     private final SelenideElement errorTitle = $(".form__error");
     private final SelenideElement signInButton = $(".form_sign-in");
 
@@ -38,11 +37,6 @@ public class RegisterPage {
     public RegisterPage checkSuccessMessage(String successMessage) {
         successRegisterMessage.shouldHave(text(successMessage));
         return this;
-    }
-
-    public LoginPage clickToLoginLink() {
-        loginLink.click();
-        return new LoginPage();
     }
 
     public RegisterPage checkErrorTitle(String errorText) {

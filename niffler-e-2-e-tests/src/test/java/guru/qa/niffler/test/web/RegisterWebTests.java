@@ -20,6 +20,7 @@ public class RegisterWebTests {
 
     @Test
     public void shouldRegisterNewUser() {
+
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterButton()
                 .setUsername(faker.funnyName().name())

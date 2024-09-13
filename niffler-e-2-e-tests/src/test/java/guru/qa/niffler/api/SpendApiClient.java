@@ -65,7 +65,7 @@ public class SpendApiClient {
             throw new AssertionError();
         }
 
-        assertEquals(200, response.code());
+        assertEquals(202, response.code());
     }
 
     public List<SpendJson> getSpends(String username,
@@ -114,7 +114,7 @@ public class SpendApiClient {
         } catch (IOException e) {
             throw new AssertionError();
         }
-
+        System.out.println(spendApi.updateCategory(category).request().url());
         assertEquals(200, response.code());
         return response.body();
     }

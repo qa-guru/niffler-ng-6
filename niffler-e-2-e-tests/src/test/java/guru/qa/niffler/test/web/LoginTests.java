@@ -13,7 +13,7 @@ public class LoginTests {
 
     @Test
     public void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-        final String errorTitle = "Неверные учетные данные пользователя";
+        final String errorTitle = "Bad credentials";
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("not_duck", "12345");
 

@@ -20,6 +20,7 @@ public class RegisterTests {
                 .clickRegisterButton()
                 .setUsername(faker.funnyName().name())
                 .setPassword(PASSWORD)
+                .setPasswordSubmit(PASSWORD)
                 .clickSubmitButton()
                 .checkSuccessMessage(SUCCESS_MESSAGE);
     }
@@ -37,7 +38,6 @@ public class RegisterTests {
                 .setPasswordSubmit(PASSWORD)
                 .clickSubmitButton()
                 .checkSuccessMessage(SUCCESS_MESSAGE)
-                .clickSubmitButton()
                 .clickSignInButton()
                 .clickRegisterButton()
                 .setUsername(username)

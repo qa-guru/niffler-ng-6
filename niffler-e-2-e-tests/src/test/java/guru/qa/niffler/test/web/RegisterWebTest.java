@@ -17,7 +17,7 @@ public class RegisterWebTest {
 
     private static final Config CFG = Config.getInstance();
     Faker faker = new Faker();
-    String pass = faker.internet().password(3, 15);
+    String pass = faker.internet().password(3, 9);
 
     @Test
     void shouldRegisterNewUser() {

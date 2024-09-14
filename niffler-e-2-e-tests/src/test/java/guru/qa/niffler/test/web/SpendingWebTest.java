@@ -17,7 +17,7 @@ public class SpendingWebTest {
 
   @Spending(
       username = "duck",
-      category = "Обучение",
+      category = "Супер Обучение",
       description = "Обучение Advanced 2.0",
       amount = 79990
   )

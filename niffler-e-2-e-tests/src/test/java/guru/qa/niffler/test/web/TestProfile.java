@@ -43,6 +43,7 @@ public class TestProfile {
                 .shouldNotVisibleArchiveCategory(category.name());
     }
 
+    //
     @AddCategory(
             username = "superduck",
             isCategoryArchive = true

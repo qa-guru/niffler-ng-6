@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.annotation;
 
-import guru.qa.niffler.jupiter.CreateSpendingExtension;
-import guru.qa.niffler.jupiter.SpendingResolverExtension;
+import guru.qa.niffler.jupiter.extension.CreateSpendingExtension;
+import guru.qa.niffler.jupiter.extension.SpendingResolverExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;

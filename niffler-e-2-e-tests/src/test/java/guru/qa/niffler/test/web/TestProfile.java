@@ -2,11 +2,10 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.AddCategory;
-import guru.qa.niffler.jupiter.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.AddCategory;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
-import jdk.jfr.Category;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -29,13 +28,13 @@ public class TestProfile {
     }
 
     @AddCategory(
-            username = "duck",
+            username = "superduck",
             isCategoryArchive = false
     )
     @Test
     void archivedCategoryShouldNotPresentInCategoriesList(CategoryJson category) throws InterruptedException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
+                .login("superduck", "12345")
                 .clickAvatar()
                 .clickProfile()
                 .clickArchiveButtonForCategoryName(category.name())
@@ -45,13 +44,13 @@ public class TestProfile {
     }
 
     @AddCategory(
-            username = "duck",
+            username = "superduck",
             isCategoryArchive = true
     )
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) throws InterruptedException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345")
+                .login("superduck", "12345")
                 .clickAvatar()
                 .clickProfile()
                 .clickShowArchiveCategoryButton()

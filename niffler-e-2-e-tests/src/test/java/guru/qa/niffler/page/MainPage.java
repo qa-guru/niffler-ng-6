@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -16,5 +17,21 @@ public class MainPage {
 
   public void checkThatTableContainsSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription)).should(visible);
+  }
+
+  private final SelenideElement personIcon = $("[data-testid='PersonIcon']");
+  private final SelenideElement friendsLink = $("a[href='/people/friends']");
+  private final SelenideElement allPeopleLink = $("a[href='/people/all']");
+
+  public FriendsPage openFriends() {
+    personIcon.click();
+    friendsLink.click();
+    return new FriendsPage();
+  }
+
+  public FriendsPage openAllPeople() {
+    personIcon.click();
+    allPeopleLink.click();
+    return new FriendsPage();
   }
 }

@@ -32,10 +32,10 @@ public class FriendsPage {
         waitingMessage.shouldBe(visible);
     }
 
-    public void shouldFriendName(String categoryName) {
+    public void shouldFriendName(String friendName) {
         for (int i = 0; i < friendList.size(); i++) {
-            if (friendList.get(i).text().equals(categoryName)) {
-                friendList.get(i).shouldHave(text(categoryName));
+            if (friendList.get(i).text().equals(friendName)) {
+                friendList.get(i).shouldHave(text(friendName));
                 break;
             }
         }

@@ -11,8 +11,8 @@ public class ProfilePage {
     private final ElementsCollection categoryList = $$(".MuiChip-root");
     private final SelenideElement archiveButtonSubmit = $x("//button[text()='Archive']");
     private final SelenideElement unarchiveButtonSubmit = $x("//button[text()='Unarchive']");
-    private final SelenideElement successArchiveMessage = $(".MuiAlert-message .MuiTypography-body1");
-    private final SelenideElement showArchiveSwitcher = $(".MuiFormControlLabel-root");
+    private final SelenideElement successArchiveMessage = $(".MuiAlert-message");
+    private final SelenideElement showArchivedCategoriesCheckbox = $("input[type='checkbox']");
 
     public ProfilePage clickArchiveCategoryByName(String categoryName) {
         categoryList
@@ -33,7 +33,7 @@ public class ProfilePage {
     }
 
     public ProfilePage clickShowArchiveCategoryButton() {
-        showArchiveSwitcher.click();
+        showArchivedCategoriesCheckbox.click();
         return this;
     }
 

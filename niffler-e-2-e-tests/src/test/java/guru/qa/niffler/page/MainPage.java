@@ -9,8 +9,8 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
-    private final SelenideElement statisticsHeader = $(".css-giaux5");
-    private final SelenideElement historyOfSpendingHeader = $(".css-uxhuts");
+    private final SelenideElement statisticsHeader = $("#stat h2");
+    private final SelenideElement historyOfSpendingHeader = $("#spendings h2");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();

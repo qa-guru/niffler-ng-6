@@ -13,37 +13,29 @@ public class ProfilePage {
     private final SelenideElement archiveButtonSubmit = $x("//button[text()='Archive']");
     private final SelenideElement unarchiveButtonSubmit = $x("//button[text()='Unarchive']");
     private final ElementsCollection categoryList = $$(".MuiChip-root");
-    private final SelenideElement successArchiveMessage = $x("//div[@class='MuiAlert-message css-1xsto0d']");
+    private final SelenideElement successArchiveMessage = $x("//div[contains(@class,'MuiTypography-root MuiTypography-body1')]");
     private final SelenideElement successUnarchiveMessage = $x("//div[contains(@class,'MuiTypography-root MuiTypography-body1')]");
     private final SelenideElement showArchiveCategoryButton = $x("//input[@type='checkbox']");
 
     public ProfilePage clickArchiveButtonForCategoryName(String categoryName) {
-        // Проходим по списку категорий
-        for (int i = 0; i < categoryList.size(); i++) {
-            // Проверяем, содержит ли элемент текст категории
-            if (categoryList.get(i).text().equals(categoryName)) {
-                // Находим кнопку "Архивировать" внутри той же строки с названием категории
-                SelenideElement archiveButtonInRow = categoryList.get(i).parent().$(".MuiIconButton-sizeMedium[aria-label='Archive category']");
-                // Кликаем по кнопке архивирования
-                archiveButtonInRow.click();
-                break;
-            }
-        }
+        // Находим элемент с текстом категории и кликаем по кнопке "Архивировать"
+        SelenideElement archiveButtonInRow = categoryList.stream()
+                .filter(category -> category.text().equals(categoryName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName))
+                .parent().$(".MuiIconButton-sizeMedium[aria-label='Archive category']");
+        archiveButtonInRow.click();
         return this;
     }
 
     public ProfilePage clickUnarchiveButtonForCategoryName(String categoryName) {
-        // Проходим по списку категорий
-        for (int i = 0; i < categoryList.size(); i++) {
-            // Проверяем, содержит ли элемент текст имени категории
-            if (categoryList.get(i).text().equals(categoryName)) {
-                // Находим кнопку "Разархивировать" внутри той же строки с названием категории
-                SelenideElement unarchiveButtonInRow = categoryList.get(i).parent().$("[data-testid='UnarchiveOutlinedIcon']");
-                // Кликаем по кнопке разархивирования
-                unarchiveButtonInRow.click();
-                break;
-            }
-        }
+        // Находим элемент с текстом категории и кликаем по кнопке "Разархивировать"
+        SelenideElement unarchiveButtonInRow = categoryList.stream()
+                .filter(category -> category.text().equals(categoryName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName))
+                .parent().$("[data-testid='UnarchiveOutlinedIcon']");
+        unarchiveButtonInRow.click();
         return this;
     }
 

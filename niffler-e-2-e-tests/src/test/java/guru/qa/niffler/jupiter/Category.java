@@ -11,9 +11,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @ExtendWith({CategoryExtension.class, CategoryResolverExtension.class})
 public @interface Category {
-    String name();
+    String name() default "";
 
     String username();
 
-    boolean archived();
+    boolean archived () default false;
 }

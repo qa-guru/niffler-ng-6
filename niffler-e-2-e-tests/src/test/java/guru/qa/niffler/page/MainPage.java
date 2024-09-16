@@ -10,8 +10,8 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class MainPage {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
-    private final SelenideElement statisticsHeader = $(".css-giaux5");
-    private final SelenideElement historyHeader = $(".css-uxhuts");
+    private final SelenideElement statisticsHeader = $x("//h2[text()='Statistics']");
+    private final SelenideElement historyHeader = $x("//h2[text()='History of Spendings']");
     private final SelenideElement menuButton = $("[aria-label=Menu]");
     private final SelenideElement profileButton = $x("//a[@href='/profile']");
 
@@ -21,7 +21,7 @@ public class MainPage {
     }
 
     public void checkThatTableContainsSpending(String spendingDescription) {
-        tableRows.find(text(spendingDescription)).should(visible);
+        tableRows.find(text(spendingDescription)).shouldBe(visible);
     }
 
     public MainPage shouldStatisticsHeader(String value) {

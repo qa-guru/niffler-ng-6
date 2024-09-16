@@ -19,7 +19,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno -> {
                     // Создаем категорию с рандомным именем
-                    String randomName = anno.name() + "_" + faker.animal().name();
+                    String randomName = anno.name().equals("") ? faker.animal().name() : anno.name();
                     CategoryJson category = new CategoryJson(
                             null,
                             randomName,

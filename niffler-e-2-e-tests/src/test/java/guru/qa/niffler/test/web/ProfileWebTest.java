@@ -22,7 +22,7 @@ public class ProfileWebTest {
     void archivedCategoryShouldNotPresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345");
-        new TopMenu().goToProfile()
+        new TopMenu().goToProfilePage()
                 .clickArchiveCategoryByName(category.name())
                 .clickArchiveButtonSubmit()
                 .shouldBeVisibleArchiveSuccessMessage(category.name())
@@ -37,7 +37,7 @@ public class ProfileWebTest {
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345");
-        new TopMenu().goToProfile()
+        new TopMenu().goToProfilePage()
                 .clickShowArchiveCategoryButton()
                 .clickUnarchiveCategoryByName(category.name())
                 .clickUnarchiveButtonSubmit()

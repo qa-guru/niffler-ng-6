@@ -13,7 +13,7 @@ public class ProfilePage {
     private final SelenideElement archiveSubmitButton = $x("//button[text()='Archive']");
     private final SelenideElement unarchiveSubmitButton = $x("//button[text()='Unarchive']");
     private final SelenideElement archiveSwitcher = $x("//input[@type='checkbox']");
-    private final SelenideElement successMessage = $x("//div[@class='MuiAlert-message css-1xsto0d']");
+    private final SelenideElement successMessage = $x("//div[@role='alert']");
 
     public ProfilePage clickShowArchiveCategorySwitcher() {
         archiveSwitcher.click();

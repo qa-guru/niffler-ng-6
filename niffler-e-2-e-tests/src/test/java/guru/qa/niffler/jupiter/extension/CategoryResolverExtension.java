@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import static guru.qa.niffler.jupiter.CreateCategoryExtension.CATEGORY_NAMESPACE;
+import static guru.qa.niffler.jupiter.extension.CreateCategoryExtension.CATEGORY_NAMESPACE;
 
 public class CategoryResolverExtension implements ParameterResolver {
     @Override

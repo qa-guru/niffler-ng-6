@@ -1,7 +1,8 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -22,7 +23,7 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
                 .ifPresent(anno -> {
                     CategoryJson createdCategory = new CategoryJson(
                             null,
-                            faker.company().name(),
+                            anno.name().isEmpty() ? faker.company().name() : anno.name(),
                             anno.username(),
                             false
                     );
@@ -51,15 +52,14 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
     public void afterEach(ExtensionContext context) {
         CategoryJson category = context.getStore(CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-        if (category.archived()) {
-            CategoryJson categoryJson = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            );
+        CategoryJson categoryJson = new CategoryJson(
+                category.id(),
+                category.name(),
+                category.username(),
+                true
+        );
 
-            categoryApiClient.updateCategory(categoryJson);
-        }
+        categoryApiClient.updateCategory(categoryJson);
+
     }
 }

@@ -54,7 +54,6 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
                 category.username(),
                 true
         );
-
         categoryApiClient.updateCategory(archivedCategory);
     }
 }

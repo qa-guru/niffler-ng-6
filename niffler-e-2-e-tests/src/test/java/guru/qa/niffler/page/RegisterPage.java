@@ -6,38 +6,37 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class LoginPage {
+public class RegisterPage {
+
     private final SelenideElement usernameInput = $("input[name='username']");
     private final SelenideElement passwordInput = $("input[name='password']");
+    private final SelenideElement submitPasswordInput = $("input[name='passwordSubmit']");
     private final SelenideElement submitButton = $("button[type='submit']");
-    private final SelenideElement createNewAccountButton = $(".form__register");
+    private final SelenideElement successRegisterMessage = $(".form__paragraph_success");
     private final SelenideElement formError = $(".form__error");
 
-    public LoginPage setUsername(String username) {
+    public RegisterPage setUsername(String username) {
         usernameInput.setValue(username);
-        return new LoginPage();
-    }
-
-    public LoginPage setPassword(String password) {
-        passwordInput.setValue(password);
-        return new LoginPage();
-    }
-
-    public LoginPage submitButtonClick() {
-        submitButton.click();
-        return new LoginPage();
-    }
-
-    public RegisterPage submitCreateNewAccount() {
-        createNewAccountButton.click();
         return new RegisterPage();
     }
 
-    public MainPage login(String username, String password) {
-        usernameInput.setValue(username);
+    public RegisterPage setPassword(String password) {
         passwordInput.setValue(password);
+        return new RegisterPage();
+    }
+
+    public RegisterPage setPasswordSubmit(String submitPassword) {
+        submitPasswordInput.setValue(submitPassword);
+        return new RegisterPage();
+    }
+
+    public RegisterPage submitRegistration() {
         submitButton.click();
-        return new MainPage();
+        return new RegisterPage();
+    }
+
+    public void checkSuccessRegisterNewUser(String value) {
+        successRegisterMessage.shouldHave(text(value)).shouldBe(visible);
     }
 
     public void checkFormErrorText(String value) {

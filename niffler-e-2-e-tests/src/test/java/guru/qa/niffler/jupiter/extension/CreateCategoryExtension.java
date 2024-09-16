@@ -46,17 +46,16 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
 
     @Override
     public void afterEach(ExtensionContext context) {
-        CategoryJson category = context.getStore(CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+        CategoryJson categoryCtx = context.getStore(CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-        if (category.archived()) {
-            CategoryJson categoryJson = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            );
+        CategoryJson category = new CategoryJson(
+                categoryCtx.id(),
+                categoryCtx.name(),
+                categoryCtx.username(),
+                true
+        );
 
-            categoryApiClient.updateCategory(categoryJson);
-        }
+        categoryApiClient.updateCategory(category);
+
     }
 }

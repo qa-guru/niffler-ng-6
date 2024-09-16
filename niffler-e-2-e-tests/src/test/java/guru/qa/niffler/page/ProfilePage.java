@@ -18,24 +18,22 @@ public class ProfilePage {
     private final SelenideElement showArchiveCategoryButton = $x("//input[@type='checkbox']");
 
     public ProfilePage clickArchiveButtonForCategoryName(String categoryName) {
-        // Находим элемент с текстом категории и кликаем по кнопке "Архивировать"
-        SelenideElement archiveButtonInRow = categoryList.stream()
-                .filter(category -> category.text().equals(categoryName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName))
+        // Фильтруем список категорий по названию и кликаем по кнопке "Архивировать"
+        SelenideElement archiveButtonInRow = categoryList
+                .filter(text(categoryName))  // Фильтруем по тексту категории
+                .first()  // Берём первый элемент, который соответствует фильтру
                 .parent().$(".MuiIconButton-sizeMedium[aria-label='Archive category']");
-        archiveButtonInRow.click();
+        archiveButtonInRow.click();  // Кликаем по кнопке архивирования
         return this;
     }
 
     public ProfilePage clickUnarchiveButtonForCategoryName(String categoryName) {
-        // Находим элемент с текстом категории и кликаем по кнопке "Разархивировать"
-        SelenideElement unarchiveButtonInRow = categoryList.stream()
-                .filter(category -> category.text().equals(categoryName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName))
+        // Фильтруем список категорий по названию и кликаем по кнопке "Разархивировать"
+        SelenideElement unarchiveButtonInRow = categoryList
+                .filter(text(categoryName))  // Фильтруем по тексту категории
+                .first()  // Берём первый элемент, который соответствует фильтру
                 .parent().$("[data-testid='UnarchiveOutlinedIcon']");
-        unarchiveButtonInRow.click();
+        unarchiveButtonInRow.click();  // Кликаем по кнопке разархивирования
         return this;
     }
 

@@ -20,10 +20,9 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno -> {
-                    String randomCategoryName = faker.commerce().department();
                     CategoryJson category = new CategoryJson(
                             null,
-                            randomCategoryName,
+                            anno.name().equals("") ? faker.commerce().department() : anno.name(),
                             anno.username(),
                             false // Niffler-spend не поддерживает создание сразу архивной категории
                     );

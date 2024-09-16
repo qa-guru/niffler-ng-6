@@ -10,8 +10,8 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class MainPage {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
-    private final SelenideElement statisticsHeader = $(".css-giaux5");
-    private final SelenideElement historyOfSpendingHeader = $(".css-uxhuts");
+    private final SelenideElement statisticsHeader = $x("//h2[text()='Statistics']");
+    private final SelenideElement historyOfSpendingHeader = $x("//h2[text()='History of Spendings']");
     private final SelenideElement personIcon = $("[data-testid='PersonIcon']");
     private final SelenideElement profileLink = $("a.nav-link[href='/profile']");
     private final SelenideElement friendsLink = $("a.nav-link[href='/people/friends']");

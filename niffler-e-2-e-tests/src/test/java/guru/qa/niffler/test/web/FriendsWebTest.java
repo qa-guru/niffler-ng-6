@@ -52,7 +52,6 @@ public class FriendsWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.password())
                 .goToAllPeople()
-                .shouldBePresentInAllPeopleTable(user.outcome())
-                .shouldWaitingMessage("Waiting...");
+                .shouldBePresentInAllPeopleTableAndCheckStatus(user.outcome(), "Waiting...");
     }
 }

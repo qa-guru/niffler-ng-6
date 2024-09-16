@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class SpendingWebTest {
 
-  private static final Config CFG = Config.getInstance();
+  private static final Config CFG = Config.getInstanceDocker();
 
   @Spending(
       username = "duck",
@@ -23,7 +23,7 @@ public class SpendingWebTest {
     final String newDescription = "Обучение Niffler Next Generation";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("duck", "12345")
+        .login("cat", "12345")
         .editSpending(spend.description())
         .setNewSpendingDescription(newDescription)
         .save();

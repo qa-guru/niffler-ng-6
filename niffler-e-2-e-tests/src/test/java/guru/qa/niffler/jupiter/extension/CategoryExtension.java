@@ -6,7 +6,7 @@ import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.generator.DataGenerator.genCategory;
+import static guru.qa.niffler.generator.DataGenerator.genRandomCategory;
 
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
@@ -15,15 +15,14 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        String categoryName = genCategory();
-
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno -> {
+                    String categoryName = anno.title().isEmpty() ? genRandomCategory() : anno.title();
                     CategoryJson category = new CategoryJson(
                             null,
                             categoryName,
                             anno.username(),
-                            anno.archived()
+                            false
                     );
 
                     CategoryJson created = spendApiClient.createCategory(category);

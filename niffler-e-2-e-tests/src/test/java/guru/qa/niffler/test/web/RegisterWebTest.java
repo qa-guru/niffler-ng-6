@@ -2,13 +2,16 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static guru.qa.niffler.generator.DataGenerator.genPassword;
 import static guru.qa.niffler.generator.DataGenerator.genUsername;
 
+@ExtendWith(BrowserExtension.class)
 public class RegisterWebTest {
     private static final Config CFG = Config.getInstance();
     final String EXPECTED_REGISTRATION_MESSAGE = "Congratulations! You've registered!";

@@ -40,9 +40,13 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
                         category = categoryApiClient.updateCategory(updatedCategory);
                     }
 
-                    context.getStore(CATEGORY_NAMESPACE).put(context.getUniqueId(), category);
+                    context.getStore(CATEGORY_NAMESPACE).put(
+                            context.getUniqueId(),
+                            category
+                    );
                 });
     }
+
 
     @Override
     public void afterEach(ExtensionContext context) {

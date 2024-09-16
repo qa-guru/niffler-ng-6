@@ -28,23 +28,19 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
                             false
                     );
 
-                    CategoryJson categoryJson = categoryApiClient.addCategory(createdCategory);
+                    CategoryJson category = categoryApiClient.addCategory(createdCategory);
 
                     if (anno.archived()) {
-                        CategoryJson updateCategory = new CategoryJson(
-                                categoryJson.id(),
-                                categoryJson.name(),
-                                categoryJson.username(),
+                        CategoryJson updatedCategory = new CategoryJson(
+                                category.id(),
+                                category.name(),
+                                category.username(),
                                 true
                         );
-
-                        createdCategory = categoryApiClient.updateCategory(updateCategory);
+                        category = categoryApiClient.updateCategory(updatedCategory);
                     }
 
-                    context.getStore(CATEGORY_NAMESPACE).put(
-                            context.getUniqueId(),
-                            createdCategory
-                    );
+                    context.getStore(CATEGORY_NAMESPACE).put(context.getUniqueId(), category);
                 });
     }
 
@@ -52,14 +48,12 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterEachCal
     public void afterEach(ExtensionContext context) {
         CategoryJson category = context.getStore(CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-        CategoryJson categoryJson = new CategoryJson(
+        CategoryJson archivedCategory = new CategoryJson(
                 category.id(),
                 category.name(),
                 category.username(),
                 true
         );
-
-        categoryApiClient.updateCategory(categoryJson);
-
+        categoryApiClient.updateCategory(archivedCategory);
     }
 }

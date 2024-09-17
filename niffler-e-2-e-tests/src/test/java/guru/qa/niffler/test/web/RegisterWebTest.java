@@ -3,16 +3,17 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(BrowserExtension.class)
+import static guru.qa.niffler.utils.RandomDataUtils.randomPassword;
+import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
+
+@WebTest
 public class RegisterWebTest {
-    Faker faker = new Faker();
     private static final Config CFG = Config.getInstance();
-    String pass = faker.internet().password(3, 15);
+    String pass = randomPassword();
 
     @Test
     void shouldRegisterNewUser() {
@@ -20,7 +21,7 @@ public class RegisterWebTest {
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterButton()
-                .setUsername(faker.name().username())
+                .setUsername(randomUsername())
                 .setPassword(pass)
                 .setPasswordSubmit(pass)
                 .clickSubmitButton()
@@ -29,7 +30,7 @@ public class RegisterWebTest {
 
     @Test
     void shouldNotRegisterUserWithExistingUsername() {
-        String name = faker.name().username();
+        String name = randomUsername();
         final String messageSuccessRegister = "Congratulations! You've registered!";
         final String messageErrorExistRegister = "Username `" + name + "` already exists";
 
@@ -51,14 +52,14 @@ public class RegisterWebTest {
 
     @Test
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
-        String name = faker.name().username();
+        String name = randomUsername();
         final String messageErrorNotEqualPass = "Passwords should be equal";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterButton()
                 .setUsername(name)
-                .setPassword(faker.internet().password(3, 15))
-                .setPasswordSubmit(pass)
+                .setPassword(randomPassword())
+                .setPasswordSubmit(randomPassword())
                 .clickSubmitButton()
 
                 .shouldErrorRegister(messageErrorNotEqualPass);

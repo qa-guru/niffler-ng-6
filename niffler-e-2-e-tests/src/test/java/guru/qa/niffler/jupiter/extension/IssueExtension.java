@@ -12,26 +12,26 @@ import org.junit.platform.commons.support.SearchOption;
 
 public class IssueExtension implements ExecutionCondition {
 
-  private static final GhApiClient ghApiClient = new GhApiClient();
+    private static final GhApiClient ghApiClient = new GhApiClient();
 
-  @SneakyThrows
-  @Override
-  public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-    return AnnotationSupport.findAnnotation(
-        context.getRequiredTestMethod(),
-        DisabledByIssue.class
-    ).or(
-        () -> AnnotationSupport.findAnnotation(
-            context.getRequiredTestClass(),
-            DisabledByIssue.class,
-            SearchOption.INCLUDE_ENCLOSING_CLASSES
-        )
-    ).map(
-        byIssue -> "open".equals(ghApiClient.issueState(byIssue.value()))
-            ? ConditionEvaluationResult.disabled("Disabled by issue #" + byIssue.value())
-            : ConditionEvaluationResult.enabled("Issue closed")
-    ).orElseGet(
-        () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
-    );
-  }
+    @SneakyThrows
+    @Override
+    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+        return AnnotationSupport.findAnnotation(
+                context.getRequiredTestMethod(),
+                DisabledByIssue.class
+        ).or(
+                () -> AnnotationSupport.findAnnotation(
+                        context.getRequiredTestClass(),
+                        DisabledByIssue.class,
+                        SearchOption.INCLUDE_ENCLOSING_CLASSES
+                )
+        ).map(
+                byIssue -> "open".equals(ghApiClient.issueState(byIssue.value()))
+                        ? ConditionEvaluationResult.disabled("Disabled by issue #" + byIssue.value())
+                        : ConditionEvaluationResult.enabled("Issue closed")
+        ).orElseGet(
+                () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
+        );
+    }
 }

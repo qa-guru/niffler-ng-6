@@ -16,6 +16,7 @@ public class CategoryExtension implements
     BeforeEachCallback,
     AfterTestExecutionCallback,
     ParameterResolver {
+
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
   private static final Faker faker = new Faker();
 

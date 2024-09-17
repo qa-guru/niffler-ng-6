@@ -27,9 +27,9 @@ public class UserQueueExtension implements BeforeEachCallback, AfterEachCallback
     private  static  final Queue<StaticUser> NOT_EMPTY_USER = new ConcurrentLinkedDeque<>();
 
     static {
-        EMPTY_USER.add(new StaticUser("test1", "12345", true));
+        EMPTY_USER.add(new StaticUser("user1", "12345", true));
         NOT_EMPTY_USER.add(new StaticUser("esa", "12345", false));
-        NOT_EMPTY_USER.add(new StaticUser("test2", "12345", false));
+        NOT_EMPTY_USER.add(new StaticUser("user2", "12345", false));
     }
 
     @Target(ElementType.PARAMETER)
@@ -72,17 +72,23 @@ public class UserQueueExtension implements BeforeEachCallback, AfterEachCallback
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        context.getStore(NAMESPACE).get()
-
+        StaticUser user = context.getStore(NAMESPACE).get(context.getUniqueId(), StaticUser.class);
+        if (user.empty()) {
+            EMPTY_USER.add(user);
+        } else {
+            NOT_EMPTY_USER.add(user);
+        }
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return false;
+        return parameterContext.getParameter().getType().isAssignableFrom(StaticUser.class)
+                && AnnotationSupport.isAnnotated(parameterContext.getParameter(), UserType.class);
+
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return null;
+    public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), StaticUser.class);
     }
 }

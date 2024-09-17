@@ -13,7 +13,7 @@ import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType;
 import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType.Type.*;
 
 @ExtendWith(BrowserExtension.class)
-public class FriendsWebTest {
+public class FriendsTest {
     private static final Config CFG = Config.getInstance();
 
     @Test

@@ -7,7 +7,7 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
 
-public class RegisterWebTest {
+public class RegistrationTest {
     RegisterPage registerPage = new RegisterPage();
     private static final Config CFG = Config.getInstance();
     final String REGISTERED_USER_NAME = "duck";

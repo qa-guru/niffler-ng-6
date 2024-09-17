@@ -4,14 +4,15 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback {
+public class CategoryExtension implements
+        BeforeEachCallback,
+        AfterTestExecutionCallback,
+        ParameterResolver {
 
-    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateCategoryExtension.class);
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
     private final SpendApiClient categoryApiClient = new SpendApiClient();
     private final Faker faker = new Faker();
@@ -61,5 +62,15 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
             );
             categoryApiClient.updateCategory(archivedCategory);
         }
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson.class);
+    }
+
+    @Override
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
     }
 }

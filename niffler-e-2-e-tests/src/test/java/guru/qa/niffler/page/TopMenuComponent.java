@@ -4,7 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class TopMenu {
+class TopMenuComponent {
     private final SelenideElement personIconButton = $("button[aria-label='Menu']");
     private final SelenideElement goToProfileButton = $("[href='/profile']");
 

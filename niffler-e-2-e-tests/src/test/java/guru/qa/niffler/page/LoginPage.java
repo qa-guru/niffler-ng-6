@@ -8,11 +8,18 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage {
-    private final SelenideElement usernameInput = $("input[name='username']").as("инпут ввода имени");
-    private final SelenideElement passwordInput = $("input[name='password']").as("инпут ввода пароля");
-    private final SelenideElement submitButton = $("button[type='submit']").as("кнопка 'Log In'");
-    private final SelenideElement registerButton = $(".form__register").as("кнопка 'Create new account'");
+
+    private final SelenideElement usernameInput = $("input[name='username']");
+    private final SelenideElement passwordInput = $("input[name='password']");
+    private final SelenideElement submitButton = $("button[type='submit']");
+    private final SelenideElement registerButton = $("a[href='/register']");
+    private final SelenideElement errorContainer = $(".form__error");
     private final SelenideElement formErrorText = $(".form__error").as("ошибка авторизации");
+
+    public MainPage successLogin(String username, String password) {
+        login(username, password);
+        return new MainPage();
+    }
 
     @Step("Авторизоваться")
     public MainPage login(String username, String password) {

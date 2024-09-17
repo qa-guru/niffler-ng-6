@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.TopMenu;
+import guru.qa.niffler.page.ProfilePage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -20,9 +20,11 @@ public class ProfileWebTest {
     )
     @Test
     void archivedCategoryShouldNotPresentInCategoriesList(CategoryJson category) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345");
-        new TopMenu().goToProfilePage()
+        ProfilePage profilePage = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("duck", "12345")
+                .goToProfile();
+
+        profilePage
                 .clickArchiveCategoryByName(category.name())
                 .clickArchiveButtonSubmit()
                 .shouldBeVisibleArchiveSuccessMessage(category.name())
@@ -35,9 +37,11 @@ public class ProfileWebTest {
     )
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("duck", "12345");
-        new TopMenu().goToProfilePage()
+        ProfilePage profilePage = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("duck", "12345")
+                .goToProfile();
+
+        profilePage
                 .clickShowArchiveCategoryButton()
                 .clickUnarchiveCategoryByName(category.name())
                 .clickUnarchiveButtonSubmit()

@@ -19,8 +19,11 @@ public class UserTest {
 
     @ExtendWith(UsersQueueExtension.class)
     @Test
-    void checkUserEmpty1(@UserType(empty = false) StaticUser user) throws InterruptedException {
+    void checkUserEmpty1(@UserType(empty = false) StaticUser user0,
+                         @UserType(empty = true) StaticUser user1) throws InterruptedException {
         Thread.sleep(1000);
-        System.out.println("test "+user);
+        System.out.println("test "+user1);
+        System.out.println("test "+user0);
+
     }
 }

@@ -1,29 +1,35 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@WebTest
+@ExtendWith(BrowserExtension.class)
 public class LoginTest {
+    private static final Config CFG = Config.getInstance();
+    private static final String STATISTICS_TEXT = "Statistics";
+    private static final String HISTORY_OF_SPENDING_TEXT = "History of Spendings";
+    private static final String FAILED_LOGIN_MESSAGE = "Неверные учетные данные пользователя";
+    MainPage mainPage = new MainPage();
 
-  private static final Config CFG = Config.getInstance();
-  private static final Faker faker = new Faker();
+    @Test
+    void mainPageShouldBeDisplayedAfterSuccessLogin() {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("duck", "12345");
+        mainPage.checkStatisticsHeaderContainsText(STATISTICS_TEXT)
+                .checkHistoryOfSpendingHeaderContainsText(HISTORY_OF_SPENDING_TEXT);
+    }
 
-  @Test
-  void mainPageShouldBeDisplayedAfterSuccessLogin() {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .successLogin("duck", "12345")
-        .checkThatPageLoaded();
-  }
-
-  @Test
-  void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-    LoginPage loginPage = Selenide.open(CFG.frontUrl(), LoginPage.class);
-    loginPage.login(faker.name().username(), "BAD");
-    loginPage.checkError("Bad credentials");
-  }
+    @Test
+    void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .setUsername("duck")
+                .setPassword("123")
+                .submitButtonClick()
+                .checkFormErrorText(FAILED_LOGIN_MESSAGE);
+    }
 }

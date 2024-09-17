@@ -24,7 +24,6 @@ public class FriendsTest {
                 .goToFriends()
                 .shouldHaveMyFriendsListHeader("My friends")
                 .shouldBePresentInFriendsTable(user.friend());
-
     }
 
     @Test

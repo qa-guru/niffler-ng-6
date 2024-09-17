@@ -30,7 +30,6 @@ public class SpendingTest {
                 .editSpending(spend.description())
                 .setNewSpendingDescription(newDescription)
                 .save();
-
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
 }

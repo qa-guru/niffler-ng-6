@@ -28,7 +28,7 @@ public class CategoryExtension implements
                             false // Niffler-spend не поддерживает создание сразу архивной категории
                     );
                     // Отправляем запрос на создание категории
-                    CategoryJson createdCategory = categoryApiClient.addCategory(category);
+                    CategoryJson createdCategory = categoryApiClient.createCategory(category);
 
                     // Если категория должна быть архивной, отправляем второй запрос на обновление
                     if (anno.archived()) {

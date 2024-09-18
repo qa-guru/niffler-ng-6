@@ -69,6 +69,7 @@ public class UsersQueueExtension implements
 
     @Override
     public void beforeTestExecution(ExtensionContext context) {
+        Map<UserType, StaticUser> usersMap = new HashMap<>();
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
                 .forEach(p -> {
@@ -83,18 +84,8 @@ public class UsersQueueExtension implements
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
                         user = Optional.ofNullable(queue.poll());
                     }
-                    //  Обновляем тестовый кейс для Allure-отчёта, чтобы установить время начала теста на текущий момент.
-                    Allure.getLifecycle().updateTestCase(testCase ->
-                            testCase.setStart(new Date().getTime())
-                    );
                     user.ifPresentOrElse(
                             u -> {
-                                @SuppressWarnings("unchecked")
-                                Map<UserType, StaticUser> usersMap = (Map<UserType, StaticUser>) context.getStore(NAMESPACE)
-                                        .getOrComputeIfAbsent(
-                                                context.getUniqueId(),
-                                                key -> new HashMap<>()
-                                        );
                                 // Сохраняем найденного пользователя u в Map, где ключ — это UserType, полученный ранее.
                                 usersMap.put(ut, u);
                             },
@@ -103,6 +94,12 @@ public class UsersQueueExtension implements
                             }
                     );
                 });
+        // Сохраняем локальную Map в store после завершения работы с ней
+        context.getStore(NAMESPACE).put(context.getUniqueId(), usersMap);
+        //  Обновляем тестовый кейс для Allure-отчёта, чтобы установить время начала теста на текущий момент.
+        Allure.getLifecycle().updateTestCase(testCase ->
+                testCase.setStart(new Date().getTime())
+        );
     }
 
     @Override
@@ -135,9 +132,7 @@ public class UsersQueueExtension implements
         Map<UserType, StaticUser> userMap = (Map<UserType, StaticUser>) extensionContext.getStore(NAMESPACE)
                 .getOrComputeIfAbsent(extensionContext.getUniqueId(), key -> new HashMap<>());
         // Получаем аннотацию @UserType для текущего параметра
-        UserType userTypeAnnotation = parameterContext.findAnnotation(UserType.class).orElseThrow(
-                () -> new ParameterResolutionException("Аннотация @UserType не найдена")
-        );
+        UserType userTypeAnnotation = parameterContext.getParameter().getAnnotation(UserType.class);
         // Извлекаем пользователя из карты по ключу (аннотации @UserType)
         StaticUser staticUser = userMap.get(userTypeAnnotation);
         if (staticUser == null) {

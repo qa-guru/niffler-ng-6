@@ -10,7 +10,7 @@ import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
 @WebTest
-public class SpendingWebTest {
+public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
   private final MainPage mainPage = new MainPage();

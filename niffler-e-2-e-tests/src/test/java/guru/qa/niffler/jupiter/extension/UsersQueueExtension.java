@@ -81,12 +81,11 @@ public class UsersQueueExtension implements
                     UserType ut = p.getAnnotation(UserType.class);
                     Queue<StaticUser> queue = getQueueByUserType(ut.value());
                     Optional<StaticUser> user = Optional.empty();
-                    StopWatch sw = StopWatch.createStarted();  // Таймер для отслеживания времени
+                    StopWatch sw = StopWatch.createStarted();
 
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
                         user = Optional.ofNullable(queue.poll());
                     }
-                    //  Обновляем тестовый кейс для Allure-отчёта, чтобы установить время начала теста на текущий момент.
                     Allure.getLifecycle().updateTestCase(testCase ->
                             testCase.setStart(new Date().getTime())
                     );

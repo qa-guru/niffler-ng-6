@@ -28,8 +28,8 @@ public class ProfileTest extends BaseWebTest {
             page.loginPage.login("oleg", "12345");
         });
         step("Перейти в профиль пользователя и активировать checkbox 'Show archived'", () ->
-                page.mainPage.openProfile()
-                        .setArvedCategoriesVisible()
+            page.mainPage.openProfile()
+                    .setArvedCategoriesVisible()
         );
         step("Проверить, что заархивированная категория отображается в списке", () ->
                 page.profilePage.categoriesShouldBeVisible(category.name())

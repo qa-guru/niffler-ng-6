@@ -22,8 +22,8 @@ public class LoginTest extends BaseWebTest {
             page.loginPage.login(faker.name().username(), faker.internet().password(3, 12));
         });
         step("Отображается ошибка о неверных данных пользователя, пользователь остается на странице авторизации", () ->
-                page.loginPage.checkErrorAboutBadCredentialsIsDisplayed("Неверные учетные данные пользователя")
-                        .checkUserStayOnLoginPageAfterLoginWithBadCredentials()
+            page.loginPage.checkErrorAboutBadCredentialsIsDisplayed("Неверные учетные данные пользователя")
+                    .checkUserStayOnLoginPageAfterLoginWithBadCredentials()
         );
     }
 }

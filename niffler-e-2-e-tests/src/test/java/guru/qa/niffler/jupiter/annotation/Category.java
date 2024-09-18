@@ -11,7 +11,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @ExtendWith(AddCategoryExtension.class)
-public  @interface AddCategory {
+public  @interface Category {
     String username();
-    boolean isCategoryArchive();
+    boolean isArchive();
+    String name() default "";
 }

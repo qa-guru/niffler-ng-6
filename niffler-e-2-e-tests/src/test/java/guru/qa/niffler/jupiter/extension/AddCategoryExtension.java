@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.annotation.AddCategory;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -18,19 +18,19 @@ public class AddCategoryExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), AddCategory.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno ->{
-                    String categoryName = faker.backToTheFuture().quote();
+                    String name = faker.backToTheFuture().quote();
                     CategoryJson categoryJson = new CategoryJson(
                             null,
-                            categoryName,
+                            anno.name().isEmpty() ? name : anno.name(),
                             anno.username(),
                             false
                     );
 
                     CategoryJson createCategory = spendApiClient.addCategory(categoryJson);
 
-                    if (anno.isCategoryArchive()) {
+                    if (anno.isArchive()) {
                         CategoryJson archivedCategory = new CategoryJson(
                                 createCategory.id(),
                                 createCategory.name(),

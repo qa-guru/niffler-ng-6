@@ -6,14 +6,26 @@ import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
 
 public class MainPage {
+
+  private final SelenideElement header = $("#root header");
+  private final SelenideElement headerMenu = $("ul[role='menu']");
   private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
-  private final SelenideElement menuButton = $("button[aria-label='Menu']");
-  private final SelenideElement profileButton = $("a[href='/profile']");
-  private final SelenideElement spendingHeader = $x("//h2[text()='History of Spendings']");
-  private final SelenideElement statisticsHeader = $x("//h2[text()='Statistics']");
+  private final SelenideElement statComponent = $("#stat");
+  private final SelenideElement spendingTable = $("#spendings");
+
+  public FriendsPage friendsPage() {
+    header.$("button").click();
+    headerMenu.$$("li").find(text("Friends")).click();
+    return new FriendsPage();
+  }
+
+  public PeoplePage allPeoplesPage() {
+    header.$("button").click();
+    headerMenu.$$("li").find(text("All People")).click();
+    return new PeoplePage();
+  }
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription)).$$("td").get(5).click();
@@ -24,23 +36,9 @@ public class MainPage {
     tableRows.find(text(spendingDescription)).should(visible);
   }
 
-  public MainPage checkStatisticsHeader(String title) {
-    statisticsHeader.shouldHave(text(title)).shouldBe(visible);
+  public MainPage checkThatPageLoaded() {
+    statComponent.should(visible).shouldHave(text("Statistics"));
+    spendingTable.should(visible).shouldHave(text("History of Spendings"));
     return this;
   }
-
-    public MainPage checkSpendingHeader(String title) {
-        spendingHeader.shouldHave(text(title));
-        return this;
-    }
-
-    public MainPage clickToMenuButton() {
-        menuButton.click();
-        return this;
-    }
-
-    public ProfilePage clickToProfileButton() {
-        profileButton.click();
-        return new ProfilePage();
-    }
 }

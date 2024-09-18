@@ -40,4 +40,20 @@ public class MainPage {
     profileLink.click();
     return new ProfilePage();
   }
+
+  private final SelenideElement personIcon = $("[data-testid='PersonIcon']");
+  private final SelenideElement friendsLink = $("a[href='/people/friends']");
+  private final SelenideElement allPeopleLink = $("a[href='/people/all']");
+
+  public FriendsPage openFriends() {
+    personIcon.click();
+    friendsLink.click();
+    return new FriendsPage();
+  }
+
+  public FriendsPage openAllPeople() {
+    personIcon.click();
+    allPeopleLink.click();
+    return new FriendsPage();
+  }
 }

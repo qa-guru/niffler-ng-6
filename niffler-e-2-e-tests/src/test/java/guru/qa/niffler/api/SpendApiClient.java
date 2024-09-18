@@ -8,8 +8,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+
 import java.io.IOException;
 import java.util.Date;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,12 +27,11 @@ public class SpendApiClient {
 
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
-
   public SpendJson createSpend(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.addSpend(spend)
-              .execute();
+          .execute();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -36,37 +39,49 @@ public class SpendApiClient {
     return response.body();
   }
 
-
-  public SpendJson getSpend(String id, String username) {
+  public SpendJson editSpend(SpendJson spend) {
     final Response<SpendJson> response;
     try {
-      response = spendApi.getSpend(id, username).execute();
+      response = spendApi.editSpend(spend)
+          .execute();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new AssertionError(e);
     }
     assertEquals(200, response.code());
     return response.body();
   }
-
 
   public List<SpendJson> getSpends(String username, CurrencyValues filterCurrency, Date from, Date to) {
     final Response<List<SpendJson>> response;
     try {
-      response = spendApi.getSpends(username, filterCurrency, from, to).execute();
+      response = spendApi.getSpends(username, filterCurrency, from, to)
+          .execute();
     } catch (IOException e) {
       throw new RuntimeException(e);
+
+  public SpendJson getSpend(String id) {
+    final Response<SpendJson> response;
+    try {
+      response = spendApi.getSpend(id)
+          .execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
     }
     assertEquals(200, response.code());
     return response.body();
   }
 
-
-  public SpendJson editSpend(SpendJson spend) {
-    final Response<SpendJson> response;
+  public List<SpendJson> allSpends(String username,
+                                   CurrencyValues currency,
+                                   String from,
+                                   String to) {
+    final Response<List<SpendJson>> response;
     try {
-      response = spendApi.editSpend(spend).execute();
+      response = spendApi.allSpends(username, currency, from, to)
+          .execute();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new AssertionError(e);
+
     }
     assertEquals(200, response.code());
     return response.body();
@@ -82,7 +97,6 @@ public class SpendApiClient {
     assertEquals(200, response.code());
   }
 
-
   public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
     final Response<List<CategoryJson>> response;
     try {
@@ -94,7 +108,6 @@ public class SpendApiClient {
     return response.body();
   }
 
-
   public CategoryJson addCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
@@ -105,7 +118,6 @@ public class SpendApiClient {
     assertEquals(200, response.code());
     return response.body();
   }
-
 
   public CategoryJson updateCategory(CategoryJson category) {
     final Response<CategoryJson> response;

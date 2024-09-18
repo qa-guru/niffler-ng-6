@@ -20,10 +20,10 @@ public class SpendingWebTest extends BaseWebTest {
     final String newDescription = "Обучение Niffler Next Generation";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .login("oleg", "12345")
-            .editSpending(spend.description())
-            .setNewSpendingDescription(newDescription)
-            .save();
+          .login("oleg", "12345")
+          .editSpending(spend.description())
+          .setNewSpendingDescription(newDescription)
+          .save();
 
     new MainPage().checkThatTableContainsSpending(newDescription);
   }

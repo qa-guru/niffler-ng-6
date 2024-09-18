@@ -56,6 +56,8 @@ public class UsersQueueExtension implements
 
     @Override
     public void beforeTestExecution(ExtensionContext context) {
+        Map<UserType, StaticUser> userMap = new HashMap<>();
+
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
                 .forEach(p -> {
@@ -63,16 +65,21 @@ public class UsersQueueExtension implements
                     Queue<StaticUser> queue = getQueueForType(ut.value());
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
+
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
                         user = Optional.ofNullable(queue.poll());
                     }
+
                     user.ifPresentOrElse(
-                            u -> getUserMap(context).put(ut, u),
+                            u -> userMap.put(ut, u),
                             () -> {
                                 throw new IllegalStateException("Can't obtain user after 30s.");
                             }
                     );
                 });
+
+        // После обработки всех параметров, сохраняем мапу в хранилище
+        getUserMap(context).putAll(userMap);
     }
 
     private Queue<StaticUser> getQueueForType(UserType.Type type) {
@@ -107,9 +114,7 @@ public class UsersQueueExtension implements
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Map<UserType, StaticUser> userMap = getUserMap(extensionContext);
-        UserType userTypeAnnotation = parameterContext.findAnnotation(UserType.class).orElseThrow(
-                () -> new ParameterResolutionException("Missing @UserType annotation")
-        );
+        UserType userTypeAnnotation = parameterContext.getParameter().getAnnotation(UserType.class);
         StaticUser staticUser = userMap.get(userTypeAnnotation);
         if (staticUser == null) {
             throw new ParameterResolutionException("No user found for the specified UserType");

@@ -9,37 +9,39 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class FriendsPage {
-    private final SelenideElement friendItem = $x("//p[text()='dima']");
     private final SelenideElement emptyFriendList = $x("//p[text()='There are no users yet']");
-    private final SelenideElement friendRequestList = $x("//h2[text()='Friend requests']");
-    private final SelenideElement waitingMessage = $x("//span[text()='Waiting...']");
-    private final ElementsCollection friendList = $$(".css-8va9ha");
+    private final ElementsCollection friendList = $$(".MuiTableCell-root");
+
+    private SelenideElement getFriendItem(String friendName) {
+        return $x("//p[contains(text(), '" + friendName + "')]");
+    }
+
+    public void unfriend(String friendName) {
+        SelenideElement friendItem = getFriendItem(friendName);
+        friendItem.sibling(0).find("button").click();  // Пример, если кнопка "Unfriend" находится рядом
+    }
 
 
     public void shouldFriendItem(String value) {
-        friendItem.shouldHave(text(value));
+        getFriendItem(value).shouldHave(text(value));
     }
 
     public void shouldEmptyFriendList(String value) {
         emptyFriendList.shouldHave(text(value));
     }
 
-    public void shouldFriendRequestList() {
-        friendRequestList.shouldBe(visible);
-    }
-
-    public void shouldWaitingMessage() {
-        waitingMessage.shouldBe(visible);
-    }
 
     public void shouldFriendName(String friendName) {
-        for (int i = 0; i < friendList.size(); i++) {
-            if (friendList.get(i).text().equals(friendName)) {
-                friendList.get(i).shouldHave(text(friendName));
-                break;
-            }
-        }
+        friendList.find(text(friendName)).shouldBe(visible);
     }
 
+    private SelenideElement getFriendRow(String friendName) {
+        return $x("//tr[.//p[contains(text(), '" + friendName + "')]]");
+    }
+
+    public void shouldFriendRequestListVisible(String friendName) {
+        SelenideElement friendRow = getFriendRow(friendName);
+        friendRow.find(".MuiChip-label").shouldBe(visible);
+    }
 
 }

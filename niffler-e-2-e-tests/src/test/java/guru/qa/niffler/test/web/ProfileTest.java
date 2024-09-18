@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
-public class TestProfile {
+public class ProfileTest {
 
     private static final Config CFG = Config.getInstance();
     final String messageUpdateProfile = "Profile successfully updated";

@@ -20,24 +20,26 @@ public class UserFriensQueueExtension implements BeforeEachCallback, AfterEachCa
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserFriensQueueExtension.class);
 
-    public  record StaticUser (String username, String password, String friends, String income, String outcome){}
+    public record StaticUser(String username, String password, String friends, String income, String outcome) {
+    }
 
-    private  static  final Queue<StaticUser> EMPTY_USER = new ConcurrentLinkedDeque<>();
-    private  static  final Queue<StaticUser> WITH_FRIEND_USER = new ConcurrentLinkedDeque<>();
-    private  static  final Queue<StaticUser> WITH_INCOME_REQUEST_USER = new ConcurrentLinkedDeque<>();
-    private  static  final Queue<StaticUser>  WITH_OUTCOME_REQUEST_USER = new ConcurrentLinkedDeque<>();
+    private static final Queue<StaticUser> EMPTY_USER = new ConcurrentLinkedDeque<>();
+    private static final Queue<StaticUser> WITH_FRIEND_USER = new ConcurrentLinkedDeque<>();
+    private static final Queue<StaticUser> WITH_INCOME_REQUEST_USER = new ConcurrentLinkedDeque<>();
+    private static final Queue<StaticUser> WITH_OUTCOME_REQUEST_USER = new ConcurrentLinkedDeque<>();
 
     static {
         EMPTY_USER.add(new StaticUser("user1", "12345", null, null, null));
-        WITH_FRIEND_USER.add(new StaticUser("esa", "12345", "user1", null, null));
-        WITH_INCOME_REQUEST_USER.add(new StaticUser("user2", "12345", null, "user4", null));
-        WITH_OUTCOME_REQUEST_USER.add(new StaticUser("user3", "12345", null, null, "user5"));
+        WITH_FRIEND_USER.add(new StaticUser("esa", "12345", "duck", null, null));
+        WITH_INCOME_REQUEST_USER.add(new StaticUser("user2", "12345", null, "test3", null));
+        WITH_OUTCOME_REQUEST_USER.add(new StaticUser("test3", "12345", null, null, "user2"));
     }
 
     @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface UserType {
         Type value() default Type.EMPTY;
+
         enum Type {
             EMPTY, WITH_FRIEND, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST
         }
@@ -55,13 +57,13 @@ public class UserFriensQueueExtension implements BeforeEachCallback, AfterEachCa
                             StopWatch sw = StopWatch.createStarted();
                             while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
                                 if (ut.value() == UserType.Type.EMPTY) {
-                                    Optional.ofNullable(EMPTY_USER.poll());
+                                    user = Optional.ofNullable(EMPTY_USER.poll());
                                 } else if (ut.value() == UserType.Type.WITH_FRIEND) {
-                                    Optional.ofNullable(WITH_FRIEND_USER.poll());
+                                    user = Optional.ofNullable(WITH_FRIEND_USER.poll());
                                 } else if (ut.value() == UserType.Type.WITH_INCOME_REQUEST) {
-                                    Optional.ofNullable(WITH_INCOME_REQUEST_USER.poll());
+                                    user = Optional.ofNullable(WITH_INCOME_REQUEST_USER.poll());
                                 } else if (ut.value() == UserType.Type.WITH_OUTCOME_REQUEST) {
-                                    Optional.ofNullable(WITH_OUTCOME_REQUEST_USER.poll());
+                                    user = Optional.ofNullable(WITH_OUTCOME_REQUEST_USER.poll());
                                 }
                             }
                             Allure.getLifecycle().updateTestCase(testCase -> {
@@ -99,7 +101,6 @@ public class UserFriensQueueExtension implements BeforeEachCallback, AfterEachCa
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter().getType().isAssignableFrom(StaticUser.class)
                 && AnnotationSupport.isAnnotated(parameterContext.getParameter(), UserType.class);
-
     }
 
     @Override

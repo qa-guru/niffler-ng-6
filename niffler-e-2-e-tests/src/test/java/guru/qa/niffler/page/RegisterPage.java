@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -16,24 +17,27 @@ public class RegisterPage {
     private final SelenideElement msgPasswordsShouldBeEqual = $(withText("Passwords should be equal"));
 
 
-    public RegisterPage setUsername(String username){
+    public RegisterPage setUsername(String username) {
         usernameInput.setValue(username);
         return new RegisterPage();
     }
-    public RegisterPage setPassword(String password){
+
+    public RegisterPage setPassword(String password) {
         passwordInput.setValue(password);
         return new RegisterPage();
     }
-    public RegisterPage setPasswordSubmit(String password){
+
+    public RegisterPage setPasswordSubmit(String password) {
         passwordSubmitInput.setValue(password);
         return new RegisterPage();
     }
-    public LoginPage submitRegistration(){
+
+    public LoginPage submitRegistration() {
         submitButton.click();
         return new LoginPage();
     }
 
-    public LoginPage createUser(String username, String password){
+    public LoginPage createUser(String username, String password) {
         usernameInput.setValue(username);
         passwordInput.setValue(password);
         passwordSubmitInput.setValue(password);
@@ -42,11 +46,11 @@ public class RegisterPage {
         return new LoginPage();
     }
 
-    public  Boolean checkMsgUserAlreadyExistIsDisplayed(){
-        return  msgUsernameAlreadyExist.isDisplayed();
+    public void checkMsgUserAlreadyExistIsDisplayed() {
+        msgUsernameAlreadyExist.should(visible);
     }
 
-    public  Boolean checkPasswordsShouldBeEqual (){
-        return  msgPasswordsShouldBeEqual.isDisplayed();
+    public void checkPasswordsShouldBeEqual() {
+        msgPasswordsShouldBeEqual.should(visible);
     }
 }

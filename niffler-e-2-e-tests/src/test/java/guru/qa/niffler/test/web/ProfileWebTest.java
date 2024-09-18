@@ -6,14 +6,12 @@ import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.ProfilePage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
 public class ProfileWebTest {
-    private  static  final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
     @Category(
             username = "esa",
@@ -22,13 +20,11 @@ public class ProfileWebTest {
     @Test
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) throws InterruptedException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("esa","12345")
+                .login("esa", "12345")
                 .openProfilePage()
-                .turnOnShowArchivedCategory();
-        Assertions.assertTrue(new ProfilePage().checkArchivedCategoryIsDisplay(category.name()));
+                .turnOnShowArchivedCategory()
+                .checkArchivedCategoryIsDisplay(category.name());
     }
-
-
 
     @Category(
             username = "esa",
@@ -37,9 +33,9 @@ public class ProfileWebTest {
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("esa","12345")
+                .login("esa", "12345")
                 .openProfilePage()
-                .turnOnShowArchivedCategory();
-        Assertions.assertTrue(new ProfilePage().checkArchivedCategoryIsDisplay(category.name()));
+                .turnOnShowArchivedCategory()
+                .checkArchivedCategoryIsDisplay(category.name());
     }
 }

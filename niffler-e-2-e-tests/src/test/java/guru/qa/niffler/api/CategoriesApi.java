@@ -6,11 +6,10 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-
 public interface CategoriesApi {
 
     @POST("internal/categories/add")
-    Call<CategoryJson>  addCategory(@Body CategoryJson category);
+    Call<CategoryJson> addCategory(@Body CategoryJson category);
 
     @PATCH("internal/categories/update")
     Call<CategoryJson> updateCategory(@Body CategoryJson category);
@@ -18,6 +17,4 @@ public interface CategoriesApi {
     @GET("internal/categories/all")
     Call<List<CategoryJson>> getCategories(@Query("username") String username,
                                            @Query("excludeArchived") boolean excludeArchived);
-
-
 }

@@ -10,23 +10,23 @@ import java.util.List;
 
 public interface SpendApi {
 
-  @POST("internal/spends/add")
-  Call<SpendJson> addSpend(@Body SpendJson spend);
+    @POST("internal/spends/add")
+    Call<SpendJson> addSpend(@Body SpendJson spend);
 
-  @PATCH("internal/spends/edit")
-  Call<SpendJson> editSpend(@Body SpendJson spend);
+    @PATCH("internal/spends/edit")
+    Call<SpendJson> editSpend(@Body SpendJson spend);
 
-  @GET("internal/spends/all")
-  Call<List<SpendJson>> getSpends(@Query("username") String username,
-                                  @Query("filterCurrency") CurrencyValues filterCurrency,
-                                  @Query("from") Date from,
-                                  @Query("to") Date to);
+    @GET("internal/spends/all")
+    Call<List<SpendJson>> getSpends(@Query("username") String username,
+                                    @Query("filterCurrency") CurrencyValues filterCurrency,
+                                    @Query("from") Date from,
+                                    @Query("to") Date to);
 
 
-  @GET("internal/spends/{id}")
-  Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
+    @GET("internal/spends/{id}")
+    Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
 
-  @DELETE("internal/spends/remove")
-  Call<Void> deleteSpends(@Query("username") String username, @Query("ids") List<String> ids);
+    @DELETE("internal/spends/remove")
+    Call<Void> deleteSpends(@Query("username") String username, @Query("ids") List<String> ids);
 
 }

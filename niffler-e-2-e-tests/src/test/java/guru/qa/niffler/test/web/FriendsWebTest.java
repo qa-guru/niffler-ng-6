@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extantion.UserFriensQueueExtension;
 import guru.qa.niffler.jupiter.extantion.UserFriensQueueExtension.StaticUser;
+import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,20 +23,35 @@ public class FriendsWebTest {
     void friendShouldBePresentInFriendsTable(@UserFriensQueueExtension.UserType(WITH_FRIEND) StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.password())
-                .
-        ;
+                .openFriendsPage()
+                .checkHaveFriend(user.friends());
     }
 
     @Test
     @ExtendWith(UserFriensQueueExtension.class)
-    void friendsTableShouldBeEmptyForNewUser(@UserFriensQueueExtension.UserType(EMPTY) StaticUser user) {}
+    void friendsTableShouldBeEmptyForNewUser(@UserFriensQueueExtension.UserType(EMPTY) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.password())
+                .openFriendsPage()
+                .checkNotHaveFriend();
+        new FriendsPage().openAllPeoplePage().checkNotHaveOutcomeInvitation();
+    }
 
     @Test
     @ExtendWith(UserFriensQueueExtension.class)
-    void incomeInvitationBePresentInFriendsTable(@UserFriensQueueExtension.UserType(WITH_INCOME_REQUEST) StaticUser user) {}
+    void incomeInvitationBePresentInFriendsTable(@UserFriensQueueExtension.UserType(WITH_INCOME_REQUEST) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.password())
+                .openFriendsPage()
+                .checkIncomeInvitationFriend(user.income());
+    }
 
     @Test
     @ExtendWith(UserFriensQueueExtension.class)
-    void outcomeInvitationBePresentInAllPeoplesTable(@UserFriensQueueExtension.UserType(WITH_OUTCOME_REQUEST) StaticUser user) {}
-
+    void outcomeInvitationBePresentInAllPeoplesTable(@UserFriensQueueExtension.UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.password())
+                .openAllPeoplePage()
+                .checkHaveOutcomeInvitation(user.outcome());
+    }
 }

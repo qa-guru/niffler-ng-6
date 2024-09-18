@@ -5,7 +5,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -17,28 +16,28 @@ public class RegisterUserWebTest {
     private static final Config CFG = Config.getInstance();
 
     @Test
-    void shouldRegisterNewUser(){
+    void shouldRegisterNewUser() {
         final String userName = UUID.randomUUID().toString().substring(6);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .openRegisterPage()
                 .createUser(userName, "12345");
-        Assertions.assertTrue(new LoginPage().checkButtonSingInIsDisplayed());
+        new LoginPage().checkButtonSingInIsDisplayed();
     }
 
     @Test
-    void shouldNotRegisterUserWithExistingUsername(){
-        final  String passordString = "12345";
+    void shouldNotRegisterUserWithExistingUsername() {
+        final String passordString = "12345";
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .openRegisterPage()
                 .setUsername("esa")
                 .setPassword(passordString)
                 .setPasswordSubmit(passordString)
                 .submitRegistration();
-
-        Assertions.assertTrue(new RegisterPage().checkMsgUserAlreadyExistIsDisplayed());
+        new RegisterPage().checkMsgUserAlreadyExistIsDisplayed();
     }
+
     @Test
-    void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual(){
+    void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         final String userName = UUID.randomUUID().toString().substring(6);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .openRegisterPage()
@@ -46,8 +45,6 @@ public class RegisterUserWebTest {
                 .setPassword("12345")
                 .setPasswordSubmit("54321")
                 .submitRegistration();
-
-        Assertions.assertTrue(new RegisterPage().checkPasswordsShouldBeEqual());
+        new RegisterPage().checkPasswordsShouldBeEqual();
     }
-
 }

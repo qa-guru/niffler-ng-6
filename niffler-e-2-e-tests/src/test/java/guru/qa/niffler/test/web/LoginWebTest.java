@@ -4,8 +4,6 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -16,18 +14,14 @@ public class LoginWebTest {
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() throws InterruptedException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("esa", "12345");
-        Thread.sleep(1000);
-        Assertions.assertTrue(new MainPage().checkStatisticBlockIsDisplayed());
+                .login("esa", "12345")
+                .checkStatisticBlock();
     }
 
     @Test
-    void userShouldStayOnLoginPageAfterLoginWithBadCredentials(){
+    void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("esa", "12345");
-
-        Assertions.assertFalse(new MainPage().checkStatisticBlockIsDisplayed());
-
+                .loginIncorrect("esa1", "12345")
+                .checkButtonSingInIsDisplayed();
     }
-
 }

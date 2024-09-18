@@ -19,42 +19,40 @@ public class CategoriesApiClient {
 
     private final CategoriesApi categoriesApi = retrofit.create(CategoriesApi.class);
 
-    public CategoryJson addCategory( CategoryJson category){
+    public CategoryJson addCategory(CategoryJson category) {
         final Response<CategoryJson> response;
-        try{
-            response=categoriesApi.addCategory(category)
+        try {
+            response = categoriesApi.addCategory(category)
                     .execute();
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new AssertionError(e);
         }
-        Assertions.assertEquals(200,response.code());
+        Assertions.assertEquals(200, response.code());
         return response.body();
     }
 
-
-    public CategoryJson updateCategory(CategoryJson category){
+    public CategoryJson updateCategory(CategoryJson category) {
         final Response<CategoryJson> response;
-        try{
-            response=categoriesApi.updateCategory(category)
+        try {
+            response = categoriesApi.updateCategory(category)
                     .execute();
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new AssertionError(e);
         }
-        Assertions.assertEquals(200,response.code());
+        Assertions.assertEquals(200, response.code());
         return response.body();
 
     }
 
-
-    public List<CategoryJson> getCategories(String username, Boolean excludeArchived){
+    public List<CategoryJson> getCategories(String username, Boolean excludeArchived) {
         final Response<List<CategoryJson>> response;
-        try{
-            response=categoriesApi.getCategories(username,excludeArchived)
+        try {
+            response = categoriesApi.getCategories(username, excludeArchived)
                     .execute();
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new AssertionError(e);
         }
-        Assertions.assertEquals(200,response.code());
+        Assertions.assertEquals(200, response.code());
         return response.body();
     }
 }

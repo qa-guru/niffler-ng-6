@@ -15,6 +15,8 @@ import java.util.UUID;
 public @interface Category {
   String username();
 
+  String title();
+
   boolean archived();
 
 }

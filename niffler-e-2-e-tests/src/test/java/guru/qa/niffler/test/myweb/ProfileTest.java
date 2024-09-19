@@ -18,6 +18,7 @@ public class ProfileTest {
 
     @Category(
             username = "duck",
+            title = "Mleko",
             archived = false
     )
 
@@ -33,6 +34,7 @@ public class ProfileTest {
 
     @Category(
             username = "duck",
+            title = "",
             archived = true
     )
 

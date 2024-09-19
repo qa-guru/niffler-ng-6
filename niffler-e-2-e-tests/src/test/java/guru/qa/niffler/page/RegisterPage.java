@@ -48,6 +48,4 @@ public class RegisterPage {
         formError.shouldHave(text(value));
         return this;
     }
-
-
 }

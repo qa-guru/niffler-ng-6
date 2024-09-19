@@ -14,63 +14,70 @@ import java.util.Random;
 @ExtendWith(BrowserExtension.class)
 public class OperationsWithUserWebTest {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
-  @Test
-  void shouldRegisterNewUser() {
-    RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
-      .gotoRegisterNewUser();
+    @Test
+    void shouldRegisterNewUser() {
+        RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .checkLoginPage()
+                .gotoRegisterNewUser()
+                .checkRegisterPage();
 
-    int add = new Random().nextInt(500);
-    registerPage.setUserName("kat" + add);
-    registerPage.setUserPassword("12345");
-    registerPage.setUserPasswordSubmit("12345");
-    registerPage.submitRegistration();
+        int add = new Random().nextInt(500);
+        registerPage.setUserName("kat" + add);
+        registerPage.setUserPassword("12345");
+        registerPage.setUserPasswordSubmit("12345");
+        registerPage.submitRegistration();
 
-    new LoginPage().checkLoginPage();
-  }
+        new LoginPage().checkLoginPage();
+    }
 
-  @Test
-  void shouldNotRegisterNewUserWithExistingUserName() {
-    RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .gotoRegisterNewUser();
+    @Test
+    void shouldNotRegisterNewUserWithExistingUserName() {
+        RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .checkLoginPage()
+                .gotoRegisterNewUser()
+                .checkRegisterPage();
 
-    registerPage.setUserName("duck");
-    registerPage.setUserPassword("12345");
-    registerPage.setUserPasswordSubmit("12345");
-    registerPage.clickRegistration();
+        registerPage.setUserName("duck");
+        registerPage.setUserPassword("12345");
+        registerPage.setUserPasswordSubmit("12345");
+        registerPage.clickRegistration();
 
-    registerPage.ErrorMessageMustContains("Username `duck` already exists");
-  }
+        registerPage.checkErrorMessageContainsExpectedMessage("Username `duck` already exists");
+    }
 
-  @Test
-  void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
-    RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .gotoRegisterNewUser();
+    @Test
+    void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
+        RegisterPage registerPage = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .checkLoginPage()
+                .gotoRegisterNewUser()
+                .checkRegisterPage();
 
-    int add = new Random().nextInt(500);
-    registerPage.setUserName("kat" + add);
-    registerPage.setUserPassword("1234");
-    registerPage.setUserPasswordSubmit("12345");
-    registerPage.clickRegistration();
+        int add = new Random().nextInt(500);
+        registerPage.setUserName("kat" + add);
+        registerPage.setUserPassword("1234");
+        registerPage.setUserPasswordSubmit("12345");
+        registerPage.clickRegistration();
 
-    registerPage.ErrorMessageMustContains("Passwords should be equal");
-  }
+        registerPage.checkErrorMessageContainsExpectedMessage("Passwords should be equal");
+    }
 
-  @Test
-  void mainPageShouldBedisplayedAfterSuccessLogin() {
-     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("duck", "12345");
-    MainPage mainPage = new MainPage();
-    mainPage.checkMainPage();
-  }
+    @Test
+    void mainPageShouldBedisplayedAfterSuccessLogin() {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .checkLoginPage()
+                .login("duck", "12345");
+        MainPage mainPage = new MainPage();
+        mainPage.checkMainPage();
+    }
 
-  @Test
-  void userShouldStayOnLoginPageAfterLoginWithBadcredentials() {
-    LoginPage loginPage = Selenide.open(CFG.frontUrl(), LoginPage.class);
-    loginPage.login("duck", "1234");
-    loginPage.checkErrorText("Неверные учетные данные пользователя");
-    loginPage.checkLoginPage();
-  }
+    @Test
+    void userShouldStayOnLoginPageAfterLoginWithBadcredentials() {
+        LoginPage loginPage = Selenide.open(CFG.frontUrl(), LoginPage.class);
+        loginPage.login("duck", "1234");
+        loginPage.checkErrorText("Неверные учетные данные пользователя");
+        loginPage.checkLoginPage();
+    }
 }
 

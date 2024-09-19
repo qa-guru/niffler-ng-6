@@ -13,20 +13,16 @@ public class ProfilePage {
 
     private final SelenideElement showArchivedBtn = $x("//span[text()='Show archived']");
 
-    public ProfilePage() {
-        checkProfilePage();
-    }
-
     public ProfilePage checkProfilePage() {
         profileHeader.shouldBe(visible);
         return this;
     }
 
-    public void checkCat(String catName){
-        categories.find(text(catName)).shouldBe(visible);
+    public void checkCategory(String categoryName) {
+        categories.find(text(categoryName)).shouldBe(visible);
     }
 
-    public ProfilePage showArchived(){
+    public ProfilePage showArchived() {
         showArchivedBtn.shouldBe(visible)
                 .click();
         return this;

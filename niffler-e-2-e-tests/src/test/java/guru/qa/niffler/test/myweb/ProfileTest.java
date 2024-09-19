@@ -21,7 +21,6 @@ public class ProfileTest {
             title = "Mleko",
             archived = false
     )
-
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson categoryJson) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -29,7 +28,7 @@ public class ProfileTest {
         MainPage mainPage = new MainPage();
         mainPage.checkMainPage();
         ProfilePage profilePage = mainPage.selectProfile();
-        profilePage.checkCat(categoryJson.name());
+        profilePage.checkCategory(categoryJson.name());
     }
 
     @Category(
@@ -37,7 +36,6 @@ public class ProfileTest {
             title = "",
             archived = true
     )
-
     @Test
     void acrchivedCategoryShouldPresentInCategoriesList(CategoryJson categoryJson) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -46,6 +44,6 @@ public class ProfileTest {
         mainPage.checkMainPage();
         ProfilePage profilePage = mainPage.selectProfile();
         profilePage.showArchived()
-                .checkCat(categoryJson.name());
+                .checkCategory(categoryJson.name());
     }
 }

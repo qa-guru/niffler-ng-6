@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
+@Target(ElementType.METHOD)
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
     boolean archived() default false;

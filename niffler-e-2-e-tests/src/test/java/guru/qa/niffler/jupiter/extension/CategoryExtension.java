@@ -57,9 +57,8 @@ public class CategoryExtension implements
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null) {  // Проверяем, что категория существует
-            // Если категория не архивирована, архивируем её после теста
-            if (category.archived()) {
+            // Если категория существует и не архивирована, архивируем её после теста
+            if (category != null && category.archived()) {
                 CategoryJson archivedCategory = new CategoryJson(
                         category.id(),
                         category.name(),
@@ -68,7 +67,6 @@ public class CategoryExtension implements
                 );
                 categoryApiClient.updateCategory(archivedCategory);
             }
-        }
     }
 
     @Override

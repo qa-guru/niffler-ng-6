@@ -44,7 +44,7 @@ public class FriendsPage {
 
     // Проверка, что запись с именем и соответствующим статусом отображается в таблице "all people"
     public FriendsPage shouldBePresentInAllPeopleTableAndCheckStatus(String name, String status) {
-        allPeopleRows.filter(text(name)).first().$("span").shouldHave(text(status)).shouldBe(visible);
+        allPeopleRows.findBy(text(name)).$("span").shouldHave(text(status)).shouldBe(visible);
         return this;
     }
 }

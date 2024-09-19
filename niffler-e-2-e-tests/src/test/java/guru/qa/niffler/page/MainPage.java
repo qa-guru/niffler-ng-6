@@ -19,7 +19,11 @@ public class MainPage {
     }
 
     public ProfilePage goToProfile() {
-        return topMenu.goToProfile();
+        return topMenu.goToProfilePage();
+    }
+
+    public FriendsPage goToFriends() {
+        return topMenu.goToFriendsPage();
     }
 
     public MainPage checkThatTableContainsSpending(String spendingDescription) {

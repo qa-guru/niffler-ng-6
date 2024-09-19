@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.AddCategory;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Story;
@@ -16,9 +17,11 @@ public class ProfileTest extends BaseWebTest {
     @Test
     @Story("Категории")
     @DisplayName("Архивная категория должна присутствовать в списке заархивированных категорий в профиле пользователя")
-    @AddCategory(
+    @User(
             username = "oleg",
-            isCategoryArchive = true
+            categories = {
+                    @AddCategory(isCategoryArchive = true)
+            }
     )
     void testArchivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
         step("Открыть страницу авторизации", () -> {
@@ -39,9 +42,11 @@ public class ProfileTest extends BaseWebTest {
     @Test
     @Story("Категории")
     @DisplayName("Активная категория должна присутствовать в списке категорий в профиле пользователя")
-    @AddCategory(
+    @User(
             username = "oleg",
-            isCategoryArchive = false
+            categories = {
+                    @AddCategory(isCategoryArchive = false)
+            }
     )
     void testActiveCategoryShouldPresentInCategoriesList(CategoryJson category) {
         step("Открыть страницу авторизации", () -> {

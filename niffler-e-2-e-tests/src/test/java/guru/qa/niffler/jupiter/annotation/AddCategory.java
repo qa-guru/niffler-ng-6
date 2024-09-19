@@ -12,6 +12,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @ExtendWith(AddCategoryExtension.class)
 public @interface AddCategory {
-    String username();
     boolean isCategoryArchive();
 }

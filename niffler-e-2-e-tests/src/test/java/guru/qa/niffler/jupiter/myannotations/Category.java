@@ -13,10 +13,10 @@ import java.util.UUID;
 @Target(ElementType.METHOD)
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
-  String username();
+    String username();
 
-  String title();
+    String title();
 
-  boolean archived();
+    boolean archived();
 
 }

@@ -14,6 +14,8 @@ public class MainPage {
     private final SelenideElement historyOfSpendingHeader = $x("//h2[text()='History of Spendings']");
     private final SelenideElement personIcon = $("[data-testid='PersonIcon']");
     private final SelenideElement profileLink = $("a.nav-link[href='/profile']");
+    private final SelenideElement friendsLink = $("a.nav-link[href='/people/friends']");
+    private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
@@ -24,6 +26,18 @@ public class MainPage {
         personIcon.click();
         profileLink.click();
         return new ProfilePage();
+    }
+
+    public FriendsPage goToFriends() {
+        personIcon.click();
+        friendsLink.click();
+        return new FriendsPage();
+    }
+
+    public FriendsPage goToAllPeople() {
+        personIcon.click();
+        allPeopleButton.click();
+        return new FriendsPage();
     }
 
     public void checkThatTableContainsSpending(String spendingDescription) {

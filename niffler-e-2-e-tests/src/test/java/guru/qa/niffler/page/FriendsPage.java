@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class FriendsPage {
     private final SelenideElement emptyFriendList = $x("//p[text()='There are no users yet']");
-    private final ElementsCollection friendList = $$(".MuiTableCell-root");
+    private final ElementsCollection friendList = $$("#requests tr");
 
     private SelenideElement getFriendItem(String friendName) {
         return $x("//p[contains(text(), '" + friendName + "')]");
@@ -32,7 +32,7 @@ public class FriendsPage {
 
 
     public void shouldFriendName(String friendName) {
-        friendList.find(text(friendName)).shouldBe(visible);
+        friendList.findBy(text(friendName)).shouldBe(visible);
     }
 
     private SelenideElement getFriendRow(String friendName) {

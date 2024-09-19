@@ -17,7 +17,7 @@ import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType;
 public class FriendsWebTest {
     private static final Config CFG = Config.getInstance();
     MainPage mainPage = new MainPage();
-    FriendsPage friendsPage = new FriendsPage();
+    private final FriendsPage friendsPage = new FriendsPage();
 
     @Test
     void friendShouldBePresentInFriendsTable(@UserType(UserType.Type.WITH_FRIEND) StaticUser user) {

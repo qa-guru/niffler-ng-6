@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class GhApiClient {
@@ -20,7 +21,7 @@ public class GhApiClient {
   private final GhApi ghApi = retrofit.create(GhApi.class);
 
   @SneakyThrows
-  public String issueState(String issueNumber) {
+  public String issueState(String issueNumber) throws IOException {
     JsonNode responseBody = ghApi.issue(
         "Bearer " + System.getenv(GH_TOKEN_ENV),
         issueNumber

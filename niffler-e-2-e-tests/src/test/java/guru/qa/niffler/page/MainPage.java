@@ -14,6 +14,8 @@ public class MainPage {
     private final SelenideElement historyHeader = $x("//h2[text()='History of Spendings']");
     private final SelenideElement menuButton = $("[aria-label=Menu]");
     private final SelenideElement profileButton = $x("//a[@href='/profile']");
+    private final SelenideElement friendButton = $x("(//a[@class='link nav-link'])[2]");
+    private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
@@ -37,6 +39,18 @@ public class MainPage {
     public MainPage clickProfileButton() {
         menuButton.click();
         profileButton.click();
+        return this;
+    }
+
+    public MainPage clickFriendButton() {
+        menuButton.click();
+        friendButton.click();
+        return this;
+    }
+
+    public MainPage clickAllPeopleButton() {
+        menuButton.click();
+        allPeopleButton.click();
         return this;
     }
 

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.SearchOption;
 
+import java.io.IOException;
+
 
 public class IssueExtension implements ExecutionCondition {
 
@@ -27,9 +29,15 @@ public class IssueExtension implements ExecutionCondition {
             SearchOption.INCLUDE_ENCLOSING_CLASSES
         )
     ).map(
-        byIssue -> "open".equals(ghApiClient.issueState(byIssue.value()))
-            ? ConditionEvaluationResult.disabled("Disabled by issue #" + byIssue.value())
-            : ConditionEvaluationResult.enabled("Issue closed")
+        byIssue -> {
+            try {
+                return "open".equals(ghApiClient.issueState(byIssue.value()))
+                    ? ConditionEvaluationResult.disabled("Disabled by issue #" + byIssue.value())
+                    : ConditionEvaluationResult.enabled("Issue closed");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     ).orElseGet(
         () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
     );

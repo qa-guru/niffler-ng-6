@@ -45,7 +45,5 @@ public class ProfileWebTest {
         mainPage.clickProfileButton();
         profilePage.shouldActiveCategoryList(category.name());
     }
-
-
 }
 

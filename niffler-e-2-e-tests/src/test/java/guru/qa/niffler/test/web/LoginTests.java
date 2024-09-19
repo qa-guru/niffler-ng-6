@@ -21,7 +21,6 @@ public class LoginTests {
         loginPage.checkError(BAD_CREDENTIALS);
     }
 
-
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)

@@ -71,7 +71,7 @@ public class UsersQueueExtension implements
     public void beforeTestExecution(ExtensionContext context) {
         Map<UserType, StaticUser> usersMap = new HashMap<>();
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
+                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class) && p.getType().isAssignableFrom(StaticUser.class))
                 .forEach(p -> {
 
                     // Получаем аннотацию @UserType для текущего параметра
@@ -110,12 +110,14 @@ public class UsersQueueExtension implements
                 Map.class
         );
         // Проходим по каждому элементу карты (Map)
-        for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
-            UserType userType = e.getKey(); // Получаем ключ (UserType)
-            StaticUser user = e.getValue(); // Получаем значение (StaticUser)
-            // Возвращаем пользователей в соответствующие очереди по типу
-            Queue<StaticUser> queue = getQueueByUserType(userType.value());
-            queue.add(user);
+        if (map != null) {
+            for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
+                UserType userType = e.getKey(); // Получаем ключ (UserType)
+                StaticUser user = e.getValue(); // Получаем значение (StaticUser)
+                // Возвращаем пользователей в соответствующие очереди по типу
+                Queue<StaticUser> queue = getQueueByUserType(userType.value());
+                queue.add(user);
+            }
         }
     }
 
@@ -126,7 +128,7 @@ public class UsersQueueExtension implements
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         // Извлекаем карту пользователей или создаём новую, если её ещё нет
         @SuppressWarnings("unchecked")
         Map<UserType, StaticUser> userMap = (Map<UserType, StaticUser>) extensionContext.getStore(NAMESPACE)

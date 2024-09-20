@@ -11,6 +11,7 @@ public class EditSpendingPage {
   public EditSpendingPage setNewSpendingDescription(String description) {
     descriptionInput.clear();
     descriptionInput.setValue(description);
+
     return this;
   }
 

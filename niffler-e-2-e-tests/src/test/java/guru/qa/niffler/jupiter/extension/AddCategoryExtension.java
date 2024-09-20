@@ -65,7 +65,7 @@ public class AddCategoryExtension implements
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson categoryJson = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-        if (!Objects.isNull(categoryJson) && categoryJson.archived()) {
+        if (!Objects.isNull(categoryJson) && !categoryJson.archived()) {
             CategoryJson archivedCategory = new CategoryJson(
                     categoryJson.id(),
                     categoryJson.name(),

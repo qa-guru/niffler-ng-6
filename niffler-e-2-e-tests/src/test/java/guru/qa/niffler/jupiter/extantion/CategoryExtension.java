@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.*;
 
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -23,11 +24,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
                     System.out.println(anno);
-                    if (anno.categories().length>0) {
-                        System.out.println("#############Catigory Not NULL############");
-                       AnnotationSupport.findAnnotation(anno.categories().getClass(), Category.class)
-
-
+                    if (anno.categories().length > 0) {
+                        Arrays.stream(anno.categories())
+                                .findFirst()
                                 .ifPresent(annoCatigory -> {
                                     CategoryJson category = new CategoryJson(
                                             null,
@@ -35,7 +34,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                             anno.username(),
                                             annoCatigory.archived()
                                     );
-                                    System.out.println("#############Catigory Not NULL############");
                                     System.out.println(category.name());
                                     CategoryJson created = categoriesApiClient.addCategory(category);
                                     if (annoCatigory.archived()) {
@@ -47,7 +45,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                         );
                                         created = categoriesApiClient.updateCategory(archivedCategory);
                                     }
-                                    System.out.println(created.name());
                                     context.getStore(NAMESPACE).put(
                                             context.getUniqueId(),
                                             created

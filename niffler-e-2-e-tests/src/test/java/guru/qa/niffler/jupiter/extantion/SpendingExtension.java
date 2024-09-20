@@ -9,6 +9,7 @@ import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
@@ -21,8 +22,9 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
-                    if (anno.spendings() != null) {
-                        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spending.class)
+                    if (anno.spendings().length > 0) {
+                        Arrays.stream(anno.spendings())
+                                .findFirst()
                                 .ifPresent(annoSpending -> {
                                     SpendJson spend = new SpendJson(
                                             null,

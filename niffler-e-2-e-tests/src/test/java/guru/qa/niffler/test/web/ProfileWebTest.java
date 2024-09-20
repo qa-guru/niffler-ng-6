@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
@@ -13,12 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class ProfileWebTest {
     private static final Config CFG = Config.getInstance();
 
-    @Category(
+    @User(
             username = "esa",
-            archived = true
+            categories = @Category(
+                    archived = true
+    )
     )
     @Test
-    void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) throws InterruptedException {
+    void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .openProfilePage()
@@ -26,9 +29,11 @@ public class ProfileWebTest {
                 .checkArchivedCategoryIsDisplay(category.name());
     }
 
-    @Category(
+    @User(
             username = "esa",
-            archived = false
+            categories = @Category(
+                    archived = false
+            )
     )
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {

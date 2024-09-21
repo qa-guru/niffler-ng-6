@@ -1,6 +1,5 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -18,10 +17,6 @@ public class RegistrationPage {
             .as("сообщение об успешной регистрации");
     private final SelenideElement signInBtn = $(".form_sign-in").as("кнопки 'Sign In'");
     private final SelenideElement formErrorText = $(".form__error").as("ошибка регистрации");
-
-    private final SelenideElement backToLoginPageBtn = $(".form__link").as("ссылка ведущая на страницу авторизации");
-    private final ElementsCollection showPasswordBtn = $$(".form__password-button").as("кнопки раскрытия пароля");
-
 
     @Step("Ввести логин в инпут")
     public RegistrationPage setUsername(String username) {
@@ -48,21 +43,24 @@ public class RegistrationPage {
     }
 
     @Step("Появилось сообщение об успешной регистрации. Отображается кнопка авторизации'")
-    public void registrationIsSuccessCheck() {
+    public RegistrationPage registrationIsSuccessCheck() {
         successRegistrationText.shouldBe(visible).shouldHave(text("Congratulations! You've registered!"));
         signInBtn.shouldBe(visible);
+        return this;
     }
 
     @Step("Появилось сообщение об ошибке регистрации")
-    public void registrationErrorCheck(String text) {
+    public RegistrationPage registrationErrorCheck(String text) {
         formErrorText.shouldBe(visible).shouldHave(text(text));
+        return this;
     }
 
     @Step("Зарегистрироваться")
-    public void registration(String username, String password, String confirmPassword) {
+    public RegistrationPage registration(String username, String password, String confirmPassword) {
         setUsername(username);
         setPassword(password);
         setPasswordConfirm(confirmPassword);
         clickSubmitButton();
+        return this;
     }
 }

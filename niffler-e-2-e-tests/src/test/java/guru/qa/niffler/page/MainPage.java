@@ -14,58 +14,42 @@ public class MainPage {
     private final SelenideElement statisticsHeader = $("[id='stat'] h2").as("хедер блока 'Statistics'");
     private final SelenideElement statisticsImg = $("[id='stat'] [role='img']").as("диаграмма блока 'Statistics'");
     private final SelenideElement spendingsHeader = $("[id='spendings'] h2").as("хедер блока 'History of Spendings'");
-    private final SelenideElement spendingsTable = $("[id='spendings'] [aria-labelledby='tableTitle']").as("таблица с тратами");
     private final SelenideElement userMenuBtn = $("[aria-label='Menu']").as("кнопка открытия меню");
     private final SelenideElement profileBtn = $(byText("Profile")).as("кнопка открытия профиля");
-    private final SelenideElement header = $("#root header");
-    private final SelenideElement headerMenu = $("ul[role='menu']");
-    private final SelenideElement statComponent = $("#stat");
-    private final SelenideElement spendingTable = $("#spendings");
+    private final SelenideElement friendsBtn = $(byText("Friends")).as("кнопка открытия профиля");
 
+    @Step("Нажать на кнопку редактирования траты")
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
     }
 
-    public void checkThatTableContainsSpending(String spendingDescription) {
+    @Step("Проверка того, что в списке есть ожидаемая трата")
+    public MainPage checkThatTableContainsSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).should(visible);
+        return this;
     }
 
     @Step("Отображаются основные элементы главной страницы")
-    public void mainPageAfterLoginCheck() {
+    public MainPage mainPageAfterLoginCheck() {
         statisticsHeader.shouldBe(visible).shouldHave(text("Statistics"));
         statisticsImg.shouldBe(visible);
         spendingsHeader.shouldBe(visible).shouldHave(text("History of Spendings"));
-        spendingsTable.shouldBe(visible);
-    }
-
-    @Step("Кликнуть по кнопке открытия меню")
-    public void clickUserMenuBtn() {
-        userMenuBtn.click();
+        return this;
     }
 
     @Step("Открыть профиль")
-    public void openProfile() {
+    public ProfilePage openProfile() {
         userMenuBtn.click();
         profileBtn.click();
+        return new ProfilePage();
     }
 
-    public FriendsPage friendsPage() {
-        header.$("button").click();
-        headerMenu.$$("li").find(text("Friends")).click();
+    @Step("Открыть вкладку 'Друзья'")
+    public FriendsPage openFriendsPage() {
+        userMenuBtn.click();
+        friendsBtn.click();
         return new FriendsPage();
-    }
-
-    public PeoplePage allPeoplesPage() {
-        header.$("button").click();
-        headerMenu.$$("li").find(text("All People")).click();
-        return new PeoplePage();
-    }
-
-    public MainPage checkThatPageLoaded() {
-        statComponent.should(visible).shouldHave(text("Statistics"));
-        spendingTable.should(visible).shouldHave(text("History of Spendings"));
-        return this;
     }
 }
 

@@ -1,39 +1,26 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.Pages;
-import org.junit.jupiter.api.BeforeEach;
+import guru.qa.niffler.page.BaseTest;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.open;
-import static io.qameta.allure.Allure.step;
-
 @WebTest
-public class LoginTest extends Pages {
+public class LoginTest extends BaseTest {
     String userData = "kisa";
-    private static final Config CFG = Config.getInstance();
 
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
-        openLoginPage();
-        loginPage.login(userData, userData);
-        mainPage.mainPageAfterLoginCheck();
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(userData, userData)
+                .mainPageAfterLoginCheck();
     }
 
     @Test
     void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-        openLoginPage();
-        loginPage.login(userData, "kiss");
-        loginPage.loginErrorCheck("Bad credentials");
-    }
-
-    @BeforeEach
-    public void openLoginPage() {
-        step("Открыть страницу авторизации", () -> {
-            open(CFG.frontUrl(), LoginPage.class);
-        });
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .auth(userData, "kiss")
+                .loginErrorCheck("Bad credentials");
     }
 }

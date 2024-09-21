@@ -1,15 +1,12 @@
 package guru.qa.niffler.jupiter.extantion;
 
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
-
-import java.util.Arrays;
 import java.util.Date;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
@@ -23,30 +20,26 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
                     if (anno.spendings().length > 0) {
-                        Arrays.stream(anno.spendings())
-                                .findFirst()
-                                .ifPresent(annoSpending -> {
-                                    SpendJson spend = new SpendJson(
-                                            null,
-                                            new Date(),
-                                            new CategoryJson(
-                                                    null,
-                                                    annoSpending.category(),
-                                                    anno.username(),
-                                                    false
-                                            ),
-                                            CurrencyValues.RUB,
-                                            annoSpending.amount(),
-                                            annoSpending.description(),
-                                            anno.username()
-                                    );
-                                    context.getStore(NAMESPACE).put(
-                                            context.getUniqueId(),
-                                            spendApiClient.createSpend(spend)
-                                    );
-                                });
-                    }
 
+                        SpendJson spend = new SpendJson(
+                                null,
+                                new Date(),
+                                new CategoryJson(
+                                        null,
+                                        anno.spendings()[0].category(),
+                                        anno.username(),
+                                        false
+                                ),
+                                CurrencyValues.RUB,
+                                anno.spendings()[0].amount(),
+                                anno.spendings()[0].description(),
+                                anno.username()
+                        );
+                        context.getStore(NAMESPACE).put(
+                                context.getUniqueId(),
+                                spendApiClient.createSpend(spend)
+                        );
+                    }
                 });
     }
 

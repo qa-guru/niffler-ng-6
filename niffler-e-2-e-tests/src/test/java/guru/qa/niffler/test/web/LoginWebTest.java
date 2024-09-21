@@ -12,7 +12,7 @@ public class LoginWebTest {
     private static final Config CFG = Config.getInstance();
 
     @Test
-    void mainPageShouldBeDisplayedAfterSuccessLogin() throws InterruptedException {
+    void mainPageShouldBeDisplayedAfterSuccessLogin() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .checkStatisticBlock();

@@ -1,7 +1,7 @@
-package guru.qa.niffler.config;
+package guru.qa.nifler.config;
 
-enum LocalConfig implements Config {
-  INSTANCE;
+public enum LocalConfig implements Config {
+  instance;
 
   @Override
   public String frontUrl() {
@@ -11,10 +11,5 @@ enum LocalConfig implements Config {
   @Override
   public String spendUrl() {
     return "http://127.0.0.1:8093/";
-  }
-
-  @Override
-  public String ghUrl() {
-    return "https://api.github.com/";
   }
 }

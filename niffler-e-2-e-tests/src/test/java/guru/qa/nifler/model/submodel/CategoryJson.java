@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.nifler.model.submodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,5 +13,4 @@ public record CategoryJson(
     String username,
     @JsonProperty("archived")
     boolean archived) {
-
 }

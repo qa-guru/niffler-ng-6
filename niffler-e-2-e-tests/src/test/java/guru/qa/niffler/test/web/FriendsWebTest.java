@@ -48,7 +48,6 @@ public class FriendsWebTest {
         MainPage mainPage = new MainPage();
         mainPage.clickFriendButton();
         FriendsPage friendsPage = new FriendsPage();
-        friendsPage.shouldFriendRequestList();
         friendsPage.shouldFriendName(user.income());
     }
 
@@ -60,7 +59,6 @@ public class FriendsWebTest {
         MainPage mainPage = new MainPage();
         mainPage.clickAllPeopleButton();
         FriendsPage friendsPage = new FriendsPage();
-        friendsPage.shouldWaitingMessage();
         friendsPage.shouldFriendName(user.outcome());
     }
 

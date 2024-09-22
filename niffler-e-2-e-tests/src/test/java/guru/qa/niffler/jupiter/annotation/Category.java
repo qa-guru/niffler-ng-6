@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.annotation;
 
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import org.junit.jupiter.api.extension.ExtendWith;

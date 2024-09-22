@@ -10,11 +10,15 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith(SpendExtension.class)
+@ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
 public @interface Spend {
   String category();
+
   String description();
+
   String username();
+
   double amount();
+
   CurrencyValues currency();
 }

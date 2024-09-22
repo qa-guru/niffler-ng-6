@@ -1,16 +1,12 @@
-package guru.qa.nifler.jupiter;
+package guru.qa.niffler.jupiter;
 
-import guru.qa.nifler.api.SpendApiClient;
-import guru.qa.nifler.model.SpendJson;
+import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 public class SpendingResolverExtension implements ParameterResolver {
-
-  public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingResolverExtension.class);
-  private final SpendApiClient spendApiClient = new SpendApiClient();
 
   @Override
   public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -21,9 +17,9 @@ public class SpendingResolverExtension implements ParameterResolver {
   }
 
   @Override
-  public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext
-        .getStore(CreateSpendingExtension.NAMESPACE)
-        .get(extensionContext.getUniqueId(), SpendJson.class);
+  public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return extensionContext.getStore(CreateSpendingExtension.NAMESPACE)
+        .get(extensionContext.getUniqueId(),
+            SpendJson.class);
   }
 }

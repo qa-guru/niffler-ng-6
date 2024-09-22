@@ -1,8 +1,8 @@
-package guru.qa.nifler.model;
+package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.nifler.enums.CurrencyValues;
-import guru.qa.nifler.model.submodel.CategoryJson;
+import guru.qa.niffler.enums.CurrencyValues;
+import guru.qa.niffler.model.submodel.CategoryJson;
 
 import java.util.Date;
 import java.util.UUID;

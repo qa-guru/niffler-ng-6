@@ -1,6 +1,6 @@
-package guru.qa.nifler.jupiter;
+package guru.qa.niffler.jupiter;
 
-import guru.qa.nifler.enums.CurrencyValues;
+import guru.qa.niffler.enums.CurrencyValues;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;

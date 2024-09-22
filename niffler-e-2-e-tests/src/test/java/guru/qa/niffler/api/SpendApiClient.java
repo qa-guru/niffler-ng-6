@@ -1,7 +1,7 @@
-package guru.qa.nifler.api;
+package guru.qa.niffler.api;
 
-import guru.qa.nifler.config.Config;
-import guru.qa.nifler.model.SpendJson;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.SpendJson;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

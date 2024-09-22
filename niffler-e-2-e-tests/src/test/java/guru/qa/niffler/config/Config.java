@@ -1,4 +1,4 @@
-package guru.qa.nifler.config;
+package guru.qa.niffler.config;
 
 public interface Config {
 

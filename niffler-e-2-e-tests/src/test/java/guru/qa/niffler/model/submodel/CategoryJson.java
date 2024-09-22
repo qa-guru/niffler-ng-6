@@ -1,4 +1,4 @@
-package guru.qa.nifler.model.submodel;
+package guru.qa.niffler.model.submodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

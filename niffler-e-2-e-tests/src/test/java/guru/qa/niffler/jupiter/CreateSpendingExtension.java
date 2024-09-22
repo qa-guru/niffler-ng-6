@@ -1,8 +1,8 @@
-package guru.qa.nifler.jupiter;
+package guru.qa.niffler.jupiter;
 
-import guru.qa.nifler.api.SpendApiClient;
-import guru.qa.nifler.model.SpendJson;
-import guru.qa.nifler.model.submodel.CategoryJson;
+import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.submodel.CategoryJson;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;

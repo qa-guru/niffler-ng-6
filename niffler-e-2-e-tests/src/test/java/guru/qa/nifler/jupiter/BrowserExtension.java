@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extension;
+package guru.qa.nifler.jupiter;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
@@ -20,7 +20,6 @@ public class BrowserExtension implements
     AfterEachCallback,
     TestExecutionExceptionHandler,
     LifecycleMethodExecutionExceptionHandler {
-
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
     if (WebDriverRunner.hasWebDriverStarted()) {
@@ -38,23 +37,23 @@ public class BrowserExtension implements
 
   @Override
   public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-    doScreenshot();
+    doScreenShot();
     throw throwable;
   }
 
   @Override
   public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-    doScreenshot();
+    doScreenShot();
     throw throwable;
   }
 
   @Override
   public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-    doScreenshot();
+    doScreenShot();
     throw throwable;
   }
 
-  private static void doScreenshot() {
+  private static void doScreenShot() {
     if (WebDriverRunner.hasWebDriverStarted()) {
       Allure.addAttachment(
           "Screen on fail",

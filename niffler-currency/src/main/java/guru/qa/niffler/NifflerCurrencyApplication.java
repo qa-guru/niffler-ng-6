@@ -12,5 +12,4 @@ public class NifflerCurrencyApplication {
     springApplication.addListeners(new PropertiesLogger());
     springApplication.run(args);
   }
-
 }

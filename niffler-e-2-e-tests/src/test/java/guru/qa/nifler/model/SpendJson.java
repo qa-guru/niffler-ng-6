@@ -1,6 +1,8 @@
-package guru.qa.niffler.model;
+package guru.qa.nifler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.nifler.enums.CurrencyValues;
+import guru.qa.nifler.model.submodel.CategoryJson;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,5 +22,4 @@ public record SpendJson(
     String description,
     @JsonProperty("username")
     String username) {
-
 }

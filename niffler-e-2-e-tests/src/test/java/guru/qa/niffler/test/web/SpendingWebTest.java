@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.SpendJson;
@@ -12,11 +13,13 @@ import static guru.qa.niffler.page.BaseTest.CFG;
 
 @WebTest
 public class SpendingWebTest {
-    @Spending(
+    @User(
             username = "kisa",
-            category = "Обучение",
-            description = "Обучение Advanced 2.0",
-            amount = 79990
+            spendings = @Spending(
+                    category = "Обучение",
+                    description = "Обучение Advanced 2.0",
+                    amount = 79990
+            )
     )
 
     @Test

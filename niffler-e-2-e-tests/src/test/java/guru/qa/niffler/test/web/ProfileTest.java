@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
@@ -12,11 +13,6 @@ import org.junit.jupiter.api.Test;
 @WebTest
 public class ProfileTest extends BaseTest {
     String userData = "kisa";
-
-    @Category(
-            username = "duck",
-            archived = true
-    )
 
     @Test
     @DisplayName("После удачной авторизации показывается главная страница")
@@ -35,8 +31,7 @@ public class ProfileTest extends BaseTest {
     }
 
     @DisplayName("Архивация категории")
-    @Category(username = "risa",
-            archived = false)
+    @User(username = "risa", categories = @Category(archived = false))
     @Test
     void archivingCategoryTest(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -47,9 +42,7 @@ public class ProfileTest extends BaseTest {
                 .successArchiveTooltipCheck("Category " + category.name() + " is archived");
     }
 
-    @DisplayName("Разархивация категории")
-    @Category(username = "misa",
-            archived = true)
+    @User(username = "misa", categories = @Category(archived = true))
     @Test
     void unArchivingCategoryTest(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -62,8 +55,7 @@ public class ProfileTest extends BaseTest {
                 .categoryNotInListCheck(category.name());
     }
 
-    @Category(username = "nisa",
-            archived = false)
+    @User(username = "nisa", categories = @Category(archived = false))
     @Test
     @DisplayName("Активная категория отображается в списке активных категорий")
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
@@ -73,8 +65,7 @@ public class ProfileTest extends BaseTest {
                 .categoryInListCheck(category.name());
     }
 
-    @Category(username = "lisa",
-            archived = true)
+    @User(username = "lisa", categories = @Category(archived = true))
     @Test
     @DisplayName("Архивная категория отображается в списке архивных категорий")
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {

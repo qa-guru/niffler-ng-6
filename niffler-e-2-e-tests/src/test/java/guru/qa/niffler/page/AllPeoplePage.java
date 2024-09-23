@@ -8,17 +8,16 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class AllPeoplePage {
-    private final SelenideElement friendsPage = $("a[href='/people/friends']");
+    private final SelenideElement bottonToOpenFriendsPage = $("a[href='/people/friends']");
     private final ElementsCollection listAllPeople = $$("#all tr");
 
-    public AllPeoplePage openAllPeoplePage() {
-        friendsPage.click();
-        return new AllPeoplePage();
+    public FriendsPage openFriendsPeoplePage() {
+        bottonToOpenFriendsPage.click();
+        return new FriendsPage();
     }
 
     public void checkHaveOutcomeInvitation(String friendName) {
-        listAllPeople.find(text(friendName)).should(visible);
-        listAllPeople.find(text("Waiting...")).should(visible);
+        listAllPeople.find(text(friendName)).$$("td").find(text("Waiting...")).should(visible);
     }
 
     public void checkNotHaveOutcomeInvitation() {

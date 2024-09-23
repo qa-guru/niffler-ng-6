@@ -104,15 +104,7 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Map<UserType, StaticUser> map = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class);
         UserType userType = AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class).get();
-
-        /*
-        ArrayList<UserType> ut = new ArrayList<>();
-        for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
-            ut.add(e.getKey());
-        }*/
-
-        //StaticUser user1 = map.get(ut.get(parameterContext.getIndex()));
-        StaticUser user1 = map.get(userType.value());
+        StaticUser user1 = map.get(userType);
         return user1;
     }
 }

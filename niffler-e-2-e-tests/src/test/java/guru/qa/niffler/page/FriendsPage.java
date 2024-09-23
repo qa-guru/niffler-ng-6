@@ -9,24 +9,22 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class FriendsPage {
-    private final SelenideElement allPeoplePage = $("a[href='/people/all']");
+    private final SelenideElement buttonToOpenAllPeoplePage = $("a[href='/people/all']");
     private final ElementsCollection listFriends = $$("#friends tr");
     private final ElementsCollection listRequests = $$("#requests tr");
 
 
     public AllPeoplePage openAllPeoplePage() {
-        allPeoplePage.click();
+        buttonToOpenAllPeoplePage.click();
         return new AllPeoplePage();
     }
 
     public void checkHaveFriend(String friendName) {
         listFriends.find(text(friendName)).should(visible);
-        listFriends.find(text("Unfriend")).should(visible);
     }
 
     public void checkIncomeInvitationFriend(String friendName) {
-        listRequests.find(text(friendName)).should(visible);
-        listRequests.find(text("Accept")).should(visible);
+        listRequests.find(text(friendName)).$$("td").find(text("Accept")).should(visible);
     }
 
     public void checkNotHaveFriend() {

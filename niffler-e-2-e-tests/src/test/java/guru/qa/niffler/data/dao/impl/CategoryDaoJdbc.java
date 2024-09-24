@@ -15,21 +15,20 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public CategoryEntity create(CategoryEntity category) {
-        try(Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
-            try(PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO spend (id, username, name, archived)"+
-                            "VALUES (?, ?, ?, ?)",
+        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO spend (username, name, archived)" +
+                            "VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
-                ps.setObject(1, category.getId());
-                ps.setString(2, category.getUsername());
-                ps.setString(3, category.getName());
-                ps.setBoolean(4, category.getArchived());
+                ps.setString(1, category.getUsername());
+                ps.setString(2, category.getName());
+                ps.setBoolean(3, category.isArchived());
 
                 ps.executeUpdate();
                 final UUID generationKey;
-                try(ResultSet rs = ps.getResultSet()){
-                    if(rs.next()){
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
                         generationKey = rs.getObject("id", UUID.class);
                     } else {
                         throw new SQLException("Can't find id in ResultSet");
@@ -45,24 +44,24 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
-        try(Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
-            try(PreparedStatement ps = connection.prepareStatement(
+        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM category WHERE id = ?"
             )) {
                 ps.setObject(1, id);
                 ps.execute();
 
-                try(ResultSet rs = ps.getResultSet()){
-                    if(rs.next()){
+                try (ResultSet rs = ps.getResultSet()) {
+                    if (rs.next()) {
                         CategoryEntity ce = new CategoryEntity();
                         ce.setId(rs.getObject("id", UUID.class));
                         ce.setUsername(rs.getString("username"));
                         ce.setName(rs.getString("name"));
                         ce.setArchived(rs.getBoolean("archived"));
-                        return Optional.of(             ce
+                        return Optional.of(ce
                         );
                     } else {
-                      return Optional.empty();
+                        return Optional.empty();
                     }
                 }
             }

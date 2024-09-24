@@ -47,6 +47,7 @@ enum LocalConfig implements Config {
     public String spendJdbcUrl() {
         return "jdbc:postgresql://127.0.0.1:5432/niffler-spend";
     }
+
     @Override
     public String currencyJdbcUrl() {
         return "jdbc:postgresql://127.0.0.1:5432/niffler-currency";

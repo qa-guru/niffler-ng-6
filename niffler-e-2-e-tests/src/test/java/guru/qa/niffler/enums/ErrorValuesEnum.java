@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorValuesEnum {
 
+  USER_CREDENTIAL_ERROR("Неверные учетные данные пользователя"),
   USER_ALREADY_EXIST("Username `%s` already exists"),
   PASSWORD_NOT_EQUALS("Passwords should be equal");
 

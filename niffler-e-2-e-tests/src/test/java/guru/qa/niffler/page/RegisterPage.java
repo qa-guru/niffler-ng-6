@@ -1,9 +1,9 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -49,19 +49,19 @@ public class RegisterPage {
 
   @Step("Проверка отображении текста об ошибке поля Username")
   public RegisterPage checkUsernameErrorText(String errorText) {
-    userExistErrorText.shouldHave(Condition.text(errorText));
+    userExistErrorText.shouldHave(text(errorText));
     return new RegisterPage();
   }
 
   @Step("Проверка отображении текста об ошибке поля Password")
   public RegisterPage checkPasswordErrorText(String errorText) {
-    passwordErrorText.shouldHave(Condition.text(errorText));
+    passwordErrorText.shouldHave(text(errorText));
     return new RegisterPage();
   }
 
   @Step("Проверка отображении текста об ошибке поля Submit password")
   public RegisterPage checkSubmitPasswordErrorText(String errorText) {
-    submitPasswordErrorText.shouldHave(Condition.text(errorText));
+    submitPasswordErrorText.shouldHave(text(errorText));
     return new RegisterPage();
   }
 

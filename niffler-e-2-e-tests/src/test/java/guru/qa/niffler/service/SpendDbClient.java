@@ -1,0 +1,19 @@
+package guru.qa.niffler.service;
+
+import guru.qa.niffler.data.dao.CategoryDao;
+import guru.qa.niffler.data.dao.SpendDao;
+import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.model.SpendJson;
+
+public class SpendDbClient {
+
+    public final SpendDao spendDao = new SpendDaoJdbc();
+    public final CategoryDao categoryDao = new CategoryDaoJdbc();
+
+    public SpendJson create(SpendJson spend){
+        SpendEntity spendEntity = SpendEntity.fromJson(spend);
+        if(spendEntity.getCaty)
+    }
+}

@@ -4,17 +4,16 @@ import guru.qa.niffler.api.CategoriesApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
-
-import java.util.Arrays;
 
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-    private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -29,7 +28,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 anno.username(),
                                 false
                         );
-                        CategoryJson created = categoriesApiClient.addCategory(category);
+
+                        CategoryJson created = spendDbClient.createCategory(category);
                         if (categoryAnnotation.archived()) {
                             CategoryJson archivedCategory = new CategoryJson(
                                     created.id(),
@@ -37,7 +37,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                     created.username(),
                                     true
                             );
-                            created = categoriesApiClient.updateCategory(archivedCategory);
+                             created = spendDbClient.updateCategory(archivedCategory);
                         }
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
@@ -53,7 +53,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 context.getStore(NAMESPACE).get(context.getUniqueId(),
                         CategoryJson.class);
         if (!category.archived()) {
-            categoriesApiClient.updateCategory(new CategoryJson(
+            spendDbClient.updateCategory(new CategoryJson(
                     category.id(),
                     category.name(),
                     category.username(),

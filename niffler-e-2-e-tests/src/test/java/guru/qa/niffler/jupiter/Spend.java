@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter;
 
-import guru.qa.niffler.enums.CurrencyValues;
+import guru.qa.niffler.enums.CurrencyValuesEnum;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -20,5 +20,5 @@ public @interface Spend {
 
   double amount();
 
-  CurrencyValues currency();
+  CurrencyValuesEnum currency();
 }

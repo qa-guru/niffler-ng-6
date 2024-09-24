@@ -1,7 +1,7 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.niffler.enums.CurrencyValues;
+import guru.qa.niffler.enums.CurrencyValuesEnum;
 import guru.qa.niffler.model.submodel.CategoryJson;
 
 import java.util.Date;
@@ -15,7 +15,7 @@ public record SpendJson(
     @JsonProperty("category")
     CategoryJson category,
     @JsonProperty("currency")
-    CurrencyValues currency,
+    CurrencyValuesEnum currency,
     @JsonProperty("amount")
     Double amount,
     @JsonProperty("description")

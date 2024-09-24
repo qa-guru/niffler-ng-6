@@ -1,5 +1,5 @@
 package guru.qa.niffler.enums;
 
-public enum CurrencyValues {
+public enum CurrencyValuesEnum {
   RUB, USD, EUR, KZT
 }

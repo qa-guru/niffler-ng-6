@@ -18,5 +18,11 @@ public interface Config {
 
     String userdataUrl();
 
+    String authJdbcUrl();
 
+    String userdataJdbcUrl();
+
+    String spendJdbcUrl();
+
+    String currencyJdbcUrl();
 }

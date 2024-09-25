@@ -1,25 +1,24 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.faker.FakeData;
-import guru.qa.niffler.jupiter.extensions.BrowserExtension;
+import guru.qa.niffler.faker.RandomDataUtils;
+import guru.qa.niffler.jupiter.annotations.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.faker.FakeData.generateFakePassword;
-import static guru.qa.niffler.faker.FakeData.generateFakeUserName;
+import static guru.qa.niffler.faker.RandomDataUtils.randomPassword;
+import static guru.qa.niffler.faker.RandomDataUtils.randomUsername;
 import static io.qameta.allure.Allure.step;
 
 @DisplayName("Регистрация")
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class RegistrationWebTest extends BaseWebTest {
 
-    private final String username = generateFakeUserName();
-    private final String validPassword = generateFakePassword(4, 10);
-    private final String invalidPassword = generateFakePassword(1, 3);
+    private final String username = randomUsername();
+    private final String validPassword = randomPassword(4, 10);
+    private final String invalidPassword = randomPassword(1, 3);
 
     @Test
     @Story("Успешная регистрация нового пользователя")
@@ -77,7 +76,7 @@ public class RegistrationWebTest extends BaseWebTest {
         step("Заполнить форму регистрации. В поле passwordSubmit ввести значение, которое отличается от password", () -> {
             page.registerPage.setUsername(username)
                     .setPassword(validPassword)
-                    .setConfirmPassword(FakeData.generateFakePassword(4, 10))
+                    .setConfirmPassword(RandomDataUtils.randomPassword(4, 10))
                     .clickSignUpButton();
         });
         step("Отображается сообщение, что пароли не совпадают", () -> {

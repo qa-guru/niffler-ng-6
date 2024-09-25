@@ -2,6 +2,7 @@ package guru.qa.niffler.jupiter.extensions;
 
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotations.Spending;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -18,26 +19,29 @@ public class SpendingExtension implements ParameterResolver, BeforeEachCallback 
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spending.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
-                    SpendJson spend = new SpendJson(
-                            null,
-                            new Date(),
-                            new CategoryJson(
-                                    null,
-                                    anno.category(),
-                                    anno.username(),
-                                    false
-                            ),
-                            CurrencyValues.RUB,
-                            anno.amount(),
-                            anno.description(),
-                            anno.username()
-                    );
-                    context.getStore(NAMESPACE).put(
-                            context.getUniqueId(),
-                            spendApiClient.addSpend(spend)
-                    );
+                    if (anno.spendings().length > 0) {
+                        Spending spending = anno.spendings()[0];
+                        SpendJson spend = new SpendJson(
+                                null,
+                                new Date(),
+                                new CategoryJson(
+                                        null,
+                                        anno.spendings()[0].category(),
+                                        anno.username(),
+                                        false
+                                ),
+                                CurrencyValues.RUB,
+                                spending.amount(),
+                                spending.description(),
+                                anno.username()
+                        );
+                        context.getStore(NAMESPACE).put(
+                                context.getUniqueId(),
+                                spendApiClient.addSpend(spend)
+                        );
+                    }
                 });
     }
 

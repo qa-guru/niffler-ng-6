@@ -2,26 +2,27 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotations.Category;
-import guru.qa.niffler.jupiter.extensions.BrowserExtension;
-import guru.qa.niffler.jupiter.extensions.UserQueueExtension;
+import guru.qa.niffler.jupiter.annotations.User;
+import guru.qa.niffler.jupiter.annotations.meta.WebTest;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static io.qameta.allure.Allure.step;
 
 @DisplayName("Страница профиля")
-@ExtendWith({BrowserExtension.class, UserQueueExtension.class})
+@WebTest
 public class ProfileWebTest extends BaseWebTest {
 
     private final String vladislavUsername = "vladislav";
     private final String rootPassword = "root";
 
-    @Category(
+    @User(
             username = "vladislav",
-            archived = false
+            categories = @Category(
+                    archived = false
+            )
     )
     @Test
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
@@ -41,9 +42,11 @@ public class ProfileWebTest extends BaseWebTest {
         });
     }
 
-    @Category(
+    @User(
             username = "vladislav",
-            archived = true
+            categories = @Category(
+                    archived = true
+            )
     )
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {

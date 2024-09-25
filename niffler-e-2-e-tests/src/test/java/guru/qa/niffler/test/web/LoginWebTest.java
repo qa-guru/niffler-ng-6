@@ -1,18 +1,17 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.extensions.BrowserExtension;
+import guru.qa.niffler.jupiter.annotations.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.faker.FakeData.generateFakePassword;
+import static guru.qa.niffler.faker.RandomDataUtils.randomPassword;
 import static io.qameta.allure.Allure.step;
 
 @DisplayName("Авторизация")
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class LoginWebTest extends BaseWebTest {
 
     private final String persistentName = "vladislav";
@@ -44,7 +43,7 @@ public class LoginWebTest extends BaseWebTest {
     @DisplayName("Выполняем авторизацию пользователя с невалидным паролем")
     public void testUserShouldStayOnLoginPageAfterLoginWithBadCredential() {
 
-        String invalidPassword = generateFakePassword(1, 3);
+        String invalidPassword = randomPassword(1, 3);
 
         step("Открываем страницу авторизации и заполняем форму, используя персистентный username и случайный password", () -> {
             Selenide.open(CFG.frontUrl(), LoginPage.class)

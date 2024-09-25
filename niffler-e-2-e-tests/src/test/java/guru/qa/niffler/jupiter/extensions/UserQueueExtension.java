@@ -82,8 +82,10 @@ public class UserQueueExtension implements
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         Map<UserType, StaticUser> map = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-        for (Map.Entry<UserType, StaticUser> entry : map.entrySet()) {
-            getQueueByUserType(entry.getKey().type()).add(entry.getValue());
+        if (map != null) {
+            for (Map.Entry<UserType, StaticUser> entry : map.entrySet()) {
+                addUserInQueueByType(entry.getKey().type(), entry.getValue());
+            }
         }
     }
 
@@ -116,6 +118,17 @@ public class UserQueueExtension implements
                 return WITH_OUTCOME_REQUEST_USERS;
             }
             default -> throw new RuntimeException("Type of user don't matches with any Queue type");
+        }
+    }
+
+    // хелпер для добавления пользователя в очередь, тип которой соответствует типу аннотации из контекста
+    private void addUserInQueueByType(UserType.Type type, StaticUser user) {
+        switch (type) {
+            case EMPTY -> EMPTY_USERS.add(user);
+            case WITH_FRIEND -> WITH_FRIEND_USERS.add(user);
+            case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(user);
+            case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(user);
+            default -> throw new RuntimeException("Type of annotation don't matches with any queue type");
         }
     }
 }

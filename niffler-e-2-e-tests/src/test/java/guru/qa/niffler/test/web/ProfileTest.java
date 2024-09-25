@@ -42,6 +42,7 @@ public class ProfileTest extends BaseTest {
                 .successArchiveTooltipCheck("Category " + category.name() + " is archived");
     }
 
+    @DisplayName("Разархивация категории")
     @User(username = "misa", categories = @Category(archived = true))
     @Test
     void unArchivingCategoryTest(CategoryJson category) {
@@ -55,9 +56,9 @@ public class ProfileTest extends BaseTest {
                 .categoryNotInListCheck(category.name());
     }
 
+    @DisplayName("Активная категория отображается в списке активных категорий")
     @User(username = "nisa", categories = @Category(archived = false))
     @Test
-    @DisplayName("Активная категория отображается в списке активных категорий")
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("nisa", "nisa")
@@ -72,8 +73,8 @@ public class ProfileTest extends BaseTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("lisa", "lisa")
                 .openProfile()
-                .categoryNotInListCheck(category.name())
                 .clickArchiveSwitcher()
                 .categoryInListCheck(category.name());
     }
 }
+

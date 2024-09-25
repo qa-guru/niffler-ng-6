@@ -49,7 +49,7 @@ public class CategoryExtension implements
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         // Если категория существует удаляем ее после теста
         if (category != null) {
-            spendDbClient.deleteCategory(CategoryEntity.fromJson(category));
+            spendDbClient.deleteCategory(category);
         }
     }
 

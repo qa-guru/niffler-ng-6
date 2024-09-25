@@ -37,8 +37,9 @@ public class SpendDbClient {
         return spendDao.findAllByUsername(username);
     }
 
-    public void deleteSpend(SpendEntity spend) {
-        spendDao.delete(spend);
+    public void deleteSpend(SpendJson spend) {
+        SpendEntity spendEntity = SpendEntity.fromJson(spend);
+        spendDao.delete(spendEntity);
     }
 
     public CategoryJson createCategory(CategoryJson category) {
@@ -53,7 +54,8 @@ public class SpendDbClient {
         return categoryDao.findByUsernameAndCategoryName(username, categoryName);
     }
 
-    public void deleteCategory(CategoryEntity category) {
-        categoryDao.delete(category);
+    public void deleteCategory(CategoryJson category) {
+        CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+        categoryDao.delete(categoryEntity);
     }
 }

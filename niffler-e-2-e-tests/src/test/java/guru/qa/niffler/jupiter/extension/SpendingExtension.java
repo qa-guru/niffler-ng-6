@@ -50,8 +50,8 @@ public class SpendingExtension implements BeforeEachCallback, AfterTestExecution
     public void afterTestExecution(ExtensionContext context) throws Exception {
         SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
         if (spend != null) {
-            spendDbClient.deleteSpend(SpendEntity.fromJson(spend));
-            spendDbClient.deleteCategory(SpendEntity.fromJson(spend).getCategory());
+            spendDbClient.deleteSpend(spend);
+            spendDbClient.deleteCategory(spend.category());
         }
     }
 

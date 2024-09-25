@@ -18,9 +18,6 @@ public class SpendingWebTest {
 
     @User(
             username = "duck",
-            categories = @Category(
-                    archived = false
-            ),
             spendings = @Spending(
                     category = "Обучение",
                     description = "Обучение Advanced 2.0",

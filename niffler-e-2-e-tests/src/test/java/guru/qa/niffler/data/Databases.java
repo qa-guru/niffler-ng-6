@@ -9,25 +9,26 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Databases {
-  private Databases() {
-  }
+    private Databases() {
 
-  private static final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
+    }
 
-  private static DataSource dataSource(String jdbcUrl) {
-    return dataSources.computeIfAbsent(
-        jdbcUrl,
-        key -> {
-          PGSimpleDataSource ds = new PGSimpleDataSource();
-          ds.setUser("postgres");
-          ds.setPassword("secret");
-          ds.setUrl(key);
-          return ds;
-        }
-    );
-  }
+    private static final Map<String, DataSource> datasources = new ConcurrentHashMap<>();
 
-  public static Connection connection(String jdbcUrl) throws SQLException {
-    return dataSource(jdbcUrl).getConnection();
-  }
+    private static DataSource dataSource(String jdbcUrl) {
+        return datasources.computeIfAbsent(
+                jdbcUrl,
+                key -> {
+                    PGSimpleDataSource ds = new PGSimpleDataSource();
+                    ds.setUrl(key);
+                    ds.setUser("postgres");
+                    ds.setPassword("secret");
+                    return ds;
+                }
+        );
+    }
+
+    public static Connection getConnection(String jdbcUrl) throws SQLException {
+        return dataSource(jdbcUrl).getConnection();
+    }
 }

@@ -7,7 +7,7 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
 @WebTest
-public class LoginTests {
+public class LoginTest {
 
     private static final Config CFG = Config.getInstance();
     private static final String BAD_CREDENTIALS = "Bad credentials";

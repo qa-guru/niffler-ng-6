@@ -2,8 +2,9 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
@@ -15,11 +16,13 @@ public class SpendingTest {
   private static final Config CFG = Config.getInstance();
   private final MainPage mainPage = new MainPage();
 
-  @Spending(
-          username = "duck",
+  @User(
+      username = "duck",
+      spendings = @Spending(
           category = "Обучение",
           description = "Обучение Advanced 2.0",
           amount = 79990
+      )
   )
   @Test
   void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {

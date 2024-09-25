@@ -30,22 +30,13 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 null,
                                 randomName,
                                 userAnno.username(),
-                                false // Изначально категория не архивная
+                                anno.archived()
                         );
 
-                        // Создаем категорию через API
+                        // Создаем категорию через DB
                         CategoryJson createdCategory = spendDbClient.createCategory(category);
 
-                        // Если категория должна быть архивной, архивируем её
-                        if (anno.archived()) {
-                            CategoryJson archivedCategory = new CategoryJson(
-                                    createdCategory.id(),
-                                    createdCategory.name(),
-                                    createdCategory.username(),
-                                    true
-                            );
 
-                        }
 
                         // Сохраняем категорию в контексте
                         context.getStore(NAMESPACE).put(context.getUniqueId(), createdCategory);
@@ -58,15 +49,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null && !category.archived()) {
-            // Если категория не архивирована, архивируем её после теста
-            CategoryJson archivedCategory = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true // Архивируем категорию
-            );
-            spendDbClient.deleteCategory(archivedCategory);
+        if (category != null ) {
+            spendDbClient.deleteCategory(category);
         }
     }
 

@@ -1,7 +1,9 @@
 package guru.qa.niffler.data.entity.spend;
+
 import guru.qa.niffler.model.CategoryJson;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ public class CategoryEntity implements Serializable {
     private String name;
     private String username;
     private boolean archived;
+
     public static CategoryEntity fromJson(CategoryJson json) {
         CategoryEntity ce = new CategoryEntity();
         ce.setId(json.id());

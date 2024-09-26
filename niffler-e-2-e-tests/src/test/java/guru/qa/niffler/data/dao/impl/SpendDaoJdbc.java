@@ -17,9 +17,15 @@ public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
 
+    private final Connection connection;
+
+    public SpendDaoJdbc(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public SpendEntity create(SpendEntity spend) {
-        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+
             try (PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO spend (username, spend_date, currency, amount, description, category_id)" +
                             "VALUES (?, ?, ?, ?, ?, ?)",
@@ -43,7 +49,6 @@ public class SpendDaoJdbc implements SpendDao {
                 }
                 spend.setId(generationKey);
                 return spend;
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +56,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
-        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+
             try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM spend WHERE id = ?"
             )) {
@@ -73,7 +78,6 @@ public class SpendDaoJdbc implements SpendDao {
                         return Optional.empty();
                     }
                 }
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +85,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public List<SpendEntity> findAllByUsername(String username) {
-        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+
             try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM spend WHERE username = ?"
             )) {
@@ -103,7 +107,7 @@ public class SpendDaoJdbc implements SpendDao {
                     }
                     return list; // return List.of();
                 }
-            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -112,7 +116,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public void deleteSpend(SpendEntity spend) {
-        try (Connection connection = Databases.connection(CFG.spendJdbcdUrl())) {
+
             try (PreparedStatement ps = connection.prepareStatement(
                     "DELETE FROM spend WHERE id = ?"
             )) {
@@ -124,7 +128,7 @@ public class SpendDaoJdbc implements SpendDao {
                         throw new SQLException("Can't find deleted spend");
                     }
                 }
-            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

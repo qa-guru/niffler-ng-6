@@ -159,7 +159,7 @@ public class Databases {
         );
     }
 
-    public static void  closeAllCoonection(){
+    public static void  closeAllConnection(){
         for (Map<String, Connection> connectionMap : threadConnections.values()) {
             for (Connection connection : connectionMap.values()) {
                 try{

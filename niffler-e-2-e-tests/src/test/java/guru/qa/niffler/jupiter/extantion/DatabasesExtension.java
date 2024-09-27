@@ -5,6 +5,6 @@ import guru.qa.niffler.data.Databases;
 public class DatabasesExtension implements SuiteExtension {
     @Override
     public void afterSuite() {
-        Databases.closeAllCoonection();
+        Databases.closeAllConnection();
     }
 }

@@ -122,7 +122,7 @@ public class Databases {
     }
   }
 
-  private static DataSource dataSource(String jdbcUrl) {
+  public static DataSource dataSource(String jdbcUrl) {
     return dataSources.computeIfAbsent(
         jdbcUrl,
         key -> {

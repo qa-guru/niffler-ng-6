@@ -2,6 +2,7 @@ package guru.qa.niffler.data.entity.auth;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

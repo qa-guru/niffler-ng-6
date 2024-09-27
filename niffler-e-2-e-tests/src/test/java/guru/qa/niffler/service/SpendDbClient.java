@@ -10,10 +10,13 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
+import java.sql.Connection;
+
 import static guru.qa.niffler.data.Databases.transaction;
 
 public class SpendDbClient {
     private static final Config CFG = Config.getInstance();
+    private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_SERIALIZABLE;
 
     public SpendJson createSpend(SpendJson spend) {
         return transaction(connection -> {
@@ -27,7 +30,8 @@ public class SpendDbClient {
                             new SpendDaoJdbc(connection).create(spendEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
         );
     }
 
@@ -37,7 +41,8 @@ public class SpendDbClient {
                     new SpendDaoJdbc(connection).deleteSpend(spendEntity);
                     return null;  // Возвращаем null, так как метод ничего не возвращает
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
         );
     }
 
@@ -48,7 +53,8 @@ public class SpendDbClient {
                             new CategoryDaoJdbc(connection).create(categoryEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
         );
     }
 
@@ -58,7 +64,8 @@ public class SpendDbClient {
                     new CategoryDaoJdbc(connection).deleteCategory(categoryEntity);
                     return null;  // Возвращаем null, так как метод ничего не возвращает
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
         );
     }
 

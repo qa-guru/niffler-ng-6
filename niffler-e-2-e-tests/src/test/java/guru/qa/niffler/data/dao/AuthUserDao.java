@@ -10,11 +10,6 @@ import java.util.UUID;
 public interface AuthUserDao {
     AuthUserEntity create(AuthUserEntity user);
 
-    Optional<AuthUserEntity> findById(UUID id);
-
     List<AuthUserEntity> findAll();
 
-    Optional<UserEntity> findByUsername(String username);
-
-    void deleteUser(UserEntity user);
 }

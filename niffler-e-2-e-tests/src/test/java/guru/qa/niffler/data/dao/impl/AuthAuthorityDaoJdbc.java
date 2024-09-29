@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
@@ -38,29 +37,6 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public Optional<AuthorityEntity> findAuthorityById(UUID id) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM \"authority\" WHERE id = ?"
-        )) {
-            ps.setObject(1, id);
-            ps.execute();
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    AuthorityEntity ae = new AuthorityEntity();
-                    ae.setId(rs.getObject("id", UUID.class));
-                    ae.setUserId(rs.getObject("user_id", UUID.class));
-                    ae.setAuthority(rs.getObject("authority", Authority.class));
-                    return Optional.of(ae);
-                } else {
-                    return Optional.empty();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public List<AuthorityEntity> findAll() {
         List<AuthorityEntity> authorities = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
@@ -81,16 +57,6 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         return authorities;
     }
 
-    @Override
-    public void deleteAuthority(AuthorityEntity authority) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM \"authority\" WHERE id = ?"
-        )) {
-            ps.setObject(1, authority.getId());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }
 

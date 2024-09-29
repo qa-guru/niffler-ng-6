@@ -10,8 +10,6 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
@@ -42,18 +40,9 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public Optional<AuthorityEntity> findAuthorityById(UUID id) {
-        return Optional.empty();
-    }
-
-    @Override
     public List<AuthorityEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query("SELECT * FROM authority", AuthAuthorityEntityRowMapper.instance);
     }
 
-    @Override
-    public void deleteAuthority(AuthorityEntity authority) {
-
-    }
 }

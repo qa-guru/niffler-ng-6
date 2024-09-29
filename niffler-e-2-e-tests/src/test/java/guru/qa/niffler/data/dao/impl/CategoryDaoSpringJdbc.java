@@ -9,10 +9,8 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class CategoryDaoSpringJdbc implements CategoryDao {
@@ -42,22 +40,6 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         return category;
     }
 
-    @Override
-    public Optional<CategoryEntity> findCategoryById(UUID id) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM \"category\" WHERE id = ?",
-                        CategoryEntityRowMapper.instance,
-                        id
-                )
-        );
-    }
-
-    @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) throws SQLException {
-        return Optional.empty();
-    }
 
     @Override
     public List<CategoryEntity> findAll() {
@@ -65,10 +47,6 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         return jdbcTemplate.query("SELECT * FROM \"category\"", CategoryEntityRowMapper.instance);
     }
 
-    @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
-        return List.of();
-    }
 
     @Override
     public void deleteCategory(CategoryEntity category) {

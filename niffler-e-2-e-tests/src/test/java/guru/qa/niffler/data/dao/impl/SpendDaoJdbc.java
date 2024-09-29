@@ -9,7 +9,6 @@ import guru.qa.niffler.model.CurrencyValues;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDaoJdbc implements SpendDao {
@@ -47,66 +46,6 @@ public class SpendDaoJdbc implements SpendDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Optional<SpendEntity> findSpendById(UUID id) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM \"spend\" WHERE id = ?"
-        )) {
-            statement.setObject(1, id);
-            statement.execute();
-            try (ResultSet resultSet = statement.getResultSet()) {
-                if (resultSet.next()) {
-                    SpendEntity spend = new SpendEntity();
-
-                    spend.setId(resultSet.getObject("id", UUID.class));
-                    spend.setUsername(resultSet.getString("username"));
-                    spend.setSpendDate(resultSet.getDate("spend_date"));
-                    spend.setCurrency(resultSet.getObject("currency", CurrencyValues.class));
-                    spend.setAmount(resultSet.getDouble("amount"));
-                    spend.setDescription(resultSet.getString("description"));
-                    spend.setCategory(resultSet.getObject("category_id", CategoryEntity.class));
-
-
-                    return Optional.of(spend);
-                } else {
-                    return Optional.empty();
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<SpendEntity> findAllByUsername(String username) {
-        List<SpendEntity> spends = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM \"spend\" WHERE username = ?"
-        )) {
-            statement.setObject(1, username);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    SpendEntity spend = new SpendEntity();
-
-                    spend.setId(resultSet.getObject("id", UUID.class));
-                    spend.setUsername(resultSet.getString("username"));
-                    spend.setSpendDate(resultSet.getDate("spend_date"));
-                    spend.setCurrency(resultSet.getObject("currency", CurrencyValues.class));
-                    spend.setAmount(resultSet.getDouble("amount"));
-                    spend.setDescription(resultSet.getString("description"));
-                    spend.setCategory(resultSet.getObject("category_id", CategoryEntity.class));
-
-                    spends.add(spend);
-                }
-
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return spends;
     }
 
     @Override

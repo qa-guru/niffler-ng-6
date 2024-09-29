@@ -41,10 +41,7 @@ public class CategoryExtension implements
                         category.setUsername(anno.username());
                         category.setArchived(categoryAnno.archived());
 
-
-
-                        CategoryJson categoryJson = CategoryJson.fromEntity(categoryDbClient.createCategory(category));
-                        System.out.println(categoryJson);
+                        CategoryJson categoryJson = categoryDbClient.createCategory(category);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 categoryJson

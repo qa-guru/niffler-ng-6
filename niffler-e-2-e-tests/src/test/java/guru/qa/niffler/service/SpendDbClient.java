@@ -6,6 +6,7 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
 import java.util.List;
@@ -18,26 +19,23 @@ public class SpendDbClient {
 
     public SpendJson createSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
-        if (spendEntity.getCategory().getId() == null) {
-            CategoryEntity category = categoryDao.createCategory(spendEntity.getCategory());
-            spendEntity.setCategory(category);
+        if (categoryDao.findCategoryById(spendEntity.getCategory().getId()).isEmpty()) {
+            CategoryJson category = categoryDao.createCategory(spendEntity.getCategory());
+            spendEntity.setCategory(CategoryEntity.fromJson(category));
         }
 
-        return SpendJson.fromEntity(spendDao.createSpend(spendEntity));
+        return spendDao.createSpend(spendEntity);
     }
 
     public void deleteSpend(SpendEntity spend) {
         spendDao.deleteSpend(spend);
-        if (spend.getCategory() != null) {
-            categoryDao.deleteCategory(spend.getCategory());
-        }
     }
 
-    public List<SpendEntity> findAllByUsername(String username) {
+    public List<SpendJson> findAllByUsername(String username) {
         return spendDao.findAllByUsername(username);
     }
 
-    public Optional<SpendEntity> findSpendById(UUID id) {
+    public Optional<SpendJson> findSpendById(UUID id) {
         return spendDao.findSpendById(id);
     }
 }

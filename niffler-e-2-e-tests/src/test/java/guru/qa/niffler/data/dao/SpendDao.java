@@ -1,17 +1,18 @@
 package guru.qa.niffler.data.dao;
 
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.model.SpendJson;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface SpendDao {
-    SpendEntity createSpend(SpendEntity spend);
+    SpendJson createSpend(SpendEntity spend);
 
-    Optional<SpendEntity> findSpendById(UUID id);
+    Optional<SpendJson> findSpendById(UUID id);
 
-    List<SpendEntity> findAllByUsername(String username);
+    List<SpendJson> findAllByUsername(String username);
 
     void deleteSpend(SpendEntity spend);
 }

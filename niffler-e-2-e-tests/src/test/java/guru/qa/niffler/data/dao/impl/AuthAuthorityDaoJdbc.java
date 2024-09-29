@@ -31,9 +31,10 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             for (AuthorityEntity authorityEntity : authority) {
                 preparedStatement.setObject(1, authorityEntity.getUser().getId());
                 preparedStatement.setString(1, authorityEntity.getAuthority().name());
-                preparedStatement.executeBatch();
+                preparedStatement.addBatch();
                 preparedStatement.clearParameters();
             }
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,7 +1,7 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.AuthUserDao;
-import guru.qa.niffler.data.entity.auth.UserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,9 +20,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
-    public UserEntity create(UserEntity user) {
+    public AuthUserEntity create(AuthUserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO user (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
+                "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {
@@ -53,15 +53,15 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
+    public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user WHERE id = ?"
+                "SELECT * FROM \"user\" WHERE id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    UserEntity ue = new UserEntity();
+                    AuthUserEntity ue = new AuthUserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));
                     ue.setPassword(rs.getString("password"));
@@ -80,15 +80,15 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public Optional<AuthUserEntity> findByUsername(String username) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user WHERE username = ?"
+                "SELECT * FROM \"user\" WHERE username = ?"
         )) {
             ps.setObject(1, username);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    UserEntity ue = new UserEntity();
+                    AuthUserEntity ue = new AuthUserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));
                     ue.setPassword(rs.getString("password"));
@@ -107,9 +107,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void delete(AuthUserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM user WHERE id = ?"
+                "DELETE FROM \"user\" WHERE id = ?"
         )) {
             ps.setObject(1, user.getId());
             ps.executeUpdate();

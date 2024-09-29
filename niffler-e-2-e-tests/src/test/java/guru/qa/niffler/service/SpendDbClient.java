@@ -41,8 +41,7 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new SpendDaoJdbc(connection).findById(id);
                 },
-                CFG.spendJdbcUrl(),
-                TRANSACTION_ISOLATION_LEVEL
+                CFG.spendJdbcUrl()
         );
     }
 
@@ -50,8 +49,7 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new SpendDaoJdbc(connection).findAllByUsername(username);
                 },
-                CFG.spendJdbcUrl(),
-                TRANSACTION_ISOLATION_LEVEL
+                CFG.spendJdbcUrl()
         );
     }
 
@@ -80,8 +78,7 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new CategoryDaoJdbc(connection).findById(id);
                 },
-                CFG.spendJdbcUrl(),
-                TRANSACTION_ISOLATION_LEVEL
+                CFG.spendJdbcUrl()
         );
     }
 
@@ -89,8 +86,7 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new CategoryDaoJdbc(connection).findAllByUsername(username);
                 },
-                CFG.spendJdbcUrl(),
-                TRANSACTION_ISOLATION_LEVEL
+                CFG.spendJdbcUrl()
         );
     }
 
@@ -98,8 +94,7 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new CategoryDaoJdbc(connection).findByUsernameAndCategoryName(username, categoryName);
                 },
-                CFG.spendJdbcUrl(),
-                TRANSACTION_ISOLATION_LEVEL
+                CFG.spendJdbcUrl()
         );
     }
 

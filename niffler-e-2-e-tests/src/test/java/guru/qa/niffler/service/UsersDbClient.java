@@ -21,7 +21,6 @@ public class UsersDbClient {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-
     public UserJson createUserSpringJdbc(UserJson user) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(user.username());
@@ -30,10 +29,8 @@ public class UsersDbClient {
         authUser.setAccountNonExpired(true);
         authUser.setAccountNonLocked(true);
         authUser.setCredentialsNonExpired(true);
-
         AuthUserEntity createdAuthUser = new AuthUserDaoSpringJdbc(dataSource(CFG.authJdbcUrl()))
                 .create(authUser);
-
         AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                 e -> {
                     AuthorityEntity ae = new AuthorityEntity();
@@ -42,10 +39,8 @@ public class UsersDbClient {
                     return ae;
                 }
         ).toArray(AuthorityEntity[]::new);
-
         new AuthAuthorityDaoSpringJdbc(dataSource(CFG.authJdbcUrl()))
                 .create(authorityEntities);
-
         return UserJson.fromEntity(
                 new UdUserDaoSpringJdbc(dataSource(CFG.userdataJdbcUrl()))
                         .create(
@@ -54,7 +49,6 @@ public class UsersDbClient {
                 null
         );
     }
-
 
     public UserJson createUser(UserJson user) {
         return UserJson.fromEntity(

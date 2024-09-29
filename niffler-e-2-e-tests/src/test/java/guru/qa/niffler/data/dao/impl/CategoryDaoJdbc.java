@@ -21,7 +21,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     @Override
     public CategoryEntity create(CategoryEntity category) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO category (username, name, archived) " +
+                "INSERT INTO \"category\" (username, name, archived) " +
                         "VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {
@@ -50,7 +50,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE id = ?"
+                "SELECT * FROM \"category\" WHERE id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
@@ -76,7 +76,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) throws SQLException {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ? AND name = ?"
+                "SELECT * FROM \"category\" WHERE username = ? AND name = ?"
         )) {
             ps.setString(1, username);
             ps.setString(2, categoryName);
@@ -101,10 +101,29 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
+    public List<CategoryEntity> findAll() {
+        List<CategoryEntity> categories = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"category\"");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                CategoryEntity category = new CategoryEntity();
+                category.setId(rs.getObject("id", UUID.class));
+                category.setUsername(rs.getString("username"));
+                category.setName(rs.getString("name"));
+                category.setArchived(rs.getBoolean("archived"));
+                categories.add(category);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return categories;
+    }
+
+    @Override
     public List<CategoryEntity> findAllByUsername(String username) {
         List<CategoryEntity> categories = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ?"
+                "SELECT * FROM \"category\" WHERE username = ?"
         )) {
             ps.setObject(1, username);
             try (ResultSet rs = ps.executeQuery()) {

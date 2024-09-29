@@ -40,7 +40,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public Optional<AuthorityEntity> findAuthorityById(UUID id) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM authority WHERE id = ?"
+                "SELECT * FROM \"authority\" WHERE id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
@@ -61,12 +61,11 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public List<AuthorityEntity> findByUserId(String userId) {
+    public List<AuthorityEntity> findAll() {
         List<AuthorityEntity> authorities = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM authority WHERE user_id = ?"
+                "SELECT * FROM \"authority\" WHERE user_id = ?"
         )) {
-            ps.setObject(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     AuthorityEntity ae = new AuthorityEntity();
@@ -85,7 +84,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public void deleteAuthority(AuthorityEntity authority) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM authority WHERE id = ?"
+                "DELETE FROM \"authority\" WHERE id = ?"
         )) {
             ps.setObject(1, authority.getId());
             ps.executeUpdate();

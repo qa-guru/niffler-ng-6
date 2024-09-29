@@ -22,7 +22,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public SpendEntity createSpend(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                         "VALUES (?, ?, ?, ?, ?, ?)",
@@ -56,7 +56,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public Optional<SpendEntity> findSpendById(UUID id) {
+    public Optional<SpendEntity> findById(UUID id) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM spend WHERE id=?"
         )) {
@@ -110,6 +110,26 @@ public class SpendDaoJdbc implements SpendDao {
             ps.setObject(1, spend.getId());
 
             ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<SpendEntity> findAll() {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM \"spend\""
+        )) {
+            preparedStatement.execute();
+            List<SpendEntity> spendEntityList = new ArrayList<>();
+            try (ResultSet rs = preparedStatement.getResultSet()) {
+                while (rs.next()) {
+                    SpendEntity spend = getSpendEntityFromResultSet(rs);
+                    spendEntityList.add(spend);
+                }
+                return spendEntityList;
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

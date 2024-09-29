@@ -18,7 +18,7 @@ public class CategoryDbClient {
 
     public CategoryJson createCategory(CategoryEntity category) {
         return transaction(connection -> {
-                    CategoryEntity categoryEntity = new CategoryDaoJdbc(connection).createCategory(category);
+                    CategoryEntity categoryEntity = new CategoryDaoJdbc(connection).create(category);
                     return CategoryJson.fromEntity(categoryEntity);
                 },
                 CFG.spendJdbcUrl(),
@@ -28,7 +28,7 @@ public class CategoryDbClient {
 
     public void deleteCategory(CategoryEntity category) {
         transaction(connection -> {
-                    new CategoryDaoJdbc(connection).deleteCategory(category);
+                    new CategoryDaoJdbc(connection).delete(category);
                 },
                 CFG.spendJdbcUrl(),
                 Connection.TRANSACTION_REPEATABLE_READ
@@ -49,7 +49,7 @@ public class CategoryDbClient {
 
     public Optional<CategoryJson> findCategoryById(UUID id) {
         return transaction(connection -> {
-                    Optional<CategoryEntity> categoryById = new CategoryDaoJdbc(connection).findCategoryById(id);
+                    Optional<CategoryEntity> categoryById = new CategoryDaoJdbc(connection).findById(id);
 
                     return categoryById.map(CategoryJson::fromEntity);
                 },

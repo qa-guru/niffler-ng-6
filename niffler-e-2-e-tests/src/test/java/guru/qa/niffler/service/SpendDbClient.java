@@ -21,11 +21,11 @@ public class SpendDbClient {
                     SpendEntity spendEntity = SpendEntity.fromJson(spend);
                     if (spendEntity.getCategory().getId() == null) {
                         var category = new CategoryDaoJdbc(connection)
-                                .createCategory(spendEntity.getCategory());
+                                .create(spendEntity.getCategory());
                         spendEntity.setCategory(category);
                     }
 
-                    SpendEntity entity = new SpendDaoJdbc(connection).createSpend(spendEntity);
+                    SpendEntity entity = new SpendDaoJdbc(connection).create(spendEntity);
                     return SpendJson.fromEntity(entity);
                 },
                 CFG.spendJdbcUrl(),
@@ -36,7 +36,7 @@ public class SpendDbClient {
     public void deleteSpend(SpendEntity spend) {
         transaction(connection -> {
                     if (spend.getCategory() != null) {
-                        new CategoryDaoJdbc(connection).deleteCategory(spend.getCategory());
+                        new CategoryDaoJdbc(connection).delete(spend.getCategory());
                     }
                     new SpendDaoJdbc(connection).deleteSpend(spend);
                 }
@@ -59,7 +59,7 @@ public class SpendDbClient {
 
     public Optional<SpendJson> findSpendById(UUID id) {
         return transaction(connection -> {
-                    Optional<SpendEntity> spendById = new SpendDaoJdbc(connection).findSpendById(id);
+                    Optional<SpendEntity> spendById = new SpendDaoJdbc(connection).findById(id);
                     return spendById.map(SpendJson::fromEntity);
                 },
                 CFG.spendJdbcUrl(),

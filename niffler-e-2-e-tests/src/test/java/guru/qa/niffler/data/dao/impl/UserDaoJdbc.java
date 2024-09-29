@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +21,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public UserEntity createUser(UserEntity user) {
+    public UserEntity create(UserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO user (username, currency, firstname, surname, full_name, photo, photo_small) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -106,6 +108,26 @@ public class UserDaoJdbc implements UserDao {
             ps.setObject(1, user.getId());
 
             ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"user\""
+        )) {
+            ps.execute();
+            List<UserEntity> userEntities = new ArrayList<>();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    UserEntity user = getUserEntity(rs);
+                    userEntities.add(user);
+                }
+                return userEntities;
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

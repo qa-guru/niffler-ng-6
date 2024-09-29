@@ -16,7 +16,7 @@ public class UserDbClient {
 
     public UserJson createUser(UserEntity user) {
         return transaction(connection -> {
-                    UserEntity userEntity = new UserDaoJdbc(connection).createUser(user);
+                    UserEntity userEntity = new UserDaoJdbc(connection).create(user);
                     return UserJson.fromEntity(userEntity);
                 },
                 CFG.userDataJdbcUrl(),

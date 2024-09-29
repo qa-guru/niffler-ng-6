@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.entity.user;
+package guru.qa.niffler.data.entity.userdata;
 
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;

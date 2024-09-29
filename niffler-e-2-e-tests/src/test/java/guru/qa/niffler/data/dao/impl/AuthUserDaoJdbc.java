@@ -1,35 +1,41 @@
 package guru.qa.niffler.data.dao.impl;
 
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.entity.auth.UserEntity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.*;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserdataUserDaoJdbc implements UserdataUserDao {
-
+public class AuthUserDaoJdbc implements AuthUserDao {
     private final Connection connection;
 
-    public UserdataUserDaoJdbc(Connection connection) {
+    public AuthUserDaoJdbc(Connection connection) {
         this.connection = connection;
     }
+
+    private static final PasswordEncoder pe
+            = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
     public UserEntity create(UserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO user (username, currency, firstname, surname, photo, photo_small, full_name) " +
-                        "VALUES ( ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO user (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
+                        "VALUES ( ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {
+            // Кодируем пароль перед вставкой в базу данных
+            String encodedPassword = pe.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getCurrency().name());
-            ps.setString(3, user.getFirstname());
-            ps.setString(4, user.getSurname());
-            ps.setBytes(5, user.getPhoto());
-            ps.setBytes(6, user.getPhotoSmall());
-            ps.setString(7, user.getFullname());
+            ps.setString(2, user.getPassword());
+            ps.setBoolean(3, user.getEnabled());
+            ps.setBoolean(4, user.getAccountNonExpired());
+            ps.setBoolean(5, user.getAccountNonLocked());
+            ps.setBoolean(6, user.getCredentialsNonExpired());
             ps.executeUpdate();
             final UUID generatedKey;
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -58,12 +64,11 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
                     UserEntity ue = new UserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));
-                    ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
-                    ue.setFirstname(rs.getString("firstname"));
-                    ue.setSurname(rs.getString("surname"));
-                    ue.setPhoto(rs.getBytes("photo"));
-                    ue.setPhoto(rs.getBytes("photo_small"));
-                    ue.setFullname(rs.getString("full_name"));
+                    ue.setPassword(rs.getString("password"));
+                    ue.setEnabled((rs.getBoolean("enabled")));
+                    ue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    ue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    ue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     return Optional.of(ue);
                 } else {
                     return Optional.empty();
@@ -86,12 +91,11 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
                     UserEntity ue = new UserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));
-                    ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
-                    ue.setFirstname(rs.getString("firstname"));
-                    ue.setSurname(rs.getString("surname"));
-                    ue.setPhoto(rs.getBytes("photo"));
-                    ue.setPhoto(rs.getBytes("photo_small"));
-                    ue.setFullname(rs.getString("full_name"));
+                    ue.setPassword(rs.getString("password"));
+                    ue.setEnabled((rs.getBoolean("enabled")));
+                    ue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    ue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    ue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     return Optional.of(ue);
                 } else {
                     return Optional.empty();

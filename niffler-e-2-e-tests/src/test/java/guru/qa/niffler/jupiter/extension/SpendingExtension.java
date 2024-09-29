@@ -46,7 +46,6 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                         );
 
                         SpendJson spendJson = spendDbClient.createSpend(spend);
-                        System.out.println(spendJson);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 spendJson

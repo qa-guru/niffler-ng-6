@@ -40,3 +40,6 @@ out/
 
 ### gRPC generated files ###
 /niffler-grpc-common/src/generated/**
+
+### Amplicode
+/amplicode.xml

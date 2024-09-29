@@ -14,30 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal/invitations")
 public class InvitationsController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(InvitationsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InvitationsController.class);
 
-  private final UserService userService;
+    private final UserService userService;
 
-  @Autowired
-  public InvitationsController(UserService userService) {
-    this.userService = userService;
-  }
+    @Autowired
+    public InvitationsController(UserService userService) {
+        this.userService = userService;
+    }
 
-  @PostMapping("/send")
-  public UserJson sendInvitation(@RequestParam String username,
-                                 @RequestParam String targetUsername) {
-    return userService.createFriendshipRequest(username, targetUsername);
-  }
-
-  @PostMapping("/accept")
-  public UserJson acceptInvitation(@RequestParam String username,
+    @PostMapping("/send")
+    public UserJson sendInvitation(@RequestParam String username,
                                    @RequestParam String targetUsername) {
-    return userService.acceptFriendshipRequest(username, targetUsername);
-  }
+        return userService.createFriendshipRequest(username, targetUsername);
+    }
 
-  @PostMapping("/decline")
-  public UserJson declineInvitation(@RequestParam String username,
-                                    @RequestParam String targetUsername) {
-    return userService.declineFriendshipRequest(username, targetUsername);
-  }
+    @PostMapping("/accept")
+    public UserJson acceptInvitation(@RequestParam String username,
+                                     @RequestParam String targetUsername) {
+        return userService.acceptFriendshipRequest(username, targetUsername);
+    }
+
+    @PostMapping("/decline")
+    public UserJson declineInvitation(@RequestParam String username,
+                                      @RequestParam String targetUsername) {
+        return userService.declineFriendshipRequest(username, targetUsername);
+    }
 }

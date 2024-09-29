@@ -8,11 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,26 +17,26 @@ import java.util.List;
 @RequestMapping("/api/friends")
 public class FriendsController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FriendsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FriendsController.class);
 
-  private final UserDataClient userDataClient;
+    private final UserDataClient userDataClient;
 
-  @Autowired
-  public FriendsController(UserDataClient userDataClient) {
-    this.userDataClient = userDataClient;
-  }
+    @Autowired
+    public FriendsController(UserDataClient userDataClient) {
+        this.userDataClient = userDataClient;
+    }
 
-  @GetMapping("/all")
-  public List<UserJson> friends(@AuthenticationPrincipal Jwt principal,
-                                @RequestParam(required = false) String searchQuery) {
-    String username = principal.getClaim("sub");
-    return userDataClient.friends(username, searchQuery);
-  }
+    @GetMapping("/all")
+    public List<UserJson> friends(@AuthenticationPrincipal Jwt principal,
+                                  @RequestParam(required = false) String searchQuery) {
+        String username = principal.getClaim("sub");
+        return userDataClient.friends(username, searchQuery);
+    }
 
-  @DeleteMapping("/remove")
-  public void removeFriend(@AuthenticationPrincipal Jwt principal,
-                           @RequestParam("username") String targetUsername) {
-    String username = principal.getClaim("sub");
-    userDataClient.removeFriend(username, targetUsername);
-  }
+    @DeleteMapping("/remove")
+    public void removeFriend(@AuthenticationPrincipal Jwt principal,
+                             @RequestParam("username") String targetUsername) {
+        String username = principal.getClaim("sub");
+        userDataClient.removeFriend(username, targetUsername);
+    }
 }

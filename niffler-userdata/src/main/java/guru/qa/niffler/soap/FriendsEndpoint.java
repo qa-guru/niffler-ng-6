@@ -18,38 +18,38 @@ import java.util.List;
 @Endpoint
 public class FriendsEndpoint extends BaseEndpoint {
 
-  private final UserService userService;
+    private final UserService userService;
 
-  @Autowired
-  public FriendsEndpoint(UserService userService) {
-    this.userService = userService;
-  }
+    @Autowired
+    public FriendsEndpoint(UserService userService) {
+        this.userService = userService;
+    }
 
-  @PayloadRoot(namespace = NAMESPACE_URI, localPart = "friendsRequest")
-  @ResponsePayload
-  public UsersResponse friendsRq(@RequestPayload FriendsRequest request) {
-    UsersResponse response = new UsersResponse();
-    List<UserJsonBulk> users = userService.friends(request.getUsername(), request.getSearchQuery());
-    return enrichUsersResponse(users, response);
-  }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "friendsRequest")
+    @ResponsePayload
+    public UsersResponse friendsRq(@RequestPayload FriendsRequest request) {
+        UsersResponse response = new UsersResponse();
+        List<UserJsonBulk> users = userService.friends(request.getUsername(), request.getSearchQuery());
+        return enrichUsersResponse(users, response);
+    }
 
-  @PayloadRoot(namespace = NAMESPACE_URI, localPart = "friendsPageRequest")
-  @ResponsePayload
-  public UsersResponse friendsPageRq(@RequestPayload FriendsPageRequest request) {
-    UsersResponse response = new UsersResponse();
-    Page<UserJsonBulk> users = userService.friends(
-        request.getUsername(),
-        new SpringPageable(request.getPageInfo()).pageable(),
-        request.getSearchQuery()
-    );
-    return enrichUsersResponse(users, response);
-  }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "friendsPageRequest")
+    @ResponsePayload
+    public UsersResponse friendsPageRq(@RequestPayload FriendsPageRequest request) {
+        UsersResponse response = new UsersResponse();
+        Page<UserJsonBulk> users = userService.friends(
+                request.getUsername(),
+                new SpringPageable(request.getPageInfo()).pageable(),
+                request.getSearchQuery()
+        );
+        return enrichUsersResponse(users, response);
+    }
 
-  @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeFriendRequest")
-  public void removeFriendRq(@RequestPayload RemoveFriendRequest request) {
-    userService.removeFriend(
-        request.getUsername(),
-        request.getFriendToBeRemoved()
-    );
-  }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeFriendRequest")
+    public void removeFriendRq(@RequestPayload RemoveFriendRequest request) {
+        userService.removeFriend(
+                request.getUsername(),
+                request.getFriendToBeRemoved()
+        );
+    }
 }

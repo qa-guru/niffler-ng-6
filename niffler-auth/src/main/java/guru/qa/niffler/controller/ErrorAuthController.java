@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ErrorAuthController implements ErrorController {
 
-  private static final String ERROR_VIEW_NAME = "error";
+    private static final String ERROR_VIEW_NAME = "error";
 
-  private final String nifflerFrontUri;
+    private final String nifflerFrontUri;
 
-  public ErrorAuthController(@Value("${niffler-front.base-uri}") String nifflerFrontUri) {
-    this.nifflerFrontUri = nifflerFrontUri;
-  }
+    public ErrorAuthController(@Value("${niffler-front.base-uri}") String nifflerFrontUri) {
+        this.nifflerFrontUri = nifflerFrontUri;
+    }
 
-  @GetMapping("/error")
-  public String error(HttpServletRequest request, HttpServletResponse response, Model model) {
-    int status = response.getStatus();
-    Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
-    model.addAttribute("status", status);
-    model.addAttribute("frontUri", nifflerFrontUri + "/main");
-    model.addAttribute("error", throwable != null ? throwable.getMessage() : "Unknown error");
-    return ERROR_VIEW_NAME;
-  }
+    @GetMapping("/error")
+    public String error(HttpServletRequest request, HttpServletResponse response, Model model) {
+        int status = response.getStatus();
+        Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        model.addAttribute("status", status);
+        model.addAttribute("frontUri", nifflerFrontUri + "/main");
+        model.addAttribute("error", throwable != null ? throwable.getMessage() : "Unknown error");
+        return ERROR_VIEW_NAME;
+    }
 }

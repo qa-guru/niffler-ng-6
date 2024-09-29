@@ -4,7 +4,10 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,25 +21,17 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public AuthorityEntity create(AuthorityEntity authority) {
+    public void create(AuthorityEntity... authority) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO authority (user_id, authority) " +
-                        "VALUES ( ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
-        )) {
-            ps.setObject(1, authority.getUser().getId());
-            ps.setString(2, authority.getAuthority().name());
-            ps.executeUpdate();
-            final UUID generatedKey;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    generatedKey = rs.getObject("id", UUID.class);
-                } else {
-                    throw new SQLException("Can`t find id in ResultSet");
-                }
+                "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS)) {
+            for (AuthorityEntity a : authority) {
+                ps.setObject(1, a.getUserId());
+                ps.setString(2, a.getAuthority().name());
+                ps.addBatch();
+                ps.clearParameters();
             }
-            authority.setId(generatedKey);
-            return authority;
+            ps.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +48,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 if (rs.next()) {
                     AuthorityEntity ae = new AuthorityEntity();
                     ae.setId(rs.getObject("id", UUID.class));
-                    ae.setUser(rs.getObject("user_id", guru.qa.niffler.data.entity.auth.UserEntity.class));
+                    ae.setUserId(rs.getObject("user_id", UUID.class));
                     ae.setAuthority(rs.getObject("authority", Authority.class));
                     return Optional.of(ae);
                 } else {
@@ -76,7 +71,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 while (rs.next()) {
                     AuthorityEntity ae = new AuthorityEntity();
                     ae.setId(rs.getObject("id", UUID.class));
-                    ae.setUser(rs.getObject("user_id", guru.qa.niffler.data.entity.auth.UserEntity.class));
+                    ae.setUserId(rs.getObject("user_id", UUID.class));
                     ae.setAuthority(rs.getObject("authority", Authority.class));
                     authorities.add(ae);
                 }

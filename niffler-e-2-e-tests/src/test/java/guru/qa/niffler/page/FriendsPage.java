@@ -7,9 +7,6 @@ import static com.codeborne.selenide.CollectionCondition.textsInAnyOrder;
 import static com.codeborne.selenide.Selenide.$;
 
 public class FriendsPage {
-
-  private final SelenideElement peopleTab = $("a[href='/people/friends']");
-  private final SelenideElement allTab = $("a[href='/people/all']");
   private final SelenideElement requestsTable = $("#requests");
   private final SelenideElement friendsTable = $("#friends");
 

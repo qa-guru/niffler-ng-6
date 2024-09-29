@@ -24,12 +24,12 @@ enum LocalConfig implements Config {
   }
 
   @Override
-  public String userdataUrl() {
+  public String userDataUrl() {
     return "http://127.0.0.1:8089/";
   }
 
   @Override
-  public String userdataJdbcUrl() {
+  public String userDataJdbcUrl() {
     return "jdbc:postgresql://127.0.0.1:5432/niffler-userdata";
   }
 

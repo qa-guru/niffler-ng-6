@@ -11,9 +11,10 @@ import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
 @WebTest
-public class SpendingWebTest {
+public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
+  private final MainPage mainPage = new MainPage();
 
   @User(
       username = "duck",
@@ -28,12 +29,12 @@ public class SpendingWebTest {
     final String newDescription = "Обучение Niffler Next Generation";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .successLogin("duck", "12345")
-        .editSpending(spend.description())
-        .setNewSpendingDescription(newDescription)
-        .save();
+            .successLogin("duck", "12345")
+            .editSpending(spend.description())
+            .setNewSpendingDescription(newDescription)
+            .save();
 
-    new MainPage().checkThatTableContainsSpending(newDescription);
+    mainPage.checkThatTableContainsSpending(newDescription);
   }
 }
 

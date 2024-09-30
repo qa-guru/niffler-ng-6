@@ -21,7 +21,7 @@ allprojects {
 
 subprojects {
     ext {
-        dockerHubName = "qaguru"
+        dockerHubName = "arrnel"
 
         lombokVersion = '1.18.34'
         springKafkaVersion = '3.2.2'

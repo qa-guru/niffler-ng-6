@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Group": "Servers",
+      "Name": "niffler-local",
+      "Host": "niffler-all-db",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "postgres",
+      "Password": "secret",
+      "SSLMode": "prefer",
+      "Favorite": true
+    }
+  }
+}

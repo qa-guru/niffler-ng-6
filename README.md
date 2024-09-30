@@ -230,6 +230,14 @@ WSDL сервиса niffler-userdata доступен по адресу: http://
 
 #### 3. Выполнить docker login с созданным access_token (в инструкции это описано)
 
+Также нужно выполнить:
+```posh
+docker login registry.hub.docker.com
+```
+```posh
+docker login registry-1.docker.io
+```
+
 #### 4. Прописать в etc/hosts элиас для Docker-имени
 
 - frontend:  127.0.0.1 frontend.niffler.dc,

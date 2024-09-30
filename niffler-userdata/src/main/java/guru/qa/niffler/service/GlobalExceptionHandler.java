@@ -17,44 +17,44 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  @Value("${spring.application.name}")
-  private String appName;
+    @Value("${spring.application.name}")
+    private String appName;
 
-  @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<ErrorJson> handleNotFoundException(@Nonnull RuntimeException ex,
-                                                           @Nonnull HttpServletRequest request) {
-    LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
-    return withStatus("Bad request", HttpStatus.NOT_FOUND, ex.getMessage(), request);
-  }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorJson> handleNotFoundException(@Nonnull RuntimeException ex,
+                                                             @Nonnull HttpServletRequest request) {
+        LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
+        return withStatus("Bad request", HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
 
-  @ExceptionHandler(SameUsernameException.class)
-  public ResponseEntity<ErrorJson> handleSameUsernameException(@Nonnull RuntimeException ex,
-                                                               @Nonnull HttpServletRequest request) {
-    LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
-    return withStatus("Bad request", HttpStatus.BAD_REQUEST, ex.getMessage(), request);
-  }
+    @ExceptionHandler(SameUsernameException.class)
+    public ResponseEntity<ErrorJson> handleSameUsernameException(@Nonnull RuntimeException ex,
+                                                                 @Nonnull HttpServletRequest request) {
+        LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
+        return withStatus("Bad request", HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorJson> handleException(@Nonnull Exception ex,
-                                                   @Nonnull HttpServletRequest request) {
-    LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
-    return withStatus("Internal error", HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorJson> handleException(@Nonnull Exception ex,
+                                                     @Nonnull HttpServletRequest request) {
+        LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
+        return withStatus("Internal error", HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+    }
 
-  private @Nonnull ResponseEntity<ErrorJson> withStatus(@Nonnull String type,
-                                                        @Nonnull HttpStatus status,
-                                                        @Nonnull String message,
-                                                        @Nonnull HttpServletRequest request) {
-    return ResponseEntity
-        .status(status)
-        .body(new ErrorJson(
-            appName + ": " + type,
-            status.getReasonPhrase(),
-            status.value(),
-            message,
-            request.getRequestURI()
-        ));
-  }
+    private @Nonnull ResponseEntity<ErrorJson> withStatus(@Nonnull String type,
+                                                          @Nonnull HttpStatus status,
+                                                          @Nonnull String message,
+                                                          @Nonnull HttpServletRequest request) {
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorJson(
+                        appName + ": " + type,
+                        status.getReasonPhrase(),
+                        status.value(),
+                        message,
+                        request.getRequestURI()
+                ));
+    }
 }

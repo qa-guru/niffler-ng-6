@@ -8,17 +8,17 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class SpendApiClient {
 
-  private final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(Config.getInstance().spendUrl())
-      .addConverterFactory(JacksonConverterFactory.create())
-      .build();
+    private final Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(Config.getInstance().spendUrl())
+            .addConverterFactory(JacksonConverterFactory.create())
+            .build();
 
-  private final SpendApi spendApi = retrofit.create(SpendApi.class);
+    private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
-  @SneakyThrows
-  public SpendJson createSpend(SpendJson spend) {
-    return spendApi.addSpend(spend)
-        .execute()
-        .body();
-  }
+    @SneakyThrows
+    public SpendJson createSpend(SpendJson spend) {
+        return spendApi.addSpend(spend)
+                .execute()
+                .body();
+    }
 }

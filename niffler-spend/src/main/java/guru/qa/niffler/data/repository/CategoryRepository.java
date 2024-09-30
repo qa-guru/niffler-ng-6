@@ -11,15 +11,15 @@ import java.util.UUID;
 
 public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> {
 
-  @Nonnull
-  Optional<CategoryEntity> findByUsernameAndName(@Nonnull String username, @Nonnull String category);
+    @Nonnull
+    Optional<CategoryEntity> findByUsernameAndName(@Nonnull String username, @Nonnull String category);
 
-  @Nonnull
-  Optional<CategoryEntity> findByUsernameAndId(@Nonnull String username, @Nonnull UUID id);
+    @Nonnull
+    Optional<CategoryEntity> findByUsernameAndId(@Nonnull String username, @Nonnull UUID id);
 
-  @Nonnull
-  @Query("SELECT c FROM CategoryEntity c WHERE c.username = :username ORDER BY c.archived ASC, c.name ASC")
-  List<CategoryEntity> findAllByUsernameOrderByName(@Nonnull String username);
+    @Nonnull
+    @Query("SELECT c FROM CategoryEntity c WHERE c.username = :username ORDER BY c.archived ASC, c.name ASC")
+    List<CategoryEntity> findAllByUsernameOrderByName(@Nonnull String username);
 
-  long countByUsernameAndArchived(@Nonnull String username, boolean archived);
+    long countByUsernameAndArchived(@Nonnull String username, boolean archived);
 }

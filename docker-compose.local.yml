@@ -1,0 +1,95 @@
+name: niffler-ng-local
+
+services:
+
+  niffler-all-db:
+    container_name: niffler-all-db
+    image: postgres:15.1
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - CREATE_DATABASES=niffler-auth,niffler-currency,niffler-spend,niffler-userdata
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=secret
+    command: postgres -c max_prepared_transactions=100
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - niffler-network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.11.0
+    restart: "no"
+    ports:
+      - "5433:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./postgres/servers.json:/pgadmin4/servers.json # auto-connect to postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 12345
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:80/misc/ping || exit -1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    depends_on:
+      niffler-all-db:
+        condition: service_healthy
+    networks:
+      - niffler-network
+
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.3.2
+    restart: unless-stopped
+    expose:
+      - 2181
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    networks:
+      - niffler-network
+
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.3.2
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    depends_on:
+      zookeeper:
+        condition: service_started
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+    healthcheck:
+      test: kafka-topics --bootstrap-server localhost:9092 --list
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    networks:
+      - niffler-network
+
+volumes:
+  pgdata:
+  pgadmin_data:
+
+networks:
+  niffler-network:
+    driver: bridge

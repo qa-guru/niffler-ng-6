@@ -6,11 +6,11 @@ import guru.qa.niffler.data.projection.SumByCategoryInfo;
 import java.util.List;
 
 public record StatisticV2Json(
-    @JsonProperty("total")
-    Double total,
-    @JsonProperty("currency")
-    CurrencyValues currency,
-    @JsonProperty("statByCategories")
-    List<SumByCategoryInfo> statByCategories) {
+        @JsonProperty("total")
+        Double total,
+        @JsonProperty("currency")
+        CurrencyValues currency,
+        @JsonProperty("statByCategories")
+        List<SumByCategoryInfo> statByCategories) {
 
 }

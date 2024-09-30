@@ -3,15 +3,13 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
-
+import java.util.UUID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
-import java.util.UUID;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private final Connection connection;
@@ -28,7 +26,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 Statement.RETURN_GENERATED_KEYS
         )) {
             for (AuthorityEntity authorityEntity : authority) {
-                preparedStatement.setObject(1, authorityEntity.getUser().getId());
+                preparedStatement.setObject(1, authorityEntity.getUserId());
                 preparedStatement.setString(2, authorityEntity.getAuthority().name());
 
                 preparedStatement.addBatch();
@@ -54,7 +52,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                     AuthorityEntity authority = new AuthorityEntity();
                     authority.setId(id);
                     authority.setAuthority(resultSet.getObject("authority", Authority.class));
-                    authority.setUser(resultSet.getObject("user_id", UserEntity.class));
+                    authority.setUserId(resultSet.getObject("user_id", UUID.class));
                     return Optional.of(authority);
                 } else {
                     return Optional.empty();

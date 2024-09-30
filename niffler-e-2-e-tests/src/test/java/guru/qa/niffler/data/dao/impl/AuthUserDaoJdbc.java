@@ -38,10 +38,10 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
             ps.executeUpdate();
 
-            final UUID generatedKey;
+            final java.util.UUID generatedKey;
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    generatedKey = rs.getObject("id", UUID.class);
+                    generatedKey = rs.getObject("id", java.util.UUID.class);
                 } else {
                     throw new SQLException("Can't find id from ResultSet");
                 }
@@ -98,11 +98,11 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void delete(UUID userId) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM  \"user\" WHERE id = ?"
         )) {
-            ps.setObject(1, user.getId());
+            ps.setObject(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

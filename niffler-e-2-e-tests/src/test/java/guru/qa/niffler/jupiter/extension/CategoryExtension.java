@@ -42,6 +42,7 @@ public class CategoryExtension implements
                         category.setArchived(categoryAnno.archived());
 
                         CategoryJson categoryJson = categoryDbClient.createCategory(category);
+                        System.out.println(categoryJson);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 categoryJson

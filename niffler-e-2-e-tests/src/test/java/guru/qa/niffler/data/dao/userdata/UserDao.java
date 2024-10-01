@@ -1,13 +1,13 @@
-package guru.qa.niffler.data.dao;
+package guru.qa.niffler.data.dao.userdata;
 
-import guru.qa.niffler.data.entity.spend.UserEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserDao {
 
-    UserEntity createUser(UserEntity user);
+    UserEntity create(UserEntity user);
 
     Optional<UserEntity> findById(UUID id);
 

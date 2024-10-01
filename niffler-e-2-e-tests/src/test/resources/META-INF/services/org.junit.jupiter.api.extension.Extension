@@ -1,0 +1,2 @@
+guru.qa.niffler.jupiter.extensions.DatabasesExtension
+guru.qa.niffler.jupiter.extensions.TestMethodContextExtension

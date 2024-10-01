@@ -21,8 +21,8 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                         "VALUES (?, ?);",
                 Statement.RETURN_GENERATED_KEYS
         )) {
-            ps.setObject(1, authAuthority.getUser_id());
-            ps.setString(2, authAuthority.getAuthority());
+            ps.setObject(1, authAuthority.getUserId());
+            ps.setString(2, authAuthority.getAuthority().toString());
 
             ps.executeUpdate();
             final UUID generationKey;

@@ -1,5 +1,5 @@
 package guru.qa.niffler.data.entity;
 
-public enum Authory {
+public enum Authority {
     read, write;
 }

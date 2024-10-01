@@ -68,11 +68,11 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> findByUsernameAndCategoryName(String username, String categoryName) {
+    public Optional<CategoryEntity> findByUsernameAndCategoryName(String userName, String categoryName) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM category WHERE username = ? AND name = ?"
         )) {
-            ps.setObject(1, username);
+            ps.setObject(1, userName);
             ps.setObject(2, categoryName);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -93,12 +93,34 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public List<CategoryEntity> findAllByUsername(String userName) {
         List<CategoryEntity> categories = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM category WHERE username = ?"
         )) {
-            ps.setObject(1, username);
+            ps.setObject(1, userName);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CategoryEntity ce = new CategoryEntity();
+                    ce.setId(rs.getObject("id", UUID.class));
+                    ce.setName(rs.getString("name"));
+                    ce.setUsername(rs.getString("username"));
+                    ce.setArchived(rs.getBoolean("archived"));
+                    categories.add(ce);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return categories;
+    }
+
+    @Override
+    public List<CategoryEntity> findAll() {
+        List<CategoryEntity> categories = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM category"
+        )) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     CategoryEntity ce = new CategoryEntity();

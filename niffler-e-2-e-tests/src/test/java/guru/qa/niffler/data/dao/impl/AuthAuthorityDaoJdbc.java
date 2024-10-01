@@ -4,7 +4,10 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +68,27 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 "SELECT * FROM \"authority\" WHERE user_id = ?"
         )) {
             ps.setObject(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    AuthorityEntity ae = new AuthorityEntity();
+                    ae.setId(rs.getObject("id", UUID.class));
+                    ae.setUserId(rs.getObject("user_id", UUID.class));
+                    ae.setAuthority(rs.getObject("authority", Authority.class));
+                    authorities.add(ae);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return authorities;
+    }
+
+    @Override
+    public List<AuthorityEntity> findAll() {
+        List<AuthorityEntity> authorities = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"authority\""
+        )) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     AuthorityEntity ae = new AuthorityEntity();

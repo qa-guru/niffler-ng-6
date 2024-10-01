@@ -76,16 +76,15 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(String username) {
+    public List<SpendEntity> findAllByUsername(String userName) {
         List<SpendEntity> spends = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM spend WHERE username = ?"
         )) {
-            ps.setObject(1, username);
+            ps.setObject(1, userName);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     SpendEntity se = new SpendEntity();
-
                     se.setId(rs.getObject("id", UUID.class));
                     se.setUsername(rs.getString("username"));
                     se.setSpendDate(rs.getDate("spend_date"));
@@ -93,7 +92,31 @@ public class SpendDaoJdbc implements SpendDao {
                     se.setAmount(rs.getDouble("amount"));
                     se.setDescription(rs.getString("description"));
                     se.setCategory(rs.getObject("category_id", CategoryEntity.class));
+                    spends.add(se);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return spends;
+    }
 
+    @Override
+    public List<SpendEntity> findAll() {
+        List<SpendEntity> spends = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM spend"
+        )) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SpendEntity se = new SpendEntity();
+                    se.setId(rs.getObject("id", UUID.class));
+                    se.setUsername(rs.getString("username"));
+                    se.setSpendDate(rs.getDate("spend_date"));
+                    se.setCurrency(rs.getObject("currency", CurrencyValues.class));
+                    se.setAmount(rs.getDouble("amount"));
+                    se.setDescription(rs.getString("description"));
+                    se.setCategory(rs.getObject("category_id", CategoryEntity.class));
                     spends.add(se);
                 }
             }

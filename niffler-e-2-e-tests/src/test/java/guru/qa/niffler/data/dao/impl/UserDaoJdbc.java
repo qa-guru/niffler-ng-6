@@ -26,7 +26,7 @@ public class UserDaoJdbc implements UserDao {
     public UserEntity createUser(UserEntity user) {
 
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO spend (username, currency, firstname, surname, photo, photo_small, full_name)" +
+                    "INSERT INTO public.user(username, currency, firstname, surname, photo, photo_small, full_name)" +
                             "VALUES (?, ?, ? ,?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
@@ -36,7 +36,7 @@ public class UserDaoJdbc implements UserDao {
                 ps.setString(4, user.getSurname());
                 ps.setBytes(5, user.getPhoto());
                 ps.setBytes(6, user.getPhotoSmall());
-                ps.setString(7, user.getUsername());
+                ps.setString(7, user.getFullname());
                 ps.executeUpdate();
                 final UUID generationKey;
                 try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -58,7 +58,7 @@ public class UserDaoJdbc implements UserDao {
     public Optional<UserEntity> findById(UUID id) {
 
             try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM user WHERE id = ?"
+                    "SELECT * FROM public.user WHERE id = ?"
             )) {
                 ps.setObject(1, id);
                 ps.execute();

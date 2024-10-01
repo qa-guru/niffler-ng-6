@@ -18,9 +18,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public AuthUserEntity create(AuthUserEntity userAuth) {
         try (PreparedStatement ps = connection.prepareStatement(
-               "INSERT INTO public.user( username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)" +
-                       " VALUES (?, ?, ?, ?, ?, ?);",
-                 Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO public.user( username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)" +
+                        " VALUES (?, ?, ?, ?, ?, ?);",
+                Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, userAuth.getUsername());
             ps.setString(2, userAuth.getPassword());
@@ -32,8 +32,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             ps.executeUpdate();
             final UUID generationKey;
 
-            try(ResultSet rs = ps.getGeneratedKeys()) {
-                if(rs.next()) {
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
                     generationKey = rs.getObject("id", UUID.class);
                 } else {
                     throw new SQLException("Can't find id in ResultSet");
@@ -41,7 +41,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             }
             userAuth.setId(generationKey);
             return userAuth;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

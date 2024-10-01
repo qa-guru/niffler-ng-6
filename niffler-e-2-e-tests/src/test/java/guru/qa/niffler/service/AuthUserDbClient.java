@@ -24,7 +24,7 @@ public class AuthUserDbClient {
 
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    public UserJson createUser1(UserJson user) {
+    public UserJson createUser(UserJson user) {
         return UserJson.fromEntity(
                 xaTransaction(
                         new XaFunction<>(
@@ -45,13 +45,12 @@ public class AuthUserDbClient {
                                                         return ae;
                                                     }
                                             ).toArray(AuthAuthorityEntity[]::new);
-
-                                    for(AuthAuthorityEntity authAuthorityEntity : aes){
+                                    for (AuthAuthorityEntity authAuthorityEntity : aes) {
                                         new AuthAuthorityDaoJdbc(con).create(authAuthorityEntity);
                                     }
                                     return null;
                                 },
-                                CFG.authJdbcUrl()
+                                CFG.authJdbcUrl(), 1
                         ),
                         new XaFunction<>(
                                 con -> {
@@ -62,7 +61,7 @@ public class AuthUserDbClient {
                                     new UserDaoJdbc(con).createUser(ue);
                                     return ue;
                                 },
-                                CFG.userdataJdbcUrl()
+                                CFG.userdataJdbcUrl(), 1
                         )
                 )
         );

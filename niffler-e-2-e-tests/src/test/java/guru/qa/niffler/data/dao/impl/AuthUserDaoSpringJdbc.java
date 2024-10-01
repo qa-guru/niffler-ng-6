@@ -2,7 +2,6 @@ package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDaoSpringJdbc implements AuthUserDao {
@@ -46,25 +45,11 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         return user;
     }
 
+
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public List<AuthUserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM \"user\" WHERE id = ?",
-                        AuthUserEntityRowMapper.instance,
-                        id
-                )
-        );
+        return jdbcTemplate.query("SELECT * FROM \"user\"", AuthUserEntityRowMapper.instance);
     }
 
-    @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void deleteUser(UserEntity user) {
-
-    }
 }

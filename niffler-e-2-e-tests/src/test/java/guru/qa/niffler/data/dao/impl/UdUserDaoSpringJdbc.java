@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 public class UdUserDaoSpringJdbc implements UdUserDao {
@@ -47,14 +47,9 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
+    public List<UserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM \"user\" WHERE id = ?",
-                        UdUserEntityRowMapper.instance,
-                        id
-                )
-        );
+        return jdbcTemplate.query("SELECT * FROM \"user\"", UdUserEntityRowMapper.instance);
     }
+
 }

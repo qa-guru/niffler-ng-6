@@ -2,13 +2,13 @@ package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
@@ -48,69 +48,30 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
-            ps.setObject(1, id);
-
-            ps.execute();
-
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    AuthUserEntity result = new AuthUserEntity();
-                    result.setId(rs.getObject("id", UUID.class));
-                    result.setUsername(rs.getString("username"));
-                    result.setPassword(rs.getString("password"));
-                    result.setEnabled(rs.getBoolean("enabled"));
-                    result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-                    result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-                    result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-                    return Optional.of(result);
-                } else {
-                    return Optional.empty();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public List<AuthUserEntity> findAll() {
+        List<AuthUserEntity> users = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user WHERE username = ?"
+                "SELECT * FROM \"user\""
         )) {
-            ps.setObject(1, username);
-            ps.execute();
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    UserEntity ue = new UserEntity();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    AuthUserEntity ue = new AuthUserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));
                     ue.setPassword(rs.getString("password"));
-                    ue.setEnabled((rs.getBoolean("enabled")));
+                    ue.setEnabled(rs.getBoolean("enabled"));
                     ue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
                     ue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
                     ue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-                    return Optional.of(ue);
-                } else {
-                    return Optional.empty();
+                    users.add(ue);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return users;
     }
 
-    @Override
-    public void deleteUser(UserEntity user) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM user WHERE id = ?"
-        )) {
-            ps.setObject(1, user.getId());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }
 

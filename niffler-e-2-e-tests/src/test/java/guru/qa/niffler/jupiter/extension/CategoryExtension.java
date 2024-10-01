@@ -1,7 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -37,7 +36,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                         CategoryJson createdCategory = spendDbClient.createCategory(category);
 
 
-
                         // Сохраняем категорию в контексте
                         context.getStore(NAMESPACE).put(context.getUniqueId(), createdCategory);
 
@@ -49,7 +47,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null ) {
+        if (category != null) {
             spendDbClient.deleteCategory(category);
         }
     }

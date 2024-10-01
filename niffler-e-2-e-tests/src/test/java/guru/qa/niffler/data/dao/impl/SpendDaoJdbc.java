@@ -6,22 +6,22 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
 public class SpendDaoJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
-    private final Connection connection;
-
-    public SpendDaoJdbc(Connection connection) {
-        this.connection = connection;
-    }
 
     @Override
     public SpendEntity create(SpendEntity spend) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"spend\" (username, spend_date, currency, amount, description, category_id) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -51,7 +51,7 @@ public class SpendDaoJdbc implements SpendDao {
     @Override
     public List<SpendEntity> findAll() {
         List<SpendEntity> spends = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"spend\"");
+        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement("SELECT * FROM \"spend\"");
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 SpendEntity spend = new SpendEntity();
@@ -76,7 +76,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public void deleteSpend(SpendEntity spend) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM spend WHERE id = ?"
         )) {
 

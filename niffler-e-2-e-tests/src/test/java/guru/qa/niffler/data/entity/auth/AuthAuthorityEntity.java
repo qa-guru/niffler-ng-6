@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.entity.auth;
 
+import guru.qa.niffler.data.entity.Authory;
 import guru.qa.niffler.model.AuthAuthorityJson;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.util.UUID;
 public class AuthAuthorityEntity implements Serializable {
     private UUID id;
     private UUID userId;
-    private String authority;
+    private Authory authority;
 
     public static AuthAuthorityEntity fromJson(AuthAuthorityJson json) {
         AuthAuthorityEntity aae = new AuthAuthorityEntity();

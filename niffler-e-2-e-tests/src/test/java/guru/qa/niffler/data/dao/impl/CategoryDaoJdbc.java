@@ -67,11 +67,9 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public void deleteCategory(CategoryEntity category) {
-
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM category WHERE id = ?"
         )) {
-
             ps.setObject(1, category.getId());
             ps.executeUpdate();
 

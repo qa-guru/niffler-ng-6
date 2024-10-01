@@ -40,7 +40,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     public List<AuthorityEntity> findAll() {
         List<AuthorityEntity> authorities = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM \"authority\" WHERE user_id = ?"
+                "SELECT * FROM \"authority\""
         )) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

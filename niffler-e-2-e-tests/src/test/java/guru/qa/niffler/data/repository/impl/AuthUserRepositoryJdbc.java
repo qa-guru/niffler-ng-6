@@ -82,16 +82,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           ae.setId(rs.getObject("a.id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
-
-
-          AuthUserEntity result = new AuthUserEntity();
-          result.setId(rs.getObject("id", UUID.class));
-          result.setUsername(rs.getString("username"));
-          result.setPassword(rs.getString("password"));
-          result.setEnabled(rs.getBoolean("enabled"));
-          result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-          result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-          result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
         }
         if (user == null) {
           return Optional.empty();

@@ -93,7 +93,7 @@ public class SpendDaoJdbc implements SpendDao {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         SpendEntity se = new SpendEntity();
-                        CategoryEntity ce = ce = new CategoryDaoJdbc()
+                        CategoryEntity ce = new CategoryDaoJdbc()
                                 .findCategoryById(rs.getObject("category_id", UUID.class))
                                 .orElse(null);
                         se.setId(rs.getObject("id", UUID.class));

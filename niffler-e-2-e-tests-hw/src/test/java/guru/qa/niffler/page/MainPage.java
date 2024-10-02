@@ -7,6 +7,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
+
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
 
     public EditSpendingPage editSpending(String spendingDescription) {

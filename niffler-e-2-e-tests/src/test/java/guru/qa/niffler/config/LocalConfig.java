@@ -39,7 +39,7 @@ enum LocalConfig implements Config {
     }
 
     @Override
-    public String spendJdbcdUrl() {
+    public String spendJdbcUrl() {
         return "jdbc:postgresql://127.0.0.1:5432/niffler-spend";
     }
 

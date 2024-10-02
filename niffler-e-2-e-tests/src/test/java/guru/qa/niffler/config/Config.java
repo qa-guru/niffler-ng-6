@@ -20,7 +20,7 @@ public interface Config {
 
     String spendUrl();
 
-    String spendJdbcdUrl();
+    String spendJdbcUrl();
 
     String currencyJdbcUrl();
 

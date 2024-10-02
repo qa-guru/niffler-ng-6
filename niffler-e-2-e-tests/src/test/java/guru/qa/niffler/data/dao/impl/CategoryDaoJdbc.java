@@ -49,16 +49,15 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public CategoryEntity update(CategoryEntity category) {
+    public CategoryEntity updateArchived(CategoryEntity category) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "UPDATE public.category SET archived=? " +
-                            "WHERE name = ?"
+                            "WHERE id = ?"
             )) {
                 ps.setBoolean(1, category.isArchived());
-                ps.setString(2, category.getName());
+                ps.setObject(2, category.getId());
                 ps.executeUpdate();
                 return category;
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -148,12 +147,10 @@ public class CategoryDaoJdbc implements CategoryDao {
                     "DELETE FROM category WHERE id = ?"
             )) {
                 ps.setObject(1, category.getId());
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                    } else {
-                        throw new SQLException("Can't find deleted category");
-                    }
+
+                boolean affectedRows =  ps.execute();
+                if (!affectedRows){
+                    throw new SQLException("Can't find deleted category");
                 }
 
         } catch (SQLException e) {

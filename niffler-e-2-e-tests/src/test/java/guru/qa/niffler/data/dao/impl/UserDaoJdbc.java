@@ -68,7 +68,7 @@ public class UserDaoJdbc implements UserDao {
                         UserEntity ue = new UserEntity();
                         ue.setId(rs.getObject("id", UUID.class));
                         ue.setUsername(rs.getString("username"));
-                        ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
+                        ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
                         ue.setFirstname(rs.getString("firstname"));
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
@@ -88,7 +88,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Optional<UserEntity> findByUsername(String username) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM user WHERE username = ?"
+                    "SELECT * FROM public.user WHERE username = ?"
             )) {
                 ps.setObject(1, username);
                 ps.execute();
@@ -98,7 +98,7 @@ public class UserDaoJdbc implements UserDao {
                         UserEntity ue = new UserEntity();
                         ue.setId(rs.getObject("id", UUID.class));
                         ue.setUsername(rs.getString("username"));
-                        ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
+                        ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
                         ue.setFirstname(rs.getString("firstname"));
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
@@ -118,7 +118,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void delete(UserEntity user) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM user WHERE id = ?"
+                    "DELETE FROM public.user WHERE id = ?"
             )) {
                 ps.setObject(1, user.getId());
                 ps.execute();

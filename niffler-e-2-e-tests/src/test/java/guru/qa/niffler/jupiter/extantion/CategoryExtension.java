@@ -52,13 +52,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         CategoryJson category =
                 context.getStore(NAMESPACE).get(context.getUniqueId(),
                         CategoryJson.class);
-        if (!category.archived()) {
-            spendDbClient.updateCategory(new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            ));
+        if (!category.archived() && category != null) {
+            spendDbClient.deleteCategory(category);
         }
     }
 

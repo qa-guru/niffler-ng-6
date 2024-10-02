@@ -201,7 +201,7 @@ export const SpendingForm: FC<SpendingFormInterface> = ({id, isEdit}) => {
                 </Grid>
                 <Grid item xs={12}>
                     <InputLabel
-                        htmlFor={"date"}
+                        htmlFor={"category"}
                         sx={{
                             color: theme.palette.black.main,
                         }}>

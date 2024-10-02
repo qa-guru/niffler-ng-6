@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 
 import java.sql.*;
 import java.sql.PreparedStatement;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
@@ -44,5 +45,25 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public AuthUserEntity update(AuthUserEntity authUser) {
+        return null;
+    }
+
+    @Override
+    public Optional<AuthUserEntity> findById(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<AuthUserEntity> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void delete(AuthUserEntity authUser) {
+
     }
 }

@@ -4,6 +4,7 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 
 import java.sql.*;
+import java.util.List;
 import java.util.UUID;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
@@ -38,5 +39,16 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<AuthAuthorityEntity> findByUserId(UUID userId) {
+        return List.of();
+    }
+
+    @Override
+    public void delete(AuthAuthorityEntity authAuthority) {
+        try (Prepe)
+
     }
 }

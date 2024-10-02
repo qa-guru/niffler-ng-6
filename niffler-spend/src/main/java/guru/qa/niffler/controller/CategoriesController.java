@@ -3,6 +3,7 @@ package guru.qa.niffler.controller;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class CategoriesController {
     }
 
     @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
     public CategoryJson addCategory(@RequestBody CategoryJson category) {
         return categoryService.addCategory(category);
     }

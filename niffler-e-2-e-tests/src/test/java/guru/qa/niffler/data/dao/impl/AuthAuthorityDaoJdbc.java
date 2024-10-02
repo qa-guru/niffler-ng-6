@@ -48,7 +48,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public void delete(AuthAuthorityEntity authAuthority) {
-        try (Prepe)
+        try (Preper)
 
     }
 }

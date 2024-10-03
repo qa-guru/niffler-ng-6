@@ -26,7 +26,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                     Spending spendingAnnotation;
                     if (anno.spendings().length > 0) {
                         spendingAnnotation = anno.spendings()[0];
-                        UUID idCategory = spendDbClient.findCategoryByUsernameAndCategoryName(anno.username(), spendingAnnotation.category());
+                        UUID idCategory = spendDbClient.findCategoryByUsernameAndCategoryName(anno.username(), spendingAnnotation.category()).get().id();
                         SpendJson spend = new SpendJson(
                                 null,
                                 new Date(),

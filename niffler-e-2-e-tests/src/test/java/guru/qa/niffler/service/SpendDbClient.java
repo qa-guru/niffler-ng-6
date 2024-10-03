@@ -40,7 +40,7 @@ public class SpendDbClient {
                 CFG.spendJdbcUrl(), 1);
     }
 
-    public CategoryJson updateCategory(CategoryJson category) {
+    public CategoryJson updateCategoryArchivedStatus(CategoryJson category) {
         return transaction(connection -> {
                     CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
                     return CategoryJson.fromEntity(new CategoryDaoJdbc(connection).updateArchived(categoryEntity));
@@ -48,12 +48,10 @@ public class SpendDbClient {
                 CFG.spendJdbcUrl(), 1);
     }
 
-    public UUID findCategoryByUsernameAndCategoryName(String username, String name) {
+    public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
         return transaction(connection -> {
                     Optional<CategoryEntity> ce = new CategoryDaoJdbc(connection).findCategoryByUsernameAndCategoryName(username, name);
-                    UUID id;
-                    id = Optional.ofNullable(ce).map(rez -> rez.get().getId()).orElseThrow(IllegalArgumentException::new);
-                    return id;
+                    return ce.map(CategoryJson::fromEntity);
                 },
                 CFG.spendJdbcUrl(), 1);
     }

@@ -12,4 +12,8 @@ public enum ErrorValuesEnum {
   PASSWORD_NOT_EQUALS("Passwords should be equal");
 
   final String description;
+
+  public String getFormatDescription(String data) {
+    return String.format(this.description, data);
+  }
 }

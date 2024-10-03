@@ -2,7 +2,7 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.BrowserExtension;
-import guru.qa.niffler.jupiter.Spend;
+import guru.qa.niffler.jupiter.spend.Spend;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
@@ -31,7 +31,7 @@ public class SpendingWebTest extends BaseTest {
   @Test
   @Description("Проверка возможности редактирования трат")
   void categoryDescriptionShouldBeEditedByTableAction(SpendJson spend) {
-    final String newSpendingName = "Обучение Niffler Next Generation";
+    final String newSpendingName = "Обучение Advanced 3.0";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(MAIN_USER, MAIN_PASSWORD)
@@ -59,7 +59,7 @@ public class SpendingWebTest extends BaseTest {
   void registerExistingUser() {
     final String userName = MAIN_USER;
     final String userPassword = "maxPassword" + randomizer.nextInt(5);
-    final String errorText = String.format(USER_ALREADY_EXIST.getDescription(), userName);
+    final String errorText = USER_ALREADY_EXIST.getFormatDescription(userName);
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .goToRegistrationPage()

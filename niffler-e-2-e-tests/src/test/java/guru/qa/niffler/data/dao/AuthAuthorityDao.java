@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AuthAuthorityDao {
-    AuthAuthorityEntity create(AuthAuthorityEntity authAuthority);
+    void create(AuthAuthorityEntity...authAuthority);
 
     List<AuthAuthorityEntity> findByUserId(UUID userId);
 

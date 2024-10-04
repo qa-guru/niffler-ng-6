@@ -64,7 +64,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
         return new SpendMapper().updateFromAnno(spend, anno);
     }
 
-    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(@NonNull String username, @NonNull String annoUsername) {
+    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(String username, String annoUsername) {
 
         if (isNullOrEmpty(username) && isNullOrEmpty(annoUsername)) {
             throw new IllegalArgumentException("Username should contains in @Spending or should add @CreateNewUser on test");

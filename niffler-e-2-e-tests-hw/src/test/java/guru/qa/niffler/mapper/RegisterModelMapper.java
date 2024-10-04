@@ -9,21 +9,19 @@ public class RegisterModelMapper {
 
     public Map<String, String> toRegisterMap(RegisterModel source) {
         return Map.of(
-                "_csrf", source.csrf(),
-                "username", source.username(),
-                "password", source.password(),
-                "passwordSubmit", source.passwordConfirmation()
+                "_csrf", source.getCsrf(),
+                "username", source.getUsername(),
+                "password", source.getPassword(),
+                "passwordSubmit", source.getPasswordConfirmation()
         );
     }
 
     public RegisterModel fromUserModel(UserModel source) {
-        return new RegisterModel(
-                null,
-                source.getUsername(),
-                source.getPassword(),
-                source.getPasswordConfirmation()
-        );
+        return RegisterModel.builder()
+                .username(source.getUsername())
+                .password(source.getPassword())
+                .passwordConfirmation(source.getPasswordConfirmation())
+                .build();
     }
-
 
 }

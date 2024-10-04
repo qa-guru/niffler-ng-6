@@ -13,14 +13,10 @@ import org.openqa.selenium.Keys;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -57,11 +53,11 @@ public abstract class SpendingPage<T> {
 
         log.info("Fill spending data: {}", spend);
 
-        setAmount(spend.amount());
-        selectCurrency(spend.currency());
-        setCategory(spend.category().name());
-        setDate(spend.spendDate());
-        setDescription(spend.description());
+        setAmount(spend.getAmount());
+        selectCurrency(spend.getCurrency());
+        setCategory(spend.getCategory().getName());
+        setDate(spend.getSpendDate());
+        setDescription(spend.getDescription());
 
         return (T) this;
 
@@ -70,7 +66,7 @@ public abstract class SpendingPage<T> {
     // INFO: Amount
     public double getAmount() {
         var amountText = amountInput.getValue();
-        return Double.parseDouble(amountText.contains(".") ? amountText : amountText + ".0");
+        return Double.parseDouble(Objects.requireNonNull(amountText).contains(".") ? amountText : amountText + ".0");
     }
 
     @SuppressWarnings("unchecked")
@@ -104,8 +100,8 @@ public abstract class SpendingPage<T> {
         return (categoryTagsList.isEmpty())
                 ? new ArrayList<>()
                 : categoryTagsList.asFixedIterable().stream()
-                    .map(category -> category.$(".//span[1]").getText())
-                    .toList();
+                        .map(category -> category.$x(".//span[1]").getText())
+                        .toList();
         // @formatter:on
     }
 
@@ -155,11 +151,9 @@ public abstract class SpendingPage<T> {
 
     @SuppressWarnings("unchecked")
     public T dateInputShouldHaveDate(Date date) {
-        log.info("Pick date from calendar: [{}]", date);
         calendarService.calendarInputShouldHaveDate(date);
         return (T) this;
     }
-
 
     // INFO: description
 
@@ -187,33 +181,21 @@ public abstract class SpendingPage<T> {
     }
 
     protected void assertSpendingPageElementsAreVisible() {
-        assertAll("Assert 'Edit Spending' page and elements", () -> {
-            assertTrue(title.is(visible, Duration.ofSeconds(4)));
-            assertAll("Assert amount is visible", () -> {
-                assertTrue(amountLabel.isDisplayed());
-                assertTrue(amountInput.isDisplayed());
-            });
-            assertAll("Currency is visible", () -> {
-                assertTrue(currencyLabel.isDisplayed());
-                assertTrue(currencySelector.isDisplayed());
-                assertTrue(currencyInput.isDisplayed());
-            });
-            assertAll("Category is visible", () -> {
-                assertTrue(categoryLabel.isDisplayed());
-                assertTrue(categoryInput.isDisplayed());
-            });
-            assertAll("Date is visible", () -> {
-                assertTrue(dateLabel.isDisplayed());
-                assertTrue(dateInput.isDisplayed());
-                assertTrue(dateCalendarButton.isDisplayed());
-            });
-            assertAll("Description is visible", () -> {
-                assertTrue(descriptionInput.isDisplayed());
-                assertTrue(descriptionLabel.isDisplayed());
-            });
-            assertTrue(cancelButton.isDisplayed());
-            assertTrue(saveButton.isDisplayed());
-        });
+        title.shouldBe(visible);
+        amountLabel.shouldBe(visible);
+        amountInput.shouldBe(visible);
+        currencyLabel.shouldBe(visible);
+        currencySelector.shouldBe(visible);
+        currencyInput.shouldBe(visible);
+        categoryLabel.shouldBe(visible);
+        categoryInput.shouldBe(visible);
+        dateLabel.shouldBe(visible);
+        dateInput.shouldBe(visible);
+        dateCalendarButton.shouldBe(visible);
+        descriptionInput.shouldBe(visible);
+        descriptionLabel.shouldBe(visible);
+        cancelButton.shouldBe(visible);
+        saveButton.shouldBe(visible);
     }
 
     public abstract T assertPageElementsAreVisible();
@@ -242,12 +224,12 @@ public abstract class SpendingPage<T> {
 
     @SuppressWarnings("unchecked")
     public T assertSpendingData(SpendJson spend) {
-        log.info("Assert spend: [{}]", spend.username());
-        spendingShouldHaveAmount(spend.amount());
-        spendingShouldHaveCurrency(spend.currency());
-        spendingShouldHaveCategory(spend.category().name());
-        spendingShouldHaveDate(spend.spendDate());
-        spendingShouldHaveDescription(spend.description());
+        log.info("Assert spend: [{}]", spend.getUsername());
+        spendingShouldHaveAmount(spend.getAmount());
+        spendingShouldHaveCurrency(spend.getCurrency());
+        spendingShouldHaveCategory(spend.getCategory().getName());
+        spendingShouldHaveDate(spend.getSpendDate());
+        spendingShouldHaveDescription(spend.getDescription());
         return (T) this;
     }
 }

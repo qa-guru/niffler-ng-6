@@ -8,7 +8,6 @@ import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.NonNull;
@@ -48,11 +47,10 @@ class SpendingWebTests {
 
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .openEditSpendingPage(spend.description())
+                .openEditSpendingPage(spend.getDescription())
                 .editSpending(newSpend)
-                .openEditSpendingPage(newSpend.description())
+                .openEditSpendingPage(newSpend.getDescription())
                 .assertSpendingData(newSpend);
-
     }
 
     @Test
@@ -62,7 +60,7 @@ class SpendingWebTests {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)
-                .openEditSpendingPage(spend.description(), 0)
+                .openEditSpendingPage(spend.getDescription(), 0)
                 .assertSpendingData(spend);
     }
 

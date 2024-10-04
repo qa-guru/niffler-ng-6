@@ -9,18 +9,21 @@ public class CategoryMapper {
 
     public CategoryJson updateFromAnno(CategoryJson category, Category anno) {
 
-        return new CategoryJson(
-                category.id(),
-                !anno.name().isEmpty()
-                        ? anno.name()
-                        : category.name(),
-                anno.username().isEmpty()
-                        ? category.username()
-                        : anno.username(),
-                anno.generateIsArchived()
-                        ? new Random().nextBoolean()
-                        : anno.isArchived()
-        );
+        return CategoryJson.builder()
+                .id(category.getId())
+                .name(
+                        anno.name().isEmpty()
+                                ? category.getName()
+                                : anno.name())
+                .username(
+                        anno.username().isEmpty()
+                                ? category.getUsername()
+                                : anno.username())
+                .archived(
+                        anno.generateIsArchived()
+                                ? new Random().nextBoolean()
+                                : anno.isArchived())
+                .build();
 
     }
 

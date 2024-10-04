@@ -1,25 +1,30 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-public record RegisterModel(
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class RegisterModel {
 
-        @JsonProperty("_csrf")
-        String csrf,
+    @JsonProperty("_csrf")
+    private String csrf;
 
-        @JsonProperty("username")
-        String username,
+    @JsonProperty("username")
+    private String username;
 
-        @JsonProperty("password")
-        String password,
+    @JsonProperty("password")
+    private String password;
 
-        @JsonProperty("passwordSubmit")
-        String passwordConfirmation
-
-) {
-
-    public RegisterModel csrf(String csrf) {
-        return new RegisterModel(csrf, this.username, this.password, this.passwordConfirmation);
-    }
+    @JsonProperty("passwordSubmit")
+    private String passwordConfirmation;
 
 }
+

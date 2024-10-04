@@ -82,7 +82,7 @@ public class MainPage {
     }
 
     public MainPage assertSpendingExists(@NonNull SpendJson spend) {
-        var description = spend.description();
+        var description = spend.getDescription();
         searchSpending(description);
         $x("//*[@id='spendings']//tr//td[4]//span[text()='" + description + "']").as("Spending [" + description + "] description").shouldBe(visible);
         return this;

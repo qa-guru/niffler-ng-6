@@ -9,19 +9,17 @@ public class LoginModelToMap {
 
     public Map<String, String> toLoginMap(LoginModel source) {
         return Map.of(
-                "_csrf", source.csrf(),
-                "username", source.username(),
-                "password", source.password()
+                "_csrf", source.getCsrf(),
+                "username", source.getUsername(),
+                "password", source.getPassword()
         );
     }
 
     public LoginModel fromUserModel(UserModel source) {
-        return new LoginModel(
-                null,
-                source.getUsername(),
-                source.getPassword()
-        );
+        return LoginModel.builder()
+                .username(source.getUsername())
+                .password(source.getPassword())
+                .build();
     }
-
 
 }

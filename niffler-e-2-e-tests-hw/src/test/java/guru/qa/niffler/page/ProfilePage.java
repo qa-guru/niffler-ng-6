@@ -104,16 +104,6 @@ public class ProfilePage {
         return !isCategoryActive(name);
     }
 
-    public ProfilePage archiveCategory(@NonNull String name, boolean status) {
-        if (status != isCategoryArchived(name)) {
-            log.info("Set set category check status = [{}]", status);
-            showArchivedButton.click();
-        } else {
-            log.info("Show archived check status is already = [{}]", status);
-        }
-        return this;
-    }
-
     public ProfilePage save() {
         saveChangesButton.click();
         return this;

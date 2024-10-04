@@ -61,17 +61,17 @@ public class RegisterPage {
         submitButton.click();
     }
 
-    public RegisterPage assertUsernameHasError(String error) {
+    public RegisterPage assertUsernameHasError(@NonNull String error) {
         usernameInput.parent().$(".form__error").as("Username error text").shouldHave(text(error));
         return this;
     }
 
-    public RegisterPage assertPasswordHasError(String error) {
+    public RegisterPage assertPasswordHasError(@NonNull String error) {
         passwordInput.parent().$(".form__error").as("Password error text").shouldHave(text(error));
         return this;
     }
 
-    public RegisterPage assertPasswordConfirmationHasError(String error) {
+    public RegisterPage assertPasswordConfirmationHasError(@NonNull String error) {
         passwordConfirmationInput.parent().$(".form__error").as("Password confirmation error text").shouldHave(text(error));
         return this;
     }

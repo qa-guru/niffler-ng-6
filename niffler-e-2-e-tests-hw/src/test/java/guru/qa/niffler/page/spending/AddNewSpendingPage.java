@@ -2,6 +2,7 @@ package guru.qa.niffler.page.spending;
 
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.MainPage;
+import lombok.NonNull;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,7 +20,7 @@ public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
         return this;
     }
 
-    public MainPage createNewSpending(SpendJson spend) {
+    public MainPage createNewSpending(@NonNull SpendJson spend) {
         fillSpendingData(spend);
         return submit();
     }

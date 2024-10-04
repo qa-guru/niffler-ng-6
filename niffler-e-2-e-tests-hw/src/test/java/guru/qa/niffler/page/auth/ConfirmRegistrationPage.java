@@ -1,14 +1,12 @@
 package guru.qa.niffler.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfirmRegistrationPage {
 
@@ -22,10 +20,8 @@ public class ConfirmRegistrationPage {
     }
 
     public ConfirmRegistrationPage assertSuccessfulRegistration() {
-        Assertions.assertAll("Assert successful login", () -> {
-            assertTrue(successfulRegistrationLabel.is(visible, Duration.ofSeconds(2)));
-            assertTrue(signInButton.isDisplayed());
-        });
+            successfulRegistrationLabel.shouldBe(visible, Duration.ofSeconds(2));
+            signInButton.shouldBe(visible);
         return this;
     }
 

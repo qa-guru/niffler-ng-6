@@ -5,14 +5,13 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.spending.EditSpendingPage;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 
 @Slf4j
 public class MainPage {
@@ -38,20 +37,20 @@ public class MainPage {
         return new AppHeader();
     }
 
-    public MainPage searchSpending(String query) {
+    public MainPage searchSpending(@NonNull String query) {
         log.info("Filtering spendings by query {}", query);
         spendingsSearchInputContainer.click();
         spendingsSearchInput.shouldBe(visible).setValue(query).pressEnter();
         return this;
     }
 
-    public MainPage createNewSpending(SpendJson spend) {
+    public MainPage createNewSpending(@NonNull SpendJson spend) {
         log.info("Go to 'Create new spending' page");
         getHeader().goToCreateSpendingPage();
         return new AddNewSpendingPage().createNewSpending(spend);
     }
-    
-    public EditSpendingPage openEditSpendingPage(String spendingName) {
+
+    public EditSpendingPage openEditSpendingPage(@NonNull String spendingName) {
         searchSpending(spendingName);
         getSpendingInCurrentSearchPage(spendingName, 0).$$("td").get(5)
                 .as("['Spending " + spendingName + "' edit button]").click();
@@ -62,18 +61,18 @@ public class MainPage {
      * Filter spendings by text and open edit spending page by index (min = 0).
      * Newest spendings on top of the spending table in main page.
      */
-    public EditSpendingPage openEditSpendingPage(String spendingName, int index) {
+    public EditSpendingPage openEditSpendingPage(@NonNull String spendingName, int index) {
         searchSpending(spendingName);
         getSpendingInCurrentSearchPage(spendingName, index).$$("td").get(5)
                 .as("['Spending " + spendingName + "' edit button]").click();
         return new EditSpendingPage();
     }
 
-    private SelenideElement getSpendingInCurrentSearchPage(String spendingDescription, int index) {
+    private SelenideElement getSpendingInCurrentSearchPage(@NonNull String spendingDescription, int index) {
         return spendingRows.filter(text(spendingDescription)).get(index);
     }
 
-    public void checkThatTableContainsSpending(String spendingDescription) {
+    public void checkThatTableContainsSpending(@NonNull String spendingDescription) {
         spendingRows.find(text(spendingDescription)).should(visible);
     }
 
@@ -82,12 +81,10 @@ public class MainPage {
         historyOfSpendingsTitle.shouldBe(visible);
     }
 
-    public MainPage assertSpendingExists(SpendJson spend) {
-        searchSpending(spend.description());
-        Assertions.assertTrue(
-                spendingRows.stream()
-                        .allMatch(element -> element.$x(".//td[4]//span").has(text(spend.description())))
-        );
+    public MainPage assertSpendingExists(@NonNull SpendJson spend) {
+        var description = spend.description();
+        searchSpending(description);
+        $x("//*[@id='spendings']//tr//td[4]//span[text()='" + description + "']").as("Spending [" + description + "] description").shouldBe(visible);
         return this;
     }
 

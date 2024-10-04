@@ -2,6 +2,7 @@ package guru.qa.niffler.page.spending;
 
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.MainPage;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.codeborne.selenide.Condition.exactText;
@@ -17,7 +18,7 @@ public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
         return this;
     }
 
-    public MainPage editSpending(SpendJson spending) {
+    public MainPage editSpending(@NonNull SpendJson spending) {
         log.info("Edit spending data to: {}", spending);
         fillSpendingData(spending);
         submit();

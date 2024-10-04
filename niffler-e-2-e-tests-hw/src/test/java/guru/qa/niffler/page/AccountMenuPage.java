@@ -2,11 +2,10 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.auth.LogoutForm;
-import org.junit.jupiter.api.Assertions;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountMenuPage {
 
@@ -28,14 +27,11 @@ public class AccountMenuPage {
 
     public AccountMenuPage accountMenuShouldBeVisible() {
 
-        Assertions.assertAll("Assert account menu elements are visible", () -> {
-                    assertTrue(accountMenuForm.isDisplayed());
-                    assertTrue(profileButton.isDisplayed());
-                    assertTrue(friendsButton.isDisplayed());
-                    assertTrue(allPeopleButton.isDisplayed());
-                    assertTrue(signOutButton.isDisplayed());
-                }
-        );
+        accountMenuForm.shouldBe(visible);
+        profileButton.shouldBe(visible);
+        friendsButton.shouldBe(visible);
+        allPeopleButton.shouldBe(visible);
+        signOutButton.shouldBe(visible);
 
         return this;
 

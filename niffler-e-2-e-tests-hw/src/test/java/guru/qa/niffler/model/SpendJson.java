@@ -21,4 +21,27 @@ public record SpendJson(
         @JsonProperty("username")
         String username) {
 
+    public SpendJson category(CategoryJson category) {
+        return new SpendJson(
+                this.id,
+                this.spendDate,
+                category,
+                this.currency,
+                this.amount,
+                this.description,
+                this.username
+        );
+    }
+
+    public SpendJson username(String username) {
+        return new SpendJson(
+                this.id,
+                this.spendDate,
+                this.category,
+                this.currency,
+                this.amount,
+                this.description,
+                username
+        );
+    }
 }

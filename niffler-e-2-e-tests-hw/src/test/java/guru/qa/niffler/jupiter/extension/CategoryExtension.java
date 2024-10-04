@@ -47,7 +47,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
                     CategoryJson category = categoryApiClient
                             .createCategory(new CategoryMapper()
-                                    .updateFromAnno(CategoryUtils.generate().username(username), anno));
+                                    .updateFromAnno(CategoryUtils.generate().setUsername(username), anno));
 
                     context.getStore(NAMESPACE)
                             .put(context.getUniqueId(), category);
@@ -66,8 +66,8 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
                     var category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-                    if (!category.archived()) categoryApiClient.updateCategory(category.archived(true));
-                    log.info("Successfully updated status to [archived] for category: {}", category.name());
+                    if (!category.isArchived()) categoryApiClient.updateCategory(category.setArchived(true));
+                    log.info("Successfully updated status to [archived] for category: {}", category.getName());
 
                 });
 
@@ -75,7 +75,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
     private Optional<CategoryJson> getUserCategories(@NonNull String username, @NonNull String categoryName, boolean excludeArchived) {
         return categoryApiClient.getAllCategories(username, excludeArchived).stream()
-                .filter(category -> category.name().equals(categoryName))
+                .filter(category -> category.getName().equals(categoryName))
                 .findFirst();
     }
 
@@ -101,7 +101,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
     }
 

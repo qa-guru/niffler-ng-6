@@ -71,7 +71,7 @@ public class AuthApiClient {
         final Response<Void> response;
         try {
             response = authApi.register(
-                            registerJsonToMap.toRegisterMap(registerJson.csrf(cookies.get(Token.CSRF))),
+                            registerJsonToMap.toRegisterMap(registerJson.setCsrf(cookies.get(Token.CSRF))),
                             "XSRF-TOKEN=" + cookies.get(Token.CSRF),
                             "JSESSIONID=" + cookies.get(Token.JSESSIONID)
                     )
@@ -92,7 +92,7 @@ public class AuthApiClient {
         final Response<Void> response;
         try {
             response = authApi.login(
-                            loginModelToMap.toLoginMap(loginModel.csrf(cookies.get(Token.CSRF))),
+                            loginModelToMap.toLoginMap(loginModel.setCsrf(cookies.get(Token.CSRF))),
                             cookies.get(Token.CSRF),
                             cookies.get(Token.JSESSIONID)
                     )

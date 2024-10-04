@@ -44,7 +44,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
                     var spend = generateSpendForUserAndLazyUpdateBySpendingAnnotation(username, anno);
                     isCategoryWasCreatedBySpend = categoryApiClient.getAllCategories(username, true).stream()
-                            .noneMatch(category -> category.name().equals(spend.category().name()));
+                            .noneMatch(category -> category.getName().equals(spend.getCategory().getName()));
 
                     context.getStore(NAMESPACE).put(context.getUniqueId(), spendApiClient.createNewSpend(spend));
 
@@ -57,14 +57,17 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
     public SpendJson generateSpendForUserAndLazyUpdateBySpendingAnnotation(@NonNull String username, Spending anno) {
 
         var spend = SpendUtils.generate();
-        var category = spend.category();
+
         spend = spend
-                .username(username)
-                .category(category.username(username));
+                .setUsername(username)
+                .setCategory(
+                        spend.getCategory()
+                                .setUsername(username));
+        log.info("EDITED SPEND: {}", spend);
         return new SpendMapper().updateFromAnno(spend, anno);
     }
 
-    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(String username, String annoUsername) {
+    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(@NonNull String username, @NonNull String annoUsername) {
 
         if (isNullOrEmpty(username) && isNullOrEmpty(annoUsername)) {
             throw new IllegalArgumentException("Username should contains in @Spending or should add @CreateNewUser on test");
@@ -93,12 +96,12 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
                     var spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
                     log.info("Text spend: {}", spend);
-                    log.info("Delete spend: id = [{}], description = [{}]", spend.id().toString(), spend.description());
-                    spendApiClient.deleteSpends(spend.username(), List.of(spend.id().toString()));
+                    log.info("Delete spend: id = [{}], description = [{}]", spend.getId().toString(), spend.getDescription());
+                    spendApiClient.deleteSpends(spend.getUsername(), List.of(spend.getId().toString()));
                     if (isCategoryWasCreatedBySpend) {
-                        var category = spend.category();
-                        log.info("Set category archived: id = [{}], name = [{}]", category.id().toString(), category.name());
-                        categoryApiClient.updateCategory(category.archived(false));
+                        var category = spend.getCategory();
+                        log.info("Set category archived: id = [{}], name = [{}]", category.getId().toString(), category.getName());
+                        categoryApiClient.updateCategory(category.setArchived(false));
                     }
 
                 });

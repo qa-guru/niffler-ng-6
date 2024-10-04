@@ -1,13 +1,18 @@
 package guru.qa.niffler.model;
 
-public record LoginModel(
-        String csrf,
-        String username,
-        String password
-) {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-    public LoginModel csrf(String csrf) {
-        return new LoginModel(csrf, username, password);
-    }
-
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class LoginModel {
+    private String csrf;
+    private String username;
+    private String password;
 }

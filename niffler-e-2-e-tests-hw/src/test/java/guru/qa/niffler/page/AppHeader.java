@@ -1,7 +1,6 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.spending.AddNewSpendingPage;
 import lombok.extern.slf4j.Slf4j;
 

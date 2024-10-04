@@ -90,55 +90,75 @@ class ProfileTests {
     @CreateNewUser
     @Category
     void canNotCreateCategoryWithExistsNameTest(UserModel user, CategoryJson category) {
+
+        var categoryName = category.getName();
+
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .addNewCategory(category.name())
-                .assertAlertMessageHasText("Error while adding category %s: Cannot save duplicates".formatted(category.name()));
+                .addNewCategory(categoryName)
+                .assertAlertMessageHasText("Error while adding category " + categoryName + ": Cannot save duplicates");
+
     }
 
     @Test
     @CreateNewUser
     @Category
     void canChangeCategoryNameTest(UserModel user, CategoryJson category) {
+
         var newCategoryName = FAKE.company().industry();
+
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .changeCategoryName(category.name(), newCategoryName)
-                .assertCategoryExists(newCategoryName);
+                .changeCategoryName(category.getName(), newCategoryName);
+
+        Selenide.refresh();
+        profile.assertCategoryExists(newCategoryName);
+
     }
 
     @Test
     @CreateNewUser
     @Category
     void canSetCategoryArchivedTest(UserModel user, CategoryJson category) {
+
+        var categoryName = category.getName();
+
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .changeCategoryStatus(category.name(), false)
-                .toggleShowArchived(true)
-                .assertCategoryHasStatus(category.name(), true);
+                .changeCategoryStatus(categoryName, false)
+                .toggleShowArchived(true);
+
+        Selenide.refresh();
+        profile.assertCategoryHasStatus(categoryName, false);
+
     }
 
     @Test
     @CreateNewUser
     @Category(isArchived = true)
-    void canSetCategoryUnarchivedNameTest(UserModel user, CategoryJson category) {
+    void canSetCategoryUnarchivedTest(UserModel user, CategoryJson category) {
+
+        var categoryName = category.getName();
+
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
                 .toggleShowArchived(true)
-                .changeCategoryStatus(category.name(), true)
-                .assertCategoryHasStatus(category.name(), true);
+                .changeCategoryStatus(categoryName, true);
+
+        Selenide.refresh();
+        profile.assertCategoryHasStatus(categoryName, true);
 
     }
 

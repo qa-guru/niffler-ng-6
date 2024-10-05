@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DataSources  {
+public class DataSources {
     private DataSources() {
     }
 
@@ -21,7 +21,7 @@ public class DataSources  {
                     AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
                     String uniqueId = StringUtils.substringAfter(jdbcUrl, "5432/");
                     ds.setUniqueResourceName(uniqueId);
-                    ds.setUniqueResourceName("org.postgresql.xa.PGXADataSource");
+                    ds.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
                     Properties props = new Properties();
                     props.put("URL", jdbcUrl);
                     props.put("user", "postgres");

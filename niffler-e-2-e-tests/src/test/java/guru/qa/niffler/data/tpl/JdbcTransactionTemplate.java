@@ -13,7 +13,7 @@ public class JdbcTransactionTemplate {
         this.holder = Connections.holder(jdbcUrl);
     }
 
-    public <T> T transaction(Supplier<T> action, int isolationLevel) {
+    public <T> T execute(Supplier<T> action, int isolationLevel) {
         Connection connection = null;
         try {
             connection = holder.connection();
@@ -34,17 +34,17 @@ public class JdbcTransactionTemplate {
             }
             throw new RuntimeException(e);
         } finally {
-            if(closeAfterAction.get()) {
-                holder.close();;
+            if (closeAfterAction.get()) {
+                holder.close();
             }
         }
     }
 
-    public <T> T transaction(Supplier<T> action, String jdbcUrl) {
-        return transaction(action, Connection.TRANSACTION_READ_COMMITTED);
+    public <T> T execute(Supplier<T> action) {
+        return execute(action, Connection.TRANSACTION_READ_COMMITTED);
     }
 
-    public JdbcTransactionTemplate holdConnectionAfterAction(){
+    public JdbcTransactionTemplate holdConnectionAfterAction() {
         this.closeAfterAction.set(false);
         return this;
     }

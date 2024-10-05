@@ -4,6 +4,7 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.Authority;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,26 +19,18 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public AuthAuthorityEntity create(AuthAuthorityEntity authAuthority) {
+    public void create(AuthAuthorityEntity... authAuthority) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO public.authority(user_id, authority) " +
                         "VALUES (?, ?);",
                 Statement.RETURN_GENERATED_KEYS
         )) {
-            ps.setObject(1, authAuthority.getUserId());
-            ps.setString(2, authAuthority.getAuthority().toString());
-
-            ps.executeUpdate();
-            final UUID generationKey;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    generationKey = rs.getObject("id", UUID.class);
-                } else {
-                    throw new SQLException("Can't find id in ResultSet");
-                }
+            for (int i = 0; i < authAuthority.length; i++) {
+                ps.setObject(1, authAuthority[i].getUserId());
+                ps.setString(2, authAuthority[i].getAuthority().toString());
+                ps.executeUpdate();
             }
-            authAuthority.setId(generationKey);
-            return authAuthority;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +42,28 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 "SELECT * FROM public.authority WHERE userId="
         )) {
             ps.setObject(1, userId);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                List<AuthAuthorityEntity> list = new ArrayList<>();
+                if (rs.next()) {
+                    AuthAuthorityEntity authority = new AuthAuthorityEntity();
+                    authority.setId(rs.getObject("id", UUID.class));
+                    authority.setUserId(rs.getObject("user_id", UUID.class));
+                    authority.setAuthority(rs.getObject("authority", Authority.class));
+                    list.add(authority);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<AuthAuthorityEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM public.authority"
+        )) {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 List<AuthAuthorityEntity> list = new ArrayList<>();

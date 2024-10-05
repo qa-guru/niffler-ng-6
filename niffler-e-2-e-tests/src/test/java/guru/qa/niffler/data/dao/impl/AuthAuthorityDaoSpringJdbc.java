@@ -2,6 +2,7 @@ package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -42,11 +43,28 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
     @Override
     public List<AuthAuthorityEntity> findByUserId(UUID userId) {
-        return List.of();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return jdbcTemplate.query(
+                "SELECT * FROM authority WHERE id=?",
+                AuthAuthorityEntityRowMapper.instance,
+                userId
+        );
+    }
+
+    @Override
+    public List<AuthAuthorityEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return jdbcTemplate.query(
+                "SELECT * FROM authority WHERE id=?",
+                AuthAuthorityEntityRowMapper.instance
+        );
     }
 
     @Override
     public void delete(AuthAuthorityEntity authAuthority) {
-
+        new JdbcTemplate().update(
+                "DELETE authority WHERE id=?",
+                authAuthority.getId()
+        );
     }
 }

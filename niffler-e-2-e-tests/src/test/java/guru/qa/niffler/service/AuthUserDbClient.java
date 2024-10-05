@@ -66,17 +66,15 @@ public class AuthUserDbClient {
                                     authUser.setAccountNonLocked(true);
                                     authUser.setCredentialsNonExpired(true);
                                     new AuthUserDaoJdbc(con).create(authUser);
-                                    AuthAuthorityEntity[] aes = Arrays.stream(Authority.values())
+                                    new AuthAuthorityDaoJdbc(con).create(Arrays.stream(Authority.values())
                                             .map(a -> {
                                                         AuthAuthorityEntity ae = new AuthAuthorityEntity();
                                                         ae.setUserId(authUser.getId());
                                                         ae.setAuthority(a);
                                                         return ae;
                                                     }
-                                            ).toArray(AuthAuthorityEntity[]::new);
-                                    for (AuthAuthorityEntity authAuthorityEntity : aes) {
-                                        new AuthAuthorityDaoJdbc(con).create(authAuthorityEntity);
-                                    }
+                                            ).toArray(AuthAuthorityEntity[]::new));
+
                                     return null;
                                 },
                                 CFG.authJdbcUrl(), 1

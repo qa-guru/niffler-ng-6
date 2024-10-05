@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,11 +67,30 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
-        return Optional.empty();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM public.user WHERE username = ?",
+                        AuthUserEntityRowMapper.instance,
+                        username
+                )
+        );
+    }
+
+    @Override
+    public List<AuthUserEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return jdbcTemplate.query(
+                "SELECT * FROM public.user",
+                AuthUserEntityRowMapper.instance
+        );
     }
 
     @Override
     public void delete(AuthUserEntity authUser) {
-
+        new JdbcTemplate().update(
+                "DELETE public.user WHERE id = ? ",
+                authUser.getId()
+        );
     }
 }

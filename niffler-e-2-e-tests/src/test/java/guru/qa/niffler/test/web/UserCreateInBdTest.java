@@ -21,4 +21,20 @@ public class UserCreateInBdTest {
         ));
         System.out.println(user);
     }
+
+    @Test
+    void createUserSpringInDb() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserJson user = authUserDbClient.createUserSpring(new UserJson(
+                null,
+                RandomDataUtils.randomUsername(),
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
 }

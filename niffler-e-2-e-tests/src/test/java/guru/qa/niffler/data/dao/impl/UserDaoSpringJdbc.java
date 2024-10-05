@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,12 +28,12 @@ public class UserDaoSpringJdbc implements UserDao {
         KeyHolder kh = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO public.user(username, currency, firstname, surname, photo, photo_small, full_name)" +
+                    "INSERT INTO public.user (username, currency, firstname, surname, photo, photo_small, full_name) " +
                             "VALUES (?, ?, ? ,?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, user.getUsername());
-            ps.setObject(2, user.getCurrency());
+            ps.setString(2, user.getCurrency().name());
             ps.setString(3, user.getFirstname());
             ps.setString(4, user.getSurname());
             ps.setBytes(5, user.getPhoto());
@@ -59,7 +60,24 @@ public class UserDaoSpringJdbc implements UserDao {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM public.user WHERE id = ?",
+                        UserEntityRowMapper.instance,
+                        username
+                )
+        );
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return jdbcTemplate.query(
+                "SELECT * FROM public.user",
+                UserEntityRowMapper.instance
+        );
     }
 
     @Override

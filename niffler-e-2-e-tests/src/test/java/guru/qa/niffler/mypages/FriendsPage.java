@@ -2,8 +2,9 @@ package guru.qa.niffler.mypages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.collections.SizeLessThanOrEqual;
 
+import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
@@ -29,23 +30,17 @@ public class FriendsPage {
 
     public void checkFriendNameInFriends(String friendName) {
         friendsTableHeader.shouldBe(visible);
-        friendNames.stream()
-                .filter(fn -> fn.getText().equals(friendName))
-                .findFirst()
-                .get()
+        friendNames.find(text(friendName))
                 .shouldBe(visible);
     }
 
     public void checkFriendsTableIsEmpty() {
-        friendNames.shouldBe(new SizeLessThanOrEqual(0));
+        friendNames.shouldBe(size(0));
     }
 
     public void checkFriendIncomeRequestExistInTable(String personName) {
         friendRequestsTableHeader.shouldBe(visible);
-        requestNames.stream()
-                .filter(fn -> fn.getText().equals(personName))
-                .findFirst()
-                .get()
+        requestNames.find(text(personName))
                 .shouldBe(visible);
     }
 
@@ -60,10 +55,7 @@ public class FriendsPage {
     }
 
     public void checkFriendOutcomeRequestExistInTable(String personName) {
-        outcomeRequestNames.stream()
-                .filter(fn -> fn.getText().equals(personName))
-                .findFirst()
-                .get()
+        outcomeRequestNames.find(text(personName))
                 .shouldBe(visible);
     }
 }

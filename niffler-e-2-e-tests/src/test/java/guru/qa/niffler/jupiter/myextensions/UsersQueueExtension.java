@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Optional.ofNullable;
+
 public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
@@ -54,25 +56,13 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
                     Optional<StaticUserExtended> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                        switch (ut.value()) {
-                            case WITH_FRIENDS: {
-                                user = Optional.ofNullable(WITH_FRIEND_USERS.poll());
-                                break;
-                            }
-                            case WITH_INCOME_FRIEND_REQUEST: {
-                                user = Optional.ofNullable(WITH_INCOME_FRIEND_REQUEST_EXTENDED_USERS.poll());
-                                break;
-                            }
-                            case WITH_OUTCOME_FRIEND_REQUEST: {
-                                user = Optional.ofNullable(WITH_OUTCOME_FRIEND_REQUEST_EXTENDED_USERS.poll());
-                                break;
-                            }
-                            case EMPTY:
-                            default: {
-                                user = Optional.ofNullable(EMPTY_EXTENDED_USERS.poll());
-                            }
+                        user = switch (ut.value()) {
+                            case WITH_FRIENDS -> ofNullable(WITH_FRIEND_USERS.poll());
+                            case WITH_INCOME_FRIEND_REQUEST -> ofNullable(WITH_INCOME_FRIEND_REQUEST_EXTENDED_USERS.poll());
+                            case WITH_OUTCOME_FRIEND_REQUEST -> ofNullable(WITH_OUTCOME_FRIEND_REQUEST_EXTENDED_USERS.poll());
+                            case EMPTY -> ofNullable(EMPTY_EXTENDED_USERS.poll());
+                            };
                         }
-                    }
                     user.ifPresentOrElse(
                             u -> {
                                 muEx.put(ut, u);
@@ -94,22 +84,10 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
         Map<UserTypeExtended, StaticUserExtended> muEx = (Map<UserTypeExtended, StaticUserExtended>) context.getStore(NAMESPACE).getOrComputeIfAbsent(context.getUniqueId(), key -> new HashMap<>());
         muEx.forEach((ut, u) -> {
             switch (ut.value()) {
-                case WITH_FRIENDS: {
-                    WITH_FRIEND_USERS.add(u);
-                    break;
-                }
-                case WITH_INCOME_FRIEND_REQUEST: {
-                    WITH_INCOME_FRIEND_REQUEST_EXTENDED_USERS.add(u);
-                    break;
-                }
-                case WITH_OUTCOME_FRIEND_REQUEST: {
-                    WITH_OUTCOME_FRIEND_REQUEST_EXTENDED_USERS.add(u);
-                    break;
-                }
-                case EMPTY:
-                default: {
-                    EMPTY_EXTENDED_USERS.add(u);
-                }
+                case WITH_FRIENDS -> WITH_FRIEND_USERS.add(u);
+                case WITH_INCOME_FRIEND_REQUEST -> WITH_INCOME_FRIEND_REQUEST_EXTENDED_USERS.add(u);
+                case WITH_OUTCOME_FRIEND_REQUEST -> WITH_OUTCOME_FRIEND_REQUEST_EXTENDED_USERS.add(u);
+                case EMPTY -> EMPTY_EXTENDED_USERS.add(u);
             }
         });
     }
@@ -123,11 +101,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     @Override
     public StaticUserExtended resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Map<UserTypeExtended, StaticUserExtended> muEx = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class);
-        StaticUserExtended staticUserExtended = null;
-        if (!muEx.isEmpty()) {
-            staticUserExtended = muEx.get(parameterContext.getParameter().getAnnotation(UserTypeExtended.class));
-        } else
-            new IllegalStateException("Can't find user");
-        return staticUserExtended;
+
+        return muEx.get(parameterContext.getParameter().getAnnotation(UserTypeExtended.class));
     }
 }

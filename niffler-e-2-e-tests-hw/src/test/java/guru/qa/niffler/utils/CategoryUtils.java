@@ -5,10 +5,12 @@ import guru.qa.niffler.model.CategoryJson;
 
 public class CategoryUtils {
 
-    private static Faker fake = new Faker();
+    private static Faker FAKE = new Faker();
 
     public static CategoryJson generate() {
-        return new CategoryJson(null, fake.lorem().word(), null, false);
+        return CategoryJson.builder()
+                .name(FAKE.lorem().characters(3, 10))
+                .archived(false).build();
     }
 
 }

@@ -2,19 +2,32 @@ package guru.qa.niffler.page.spending;
 
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.MainPage;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.codeborne.selenide.Condition.exactText;
 
 @Slf4j
+@NoArgsConstructor
 public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
+
+    public EditSpendingPage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
 
     public MainPage editSpending(@NonNull SpendJson spending) {
         log.info("Edit spending data to: {}", spending);
         fillSpendingData(spending);
         submit();
-        return new MainPage();
+        return new MainPage(true);
+    }
+
+    @Override
+    public EditSpendingPage shouldVisiblePageElement() {
+        log.info("Assert 'Edit spending' page element visible on start up");
+        saveButton.shouldHave(exactText("Add"));
+        return this;
     }
 
     @Override

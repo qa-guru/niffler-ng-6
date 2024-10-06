@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toMap;
 @Slf4j
 public class AuthApiClient {
 
-    private static final RegisterModelMapper registerJsonToMap = new RegisterModelMapper();
+    private static final RegisterModelMapper registerModelToMap = new RegisterModelMapper();
     private static final LoginModelToMap loginModelToMap = new LoginModelToMap();
 
     @Getter
@@ -44,6 +44,7 @@ public class AuthApiClient {
 
 
     private void updateCookies() {
+        log.info("Updating cookies");
         final Response<Void> response;
         try {
             response = authApi.getCookies().execute();
@@ -64,14 +65,14 @@ public class AuthApiClient {
                 ));
     }
 
-    public void register(RegisterModel registerJson) {
-
+    public void register(RegisterModel registerModel) {
         if (cookies == null || cookies.isEmpty()) updateCookies();
 
+        log.info("Register user: username = [{}], password = [{}]", registerModel.getUsername(), registerModel.getPassword());
         final Response<Void> response;
         try {
             response = authApi.register(
-                            registerJsonToMap.toRegisterMap(registerJson.setCsrf(cookies.get(Token.CSRF))),
+                            registerModelToMap.toRegisterMap(registerModel.setCsrf(cookies.get(Token.CSRF))),
                             "XSRF-TOKEN=" + cookies.get(Token.CSRF),
                             "JSESSIONID=" + cookies.get(Token.JSESSIONID)
                     )
@@ -89,6 +90,7 @@ public class AuthApiClient {
 
         if (cookies == null || cookies.isEmpty()) updateCookies();
 
+        log.info("Login user: username = [{}], password = [{}]", loginModel.getUsername(), loginModel.getPassword());
         final Response<Void> response;
         try {
             response = authApi.login(

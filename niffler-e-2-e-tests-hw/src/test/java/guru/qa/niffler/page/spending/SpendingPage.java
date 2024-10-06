@@ -1,5 +1,6 @@
 package guru.qa.niffler.page.spending;
 
+import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.CurrencyValues;
@@ -8,6 +9,7 @@ import guru.qa.niffler.page.AppHeader;
 import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.CalendarService;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
@@ -19,7 +21,12 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 @Slf4j
+@NoArgsConstructor
 public abstract class SpendingPage<T> extends BasePage<T> {
+
+    protected SpendingPage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
 
     protected final SelenideElement title = $("form h2").as("[Page title]"),
             amountLabel = $("label[for='amount']").as("['Amount' label]"),

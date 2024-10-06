@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +13,12 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Slf4j
+@NoArgsConstructor
 public class ProfilePage extends BasePage<ProfilePage> {
+
+    public ProfilePage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
 
     private final SelenideElement usernameInput = $("#username").as("['Username' input]"),
             nameInput = $("#name").as("['Name' input]"),
@@ -140,6 +146,13 @@ public class ProfilePage extends BasePage<ProfilePage> {
     public ProfilePage shouldHaveImage() {
         log.info("Assert avatar has image");
         avatarImage.shouldBe(visible);
+        return this;
+    }
+
+    @Override
+    public ProfilePage shouldVisiblePageElement() {
+        log.info("Assert profile page element are visible");
+        usernameInput.shouldBe(visible);
         return this;
     }
 

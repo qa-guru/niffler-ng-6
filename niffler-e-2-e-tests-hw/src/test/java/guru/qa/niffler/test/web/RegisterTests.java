@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.page.auth.ConfirmRegistrationPage;
 import guru.qa.niffler.page.auth.RegisterPage;
 import guru.qa.niffler.utils.UserUtils;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ import static com.codeborne.selenide.Selenide.open;
 class RegisterTests {
 
     static final String REGISTRATION_PAGE_URL = Config.getInstance().authUrl() + "register";
+    static final Faker FAKE = new Faker();
     final RegisterPage registerPage = new RegisterPage();
+    final ConfirmRegistrationPage confirmRegistrationPage = new ConfirmRegistrationPage();
 
     @Test
     void canRegisterUserWithCorrectCredentialsTest() {
@@ -25,7 +28,7 @@ class RegisterTests {
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
 
-        registerPage.shouldVisiblePageElements();
+        confirmRegistrationPage.shouldVisiblePageElements();
     }
 
     @Test
@@ -44,14 +47,14 @@ class RegisterTests {
     void canNotRegisterIfPasswordAndPasswordConfirmationNotEqualTest() {
         var user = UserUtils.generateValidUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user.setPassword(new Faker().internet().password()));
+                .signUp(user.setPassword(FAKE.internet().password()));
         registerPage.assertPasswordHasError("Passwords should be equal");
     }
 
     @Test
     void canNotRegisterIfUsernameIsTooShortTest() {
         var user = UserUtils.generateValidUser();
-        user.setUsername(new Faker().lorem().characters(2));
+        user.setUsername(FAKE.lorem().characters(2));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
@@ -60,7 +63,7 @@ class RegisterTests {
     @Test
     void canNotRegisterIfUsernameIsTooLongTest() {
         var user = UserUtils.generateValidUser();
-        user.setUsername(new Faker().lorem().characters(51));
+        user.setUsername(FAKE.lorem().characters(51));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
@@ -70,7 +73,7 @@ class RegisterTests {
     void canNotRegisterIfPasswordIsTooShortTest() {
 
         var user = UserUtils.generateValidUser();
-        var password = new Faker().lorem().characters(2);
+        var password = FAKE.lorem().characters(2);
         user.setPassword(password).setPasswordConfirmation(password);
 
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
@@ -85,7 +88,7 @@ class RegisterTests {
     void canNotRegisterIfPasswordIsTooLongTest() {
 
         var user = UserUtils.generateValidUser();
-        var password = new Faker().lorem().characters(13);
+        var password = FAKE.lorem().characters(13);
         user.setPassword(password).setPasswordConfirmation(password);
 
         open(REGISTRATION_PAGE_URL, RegisterPage.class)

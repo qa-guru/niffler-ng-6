@@ -3,6 +3,7 @@ package guru.qa.niffler.page.auth;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.codeborne.selenide.Condition.*;
@@ -12,7 +13,12 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Slf4j
+@NoArgsConstructor
 public class LoginPage extends BasePage<LoginPage> {
+
+    public LoginPage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
 
     private final SelenideElement title = $("h1").as("['Login Page' title]"),
             usernameInput = $(byName("username")).as("Username input"),
@@ -60,6 +66,14 @@ public class LoginPage extends BasePage<LoginPage> {
 
     public LoginPage shouldVisibleBadCredentialsError() {
         badCredentialsError.shouldBe(visible);
+        return this;
+    }
+
+    @Override
+    public LoginPage shouldVisiblePageElement() {
+        log.info("Assert login page element visible");
+        title.shouldBe(visible);
+        title.shouldHave(text("Log in"));
         return this;
     }
 

@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.CategoryJson;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class CategoryApiClient {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -30,6 +32,8 @@ public class CategoryApiClient {
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
     public CategoryJson createCategory(@NonNull CategoryJson category) {
+
+        log.info("Create new category: {}", category);
         final Response<CategoryJson> response;
         try {
             response = categoryApi.createNewCategory(category)
@@ -42,6 +46,7 @@ public class CategoryApiClient {
     }
 
     public List<CategoryJson> getAllCategories(@NonNull String username, boolean excludeArchived) {
+        log.info("Get all categories of user: [{}]", username);
         final Response<List<CategoryJson>> response;
         try {
             response = categoryApi.getAllCategories(username, excludeArchived)
@@ -54,6 +59,7 @@ public class CategoryApiClient {
     }
 
     public CategoryJson updateCategory(@NonNull CategoryJson category) {
+        log.info("Update category to: {}", category);
         final Response<CategoryJson> response;
         try {
             response = categoryApi.updateCategory(category)

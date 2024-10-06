@@ -3,6 +3,7 @@ package guru.qa.niffler.page.auth;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.page.BasePage;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,9 +11,15 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
+@NoArgsConstructor
 public class RegisterPage extends BasePage<RegisterPage> {
 
+    public RegisterPage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
+
     private final SelenideElement
+            title = $("h1").as("[Registration page title]"),
             usernameInput = $("#username").as("Username input"),
             passwordInput = $("#password").as("Password input"),
             showPasswordButton = $("#passwordBtn").as("Show password button"),
@@ -80,6 +87,14 @@ public class RegisterPage extends BasePage<RegisterPage> {
         log.info("Go to login page");
         goToLoginPageLink.click();
         return new LoginPage();
+    }
+
+    @Override
+    public RegisterPage shouldVisiblePageElement() {
+        log.info("Assert registration page element is visible");
+        title.shouldBe(visible);
+        title.shouldHave(text("Sign up"));
+        return null;
     }
 
     @Override

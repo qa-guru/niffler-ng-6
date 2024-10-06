@@ -6,6 +6,7 @@ import guru.qa.niffler.ex.InvalidDateException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Month;
 import java.util.Calendar;
@@ -57,11 +58,10 @@ public class CalendarService {
 
     public void calendarInputShouldHaveDate(Date date) {
 
-        Calendar calendar = getCalendar(date);
-        var dateValue = "%d/%d/%d".formatted(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH));
+        var dateValue = new SimpleDateFormat("MM/dd/yyyy").format(date);
 
         log.info("Calendar input should have value: [{}]", dateValue);
-        assertEquals(dateInput.getValue(), dateValue);
+        dateInput.shouldHave(value(dateValue));
 
     }
 

@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.AppHeader;
+import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.CalendarService;
 import lombok.NonNull;
@@ -12,15 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.*;
+import java.util.Date;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-public abstract class SpendingPage<T> {
+public abstract class SpendingPage<T> extends BasePage<T> {
 
     protected final SelenideElement title = $("form h2").as("[Page title]"),
             amountLabel = $("label[for='amount']").as("['Amount' label]"),
@@ -48,6 +47,10 @@ public abstract class SpendingPage<T> {
         return new AppHeader();
     }
 
+    private SelenideElement getCategorySelector(@NonNull String categoryName) {
+        return categoryTagsList.find(exactText(categoryName));
+    }
+
     @SuppressWarnings("unchecked")
     public T fillSpendingData(@NonNull SpendJson spend) {
 
@@ -63,12 +66,6 @@ public abstract class SpendingPage<T> {
 
     }
 
-    // INFO: Amount
-    public double getAmount() {
-        var amountText = amountInput.getValue();
-        return Double.parseDouble(Objects.requireNonNull(amountText).contains(".") ? amountText : amountText + ".0");
-    }
-
     @SuppressWarnings("unchecked")
     public T setAmount(@NonNull Double amount) {
         log.info("Set amount: [{}]", amount);
@@ -76,13 +73,11 @@ public abstract class SpendingPage<T> {
         return (T) this;
     }
 
-    // INFO: Currency
-    public CurrencyValues getCurrency() {
-        var currencyText = currencySelectorText.as("['Currency' selector text]").shouldBe(visible).getText();
-        return Arrays.stream(CurrencyValues.values())
-                .filter(currency -> currency.name().equalsIgnoreCase(currencyText))
-                .findFirst()
-                .orElse(null);
+    @SuppressWarnings("unchecked")
+    public T setCategory(@NonNull String categoryName) {
+        log.info("Set category: [{}]", categoryName);
+        categoryInput.setValue(categoryName).pressEnter();
+        return (T) this;
     }
 
     @SuppressWarnings("unchecked")
@@ -90,25 +85,6 @@ public abstract class SpendingPage<T> {
         log.info("Select currency: [{}]", currency);
         currencySelector.click();
         currenciesList.find(text(currency.toString())).click();
-        return (T) this;
-    }
-
-    // INFO: Category
-    public List<String> getCategoryTagList() {
-        log.info("Get category tag list");
-        // @formatter:off
-        return (categoryTagsList.isEmpty())
-                ? new ArrayList<>()
-                : categoryTagsList.asFixedIterable().stream()
-                        .map(category -> category.$x(".//span[1]").getText())
-                        .toList();
-        // @formatter:on
-    }
-
-    @SuppressWarnings("unchecked")
-    public T setCategory(@NonNull String categoryName) {
-        log.info("Set category: [{}]", categoryName);
-        categoryInput.setValue(categoryName).pressEnter();
         return (T) this;
     }
 
@@ -120,15 +96,7 @@ public abstract class SpendingPage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T categoryTagShouldBeSelected(@NonNull String categoryName) {
-        log.info("Category tag should be selected: [{}]", categoryName);
-        categoryTagsList.find(exactText(categoryName)).shouldHave(cssClass("MuiChip-colorPrimary"), Duration.ofSeconds(4));
-        return (T) this;
-    }
-
-    // INFO: Date
-    @SuppressWarnings("unchecked")
-    public T setDate(Date date) {
+    public T setDate(@NonNull Date date) {
 
         var dateVal = new SimpleDateFormat("MM/dd/yyyy").format(date);
         log.info("Set date: [{}]", dateVal);
@@ -143,35 +111,17 @@ public abstract class SpendingPage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T selectDateFromCalendar(Date date) {
+    public T selectDateFromCalendar(@NonNull Date date) {
         log.info("Pick date from calendar: [{}]", date);
         calendarService.pickDate(date);
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T dateInputShouldHaveDate(Date date) {
-        calendarService.calendarInputShouldHaveDate(date);
-        return (T) this;
-    }
-
-    // INFO: description
-
-    public String getDescription() {
-        return descriptionInput.getValue();
-    }
-
-    @SuppressWarnings("unchecked")
-    public T setDescription(String description) {
+    public T setDescription(@NonNull String description) {
         log.info("Set description: [{}]", description);
         descriptionInput.setValue(description);
         return (T) this;
-    }
-
-    // INFO: Cancel and Submit
-    public MainPage cancel() {
-        cancelButton.click();
-        return new MainPage();
     }
 
     public MainPage submit() {
@@ -180,7 +130,61 @@ public abstract class SpendingPage<T> {
         return new MainPage();
     }
 
-    protected void assertSpendingPageElementsAreVisible() {
+    public MainPage cancel() {
+        cancelButton.click();
+        return new MainPage();
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldHaveAmount(@NonNull Double amount) {
+        var amountVal = String.valueOf((amount % 1.0 == 0) ? amount.intValue() : amount);
+        log.info("Spending should have amount: [{}] ", amountVal);
+        amountInput.shouldHave(value(amountVal));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldHaveCurrency(@NonNull CurrencyValues currency) {
+        log.info("Spending should have selected currency: [{}]", currency);
+        currencySelectorText.shouldHave(text(currency.name()));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldBeSelectedCategory(@NonNull String categoryName) {
+        log.info("Category tag should be selected: [{}]", categoryName);
+        getCategorySelector(categoryName).shouldHave(cssClass("MuiChip-colorPrimary"));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldNotBeSelectedCategory(@NonNull String categoryName) {
+        log.info("Category should not be selected: [{}]", categoryName);
+        getCategorySelector(categoryName).shouldNotHave(cssClass("MuiChip-colorPrimary"));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldHaveCategory(@NonNull String category) {
+        log.info("Spending should have category: [{}]", category);
+        categoryInput.shouldHave(value(category));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T shouldHaveDate(@NonNull Date date) {
+        calendarService.calendarInputShouldHaveDate(date);
+        return (T) this;
+    }
+
+    // INFO: description
+    @SuppressWarnings("unchecked")
+    public T shouldHaveDescription(@NonNull String description) {
+        descriptionInput.shouldHave(value(description));
+        return (T) this;
+    }
+
+    protected void shouldVisibleSpendingPageElements() {
         title.shouldBe(visible);
         amountLabel.shouldBe(visible);
         amountInput.shouldBe(visible);
@@ -198,38 +202,15 @@ public abstract class SpendingPage<T> {
         saveButton.shouldBe(visible);
     }
 
-    public abstract T assertPageElementsAreVisible();
-
-    public void spendingShouldHaveAmount(Double amount) {
-        var amountVal = String.valueOf((amount % 1.0 == 0) ? amount.intValue() : amount);
-        amountInput.shouldHave(value(amountVal));
-    }
-
-    public void spendingShouldHaveCurrency(CurrencyValues currency) {
-        currencySelector.shouldHave(text(currency.name()));
-    }
-
-    public void spendingShouldHaveCategory(String name) {
-        categoryTagsList.find(cssClass("MuiChip-colorPrimary")).$x(".//*[contains(@class, 'label')]").shouldHave(text(name));
-    }
-
-    public void spendingShouldHaveDate(Date date) {
-        var dateVal = new SimpleDateFormat("MM/dd/yyyy").format(date);
-        dateInput.shouldHave(value(dateVal));
-    }
-
-    public void spendingShouldHaveDescription(String description) {
-        descriptionInput.shouldHave(value(description));
-    }
-
     @SuppressWarnings("unchecked")
-    public T assertSpendingData(SpendJson spend) {
+    public T shouldHaveData(SpendJson spend) {
         log.info("Assert spend: [{}]", spend.getUsername());
-        spendingShouldHaveAmount(spend.getAmount());
-        spendingShouldHaveCurrency(spend.getCurrency());
-        spendingShouldHaveCategory(spend.getCategory().getName());
-        spendingShouldHaveDate(spend.getSpendDate());
-        spendingShouldHaveDescription(spend.getDescription());
+        shouldHaveAmount(spend.getAmount());
+        shouldHaveCurrency(spend.getCurrency());
+        shouldHaveCategory(spend.getCategory().getName());
+        shouldBeSelectedCategory(spend.getCategory().getName());
+        shouldHaveDate(spend.getSpendDate());
+        shouldHaveDescription(spend.getDescription());
         return (T) this;
     }
 }

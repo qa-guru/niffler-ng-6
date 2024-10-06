@@ -45,9 +45,12 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                         throw new CategoryStatusException("Active category [%s] already exists".formatted(anno.name()));
                     });
 
-                    CategoryJson category = categoryApiClient
-                            .createCategory(new CategoryMapper()
-                                    .updateFromAnno(CategoryUtils.generate().setUsername(username), anno));
+                    CategoryJson category = new CategoryMapper()
+                            .updateFromAnno(CategoryUtils.generate().setUsername(username), anno);
+
+                    var isArchive = category.isArchived();
+                    category = categoryApiClient.createCategory(category);
+                    if (isArchive) categoryApiClient.updateCategory(category.setArchived(true));
 
                     context.getStore(NAMESPACE)
                             .put(context.getUniqueId(), category);

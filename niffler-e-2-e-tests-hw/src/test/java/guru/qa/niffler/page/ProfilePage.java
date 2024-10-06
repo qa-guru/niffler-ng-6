@@ -2,22 +2,17 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.ex.CategoryNotFoundException;
-import guru.qa.niffler.ex.CategoryStatusException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
-import java.time.Duration;
-import java.util.Optional;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Slf4j
-public class ProfilePage {
+public class ProfilePage extends BasePage<ProfilePage> {
 
     private final SelenideElement usernameInput = $("#username").as("['Username' input]"),
             nameInput = $("#name").as("['Name' input]"),
@@ -28,11 +23,10 @@ public class ProfilePage {
             categoriesContainer = $x("//div[contains(@class,'container') and .//*[.='Categories']]").as("['Categories' items container]"),
             alertNotificationMessage = $("div[class*='MuiAlert-message']").as("[Error message] text"),
             editCategoryNameInput = $("[placeholder='Edit category']").as("['Edit category' input]"),
-            submitArchiveCategory = $x("//button[text()='Archive']").as("[Archive] button]"),
-            submitUnarchiveCategory = $x("//button[text()='Unarchive']").as("[Unarchive] button]"),
+            submitArchiveCategory = $x("//button[text()='Archive']").as("[Submit 'Archive' button]"),
+            submitUnarchiveCategory = $x("//button[text()='Unarchive']").as("[Submit 'Unarchive' button]"),
             avatarImage = $("img[class*='Avatar-img']").as("['Avatar' image]"),
             avatarInput = $("input[type='file']").as("['Avatar' input]");
-
     private final ElementsCollection allCategories = categoriesContainer.$$x(".//*[./div[contains(@class, 'clickable')]]");
 
 
@@ -40,117 +34,9 @@ public class ProfilePage {
         return new AppHeader();
     }
 
-    public String getUsername() {
-        return usernameInput.getText();
-    }
-
-    public String getName() {
-        return nameInput.shouldBe(visible).getValue();
-    }
-
     public ProfilePage setName(@NonNull String name) {
         log.info("Set profile name: {}", name);
         nameInput.shouldBe(visible).setValue(name).pressEnter();
-        return this;
-    }
-
-    public boolean isShowArchived() {
-        var status = showArchivedStatusButton.has(cssClass("Mui-checked"));
-        log.info("'Show archived' status: {}", status);
-        return status;
-    }
-
-    public ProfilePage toggleShowArchived(boolean status) {
-        if (status != isShowArchived()) {
-            log.info("Change 'Show archived' checkbox status to: {}", status);
-            showArchivedButton.click();
-        } else {
-            log.info("'Show archived' checkbox status is already: {}", status);
-        }
-        return this;
-    }
-
-    public ProfilePage addNewCategory(@NonNull String name) {
-        log.info("Add new category with name: {}", name);
-        categoryInput.shouldBe(visible).setValue(name).pressEnter();
-        isCategoryActive(name, Duration.ofSeconds(2));
-        return this;
-    }
-
-    public ProfilePage assertAlertMessageHasText(@NonNull String allertMessage) {
-        log.info("Assert error message has text: {}", allertMessage);
-        alertNotificationMessage.shouldBe(visible).shouldHave(text(allertMessage));
-        return this;
-    }
-
-    private Optional<SelenideElement> getCategoryContainer(@NonNull String name) {
-        categoriesContainer.shouldBe(visible);
-        return allCategories.stream().filter(categoryRow -> categoryRow.$x(".//span[contains(@class, 'label')]").has(exactText(name))).findFirst();
-    }
-
-    public boolean isCategoryActive(@NonNull String name) {
-        return getCategoryContainer(name)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name = [" + name + "] not found"))
-                .$x(".//button[@aria-label='Archive category']").as("[Category = [" + name + "] 'Archive' button]").is(exist);
-    }
-
-    public boolean isCategoryActive(@NonNull String name, @NonNull Duration duration) {
-        return getCategoryContainer(name)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name = [" + name + "] not found"))
-                .$x(".//button[@aria-label='Archive category']").as("[Category = [" + name + "] 'Archive' button]").is(exist, duration);
-    }
-
-    public boolean isCategoryArchived(@NonNull String name) {
-        return !isCategoryActive(name);
-    }
-
-    public ProfilePage save() {
-        saveChangesButton.click();
-        return this;
-    }
-
-    public ProfilePage changeCategoryName(@NonNull String oldCategoryName, @NonNull String newCategoryName) {
-
-        log.info("Rename category name from [{}] to [{}]", oldCategoryName, newCategoryName);
-
-        SelenideElement category = getCategoryContainer(oldCategoryName)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name = [%s] not found".formatted(oldCategoryName)));
-
-        if (isCategoryArchived(oldCategoryName))
-            throw new CategoryStatusException("Category with name = [%s] should be active");
-
-        category.$x(".//button[@aria-label='Edit category']").click();
-        editCategoryNameInput.setValue(newCategoryName).pressEnter();
-        return this;
-
-    }
-
-    /**
-     * Changing category status:<br/> true - active,<br/> false - archived
-     */
-    public ProfilePage changeCategoryStatus(@NonNull String categoryName, boolean status) {
-
-        SelenideElement category = getCategoryContainer(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name = [%s] not found".formatted(categoryName)));
-
-        if (status != isCategoryActive(categoryName)) {
-            log.info("Change category archived status to: [{}]", status);
-            category.$x(".//button[@aria-label='" + (status ? "Unarchive category" : "Archive category") + "']").click();
-            (status ? submitUnarchiveCategory : submitArchiveCategory).click();
-        } else {
-            log.info("Category [{}] is already {}", categoryName, status ? "active" : "archived");
-        }
-
-        return this;
-
-    }
-
-    public ProfilePage assertCategoryHasStatus(@NonNull String categoryName, boolean status) {
-        log.info("Assert category [{}] archived status = [{}]", categoryName, status);
-        var categoryContainer = getCategoryContainer(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name = [%s] not found".formatted(categoryName)));
-        categoryContainer.$x(".//button[@aria-label='" + (status ? "Archive category" : "Unarchive category") + "']")
-                .is(exist, Duration.ofSeconds(1));
         return this;
     }
 
@@ -160,16 +46,115 @@ public class ProfilePage {
         return this;
     }
 
-    public ProfilePage assertCategoryExists(@NonNull String categoryName) {
-        log.info("Assert category with name = [{}] exists", categoryName);
-        Assertions.assertNotNull(getCategoryContainer(categoryName).orElse(null));
+    public ProfilePage save() {
+        log.info("Save changes");
+        saveChangesButton.click();
         return this;
     }
 
-    public ProfilePage assertAvatarHasImage() {
+    public ProfilePage showArchivedCategories() {
+        log.info("Turn on 'Show archived' categories'");
+        showArchivedButton.click();
+        showArchivedStatusButton.shouldHave(cssClass("Mui-checked"));
+        return this;
+    }
+
+    public ProfilePage showOnlyActiveCategories() {
+        log.info("Turn off 'Show archived' categories'");
+        showArchivedButton.click();
+        showArchivedStatusButton.shouldNotHave(cssClass("Mui-checked"));
+        return this;
+    }
+
+    public ProfilePage addNewCategory(@NonNull String name) {
+        log.info("Add new category with name: {}", name);
+        categoryInput.shouldBe(visible).setValue(name).pressEnter();
+        return this;
+    }
+
+    private SelenideElement getCategoryContainer(@NonNull String categoryName) {
+        return allCategories.findBy(text(categoryName));
+    }
+
+    public ProfilePage editCategoryName(@NonNull String oldCategoryName, @NonNull String newCategoryName) {
+        log.info("Change category name = from [{}], to = [{}]", oldCategoryName, newCategoryName);
+        getCategoryContainer(oldCategoryName).$("[aria-label='Edit category']").as("[Category '" + oldCategoryName + " edit button']").click();
+        editCategoryNameInput.setValue(newCategoryName).pressEnter();
+        return this;
+    }
+
+    public ProfilePage setCategoryActive(@NonNull String categoryName) {
+        log.info("Set category active: [{}]", categoryName);
+        getCategoryContainer(categoryName).$x(".//button[@aria-label='Unarchive category']")
+                .as("[Category '" + categoryName + " unarchive button']").click();
+        submitUnarchiveCategory.click();
+        return this;
+    }
+
+    public ProfilePage setCategoryArchive(@NonNull String categoryName) {
+        log.info("Set category archive: [{}]", categoryName);
+        getCategoryContainer(categoryName).$x(".//button[@aria-label='Archive category']")
+                .as("[Category '" + categoryName + " archive button']").click();
+        submitArchiveCategory.click();
+        return this;
+    }
+
+    public ProfilePage shouldHaveUsername(@NonNull String text) {
+        log.info("Assert username equals: {}", text);
+        usernameInput.shouldHave(value(text));
+        return this;
+    }
+
+    public ProfilePage shouldHaveName(@NonNull String name) {
+        log.info("Assert name equals: {}", name);
+        nameInput.shouldHave(value(name));
+        return this;
+    }
+
+    public ProfilePage shouldHaveMessageAlert(@NonNull String alertMessage) {
+        log.info("Assert alert has text: {}", alertMessage);
+        alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
+        return this;
+    }
+
+    public ProfilePage shouldBeArchiveCategory(@NonNull String categoryName) {
+        log.info("Assert name equals: {}", categoryName);
+        getCategoryContainer(categoryName).$x(".//button[@aria-label='Unarchive category']")
+                .as("[Category '" + categoryName + " unarchive button']").shouldBe(visible);
+        return this;
+    }
+
+    public ProfilePage shouldBeActiveCategory(@NonNull String categoryName) {
+        log.info("Assert name equals: {}", categoryName);
+        getCategoryContainer(categoryName).$x(".//button[@aria-label='Archive category']")
+                .as("[Category '" + categoryName + " archive button']").shouldBe(visible);
+        return this;
+    }
+
+    public ProfilePage shouldCategoryExists(@NonNull String categoryName) {
+        log.info("Assert category with name = [{}] exists", categoryName);
+        allCategories.findBy(text(categoryName)).shouldBe(visible);
+        return this;
+    }
+
+    public ProfilePage shouldHaveImage() {
         log.info("Assert avatar has image");
         avatarImage.shouldBe(visible);
         return this;
+    }
+
+    @Override
+    public ProfilePage shouldVisiblePageElements() {
+
+        log.info("Assert profile page elements are visible");
+
+        nameInput.shouldBe(visible);
+        showArchivedButton.shouldBe(visible);
+        saveChangesButton.shouldBe(visible);
+        categoryInput.shouldBe(visible);
+
+        return this;
+
     }
 
 }

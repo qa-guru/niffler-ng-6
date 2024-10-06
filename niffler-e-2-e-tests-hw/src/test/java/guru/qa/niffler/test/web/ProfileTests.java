@@ -12,7 +12,6 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.page.auth.LoginPage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -45,7 +44,7 @@ class ProfileTests {
                 .setName(name);
 
         Selenide.refresh();
-        Assertions.assertEquals(name, profile.getName());
+        profile.shouldHaveName(name);
 
     }
 
@@ -64,7 +63,7 @@ class ProfileTests {
                 .save();
 
         Selenide.refresh();
-        profile.assertAvatarHasImage();
+        profile.shouldHaveImage();
 
     }
 
@@ -82,7 +81,7 @@ class ProfileTests {
                 .addNewCategory(categoryName);
 
         Selenide.refresh();
-        profile.assertCategoryExists(categoryName);
+        profile.shouldBeActiveCategory(categoryName);
 
     }
 
@@ -99,14 +98,14 @@ class ProfileTests {
                 .openUserMenu()
                 .goToProfilePage()
                 .addNewCategory(categoryName)
-                .assertAlertMessageHasText("Error while adding category " + categoryName + ": Cannot save duplicates");
+                .shouldHaveMessageAlert("Error while adding category " + categoryName + ": Cannot save duplicates");
 
     }
 
     @Test
     @CreateNewUser
     @Category
-    void canChangeCategoryNameTest(UserModel user, CategoryJson category) {
+    void canEditCategoryNameTest(UserModel user, CategoryJson category) {
 
         var newCategoryName = FAKE.company().industry();
 
@@ -115,10 +114,10 @@ class ProfileTests {
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .changeCategoryName(category.getName(), newCategoryName);
+                .editCategoryName(category.getName(), newCategoryName);
 
         Selenide.refresh();
-        profile.assertCategoryExists(newCategoryName);
+        profile.shouldCategoryExists(newCategoryName);
 
     }
 
@@ -134,11 +133,11 @@ class ProfileTests {
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .changeCategoryStatus(categoryName, false)
-                .toggleShowArchived(true);
+                .setCategoryArchive(categoryName);
 
         Selenide.refresh();
-        profile.assertCategoryHasStatus(categoryName, false);
+        profile.showArchivedCategories()
+                .shouldBeArchiveCategory(categoryName);
 
     }
 
@@ -154,11 +153,11 @@ class ProfileTests {
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .toggleShowArchived(true)
-                .changeCategoryStatus(categoryName, true);
+                .showArchivedCategories()
+                .setCategoryActive(categoryName);
 
         Selenide.refresh();
-        profile.assertCategoryHasStatus(categoryName, true);
+        profile.shouldBeActiveCategory(categoryName);
 
     }
 

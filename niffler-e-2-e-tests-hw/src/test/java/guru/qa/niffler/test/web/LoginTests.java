@@ -27,7 +27,7 @@ class LoginTests {
     void shouldLoginWithCorrectCredentialsTest(UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword());
-        new MainPage().assertMainPageAndElementsAreVisible();
+        new MainPage().shouldVisiblePageElements();
     }
 
     @Test
@@ -35,7 +35,7 @@ class LoginTests {
     void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), new Faker().internet().password());
-        new LoginPage().assertBadCredentialsErrorVisible();
+        new LoginPage().shouldVisibleBadCredentialsError();
     }
 
     @Test
@@ -44,7 +44,7 @@ class LoginTests {
         Faker faker = new Faker();
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(faker.name().username() + faker.number().randomNumber(), faker.internet().password());
-        new LoginPage().assertBadCredentialsErrorVisible();
+        new LoginPage().shouldVisibleBadCredentialsError();
     }
 
     @Test
@@ -55,7 +55,7 @@ class LoginTests {
                 .getHeader()
                 .openUserMenu()
                 .signOut()
-                .assertPage();
+                .shouldVisiblePageElements();
     }
 
 }

@@ -18,4 +18,3 @@ public class UserModel {
     private String avatar;
 
 }
-

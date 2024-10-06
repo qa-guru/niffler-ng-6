@@ -213,4 +213,5 @@ public abstract class SpendingPage<T> extends BasePage<T> {
         shouldHaveDescription(spend.getDescription());
         return (T) this;
     }
+
 }

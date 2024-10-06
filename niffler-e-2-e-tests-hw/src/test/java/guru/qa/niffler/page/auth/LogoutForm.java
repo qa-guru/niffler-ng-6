@@ -41,4 +41,5 @@ public class LogoutForm extends BasePage<LogoutForm> {
         return this;
 
     }
+
 }

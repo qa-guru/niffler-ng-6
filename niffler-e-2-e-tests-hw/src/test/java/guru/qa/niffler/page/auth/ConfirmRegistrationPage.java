@@ -30,4 +30,5 @@ public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
         signInButton.shouldBe(visible);
         return this;
     }
+
 }

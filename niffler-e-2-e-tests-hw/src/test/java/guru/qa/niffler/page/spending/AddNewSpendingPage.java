@@ -20,4 +20,5 @@ public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
         saveButton.shouldHave(exactText("Add"));
         return this;
     }
+
 }

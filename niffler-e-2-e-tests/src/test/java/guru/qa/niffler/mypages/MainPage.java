@@ -44,4 +44,12 @@ public class MainPage {
                 .click();
         return new ProfilePage();
     }
+
+    public FriendsPage selectFriends() {
+        clientMenuBtn.shouldBe(visible)
+                .click();
+        friendsBtn.shouldBe(visible)
+                .click();
+        return new FriendsPage();
+    }
 }

@@ -21,13 +21,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class LoginTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
+    final MainPage mainPage = new MainPage();
+    final LoginPage loginPage = new LoginPage();
 
     @Test
     @CreateNewUser
     void shouldLoginWithCorrectCredentialsTest(UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword());
-        new MainPage().shouldVisiblePageElements();
+        mainPage.shouldVisiblePageElements();
     }
 
     @Test
@@ -35,7 +37,7 @@ class LoginTests {
     void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), new Faker().internet().password());
-        new LoginPage().shouldVisibleBadCredentialsError();
+        loginPage.shouldVisibleBadCredentialsError();
     }
 
     @Test
@@ -44,7 +46,7 @@ class LoginTests {
         Faker faker = new Faker();
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(faker.name().username() + faker.number().randomNumber(), faker.internet().password());
-        new LoginPage().shouldVisibleBadCredentialsError();
+        loginPage.shouldVisibleBadCredentialsError();
     }
 
     @Test
@@ -54,8 +56,8 @@ class LoginTests {
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
-                .signOut()
-                .shouldVisiblePageElements();
+                .signOut();
+        loginPage.shouldVisiblePageElements();
     }
 
 }

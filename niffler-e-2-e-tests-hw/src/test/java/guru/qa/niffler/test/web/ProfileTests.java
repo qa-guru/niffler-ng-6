@@ -27,7 +27,6 @@ class ProfileTests {
 
     static final Faker FAKE = new Faker();
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
-
     final ProfilePage profile = new ProfilePage();
 
     @Test

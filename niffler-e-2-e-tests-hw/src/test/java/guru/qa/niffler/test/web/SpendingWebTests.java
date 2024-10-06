@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
@@ -8,6 +9,7 @@ import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.NonNull;
@@ -24,6 +26,7 @@ import static com.codeborne.selenide.Selenide.open;
 class SpendingWebTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
+    final MainPage mainPage = new MainPage();
 
     @Test
     @CreateNewUser
@@ -41,29 +44,31 @@ class SpendingWebTests {
     @Test
     @CreateNewUser
     @Spending
-    void canEditSpending(@NonNull UserModel user, @NonNull SpendJson spend) {
+    void canEditSpendingTest(@NonNull UserModel user, @NonNull SpendJson spend) {
 
         var newSpend = SpendUtils.generate();
 
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .openEditSpendingPage(spend.getDescription())
-                .editSpending(newSpend)
-                .openEditSpendingPage(newSpend.getDescription())
-                .shouldHaveData(newSpend);
+                .openEditSpendingPage(spend)
+                .editSpending(newSpend);
+
+        Selenide.refresh();
+        mainPage.openEditSpendingPage(spend)
+                .shouldHaveData(spend);
+
     }
 
     @Test
     @CreateNewUser
     @Spending
-    void canCreateNewSpendingWithExistsDescription(@NonNull UserModel user, @NonNull SpendJson spend) {
+    void canCreateNewSpendingWithExistsDescriptionTest(@NonNull UserModel user, @NonNull SpendJson spend) {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .createNewSpending(spend)
-                .shouldHaveSpend(spend)
-                .openEditSpendingPage(spend.getDescription(), 0)
-                .shouldHaveData(spend)
-                .cancel();
+                .createNewSpending(spend);
+
+        Selenide.refresh();
+        mainPage.shouldHaveSpends(spend, 2);
     }
 
 }

@@ -1,12 +1,11 @@
-package guru.qa.niffler.data.entity.auth;
+package guru.qa.niffler.data.entity.userdata;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,26 +14,31 @@ import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "authority")
-public class AuthorityEntity implements Serializable {
+@Table(name = "friendship")
+@IdClass(FriendShipId.class)
+public class FriendshipEntity implements Serializable {
+
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
-  private UUID id;
-
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  private Authority authority;
-
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private AuthUserEntity user;
+  @JoinColumn(name = "requester_id", referencedColumnName = "id")
+  private UserEntity requester;
+
+  @Id
+  @ManyToOne
+  @JoinColumn(name = "addressee_id", referencedColumnName = "id")
+  private UserEntity addressee;
+
+  @Column(name = "created_date", columnDefinition = "DATE", nullable = false)
+  private Date createdDate;
+
+  @Enumerated(EnumType.STRING)
+  private FriendshipStatus status;
 
   @Override
   public final boolean equals(Object o) {
@@ -43,12 +47,13 @@ public class AuthorityEntity implements Serializable {
     Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
     Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
     if (thisEffectiveClass != oEffectiveClass) return false;
-    AuthorityEntity that = (AuthorityEntity) o;
-    return getId() != null && Objects.equals(getId(), that.getId());
+    FriendshipEntity that = (FriendshipEntity) o;
+    return getRequester() != null && Objects.equals(getRequester(), that.getRequester())
+        && getAddressee() != null && Objects.equals(getAddressee(), that.getAddressee());
   }
 
   @Override
   public final int hashCode() {
-    return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    return Objects.hash(requester, addressee);
   }
 }

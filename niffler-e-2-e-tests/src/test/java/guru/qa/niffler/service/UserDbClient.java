@@ -13,6 +13,12 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.UserdataRepository;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositorySpringJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
@@ -40,6 +46,12 @@ public class UserDbClient {
     private final AuthUserDao authUserDaoJdbc = new AuthUserDaoJdbc();
     private final AuthAuthorityDao authAuthorityDaoJdbc = new AuthAuthorityDaoJdbc();
     private final UserDao userDaoJdbc = new UdUserDaoSpringJdbc();
+
+    private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
+    private final UserdataRepository userdataRepository = new UserdataUserRepositoryJdbc();
+
+    private final AuthUserRepository authUserSpringRepository = new AuthUserRepositorySpringJdbc();
+    private final UserdataRepository userdataSpringRepository = new UserdataUserRepositorySpringJdbc();
 
     private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(
             CFG.authJdbcUrl()
@@ -78,13 +90,40 @@ public class UserDbClient {
             AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                     e -> {
                         AuthorityEntity ae = new AuthorityEntity();
-                        ae.setUserId(createdAuthUser.getId());
+                        ae.setUser(createdAuthUser);
                         ae.setAuthority(e);
                         return ae;
                     }
             ).toArray(AuthorityEntity[]::new);
             authAuthorityDao.create(authorityEntities);
             return UserJson.fromEntity(userDaoJdbc.create(
+                            UserEntity.fromJson(user)
+                    ),
+                    null
+            );
+        });
+    }
+
+    public UserJson createUserSpringJdbcRepository(UserJson user) {
+        return xaTransactionTemplate.execute(() -> {
+            AuthUserEntity authUser = new AuthUserEntity();
+            authUser.setUsername(user.username());
+            authUser.setPassword(pe.encode("12345"));
+            authUser.setEnabled(true);
+            authUser.setAccountNonExpired(true);
+            authUser.setAccountNonLocked(true);
+            authUser.setCredentialsNonExpired(true);
+            authUser.setAuthorities(Arrays.stream(Authority.values()).map(
+                    e -> {
+                        AuthorityEntity ae = new AuthorityEntity();
+                        ae.setUser(authUser);
+                        ae.setAuthority(e);
+                        return ae;
+                    }
+            ).toList());
+
+            authUserRepository.create(authUser);
+            return UserJson.fromEntity(userdataRepository.create(
                             UserEntity.fromJson(user)
                     ),
                     null
@@ -107,7 +146,7 @@ public class UserDbClient {
             AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                     e -> {
                         AuthorityEntity ae = new AuthorityEntity();
-                        ae.setUserId(createdAuthUser.getId());
+                        ae.setUser(createdAuthUser);
                         ae.setAuthority(e);
                         return ae;
                     }
@@ -137,7 +176,7 @@ public class UserDbClient {
         AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                 e -> {
                     AuthorityEntity ae = new AuthorityEntity();
-                    ae.setUserId(createdAuthUser.getId());
+                    ae.setUser(createdAuthUser);
                     ae.setAuthority(e);
                     return ae;
                 }
@@ -165,7 +204,7 @@ public class UserDbClient {
                     AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                             e -> {
                                 AuthorityEntity ae = new AuthorityEntity();
-                                ae.setUserId(createdAuthUser.getId());
+                                ae.setUser(createdAuthUser);
                                 ae.setAuthority(e);
                                 return ae;
                             }
@@ -194,7 +233,7 @@ public class UserDbClient {
         AuthorityEntity[] authorityEntities = Arrays.stream(Authority.values()).map(
                 e -> {
                     AuthorityEntity ae = new AuthorityEntity();
-                    ae.setUserId(createdAuthUser.getId());
+                    ae.setUser(createdAuthUser);
                     ae.setAuthority(e);
                     return ae;
                 }
@@ -217,8 +256,24 @@ public class UserDbClient {
 
     public Optional<UserJson> findById(UUID id) {
         return xaTransactionTemplate.execute(() -> {
-                    Optional<UserEntity> byId = userDao.findById(id);
+                    Optional<UserEntity> byId = userdataRepository.findById(id);
                     return byId.map(entity -> UserJson.fromEntity(entity, null));
+                }
+        );
+    }
+
+    public void addInvitation(UserJson requester, UserJson addressee) {
+        xaTransactionTemplate.execute(() -> {
+                    userdataSpringRepository.addInvitation(UserEntity.fromJson(requester), UserEntity.fromJson(addressee));
+                    return null;
+                }
+        );
+    }
+
+    public void addFriends(UserJson requester, UserJson addressee) {
+        xaTransactionTemplate.execute(() -> {
+                    userdataSpringRepository.addFriend(UserEntity.fromJson(requester), UserEntity.fromJson(addressee));
+                    return null;
                 }
         );
     }

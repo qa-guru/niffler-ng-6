@@ -13,7 +13,6 @@ public class UdUserEntityRowMapper implements RowMapper<UserEntity> {
     public static final UdUserEntityRowMapper instance = new UdUserEntityRowMapper();
 
     private UdUserEntityRowMapper() {
-
     }
 
     @Override

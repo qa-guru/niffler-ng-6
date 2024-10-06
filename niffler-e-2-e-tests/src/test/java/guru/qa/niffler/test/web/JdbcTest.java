@@ -32,7 +32,7 @@ public class JdbcTest {
                         CurrencyValues.RUB,
                         1000.0,
                         "spend-name-tx",
-                        null
+                        "duck"
                 )
         );
 
@@ -41,18 +41,8 @@ public class JdbcTest {
 
     @Test
     void springJdbcTest() {
-        UserJson user = usersDbClient.createUserSpringJdbc(
-                new UserJson(
-                        null,
-                        randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+        UserJson user = usersDbClient.createUserSpringJdbcRepository(
+                getUserWithName(randomUsername())
         );
         System.out.println(user);
     }
@@ -60,17 +50,7 @@ public class JdbcTest {
     @Test
     void springJdbcWithoutTransactionTest() {
         UserJson user = usersDbClient.createUserWithoutSpringJdbcTransaction(
-                new UserJson(
-                        null,
-                        randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+                getUserWithName(randomUsername())
         );
         System.out.println(user);
     }
@@ -78,17 +58,7 @@ public class JdbcTest {
     @Test
     void chainedTransactionTest() {
         UserJson user = usersDbClient.createUserWithChainedTransactionManager(
-                new UserJson(
-                        null,
-                        randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+                getUserWithName(randomUsername())
         );
         System.out.println(user);
     }
@@ -96,17 +66,7 @@ public class JdbcTest {
     @Test
     void jdbcTest() {
         UserJson user = usersDbClient.createUserJdbcTransaction(
-                new UserJson(
-                        null,
-                        randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+                getUserWithName(randomUsername())
         );
         System.out.println(user);
     }
@@ -114,18 +74,45 @@ public class JdbcTest {
     @Test
     void jdbcWithoutTransactionTest() {
         UserJson user = usersDbClient.createUserWithoutJdbcTransaction(
-                new UserJson(
-                        null,
-                        randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+                getUserWithName(randomUsername())
         );
         System.out.println(user);
+    }
+
+    @Test
+    void addFriendTest() {
+
+        UserJson myself = usersDbClient.createUserSpringJdbcRepository(
+                getUserWithName("myself-4")
+        );
+
+        UserJson friend = usersDbClient.createUserSpringJdbcRepository(
+                getUserWithName("myfriend-4")
+        );
+
+        UserJson income = usersDbClient.createUserSpringJdbcRepository(
+               getUserWithName("income-4")
+        );
+
+        UserJson outcome = usersDbClient.createUserSpringJdbcRepository(
+               getUserWithName("outcome-4")
+        );
+
+        usersDbClient.addInvitation(income, outcome);
+        usersDbClient.addFriends(myself, friend);
+    }
+
+    private UserJson getUserWithName(String username) {
+        return new UserJson(
+                null,
+                username,
+                null,
+                null,
+                null,
+                CurrencyValues.RUB,
+                null,
+                null,
+                null
+        );
     }
 }

@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.mapper;
 
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +22,7 @@ public class AuthorityUserEntityRowMapper implements RowMapper<AuthorityEntity> 
         AuthorityEntity authority = new AuthorityEntity();
         authority.setId(rs.getObject("id", UUID.class));
         authority.setAuthority(rs.getObject("authority", Authority.class));
-        authority.setUserId(rs.getObject("user_id", UUID.class));
+        authority.setUser(rs.getObject("user_id", AuthUserEntity.class));
         return authority;
     }
 }

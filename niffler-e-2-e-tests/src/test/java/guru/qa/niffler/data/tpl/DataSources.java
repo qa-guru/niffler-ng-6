@@ -28,7 +28,7 @@ public class DataSources {
                     props.put("password", "secret");
                     ds.setXaProperties(props);
                     ds.setPoolSize(3);
-                    ds.setMaxPoolSize(10);
+                    ds.setMaxPoolSize(20);
                     return ds;
                 }
         );

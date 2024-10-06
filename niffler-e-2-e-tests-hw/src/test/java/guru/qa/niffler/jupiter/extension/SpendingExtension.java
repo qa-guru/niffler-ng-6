@@ -54,6 +54,26 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
     }
 
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spending.class)
+                .ifPresent(anno -> {
+
+                    var spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
+                    log.info("Text spend: {}", spend);
+                    log.info("Delete spend: id = [{}], description = [{}]", spend.getId().toString(), spend.getDescription());
+                    spendApiClient.deleteSpends(spend.getUsername(), List.of(spend.getId().toString()));
+                    if (isCategoryWasCreatedBySpend) {
+                        var category = spend.getCategory();
+                        log.info("Set category archived: id = [{}], name = [{}]", category.getId().toString(), category.getName());
+                        categoryApiClient.updateCategory(category.setArchived(false));
+                    }
+
+                });
+
+    }
+
     public SpendJson generateSpendForUserAndLazyUpdateBySpendingAnnotation(@NonNull String username, Spending anno) {
 
         var spend = SpendUtils.generate();
@@ -88,23 +108,4 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
         return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), SpendJson.class);
     }
 
-    @Override
-    public void afterEach(ExtensionContext context) throws Exception {
-
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spending.class)
-                .ifPresent(anno -> {
-
-                    var spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
-                    log.info("Text spend: {}", spend);
-                    log.info("Delete spend: id = [{}], description = [{}]", spend.getId().toString(), spend.getDescription());
-                    spendApiClient.deleteSpends(spend.getUsername(), List.of(spend.getId().toString()));
-                    if (isCategoryWasCreatedBySpend) {
-                        var category = spend.getCategory();
-                        log.info("Set category archived: id = [{}], name = [{}]", category.getId().toString(), category.getName());
-                        categoryApiClient.updateCategory(category.setArchived(false));
-                    }
-
-                });
-
-    }
 }

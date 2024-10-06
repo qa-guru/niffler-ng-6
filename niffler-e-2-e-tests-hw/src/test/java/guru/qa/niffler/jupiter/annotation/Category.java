@@ -25,5 +25,5 @@ public @interface Category {
 
     boolean isArchived() default false;
 
-    boolean generateIsArchived() default true;
+    boolean generateIsArchived() default false;
 }

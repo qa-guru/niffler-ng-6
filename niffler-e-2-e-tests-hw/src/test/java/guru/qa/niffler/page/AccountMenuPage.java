@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.page.auth.LogoutForm;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -10,6 +11,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
+@NoArgsConstructor
 public class AccountMenuPage extends BasePage<AccountMenuPage> {
 
     private final SelenideElement accountMenuForm = $("#account-menu").as("['Account menu' form]");
@@ -34,6 +36,14 @@ public class AccountMenuPage extends BasePage<AccountMenuPage> {
         goToLogoutForm();
         return new LogoutForm().logout();
     }
+
+    @Override
+    public AccountMenuPage shouldVisiblePageElement() {
+        log.info("Assert account menu element are visible");
+        signOutButton.shouldBe(visible);
+        return this;
+    }
+
     @Override
     public AccountMenuPage shouldVisiblePageElements() {
 

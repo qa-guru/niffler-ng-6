@@ -5,6 +5,7 @@ import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class SpendApiClient {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -33,6 +35,9 @@ public class SpendApiClient {
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
     public SpendJson createNewSpend(SpendJson spend) {
+
+        log.info("Create new spend: {}", spend);
+
         final Response<SpendJson> response;
         try {
             response = spendApi.createNewSpend(spend)
@@ -42,9 +47,13 @@ public class SpendApiClient {
         }
         assertEquals(HttpStatus.CREATED, response.code());
         return response.body();
+
     }
 
     public SpendJson getSpend(String id) {
+
+        log.info("Get spend by id: {}", id);
+
         final Response<SpendJson> response;
         try {
             response = spendApi.getSpend(id)
@@ -54,6 +63,7 @@ public class SpendApiClient {
         }
         assertEquals(HttpStatus.OK, response.code());
         return response.body();
+
     }
 
     public List<SpendJson> getSpends(
@@ -62,6 +72,9 @@ public class SpendApiClient {
             @Query("from") Date from,
             @Query("to") Date to
     ) {
+
+        log.info("Get spends by: username = [{}], currency = [{}], from = [{}], to = [{}]", username, currencyValues, from, to);
+
         final Response<List<SpendJson>> response;
         try {
             response = spendApi.getSpends(username, currencyValues, from, to)
@@ -71,9 +84,13 @@ public class SpendApiClient {
         }
         assertEquals(HttpStatus.OK, response.code());
         return response.body();
+
     }
 
     public SpendJson updateSpend(SpendJson spend) {
+
+        log.info("Update spend to: {}", spend);
+
         final Response<SpendJson> response;
         try {
             response = spendApi.updateSpend(spend)
@@ -83,9 +100,13 @@ public class SpendApiClient {
         }
         assertEquals(HttpStatus.OK, response.code());
         return response.body();
+
     }
 
     public void deleteSpends(String username, List<String> ids) {
+
+        log.info("Delete spends by ids: {}", ids);
+
         final Response<Void> response;
         try {
             response = spendApi.deleteSpends(username, ids)
@@ -94,6 +115,7 @@ public class SpendApiClient {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.ACCEPTED, response.code());
+
     }
 
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class LoginTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
+    static final Faker FAKE = new Faker();
     final MainPage mainPage = new MainPage();
     final LoginPage loginPage = new LoginPage();
 
@@ -36,16 +37,15 @@ class LoginTests {
     @CreateNewUser
     void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), new Faker().internet().password());
+                .login(user.getUsername(), FAKE.internet().password());
         loginPage.shouldVisibleBadCredentialsError();
     }
 
     @Test
     @CreateNewUser
     void shouldDisplayErrorMessageIfUsernameNotFoundTest() {
-        Faker faker = new Faker();
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(faker.name().username() + faker.number().randomNumber(), faker.internet().password());
+                .login(FAKE.name().username() + FAKE.number().randomNumber(), FAKE.internet().password());
         loginPage.shouldVisibleBadCredentialsError();
     }
 

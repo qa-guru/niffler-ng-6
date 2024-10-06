@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 public class CalendarService {
 
-    private static final Date MIN_DATE = new GregorianCalendar(1900, JANUARY, 1).getTime(),
+    private static final Date MIN_DATE = new GregorianCalendar(1970, JANUARY, 1).getTime(),
             MAX_DATE = new GregorianCalendar(2099, DECEMBER, 31, 23, 59, 59).getTime();
 
     private final SelenideElement
@@ -67,7 +67,7 @@ public class CalendarService {
 
     private void validateDate(Date date) {
         if (date.before(MIN_DATE) && date.after(MAX_DATE))
-            throw new InvalidDateException("Available dates from [1900/01/01] to [2099/12/31]");
+            throw new InvalidDateException("Available dates from [1970/01/01] to [2099/12/31]");
     }
 
     private CalendarType getCalendarType() {

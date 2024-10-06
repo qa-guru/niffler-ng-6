@@ -51,11 +51,9 @@ class SpendingWebTests {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .openEditSpendingPage(spend)
-                .editSpending(newSpend);
-
-        Selenide.refresh();
-        mainPage.openEditSpendingPage(spend)
-                .shouldHaveData(spend);
+                .editSpending(newSpend)
+                .openEditSpendingPage(newSpend)
+                .shouldHaveData(newSpend);
 
     }
 
@@ -65,10 +63,9 @@ class SpendingWebTests {
     void canCreateNewSpendingWithExistsDescriptionTest(@NonNull UserModel user, @NonNull SpendJson spend) {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .createNewSpending(spend);
-
-        Selenide.refresh();
-        mainPage.shouldHaveSpends(spend, 2);
+                .createNewSpending(spend)
+                .shouldVisiblePageElements()
+                .shouldHaveSpends(spend, 2);
     }
 
 }

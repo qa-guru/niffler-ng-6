@@ -20,9 +20,9 @@ public class CategoryMapper {
                                 ? category.getUsername()
                                 : anno.username())
                 .archived(
-                        anno.generateIsArchived()
+                        anno.isArchived() || (anno.generateIsArchived()
                                 ? new Random().nextBoolean()
-                                : anno.isArchived())
+                                : false))
                 .build();
 
     }

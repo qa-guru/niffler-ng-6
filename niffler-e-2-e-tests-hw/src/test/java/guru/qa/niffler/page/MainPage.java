@@ -1,6 +1,5 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
@@ -10,6 +9,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.spending.EditSpendingPage;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,12 @@ import static com.codeborne.selenide.Selenide.*;
 import static guru.qa.niffler.conditions.SelenideCondition.child;
 
 @Slf4j
+@NoArgsConstructor
 public class MainPage extends BasePage<MainPage> {
+
+    public MainPage(boolean checkPageElementVisible){
+        super(checkPageElementVisible);
+    }
 
     private final SelenideElement statisticsTitle = $(byText("Statistics")).as("Statistics title"),
             statisticsBar = $("canvas").as("Statistics bar"),
@@ -95,7 +100,7 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage createNewSpending(@NonNull SpendJson spend) {
         log.info("Go to 'Create new spending' page");
         getHeader().goToCreateSpendingPage();
-        return new AddNewSpendingPage().createNewSpending(spend);
+        return new AddNewSpendingPage(true).createNewSpending(spend);
     }
 
     public EditSpendingPage openEditSpendingPage(@NonNull String spendingName, int index) {
@@ -132,16 +137,12 @@ public class MainPage extends BasePage<MainPage> {
         List<WebElementCondition> spendCondition = new ArrayList<>();
         if (spend.getCategory().getName() != null)
             spendCondition.add(child(byXpath(".//td[2]/span"), exactText(spend.getCategory().getName())));
-        if (spend.getAmount() != null) {
-            log.info("amount val: {}", getAmountWithCurrencySymbol(spend));
+        if (spend.getAmount() != null)
             spendCondition.add(child(byXpath(".//td[3]/span"), exactText(getAmountWithCurrencySymbol(spend))));
-        }
         if (spend.getDescription() != null)
             spendCondition.add(child(byXpath(".//td[4]/span"), exactText(spend.getDescription())));
-        if (spend.getSpendDate() != null) {
-            log.info("date val: {}", new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
+        if (spend.getSpendDate() != null)
             spendCondition.add(child(byXpath(".//td[5]/span"), exactText(new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()))));
-        }
 
         return spendCondition;
     }
@@ -153,7 +154,7 @@ public class MainPage extends BasePage<MainPage> {
                 sourceDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         if (sourceDate == today) return Period.TODAY;
         if (sourceDate.isAfter(week) || sourceDate == week) return Period.LAST_WEEK;
-        if (sourceDate.isBefore(month) || sourceDate == month) return Period.LAST_MONTH;
+        if (sourceDate.isAfter(month) || sourceDate == month) return Period.LAST_MONTH;
         return Period.ALL_TIME;
     }
 
@@ -253,6 +254,14 @@ public class MainPage extends BasePage<MainPage> {
         alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
         return this;
     }
+
+    @Override
+    public MainPage shouldVisiblePageElement() {
+        log.info("Assert 'Main' page element visible on start up");
+        historyOfSpendingsTitle.shouldBe(visible);
+        return this;
+    }
+
 
     @Override
     public MainPage shouldVisiblePageElements() {

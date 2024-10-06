@@ -7,11 +7,11 @@ public class UserUtils {
 
     public static UserModel generateValidUser() {
 
-        Faker faker = new Faker();
-        var username = faker.name().username();
-        var password = faker.internet().password();
-        var fullName = faker.name().fullName();
-        var avatar = faker.internet().avatar();
+        Faker fake = new Faker();
+        var username = fake.name().username();
+        var password = fake.internet().password();
+        var fullName = fake.name().fullName();
+        var avatar = fake.internet().avatar();
 
         username = (username.length() > 50)
                 ? username.substring(0, 50)

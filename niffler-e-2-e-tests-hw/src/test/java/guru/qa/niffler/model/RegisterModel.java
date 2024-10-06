@@ -27,4 +27,3 @@ public class RegisterModel {
     private String passwordConfirmation;
 
 }
-

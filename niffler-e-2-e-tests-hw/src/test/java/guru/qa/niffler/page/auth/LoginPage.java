@@ -75,4 +75,5 @@ public class LoginPage extends BasePage<LoginPage> {
         return this;
 
     }
+
 }

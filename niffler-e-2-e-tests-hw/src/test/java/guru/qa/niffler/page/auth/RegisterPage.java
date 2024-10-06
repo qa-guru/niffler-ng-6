@@ -96,4 +96,5 @@ public class RegisterPage extends BasePage<RegisterPage> {
         return this;
 
     }
+
 }

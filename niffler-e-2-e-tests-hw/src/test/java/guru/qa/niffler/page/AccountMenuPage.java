@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.page.auth.LogoutForm;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,12 +24,16 @@ public class AccountMenuPage extends BasePage<AccountMenuPage> {
         return new ProfilePage();
     }
 
-    public LogoutForm signOut() {
-        log.info("Sign out");
+    public LogoutForm goToLogoutForm() {
+        log.info("Open logout out form");
         signOutButton.click();
         return new LogoutForm();
     }
 
+    public LoginPage logout() {
+        goToLogoutForm();
+        return new LogoutForm().logout();
+    }
     @Override
     public AccountMenuPage shouldVisiblePageElements() {
 
@@ -42,4 +47,5 @@ public class AccountMenuPage extends BasePage<AccountMenuPage> {
 
         return this;
     }
+
 }

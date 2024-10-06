@@ -56,7 +56,7 @@ class LoginTests {
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .openUserMenu()
-                .signOut();
+                .logout();
         loginPage.shouldVisiblePageElements();
     }
 

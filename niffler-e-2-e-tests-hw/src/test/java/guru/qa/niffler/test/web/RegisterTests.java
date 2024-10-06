@@ -23,7 +23,7 @@ class RegisterTests {
         UserModel user = UserUtils.generateValidUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user)
-                .assertSuccessfulRegistration();
+                .shouldVisiblePageElements();
     }
 
     @Test

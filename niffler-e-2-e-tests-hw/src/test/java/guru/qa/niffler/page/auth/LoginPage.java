@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,17 +12,17 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Slf4j
-public class LoginPage {
+public class LoginPage extends BasePage<LoginPage> {
 
     private final SelenideElement title = $("h1").as("['Login Page' title]"),
             usernameInput = $(byName("username")).as("Username input"),
             passwordInput = $(byName("password")).as("Password input"),
             showPasswordButton = $("[class*='password-button']").as("Show password button"),
             submitButton = $("button[type='submit']").as("Submit button"),
-            createNewAccount = $(byText("Create new account")).as("Create new account button"),
+            createNewAccountButton = $(byText("Create new account")).as("Create new account button"),
             badCredentialsError = $x("//p[@class='form__error' " +
                     "and (text()='Неверные учетные данные пользователя' or text()='Bad credentials')]") // INFO: Different language in browser and AT
-                    .as("Sign in form error");
+                    .as("[Sign in form error]");
 
     public MainPage login(String username, String password) {
         log.info("Sign in for user [{}]", username);
@@ -53,19 +54,25 @@ public class LoginPage {
 
     public RegisterPage goToRegisterPage() {
         log.info("Go to 'RegisterPage'");
-        createNewAccount.click();
+        createNewAccountButton.click();
         return new RegisterPage();
     }
 
-    public LoginPage assertBadCredentialsErrorVisible() {
+    public LoginPage shouldVisibleBadCredentialsError() {
         badCredentialsError.shouldBe(visible);
         return this;
     }
 
-    public LoginPage assertPage() {
+    @Override
+    public LoginPage shouldVisiblePageElements() {
+
+        log.info("Assert login page elements are visible");
+
         title.shouldBe(visible).shouldHave(exactText("Log in"));
         usernameInput.shouldBe(visible);
         passwordInput.shouldBe(visible);
+
         return this;
+
     }
 }

@@ -34,7 +34,7 @@ class SpendingWebTests {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)
-                .assertSpendingExists(spend);
+                .shouldHaveSpend(spend);
 
     }
 
@@ -50,7 +50,7 @@ class SpendingWebTests {
                 .openEditSpendingPage(spend.getDescription())
                 .editSpending(newSpend)
                 .openEditSpendingPage(newSpend.getDescription())
-                .assertSpendingData(newSpend);
+                .shouldHaveData(newSpend);
     }
 
     @Test
@@ -60,8 +60,10 @@ class SpendingWebTests {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)
+                .shouldHaveSpend(spend)
                 .openEditSpendingPage(spend.getDescription(), 0)
-                .assertSpendingData(spend);
+                .shouldHaveData(spend)
+                .cancel();
     }
 
 }

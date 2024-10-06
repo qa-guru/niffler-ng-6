@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
-public class AppHeader {
+public class AppHeader extends BasePage<AppHeader> {
 
     private final SelenideElement header = $("header").as("[Header]");
     private final SelenideElement logoImg = header.$("a[href='main'] img").as("['Logo' image]");
@@ -34,13 +34,18 @@ public class AppHeader {
         return new AccountMenuPage();
     }
 
-    public AppHeader assertMainPageHeaderElementsAreVisible() {
+    @Override
+    public AppHeader shouldVisiblePageElements() {
+
+        log.info("Assert app header elements are visible");
+
         logoImg.shouldBe(visible);
         logoTitle.shouldBe(visible);
         newSpendingButton.shouldBe(visible);
         avatarButton.shouldBe(visible);
         logoImg.shouldBe(visible);
-        return this;
-    }
 
+        return this;
+
+    }
 }

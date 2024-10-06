@@ -11,16 +11,18 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class UdUserDaoSpringJdbc implements UdUserDao {
 
   private static final Config CFG = Config.getInstance();
+  private final String url = CFG.userdataJdbcUrl();
 
   @Override
   public UserEntity create(UserEntity user) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {
       PreparedStatement ps = con.prepareStatement(
@@ -45,13 +47,22 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findById(UUID id) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             "SELECT * FROM \"user\" WHERE id = ?",
             UdUserEntityRowMapper.instance,
             id
         )
+    );
+  }
+
+  @Override
+  public List<UserEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    return jdbcTemplate.query(
+        "SELECT * FROM \"user\"",
+        UdUserEntityRowMapper.instance
     );
   }
 }

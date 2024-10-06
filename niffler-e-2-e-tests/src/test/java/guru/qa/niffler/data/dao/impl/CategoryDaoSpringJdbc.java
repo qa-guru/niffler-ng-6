@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.dao.impl;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
@@ -16,11 +17,7 @@ import java.util.UUID;
 
 public class CategoryDaoSpringJdbc implements CategoryDao {
 
-    private final DataSource dataSource;
-
-    public CategoryDaoSpringJdbc(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private static final Config CFG = Config.getInstance();
 
     @Override
     public CategoryEntity create(CategoryEntity category) {

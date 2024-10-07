@@ -6,8 +6,6 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UsersDbClient;
-import guru.qa.niffler.utils.RandomDataUtils;
-import jaxb.userdata.FriendState;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -38,14 +36,13 @@ public class JdbcTest {
         System.out.println(spend);
     }
 
-    // Тест на создание пользователя без дружбы (friendState null)
     @Test
-    void createUserWithoutFriend() {
+    void springJdbcTest() {
         UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUserWithFriend(
+        UserJson myself = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        RandomDataUtils.randomUsername(),
+                        "myself",
                         null,
                         null,
                         null,
@@ -55,111 +52,58 @@ public class JdbcTest {
                         null
                 )
         );
-        System.out.println("Created user without friend: " + user);
-    }
 
-    // Тест на создание пользователя с VOID состоянием дружбы
-    @Test
-    void createUserWithVoidFriendState() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUserWithFriend(
+
+        UserJson friend = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        RandomDataUtils.randomUsername(),
+                        "friend",
                         null,
                         null,
                         null,
                         CurrencyValues.RUB,
                         null,
                         null,
-                        FriendState.VOID
+                        null
                 )
         );
 
-        // Печатаем данные пользователя в консоль для проверки
-        System.out.println("Created user with VOID friend state: " + user);
-    }
 
-    // Тест на создание пользователя с отправленным приглашением (friendState INVITE_SENT)
-    @Test
-    void createUserWithInviteSent() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUserWithFriend(
+        UserJson income = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        RandomDataUtils.randomUsername(),
+                        "income",
                         null,
                         null,
                         null,
                         CurrencyValues.RUB,
                         null,
                         null,
-                        FriendState.INVITE_SENT
+                        null
                 )
         );
-        System.out.println("Created user with invite sent: " + user);
-    }
 
-    // Тест на создание пользователя с полученным приглашением (friendState INVITE_RECEIVED)
-    @Test
-    void createUserWithInviteReceived() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUserWithFriend(
+        UserJson outcome = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        RandomDataUtils.randomUsername(),
+                        "outcome",
                         null,
                         null,
                         null,
                         CurrencyValues.RUB,
                         null,
                         null,
-                        FriendState.INVITE_RECEIVED
-                )
-        );
-        System.out.println("Created user with invite received: " + user);
-    }
-
-    // Тест на создание пользователя с подтвержденной дружбой (friendState FRIEND)
-    @Test
-    void createUserWithFriendConfirmed() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUserWithFriend(
-                new UserJson(
-                        null,
-                        RandomDataUtils.randomUsername(),
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        FriendState.FRIEND
+                        null
                 )
         );
 
-        // Печатаем данные пользователя в консоль для проверки
-        System.out.println("Created user with confirmed friend: " + user);
-    }
+        // Добавляем входящее приглашение
+        usersDbClient.addInvitation(income, myself);
 
-    // Имитируем ошибку при создании пользователя, передавая неверные данные
-    @Test
-    void createUserTransactionRollbackOnError() {
-            UsersDbClient usersDbClient = new UsersDbClient();
-            UserJson user = usersDbClient.createUserWithFriend(
-                    new UserJson(
-                            null,
-                            null, // Отсутствует имя пользователя, что вызовет ошибку
-                            null,
-                            null,
-                            null,
-                            CurrencyValues.RUB,
-                            null,
-                            null,
-                            FriendState.FRIEND
-                    )
-            );
-        // Печатаем данные пользователя в консоль для проверки
-        System.out.println("Created user with invalid username: " + user);
+        // Добавляем исходящее приглашение
+        usersDbClient.addInvitation(myself, outcome);
+
+        // Добавляем друзей
+        usersDbClient.addFriends(myself, friend);
     }
 }

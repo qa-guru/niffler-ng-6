@@ -5,7 +5,6 @@ import guru.qa.niffler.page.spending.AddNewSpendingPage;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -13,15 +12,14 @@ import static com.codeborne.selenide.Selenide.$;
 @NoArgsConstructor
 public class AppHeader extends BasePage<AppHeader> {
 
-    public AppHeader(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement header = $("header").as("[Header]");
     private final SelenideElement logoImg = header.$("a[href='main'] img").as("['Logo' image]");
     private final SelenideElement logoTitle = header.$("a[href='main'] h1").as("['Logo' title]");
     private final SelenideElement newSpendingButton = header.$("a[href='/spending']").as("['New spending' button]");
     private final SelenideElement avatarButton = header.$("button[aria-label='Menu']").as("['Menu' button]");
+    public AppHeader(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public MainPage mainPage() {
         log.info("Go to main page");

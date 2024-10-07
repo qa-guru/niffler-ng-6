@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Condition.exactText;
 @NoArgsConstructor
 public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
 
-    public EditSpendingPage(boolean checkPageElementVisible){
+    public EditSpendingPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
 

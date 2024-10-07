@@ -26,10 +26,6 @@ public class AuthApiClient {
 
     private static final RegisterModelMapper registerModelToMap = new RegisterModelMapper();
     private static final LoginModelToMap loginModelToMap = new LoginModelToMap();
-
-    @Getter
-    private Map<Token, String> cookies;
-
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Config.getInstance().authUrl())
             .addConverterFactory(JacksonConverterFactory.create())
@@ -38,10 +34,9 @@ public class AuthApiClient {
                     .followRedirects(false)
                     .build())
             .build();
-
     private final AuthApi authApi = retrofit.create(AuthApi.class);
-
-
+    @Getter
+    private Map<Token, String> cookies;
 
     private void updateCookies() {
         log.info("Updating cookies");

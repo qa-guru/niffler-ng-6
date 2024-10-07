@@ -16,10 +16,6 @@ import static com.codeborne.selenide.Selenide.$x;
 @NoArgsConstructor
 public class LoginPage extends BasePage<LoginPage> {
 
-    public LoginPage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement title = $("h1").as("['Login Page' title]"),
             usernameInput = $(byName("username")).as("Username input"),
             passwordInput = $(byName("password")).as("Password input"),
@@ -29,6 +25,10 @@ public class LoginPage extends BasePage<LoginPage> {
             badCredentialsError = $x("//p[@class='form__error' " +
                     "and (text()='Неверные учетные данные пользователя' or text()='Bad credentials')]") // INFO: Different language in browser and AT
                     .as("[Sign in form error]");
+
+    public LoginPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public MainPage login(String username, String password) {
         log.info("Sign in for user [{}]", username);

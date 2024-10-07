@@ -9,7 +9,8 @@ public abstract class BasePage<T> {
         if (assertPageElementsOnStart)
             try {
                 shouldVisiblePageElements();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
     }
 
     public abstract T shouldVisiblePageElement();

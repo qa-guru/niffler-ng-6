@@ -14,10 +14,6 @@ import static com.codeborne.selenide.Selenide.$;
 @NoArgsConstructor
 public class RegisterPage extends BasePage<RegisterPage> {
 
-    public RegisterPage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement
             title = $("h1").as("[Registration page title]"),
             usernameInput = $("#username").as("Username input"),
@@ -27,6 +23,10 @@ public class RegisterPage extends BasePage<RegisterPage> {
             showPasswordConfirmationButton = $("#passwordSubmitBtn").as("Submit button"),
             submitButton = $("button[type='submit']").as("Sign up button"),
             goToLoginPageLink = $("[href$='/main']").as("Log in link");
+
+    public RegisterPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public ConfirmRegistrationPage signUp(@NonNull UserModel user) {
         fillRegistrationData(user);

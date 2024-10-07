@@ -16,7 +16,6 @@ import java.util.GregorianCalendar;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static java.util.Calendar.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class CalendarService {

@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class SpendJson{
+public class SpendJson {
 
     @JsonProperty("id")
     private UUID id;

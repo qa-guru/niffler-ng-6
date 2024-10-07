@@ -31,10 +31,6 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @NoArgsConstructor
 public class MainPage extends BasePage<MainPage> {
 
-    public MainPage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement statisticsTitle = $(byText("Statistics")).as("Statistics title"),
             statisticsBar = $("canvas").as("Statistics bar"),
             historyOfSpendingsTitle = $(byText("History of Spendings")).as("History of Spendings title"),
@@ -51,11 +47,14 @@ public class MainPage extends BasePage<MainPage> {
             nextPageButton = $x("//button[text()='Next']").as("[Spending table 'next page' button]"),
             alertNotificationMessage = $("div[class*='MuiAlert-message']").as("['Error message' text]"),
             allSpendingsSelector = $x("//thead/input").as("[All spendings selector]");
-
     private final ElementsCollection spendingRows = $$("#spendings tbody tr"),
             spendingsLegendList = $$("#legend-container li").as("Statistics items list"),
             spendingsPeriodList = $$("#menu-period li").as("Spendings period list"),
             currenciesList = $$("#menu-currency li").as("Currencies list");
+
+    public MainPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public AppHeader getHeader() {
         return new AppHeader();

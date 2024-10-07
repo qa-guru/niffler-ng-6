@@ -11,4 +11,9 @@ public interface Config {
     String frontUrl();
 
     String spendUrl();
+
+    default String gitHubUrl() {
+        return "https://api.github.com/";
+    }
+
 }

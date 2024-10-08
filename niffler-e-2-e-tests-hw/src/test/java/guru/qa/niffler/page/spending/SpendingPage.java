@@ -39,8 +39,10 @@ public abstract class SpendingPage<T> extends BasePage<T> {
             descriptionLabel = $("label[for='description']").as("['Description' label]"),
             cancelButton = $("#cancel").as("['Cancel' button]"),
             saveButton = $("#save").as("['Add' button]");
+
     protected final ElementsCollection currenciesList = $$("#menu-currency li").as("'Currency' list"),
             categoryTagsList = $$x("//*[./label[@for='category']]//*[@role='button']").as("'Category' list");
+
     private final CalendarService calendarService = new CalendarService();
 
     protected SpendingPage(boolean checkPageElementVisible) {

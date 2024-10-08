@@ -17,6 +17,7 @@ public class AppHeader extends BasePage<AppHeader> {
     private final SelenideElement logoTitle = header.$("a[href='main'] h1").as("['Logo' title]");
     private final SelenideElement newSpendingButton = header.$("a[href='/spending']").as("['New spending' button]");
     private final SelenideElement avatarButton = header.$("button[aria-label='Menu']").as("['Menu' button]");
+
     public AppHeader(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }

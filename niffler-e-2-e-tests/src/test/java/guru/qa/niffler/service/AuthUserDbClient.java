@@ -13,6 +13,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.spend.UserEntity;
 
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
+import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -28,9 +29,9 @@ public class AuthUserDbClient {
     private final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final AuthUserDao authUserDao = new AuthUserDaoJdbc();
-    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoJdbc();
-    private final UserDao userDao = new UserDaoJdbc();
+    private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
+    private final UserDao userDao = new UserDaoSpringJdbc();
 
     private final TransactionTemplate txTemplate = new TransactionTemplate(
             new JdbcTransactionManager(
@@ -38,37 +39,37 @@ public class AuthUserDbClient {
             )
     );
 
-    private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(
-            CFG.authJdbcUrl()
+    private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(
+            CFG.authJdbcUrl(),
+            CFG.userdataJdbcUrl()
     );
 
     public UserJson createUserSpring(UserJson userJson) {
-        jdbcTxTemplate.execute(()-> {
-            AuthUserEntity authUser = new AuthUserEntity();
-            authUser.setUsername(userJson.username());
-            authUser.setPassword(pe.encode("12345"));
-            authUser.setEnabled(true);
-            authUser.setAccountNonExpired(true);
-            authUser.setAccountNonLocked(true);
-            authUser.setCredentialsNonExpired(true);
-            AuthUserEntity createdAuthUser = authUserDao.create(authUser);
-            AuthAuthorityEntity[] userAuthority = Arrays.stream(Authority.values()).map(
-                    e -> {
-                        AuthAuthorityEntity ae = new AuthAuthorityEntity();
-                        ae.setUserId(createdAuthUser.getId());
-                        ae.setAuthority(e);
-                        return ae;
-                    }
-            ).toArray(AuthAuthorityEntity[]::new);
-            authAuthorityDao.create(userAuthority);
-            return null;
-        });
-        return UserJson.fromEntity(
-                userDao.createUser(
-                        UserEntity.fromJson(userJson)
-                )
+        return xaTxTemplate.execute(() -> {
+                    AuthUserEntity authUser = new AuthUserEntity();
+                    authUser.setUsername(userJson.username());
+                    authUser.setPassword(pe.encode("12345"));
+                    authUser.setEnabled(true);
+                    authUser.setAccountNonExpired(true);
+                    authUser.setAccountNonLocked(true);
+                    authUser.setCredentialsNonExpired(true);
+                    AuthUserEntity createdAuthUser = authUserDao.create(authUser);
+                    AuthAuthorityEntity[] userAuthority = Arrays.stream(Authority.values()).map(
+                            e -> {
+                                AuthAuthorityEntity ae = new AuthAuthorityEntity();
+                                ae.setUserId(createdAuthUser.getId());
+                                ae.setAuthority(e);
+                                return ae;
+                            }
+                    ).toArray(AuthAuthorityEntity[]::new);
+                    authAuthorityDao.create(userAuthority);
+                    return UserJson.fromEntity(
+                            userDao.createUser(
+                                    UserEntity.fromJson(userJson)
+                            )
+                    );
+                }
         );
-
     }
 
     public UserJson createUser(UserJson user) {

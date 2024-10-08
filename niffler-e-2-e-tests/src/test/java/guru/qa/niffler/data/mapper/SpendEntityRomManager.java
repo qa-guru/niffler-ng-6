@@ -15,8 +15,8 @@ import static guru.qa.niffler.data.Databases.dataSource;
 public class SpendEntityRomManager implements RowMapper<SpendEntity> {
 
     private static final Config CFG = Config.getInstance();
-
     public static final SpendEntityRomManager instance = new SpendEntityRomManager();
+
 
     @Override
     public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -26,7 +26,7 @@ public class SpendEntityRomManager implements RowMapper<SpendEntity> {
         result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
         result.setAmount(rs.getDouble("amount"));
         result.setDescription(rs.getString("description"));
-        result.setCategory(new CategoryDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).findCategoryById(rs.getObject("category_id", UUID.class)).orElseThrow());
+        result.setCategory(new CategoryDaoSpringJdbc().findCategoryById(rs.getObject("category_id", UUID.class)).orElseThrow());
         return result;
     }
 }

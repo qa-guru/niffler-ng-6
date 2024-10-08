@@ -27,7 +27,7 @@ public class UserCreateInBdTest {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
         UserJson user = authUserDbClient.createUserSpring(new UserJson(
                 null,
-                RandomDataUtils.randomUsername(),
+                "Ignat",
                 null,
                 null,
                 RandomDataUtils.randomName(),

@@ -39,10 +39,10 @@ public class JdbcTest {
     @Test
     void springJdbcTest() {
         UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUser(
+        UserJson myself = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        "valentin-6",
+                        "myself",
                         null,
                         null,
                         null,
@@ -52,6 +52,58 @@ public class JdbcTest {
                         null
                 )
         );
-        System.out.println(user);
+
+
+        UserJson friend = usersDbClient.createUser(
+                new UserJson(
+                        null,
+                        "friend",
+                        null,
+                        null,
+                        null,
+                        CurrencyValues.RUB,
+                        null,
+                        null,
+                        null
+                )
+        );
+
+
+        UserJson income = usersDbClient.createUser(
+                new UserJson(
+                        null,
+                        "income",
+                        null,
+                        null,
+                        null,
+                        CurrencyValues.RUB,
+                        null,
+                        null,
+                        null
+                )
+        );
+
+        UserJson outcome = usersDbClient.createUser(
+                new UserJson(
+                        null,
+                        "outcome",
+                        null,
+                        null,
+                        null,
+                        CurrencyValues.RUB,
+                        null,
+                        null,
+                        null
+                )
+        );
+
+        // Добавляем входящее приглашение
+        usersDbClient.addInvitation(income, myself);
+
+        // Добавляем исходящее приглашение
+        usersDbClient.addInvitation(myself, outcome);
+
+        // Добавляем друзей
+        usersDbClient.addFriends(myself, friend);
     }
 }

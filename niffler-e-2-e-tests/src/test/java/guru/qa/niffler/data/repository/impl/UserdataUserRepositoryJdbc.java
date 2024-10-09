@@ -80,7 +80,52 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
-    public void addInvitation(UserEntity requester, UserEntity addressee) {
+    public Optional<UserEntity> findByUsername(String username) {
+        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                "SELECT * FROM \"user\" WHERE username = ?")) {
+            ps.setString(1, username);
+            ps.execute();
+
+            try (ResultSet rs = ps.getResultSet()) {
+                if (rs.next()) {
+                    UserEntity user = new UserEntity();
+                    user.setId(rs.getObject("id", UUID.class));
+                    user.setUsername(rs.getString("username"));
+                    user.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    user.setFirstname(rs.getString("firstname"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setFullname(rs.getString("full_name"));
+                    user.setPhoto(rs.getBytes("photo"));
+                    user.setPhotoSmall(rs.getBytes("photo_small"));
+                    return Optional.of(user);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
+                        "VALUES (?, ?, ?, ?)")) {
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.PENDING.name());
+            ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
                         "VALUES (?, ?, ?, ?)")) {

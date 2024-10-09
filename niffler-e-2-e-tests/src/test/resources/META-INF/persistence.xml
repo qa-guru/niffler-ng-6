@@ -2,8 +2,28 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="" transaction-type="RESOURCE_LOCAL">
-        <!--<class></class>-->
+    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/niffler-auth" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/niffler-auth</jta-data-source>
+        <class>guru.qa.niffler.data.entity.auth.AuthorityEntity</class>
+        <class>guru.qa.niffler.data.entity.auth.AuthUserEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/niffler-userdata" transaction-type="JTA">
+        <jta-data-source>java:comp/env/jdbc/niffler-userdata</jta-data-source>
+        <class>guru.qa.niffler.data.entity.userdata.UserEntity</class>
+        <class>guru.qa.niffler.data.entity.userdata.FriendshipEntity</class>
+
+        <properties>
+            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
     </persistence-unit>
 
 </persistence>

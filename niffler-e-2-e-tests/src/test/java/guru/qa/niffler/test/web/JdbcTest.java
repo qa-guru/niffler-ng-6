@@ -7,15 +7,15 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UsersDbClient;
 import org.junit.jupiter.api.Test;
-
 import java.util.Date;
+import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
 public class JdbcTest {
+    static UsersDbClient usersDbClient = new UsersDbClient();
 
     @Test
     void txTest() {
         SpendDbClient spendDbClient = new SpendDbClient();
-
         SpendJson spend = spendDbClient.createSpend(
                 new SpendJson(
                         null,
@@ -32,78 +32,20 @@ public class JdbcTest {
                         "duck"
                 )
         );
-
         System.out.println(spend);
     }
 
+
+
     @Test
     void springJdbcTest() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson myself = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "myself",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
+        UserJson user = usersDbClient.createUser(
+                randomUsername(),
+                "12345"
         );
-
-
-        UserJson friend = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "friend",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
-
-
-        UserJson income = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "income",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
-
-        UserJson outcome = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "outcome",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
-
-        // Добавляем входящее приглашение
-        usersDbClient.addInvitation(income, myself);
-
-        // Добавляем исходящее приглашение
-        usersDbClient.addInvitation(myself, outcome);
-
-        // Добавляем друзей
-        usersDbClient.addFriends(myself, friend);
+        usersDbClient.addIncomeInvitation(user, 1);
+        usersDbClient.addOutcomeInvitation(user, 1);
+        usersDbClient.addFriend(user, 1);
+        System.out.println(user);
     }
 }

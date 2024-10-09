@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 public class AuthAuthorityEntityRowMapper implements RowMapper<AuthorityEntity> {
     public static final AuthAuthorityEntityRowMapper instance = new AuthAuthorityEntityRowMapper();

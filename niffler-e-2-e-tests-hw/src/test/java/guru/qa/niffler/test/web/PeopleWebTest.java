@@ -16,7 +16,7 @@ import static guru.qa.niffler.enums.UserType.*;
 
 @Slf4j
 @ExtendWith({BrowserExtension.class})
-class PeopleTest {
+class PeopleWebTest {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl();
 

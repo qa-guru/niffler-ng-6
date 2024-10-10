@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.tpl;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
+import guru.qa.niffler.data.jdbc.Connections;
+import guru.qa.niffler.data.jdbc.JdbcConnectionHolders;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 

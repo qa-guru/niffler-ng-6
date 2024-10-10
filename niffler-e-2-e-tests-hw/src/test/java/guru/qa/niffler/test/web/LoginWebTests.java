@@ -18,7 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
         CreateNewUserExtension.class,
         BrowserExtension.class
 })
-class LoginTests {
+class LoginWebTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
     static final Faker FAKE = new Faker();

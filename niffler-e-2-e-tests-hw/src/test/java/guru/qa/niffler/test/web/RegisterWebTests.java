@@ -15,7 +15,7 @@ import static com.codeborne.selenide.Selenide.open;
 @ExtendWith({
         BrowserExtension.class
 })
-class RegisterTests {
+class RegisterWebTests {
 
     static final String REGISTRATION_PAGE_URL = Config.getInstance().authUrl() + "register";
     static final Faker FAKE = new Faker();

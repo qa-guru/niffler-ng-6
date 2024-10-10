@@ -94,6 +94,8 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
 
     @Override
     public FriendsPage shouldVisiblePageElements() {
-        return null;
+        log.info("Assert 'Friends' page elements visible on start up");
+        friendsTab.shouldHave(attribute("aria-selected", "true"));
+        return this;
     }
 }

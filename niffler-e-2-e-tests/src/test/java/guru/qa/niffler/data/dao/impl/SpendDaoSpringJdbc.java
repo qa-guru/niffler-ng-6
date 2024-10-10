@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -49,6 +50,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
   @Override
   public Optional<SpendEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    try {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             "SELECT * FROM spend WHERE id = ?",
@@ -56,6 +58,10 @@ public class SpendDaoSpringJdbc implements SpendDao {
             id
         )
     );
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override

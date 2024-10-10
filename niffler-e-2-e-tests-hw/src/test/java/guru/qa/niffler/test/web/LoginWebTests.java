@@ -4,7 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.page.MainPage;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @Slf4j
+@WebTest
 @ExtendWith({
-        CreateNewUserExtension.class,
-        BrowserExtension.class
+        CreateNewUserExtension.class
 })
 class LoginWebTests {
 
@@ -26,23 +26,20 @@ class LoginWebTests {
     final LoginPage loginPage = new LoginPage();
 
     @Test
-    @CreateNewUser
-    void shouldLoginWithCorrectCredentialsTest(UserModel user) {
+    void shouldLoginWithCorrectCredentialsTest(@CreateNewUser UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword());
         mainPage.shouldVisiblePageElements();
     }
 
     @Test
-    @CreateNewUser
-    void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(UserModel user) {
+    void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(@CreateNewUser UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), FAKE.internet().password());
         loginPage.shouldVisibleBadCredentialsError();
     }
 
     @Test
-    @CreateNewUser
     void shouldDisplayErrorMessageIfUsernameNotFoundTest() {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(FAKE.name().username() + FAKE.number().randomNumber(), FAKE.internet().password());
@@ -50,8 +47,7 @@ class LoginWebTests {
     }
 
     @Test
-    @CreateNewUser
-    void canSignOutTest(UserModel user) {
+    void canSignOutTest(@CreateNewUser UserModel user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()

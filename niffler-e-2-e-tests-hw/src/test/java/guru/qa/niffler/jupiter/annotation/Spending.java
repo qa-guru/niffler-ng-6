@@ -28,8 +28,6 @@ public @interface Spending {
      */
     String date() default "";
 
-    String username() default "";
-
     String category() default "";
 
     String description() default "";

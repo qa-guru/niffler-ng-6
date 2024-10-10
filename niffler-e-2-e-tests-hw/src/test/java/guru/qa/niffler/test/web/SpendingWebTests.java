@@ -6,12 +6,9 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
-import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
-import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -25,11 +22,9 @@ import static com.codeborne.selenide.Selenide.open;
 class SpendingWebTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
-    final MainPage mainPage = new MainPage();
 
     @Test
-    @CreateNewUser
-    void canCreateSpendingTest(@NonNull UserModel user) {
+    void canCreateSpendingTest(@CreateNewUser UserModel user) {
 
         var spend = SpendUtils.generate();
 
@@ -41,15 +36,13 @@ class SpendingWebTests {
     }
 
     @Test
-    @CreateNewUser
-    @Spending
-    void canEditSpendingTest(@NonNull UserModel user, @NonNull SpendJson spend) {
+    void canEditSpendingTest(@CreateNewUser(spendings = @Spending) UserModel user) {
 
         var newSpend = SpendUtils.generate();
 
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .openEditSpendingPage(spend)
+                .openEditSpendingPage(user.getSpendings().getFirst())
                 .editSpending(newSpend)
                 .openEditSpendingPage(newSpend)
                 .shouldHaveData(newSpend);
@@ -57,9 +50,9 @@ class SpendingWebTests {
     }
 
     @Test
-    @CreateNewUser
     @Spending
-    void canCreateNewSpendingWithExistsDescriptionTest(@NonNull UserModel user, @NonNull SpendJson spend) {
+    void canCreateNewSpendingWithExistsDescriptionTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+        var spend = user.getSpendings().getFirst();
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)

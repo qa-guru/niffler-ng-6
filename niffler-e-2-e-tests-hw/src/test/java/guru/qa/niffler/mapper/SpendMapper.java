@@ -11,13 +11,11 @@ public class SpendMapper {
 
     public SpendJson updateFromAnno(SpendJson spend, Spending anno) {
         var datePattern = "MM/dd/yyyy";
-        var username = anno.username().isEmpty()
-                ? spend.getUsername()
-                : anno.username();
 
         // @formatter:off
         return SpendJson.builder()
                 .id(spend.getId())
+                .username(spend.getUsername())
                 .spendDate(
                         anno.date().isEmpty()
                                 ? spend.getSpendDate()
@@ -32,7 +30,6 @@ public class SpendMapper {
                                         anno.category().isEmpty()
                                                 ? spend.getCategory().getName()
                                                 : anno.category())
-                                .username(username)
                                 .archived(false)
                                 .build())
                 .currency(
@@ -47,7 +44,6 @@ public class SpendMapper {
                         anno.description().isEmpty()
                                 ? spend.getDescription()
                                 : anno.description())
-                .username(username)
                 .build();
         // @formatter:on
 

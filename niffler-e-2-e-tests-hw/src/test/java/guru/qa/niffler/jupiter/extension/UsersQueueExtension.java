@@ -105,7 +105,8 @@ public class UsersQueueExtension implements
         Map<String, StaticUser> usersMap = (Map<String, StaticUser>) context.getStore(NAMESPACE)
                 .get(context.getUniqueId(), Map.class);
 
-        usersMap.values().forEach(user -> getUsersQueueByStaticUserType(user.getUserType()).add(user));
+        if (usersMap != null)
+            usersMap.values().forEach(user -> getUsersQueueByStaticUserType(user.getUserType()).add(user));
 
     }
 

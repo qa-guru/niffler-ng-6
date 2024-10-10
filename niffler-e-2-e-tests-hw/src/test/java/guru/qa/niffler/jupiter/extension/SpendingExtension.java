@@ -4,6 +4,7 @@ import guru.qa.niffler.api.CategoryApiClient;
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.mapper.SpendMapper;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.utils.SpendUtils;
@@ -25,7 +26,6 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
     private final SpendApiClient spendApiClient = new SpendApiClient();
     private final CategoryApiClient categoryApiClient = new CategoryApiClient();
-    private boolean isCategoryWasCreatedBySpend = true;
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -43,9 +43,6 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                             : anno.username();
 
                     var spend = generateSpendForUserAndLazyUpdateBySpendingAnnotation(username, anno);
-                    isCategoryWasCreatedBySpend = categoryApiClient.getAllCategories(username, true).stream()
-                            .noneMatch(category -> category.getName().equals(spend.getCategory().getName()));
-
                     context.getStore(NAMESPACE).put(context.getUniqueId(), spendApiClient.createNewSpend(spend));
 
                     log.info("Created new spend: {}", spend);
@@ -57,6 +54,8 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
 
+        context.getStore(NAMESPACE).remove(context.getUniqueId());
+
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spending.class)
                 .ifPresent(anno -> {
 
@@ -64,11 +63,18 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                     log.info("Text spend: {}", spend);
                     log.info("Delete spend: id = [{}], description = [{}]", spend.getId().toString(), spend.getDescription());
                     spendApiClient.deleteSpends(spend.getUsername(), List.of(spend.getId().toString()));
-                    if (isCategoryWasCreatedBySpend) {
-                        var category = spend.getCategory();
-                        log.info("Set category archived: id = [{}], name = [{}]", category.getId().toString(), category.getName());
-                        categoryApiClient.updateCategory(category.setArchived(false));
-                    }
+
+                    // If category was created by @Spending (not by @Category), then set category archived
+                    Optional.ofNullable(context.getStore(CategoryExtension.NAMESPACE)
+                            .get(context.getUniqueId(), CategoryJson.class))
+                            .ifPresent(
+                                    category -> {
+                                        if (category.getName().equals(spend.getCategory().getName())){
+                                            log.info("Set category archived: name = [{}]", category.getName());
+                                            categoryApiClient.updateCategory(category.setArchived(false));
+                                        }
+                                    }
+                            );
 
                 });
 
@@ -87,7 +93,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
         return new SpendMapper().updateFromAnno(spend, anno);
     }
 
-    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(@NonNull String username, @NonNull String annoUsername) {
+    public void checkUsernameIsCorrectlyFilledInSpendingAndCreateNewUserAnnotations(String username, String annoUsername) {
 
         if (isNullOrEmpty(username) && isNullOrEmpty(annoUsername)) {
             throw new IllegalArgumentException("Username should contains in @Spending or should add @CreateNewUser on test");

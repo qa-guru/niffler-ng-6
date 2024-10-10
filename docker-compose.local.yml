@@ -1,0 +1,39 @@
+services:
+  niffler-all:
+    image: postgres:15.1
+    container_name: niffler-all
+    ports:
+      - "5432:5432"
+    environment:
+      - CREATE_DATABASES=niffler-auth,niffler-currency,niffler-spend,niffler-userdata
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+    command: --max_prepared_transactions=100
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+
+volumes:
+  pgdata:
+    external: true

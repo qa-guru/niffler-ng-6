@@ -15,14 +15,15 @@ import static com.codeborne.selenide.Selenide.$;
 @Slf4j
 public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
 
-    public ConfirmRegistrationPage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement successfulRegistrationLabel = $(byText("Congratulations! You've registered!"))
             .as("Congratulation text"),
 
     signInButton = $(byText("Sign in")).as("Sign in button");
+
+    public ConfirmRegistrationPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
+
     public LoginPage goToLoginPage() {
         log.info("Go to login page");
         signInButton.click();

@@ -5,7 +5,7 @@ import guru.qa.niffler.model.CategoryJson;
 
 public class CategoryUtils {
 
-    private static Faker FAKE = new Faker();
+    private static final Faker FAKE = new Faker();
 
     public static CategoryJson generate() {
         return CategoryJson.builder()

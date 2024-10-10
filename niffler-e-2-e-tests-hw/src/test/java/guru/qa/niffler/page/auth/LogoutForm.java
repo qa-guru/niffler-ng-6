@@ -13,21 +13,19 @@ import static com.codeborne.selenide.Selenide.$x;
 @NoArgsConstructor
 public class LogoutForm extends BasePage<LogoutForm> {
 
-    public LogoutForm(boolean checkPageElementVisible){
+    public LogoutForm(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
-
-    private final SelenideElement root = $x("//*[./h2[text()='Want to logout?']]").as("['Logout form' container]"),
-            title = root.$("h2").as("['Logout' title]"),
-            message = root.$("p").as("['Message' text]"),
-            closeButton = root.$x(".//*[text()='Close']").as("['Close' button]"),
-            logoutButton = root.$x(".//*[text()='Log out']").as("['Log out' button]");
 
     public LoginPage logout() {
         log.info("Log out");
         logoutButton.click();
         return new LoginPage();
-    }
+    }    private final SelenideElement root = $x("//*[./h2[text()='Want to logout?']]").as("['Logout form' container]"),
+            title = root.$("h2").as("['Logout' title]"),
+            message = root.$("p").as("['Message' text]"),
+            closeButton = root.$x(".//*[text()='Close']").as("['Close' button]"),
+            logoutButton = root.$x(".//*[text()='Log out']").as("['Log out' button]");
 
     public void close() {
         log.info("Close logout form");
@@ -55,5 +53,7 @@ public class LogoutForm extends BasePage<LogoutForm> {
         return this;
 
     }
+
+
 
 }

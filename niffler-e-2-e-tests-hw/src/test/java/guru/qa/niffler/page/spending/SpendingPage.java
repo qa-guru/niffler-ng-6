@@ -1,6 +1,5 @@
 package guru.qa.niffler.page.spending;
 
-import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.CurrencyValues;
@@ -24,10 +23,6 @@ import static com.codeborne.selenide.Selenide.*;
 @NoArgsConstructor
 public abstract class SpendingPage<T> extends BasePage<T> {
 
-    protected SpendingPage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     protected final SelenideElement title = $("form h2").as("[Page title]"),
             amountLabel = $("label[for='amount']").as("['Amount' label]"),
             amountInput = $("#amount").as("'[Amount' input]"),
@@ -49,6 +44,10 @@ public abstract class SpendingPage<T> extends BasePage<T> {
             categoryTagsList = $$x("//*[./label[@for='category']]//*[@role='button']").as("'Category' list");
 
     private final CalendarService calendarService = new CalendarService();
+
+    protected SpendingPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public AppHeader getHeader() {
         return new AppHeader();

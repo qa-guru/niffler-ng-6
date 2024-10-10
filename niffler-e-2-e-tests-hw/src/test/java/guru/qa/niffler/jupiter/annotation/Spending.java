@@ -23,7 +23,9 @@ import java.lang.annotation.Target;
 @ExtendWith(SpendingExtension.class)
 public @interface Spending {
 
-    /** <h7><b>Date pattern "MM/dd/yyyy"</b></h7>*/
+    /**
+     * <h7><b>Date pattern "MM/dd/yyyy"</b></h7>
+     */
     String date() default "";
 
     String username() default "";

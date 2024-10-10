@@ -16,10 +16,6 @@ import static com.codeborne.selenide.Selenide.$x;
 @NoArgsConstructor
 public class ProfilePage extends BasePage<ProfilePage> {
 
-    public ProfilePage(boolean checkPageElementVisible){
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement usernameInput = $("#username").as("['Username' input]"),
             nameInput = $("#name").as("['Name' input]"),
             showArchivedButton = $x("//span[text()='Show archived']").as("['Show archived' checkbox]"),
@@ -34,7 +30,9 @@ public class ProfilePage extends BasePage<ProfilePage> {
             avatarImage = $("img[class*='Avatar-img']").as("['Avatar' image]"),
             avatarInput = $("input[type='file']").as("['Avatar' input]");
     private final ElementsCollection allCategories = categoriesContainer.$$x(".//*[./div[contains(@class, 'clickable')]]");
-
+    public ProfilePage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public AppHeader getHeader() {
         return new AppHeader();

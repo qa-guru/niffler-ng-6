@@ -8,10 +8,25 @@ import org.junit.jupiter.api.Test;
 
 public class UserCreateInBdTest {
     @Test
-    void createUserInDb() {
-        UserJson user = new AuthUserDbClient().createUser(new UserJson(
+    void createUserInJdbc() {
+        UserJson user = new AuthUserDbClient().createUserJdbs(new UserJson(
                 null,
-                RandomDataUtils.randomUsername(),
+                "Ignat-jdbc",
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
+
+    @Test
+    void createUserInJdbcTx() {
+        UserJson user = new AuthUserDbClient().createUserJdbsTx(new UserJson(
+                null,
+                "Ignat-jdbcTx",
                 null,
                 null,
                 RandomDataUtils.randomName(),
@@ -27,7 +42,7 @@ public class UserCreateInBdTest {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
         UserJson user = authUserDbClient.createUserSpring(new UserJson(
                 null,
-                "Ignat",
+                "Ignat-spring",
                 null,
                 null,
                 RandomDataUtils.randomName(),
@@ -37,4 +52,53 @@ public class UserCreateInBdTest {
         ));
         System.out.println(user);
     }
+
+    @Test
+    void createUserSpringInDbTxXa() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserJson user = authUserDbClient.createUserSpringTxXa(new UserJson(
+                null,
+                "Ignat-springTx1",
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
+
+    @Test
+    void createUserSpringCtmInDbTx() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserJson user = authUserDbClient.createUserJdbsCtmTx(new UserJson(
+                null,
+                "Ignat-springTxCtm3",
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
+
+    @Test
+    void createUserSpringInDbTx() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserJson user = authUserDbClient.createUserJdbsSpringTx(new UserJson(
+                null,
+                "Ignat-springTxCtm2",
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
+
 }

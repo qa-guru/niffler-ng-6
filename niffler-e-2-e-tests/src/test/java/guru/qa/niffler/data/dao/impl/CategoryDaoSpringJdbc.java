@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -46,13 +47,17 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   @Override
   public Optional<CategoryEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            "SELECT * FROM category WHERE id = ?",
-            CategoryEntityRowMapper.instance,
-            id
-        )
-    );
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              "SELECT * FROM category WHERE id = ?",
+              CategoryEntityRowMapper.instance,
+              id
+          )
+      );
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override

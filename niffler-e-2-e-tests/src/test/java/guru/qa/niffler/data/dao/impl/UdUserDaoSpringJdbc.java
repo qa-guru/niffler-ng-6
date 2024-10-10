@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -95,6 +96,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
   @Override
   public Optional<UserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    try {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             """
@@ -104,11 +106,16 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
             id
         )
     );
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    try {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             """
@@ -118,6 +125,9 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
             username
         )
     );
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   @Override

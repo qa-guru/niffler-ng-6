@@ -12,7 +12,6 @@ import static guru.qa.niffler.enums.ErrorValuesEnum.USER_CREDENTIAL_ERROR;
 import static guru.qa.niffler.testData.DataConstant.MAIN_PASSWORD;
 import static guru.qa.niffler.testData.DataConstant.MAIN_USER;
 
-@ExtendWith(BrowserExtension.class)
 @Feature("UI:Авторизация пользователя в системе")
 public class LoginTest extends BaseTest {
 

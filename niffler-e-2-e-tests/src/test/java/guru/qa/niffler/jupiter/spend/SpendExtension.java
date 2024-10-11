@@ -1,8 +1,8 @@
 package guru.qa.niffler.jupiter.spend;
 
 import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.submodel.CategoryJson;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class SpendExtension implements BeforeEachCallback, ParameterResolver {
 
-  public static final Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendExtension.class);
+  public static final Namespace SPEND_NAMESPACE = ExtensionContext.Namespace.create(SpendExtension.class);
   private final SpendApiClient spendApiClient = new SpendApiClient();
 
   @Override
@@ -33,7 +33,7 @@ public class SpendExtension implements BeforeEachCallback, ParameterResolver {
                   anno.username()
               );
               final SpendJson createdSpend = spendApiClient.createSpend(spendJson);
-              context.getStore(NAMESPACE)
+              context.getStore(SPEND_NAMESPACE)
                   .put(context.getUniqueId(), createdSpend);
             }
         );
@@ -49,7 +49,7 @@ public class SpendExtension implements BeforeEachCallback, ParameterResolver {
 
   @Override
   public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(SpendExtension.NAMESPACE)
+    return extensionContext.getStore(SpendExtension.SPEND_NAMESPACE)
         .get(extensionContext.getUniqueId(),
             SpendJson.class);
   }

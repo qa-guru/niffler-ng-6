@@ -12,7 +12,6 @@ import static guru.qa.niffler.enums.ErrorValuesEnum.PASSWORD_NOT_EQUALS;
 import static guru.qa.niffler.enums.ErrorValuesEnum.USER_ALREADY_EXIST;
 import static guru.qa.niffler.testData.DataConstant.MAIN_USER;
 
-@ExtendWith(BrowserExtension.class)
 @Feature("UI:Регистрация пользователя в системе")
 public class RegisterWebTest extends BaseTest {
 

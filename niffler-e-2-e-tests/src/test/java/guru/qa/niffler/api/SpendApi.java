@@ -9,8 +9,11 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 
+import java.util.List;
+
 public interface SpendApi {
 
+  //Spend
   @POST("/internal/spends/add")
   Call<SpendJson> addSpend(@Body SpendJson spend);
 
@@ -21,17 +24,18 @@ public interface SpendApi {
   Call<SpendJson> addSpend(String id);
 
   @GET("/internal/spends/all")
-  Call<SpendJson> getAllSpend();
+  Call<List<SpendJson>> getAllSpend();
 
   @DELETE("/internal/spends/remove")
   Call<SpendJson> removeSpend();
 
+  //Category
   @POST("/internal/categories/add")
-  Call<CategoryJson> addCategory(CategoryJson category);
+  Call<CategoryJson> addCategory(@Body CategoryJson category);
 
   @PATCH("/internal/categories/update")
-  Call<SpendJson> editCategory();
+  Call<CategoryJson> editCategory(@Body CategoryJson category);
 
   @GET("/internal/categories/all")
-  Call<SpendJson> getAllCategories();
+  Call<List<CategoryJson>> getAllCategories();
 }

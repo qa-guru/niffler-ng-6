@@ -2,7 +2,6 @@ package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.enums.CurrencyValuesEnum;
-import guru.qa.niffler.model.submodel.CategoryJson;
 
 import java.util.Date;
 import java.util.UUID;

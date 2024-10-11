@@ -10,9 +10,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith(SpendExtension.class)
+@ExtendWith(CategoryExtension.class)
 public @interface Category {
-  String name();
   String username();
   boolean isArchived();
 }

@@ -1,8 +1,9 @@
 package guru.qa.niffler.jupiter.category;
 
+import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -11,10 +12,13 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-public class CategoryExtension implements BeforeEachCallback, ParameterResolver {
+import java.util.UUID;
 
-  public static final Namespace NAMESPACE = Namespace.create(CategoryExtension.class);
+public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
+
+  public static final Namespace CATEGORY_NAMESPACE = Namespace.create(CategoryExtension.class);
   private final SpendApiClient spendApiClient = new SpendApiClient();
+  private final Faker faker = new Faker();
 
   @Override
   public void beforeEach(ExtensionContext context) {
@@ -22,14 +26,40 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
         .ifPresent(
             anno -> {
               CategoryJson categoryJson = new CategoryJson(
-                  null,
-                  anno.name(),
+                  UUID.randomUUID(),
+                  "Тестовая " + faker.random().nextInt(1000),
                   anno.username(),
-                  anno.isArchived()
+                  false
               );
-              final CategoryJson createdSpend = spendApiClient.createCategory(categoryJson);
-              context.getStore(NAMESPACE)
-                  .put(context.getUniqueId(), createdSpend);
+              CategoryJson createdCategory = spendApiClient.createCategory(categoryJson);
+              if (anno.isArchived()) {
+                createdCategory = spendApiClient.updateCategory(new CategoryJson(
+                    createdCategory.id(),
+                    createdCategory.name(),
+                    createdCategory.username(),
+                    true
+                ));
+              }
+              context.getStore(CATEGORY_NAMESPACE).put(context.getUniqueId(), createdCategory);
+            }
+        );
+  }
+
+  @Override
+  public void afterTestExecution(ExtensionContext context) {
+    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
+        .ifPresent(
+            anno -> {
+              CategoryJson categoryJson = context.getStore(CategoryExtension.CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+              if (!categoryJson.archived()) {
+                CategoryJson categoryJsonForPatching = new CategoryJson(
+                    categoryJson.id(),
+                    categoryJson.name(),
+                    categoryJson.username(),
+                    true
+                );
+                spendApiClient.updateCategory(categoryJsonForPatching);
+              }
             }
         );
   }
@@ -39,13 +69,13 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
     return parameterContext
         .getParameter()
         .getType()
-        .isAssignableFrom(SpendJson.class);
+        .isAssignableFrom(CategoryJson.class);
   }
 
   @Override
-  public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(CategoryExtension.NAMESPACE)
+  public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return extensionContext.getStore(CategoryExtension.CATEGORY_NAMESPACE)
         .get(extensionContext.getUniqueId(),
-            SpendJson.class);
+            CategoryJson.class);
   }
 }

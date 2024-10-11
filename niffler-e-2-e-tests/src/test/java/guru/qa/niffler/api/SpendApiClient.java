@@ -57,4 +57,16 @@ public class SpendApiClient {
     assertEquals(200, response.code());
     return response.body();
   }
+
+  @Step("Изменение категории")
+  public CategoryJson updateCategory(CategoryJson category) {
+    final Response<CategoryJson> response;
+    try {
+      response = spendApi.editCategory(category).execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertEquals(200, response.code());
+    return response.body();
+  }
 }

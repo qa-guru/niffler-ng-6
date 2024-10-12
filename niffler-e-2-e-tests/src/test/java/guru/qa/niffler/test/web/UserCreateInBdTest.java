@@ -11,7 +11,7 @@ public class UserCreateInBdTest {
     void createUserInJdbc() {
         UserJson user = new AuthUserDbClient().createUserJdbs(new UserJson(
                 null,
-                "Ignat-jdbc",
+                RandomDataUtils.randomUsername(),
                 null,
                 null,
                 RandomDataUtils.randomName(),
@@ -91,6 +91,22 @@ public class UserCreateInBdTest {
         UserJson user = authUserDbClient.createUserJdbsSpringTx(new UserJson(
                 null,
                 "Ignat-springTxCtm2",
+                null,
+                null,
+                RandomDataUtils.randomName(),
+                CurrencyValues.RUB,
+                null,
+                null
+        ));
+        System.out.println(user);
+    }
+
+    @Test
+    void createUserFromRepository() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserJson user = authUserDbClient.createUserRepository(new UserJson(
+                null,
+                "Ignat-createUserRepository1",
                 null,
                 null,
                 RandomDataUtils.randomName(),

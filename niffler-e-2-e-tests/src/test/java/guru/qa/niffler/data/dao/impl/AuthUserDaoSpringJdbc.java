@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -35,10 +34,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
             );
             ps.setString(1, authUser.getUsername());
             ps.setString(2, authUser.getPassword());
-            ps.setBoolean(3, authUser.isEnabled());
-            ps.setBoolean(4, authUser.isAccountNonExpired());
-            ps.setBoolean(5, authUser.isAccountNonLocked());
-            ps.setBoolean(6, authUser.isCredentialsNonExpired());
+            ps.setBoolean(3, authUser.getEnabled());
+            ps.setBoolean(4, authUser.getAccountNonExpired());
+            ps.setBoolean(5, authUser.getAccountNonLocked());
+            ps.setBoolean(6, authUser.getCredentialsNonExpired());
             return ps;
         }, kh);
         final UUID generatedKey = (UUID) kh.getKeys().get("id");

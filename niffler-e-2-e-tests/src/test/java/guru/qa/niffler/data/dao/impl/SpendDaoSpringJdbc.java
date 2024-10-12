@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1,spend.getUsername());
-            ps.setDate(2, spend.getSpendDate());
+            ps.setDate(2, new Date(spend.getSpendDate().getTime()));
             ps.setObject(3, spend.getCurrency());
             ps.setDouble(4, spend.getAmount());
             ps.setString(5, spend.getDescription());

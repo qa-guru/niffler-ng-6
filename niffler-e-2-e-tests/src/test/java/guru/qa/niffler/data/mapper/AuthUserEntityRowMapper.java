@@ -1,10 +1,8 @@
 package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-
 import org.springframework.jdbc.core.RowMapper;
 
-import javax.swing.tree.TreePath;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;

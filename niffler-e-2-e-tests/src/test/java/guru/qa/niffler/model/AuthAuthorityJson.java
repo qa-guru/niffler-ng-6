@@ -16,7 +16,7 @@ public record AuthAuthorityJson(
     public static AuthAuthorityJson fromEntity(AuthAuthorityEntity entity) {
         return new AuthAuthorityJson(
                 entity.getId(),
-                entity.getUserId(),
+                entity.getUser().getId(),
                 entity.getAuthority()
         );
     }

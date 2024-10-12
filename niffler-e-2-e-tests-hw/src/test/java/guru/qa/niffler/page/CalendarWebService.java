@@ -1,4 +1,4 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -12,13 +12,14 @@ import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static java.util.Calendar.*;
 
 @Slf4j
-public class CalendarService {
+public class CalendarWebService {
 
     private static final Date MIN_DATE = new GregorianCalendar(1970, JANUARY, 1).getTime(),
             MAX_DATE = new GregorianCalendar(2099, DECEMBER, 31, 23, 59, 59).getTime();
@@ -70,7 +71,7 @@ public class CalendarService {
     }
 
     private CalendarType getCalendarType() {
-        return calendarTypeSwitchButton.getAttribute("aria-label").contains("switch to year view")
+        return Objects.requireNonNull(calendarTypeSwitchButton.getAttribute("aria-label")).contains("switch to year view")
                 ? CalendarType.CALENDAR
                 : CalendarType.YEAR;
     }

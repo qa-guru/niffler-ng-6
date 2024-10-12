@@ -7,7 +7,7 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.AppHeader;
 import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.service.CalendarService;
+import guru.qa.niffler.page.CalendarWebService;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     protected final ElementsCollection currenciesList = $$("#menu-currency li").as("'Currency' list"),
             categoryTagsList = $$x("//*[./label[@for='category']]//*[@role='button']").as("'Category' list");
 
-    private final CalendarService calendarService = new CalendarService();
+    private final CalendarWebService calendarService = new CalendarWebService();
 
     protected SpendingPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);

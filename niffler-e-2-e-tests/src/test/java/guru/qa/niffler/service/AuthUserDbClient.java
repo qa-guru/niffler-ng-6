@@ -12,8 +12,10 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepsitoryJdbc;
+import guru.qa.niffler.data.repository.impl.UserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.UserJson;
 import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
@@ -21,7 +23,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static guru.qa.niffler.data.tpl.DataSources.dataSource;
 
@@ -62,7 +67,7 @@ public class AuthUserDbClient {
     );
 
     //JDBC withot transaction
-    public UserJson createUserJdbs(UserJson userJson) {
+    public UserJson createUserJdbc(UserJson userJson) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(userJson.username());
         authUser.setPassword(pe.encode("12345"));
@@ -89,7 +94,7 @@ public class AuthUserDbClient {
 
 
     //JDBC transaction
-    public UserJson createUserJdbsTx(UserJson user) {
+    public UserJson createUserJdbcTx(UserJson user) {
         jdbcTxTemplate.execute(() -> {
                     AuthUserEntity authUser = new AuthUserEntity();
                     authUser.setUsername(user.username());
@@ -173,7 +178,7 @@ public class AuthUserDbClient {
         );
     }
 
-    public UserJson createUserJdbsCtmTx(UserJson user) {
+    public UserJson createUserJdbcCtmTx(UserJson user) {
         return ctmTxTemplate.execute(status -> {
                     AuthUserEntity authUser = new AuthUserEntity();
                     authUser.setUsername(user.username());
@@ -202,7 +207,7 @@ public class AuthUserDbClient {
     }
 
     //Spring transaction
-    public UserJson createUserJdbsSpringTx(UserJson user) {
+    public UserJson createUserJdbcSpringTx(UserJson user) {
         txTemplate.execute(status -> {
                     AuthUserEntity authUser = new AuthUserEntity();
                     authUser.setUsername(user.username());
@@ -260,6 +265,38 @@ public class AuthUserDbClient {
                     );
                 }
         );
+    }
+
+    public void createUsersFriendShipJdbc(UserJson userJson1, UserJson userJson2, String typeFriendShip) {
+        List<UserJson> userList = new ArrayList<>();
+        userList.add(userJson1);
+        userList.add(userJson2);
+        for (UserJson userJson : userList) {
+            AuthUserEntity authUser = new AuthUserEntity();
+            authUser.setUsername(userJson.username());
+            authUser.setPassword(pe.encode("12345"));
+            authUser.setEnabled(true);
+            authUser.setAccountNonExpired(true);
+            authUser.setAccountNonLocked(true);
+            authUser.setCredentialsNonExpired(true);
+            AuthUserEntity createdAuthUser = new AuthUserDaoJdbc().create(authUser);
+            AuthAuthorityEntity[] userAuthority = Arrays.stream(Authority.values()).map(
+                    e -> {
+                        AuthAuthorityEntity ae = new AuthAuthorityEntity();
+                        ae.setUser(createdAuthUser);
+                        ae.setAuthority(e);
+                        return ae;
+                    }
+            ).toArray(AuthAuthorityEntity[]::new);
+            new AuthAuthorityDaoJdbc().create(userAuthority);
+        }
+        if(typeFriendShip.equals("PENDING")){
+            new UserRepositoryJdbc().createUsersFriendshipPending(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+        } else {
+            new UserRepositoryJdbc().createUsersFriendshipAccepted(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+        }
+
+
     }
 
 }

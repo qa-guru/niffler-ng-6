@@ -1,6 +1,6 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.spend;
 
-import guru.qa.niffler.enums.CurrencyValues;
+import guru.qa.niffler.enums.CurrencyValuesEnum;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
+@ExtendWith(SpendExtension.class)
 public @interface Spend {
   String category();
 
@@ -20,5 +20,5 @@ public @interface Spend {
 
   double amount();
 
-  CurrencyValues currency();
+  CurrencyValuesEnum currency();
 }

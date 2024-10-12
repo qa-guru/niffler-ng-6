@@ -1,7 +1,7 @@
 package guru.qa.niffler.config;
 
 public enum LocalConfig implements Config {
-  instance;
+  INSTANCE;
 
   @Override
   public String frontUrl() {

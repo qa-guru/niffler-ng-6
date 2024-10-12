@@ -44,7 +44,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                                 Category categoryAnno = userAnno.categories()[0];
 
                                 CategoryJson category = new CategoryMapper()
-                                        .updateFromAnno(
+                                        .updateDtoFromAnno(
                                                 CategoryUtils.generate().setUsername(user.getUsername()),
                                                 categoryAnno
                                         );

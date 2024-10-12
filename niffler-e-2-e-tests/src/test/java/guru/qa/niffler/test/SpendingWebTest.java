@@ -48,7 +48,7 @@ public class SpendingWebTest extends BaseTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(MAIN_USER, MAIN_PASSWORD)
         .goToCreateNewSpendingPage()
-        .checkCategoryIsPresent(category.name(), false);
+        .checkCategoryIsNotPresent(category.name());
   }
 
   @Category(
@@ -61,6 +61,6 @@ public class SpendingWebTest extends BaseTest {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(MAIN_USER, MAIN_PASSWORD)
         .goToCreateNewSpendingPage()
-        .checkCategoryIsPresent(category.name(), true);
+        .checkCategoryIsPresent(category.name());
   }
 }

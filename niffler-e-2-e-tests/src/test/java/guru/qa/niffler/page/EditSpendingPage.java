@@ -18,12 +18,14 @@ public class EditSpendingPage {
   }
 
   @Step("Проверка наличия категории")
-  public EditSpendingPage checkCategoryIsPresent(String categoryName, boolean isPresent) {
-    if (isPresent) {
-      $x("//span[text()='" + categoryName + "']").as("Категория " + categoryName).shouldBe(visible);
-    } else {
-      $x("//span[text()='" + categoryName + "']").as("Категория " + categoryName).shouldNotBe(visible);
-    }
+  public EditSpendingPage checkCategoryIsPresent(String categoryName) {
+    $x("//span[text()='" + categoryName + "']").as("Категория " + categoryName).shouldBe(visible);
+    return this;
+  }
+
+  @Step("Проверка отсутствия категории")
+  public EditSpendingPage checkCategoryIsNotPresent(String categoryName) {
+    $x("//span[text()='" + categoryName + "']").as("Категория " + categoryName).shouldNotBe(visible);
     return this;
   }
 }

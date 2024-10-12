@@ -12,8 +12,6 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.util.UUID;
-
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
   public static final Namespace CATEGORY_NAMESPACE = Namespace.create(CategoryExtension.class);
@@ -26,7 +24,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         .ifPresent(
             anno -> {
               CategoryJson categoryJson = new CategoryJson(
-                  UUID.randomUUID(),
+                  null,
                   "Тестовая " + faker.random().nextInt(1000),
                   anno.username(),
                   false
@@ -51,7 +49,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         .ifPresent(
             anno -> {
               CategoryJson categoryJson = context.getStore(CategoryExtension.CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-              if (!categoryJson.archived()) {
+              if (categoryJson != null) {
                 CategoryJson categoryJsonForPatching = new CategoryJson(
                     categoryJson.id(),
                     categoryJson.name(),

@@ -20,25 +20,25 @@ public class RegisterPage {
   @Step("Заполнить поле 'Username'")
   public RegisterPage setUserName(String userName) {
     usernameInput.setValue(userName);
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Заполнить поле 'Password'")
   public RegisterPage setPassword(String password) {
     passwordInput.setValue(password);
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Заполнить поле 'Submit password'")
   public RegisterPage setSubmitPassword(String password) {
     passwordSubmitInput.setValue(password);
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Нажать на кнопку 'Sign Up'")
   public RegisterPage submitRegistration() {
     submitBtn.click();
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Нажать на кнопку 'Sign In'")
@@ -50,19 +50,19 @@ public class RegisterPage {
   @Step("Проверка отображении текста об ошибке поля Username")
   public RegisterPage checkUsernameErrorText(String errorText) {
     userExistErrorText.shouldHave(text(errorText));
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Проверка отображении текста об ошибке поля Password")
   public RegisterPage checkPasswordErrorText(String errorText) {
     passwordErrorText.shouldHave(text(errorText));
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Проверка отображении текста об ошибке поля Submit password")
   public RegisterPage checkSubmitPasswordErrorText(String errorText) {
     submitPasswordErrorText.shouldHave(text(errorText));
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Заполнить поля нового пользователя с логином {userName}")
@@ -70,7 +70,7 @@ public class RegisterPage {
     setUserName(userName);
     setPassword(password);
     setSubmitPassword(submitPassword);
-    return new RegisterPage();
+    return this;
   }
 
   @Step("Зарегистрировать нового пользователя с логином {userName}")

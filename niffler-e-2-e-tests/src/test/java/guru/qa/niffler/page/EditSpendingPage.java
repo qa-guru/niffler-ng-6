@@ -24,6 +24,6 @@ public class EditSpendingPage {
     } else {
       $x("//span[text()='" + categoryName + "']").as("Категория " + categoryName).shouldNotBe(visible);
     }
-    return new EditSpendingPage();
+    return this;
   }
 }

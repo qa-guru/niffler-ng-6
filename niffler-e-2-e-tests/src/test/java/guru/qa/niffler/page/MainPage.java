@@ -27,21 +27,24 @@ public class MainPage {
   }
 
   @Step("Проверка наличие траты = {spendingDescription} в таблице")
-  public void checkThatTableContains(String spendingDescription) {
+  public MainPage checkThatTableContains(String spendingDescription) {
     tableRows.find(text(spendingDescription)).should(visible);
+    return this;
   }
 
   @Step("Проверка текста ошибки при Логине")
-  public void checkLoginErrorText(String errorText) {
+  public MainPage checkLoginErrorText(String errorText) {
     loginErrorText.shouldHave(text(errorText));
+    return this;
   }
 
   @Step("Проверка отображения текст главного экрана трат")
-  public void checkSuccessLogin() {
+  public MainPage checkSuccessLogin() {
     assertAll(
         () -> statHeaderText.should(visible),
         () -> historyOfSpendingsHeaderText.should(visible)
     );
+    return this;
   }
 
   @Step("Перейти к созданию траты")

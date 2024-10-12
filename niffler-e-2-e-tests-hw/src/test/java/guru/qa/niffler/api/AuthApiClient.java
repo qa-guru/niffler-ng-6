@@ -7,7 +7,6 @@ import guru.qa.niffler.mapper.LoginModelToMap;
 import guru.qa.niffler.mapper.RegisterModelMapper;
 import guru.qa.niffler.model.LoginModel;
 import guru.qa.niffler.model.RegisterModel;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,11 +34,11 @@ public class AuthApiClient {
                     .build())
             .build();
     private final AuthApi authApi = retrofit.create(AuthApi.class);
-    @Getter
-    private Map<Token, String> cookies;
 
-    private void updateCookies() {
-        log.info("Updating cookies");
+
+    private Map<Token, String> getNewCookies() {
+        log.info("Get new cookies");
+        Map<Token, String> cookies;
         final Response<Void> response;
         try {
             response = authApi.getCookies().execute();
@@ -48,6 +47,7 @@ public class AuthApiClient {
             throw new AssertionError(ex);
         }
         Assertions.assertEquals(HttpStatus.FOUND, response.code());
+        return cookies;
     }
 
     private Map<Token, String> parseCookies(Response<?> response) {
@@ -60,8 +60,8 @@ public class AuthApiClient {
                 ));
     }
 
-    public void register(RegisterModel registerModel) {
-        if (cookies == null || cookies.isEmpty()) updateCookies();
+    public Map<Token, String> register(RegisterModel registerModel) {
+        var cookies = getNewCookies();
 
         log.info("Register user: username = [{}], password = [{}]", registerModel.getUsername(), registerModel.getPassword());
         final Response<Void> response;
@@ -77,13 +77,13 @@ public class AuthApiClient {
         }
 
         Assertions.assertEquals(HttpStatus.CREATED, response.code());
-        cookies = parseCookies(response);
+        return parseCookies(response);
 
     }
 
-    public void login(LoginModel loginModel) {
+    public Map<Token, String> login(LoginModel loginModel) {
 
-        if (cookies == null || cookies.isEmpty()) updateCookies();
+        var cookies = getNewCookies();
 
         log.info("Login user: username = [{}], password = [{}]", loginModel.getUsername(), loginModel.getPassword());
         final Response<Void> response;
@@ -99,7 +99,7 @@ public class AuthApiClient {
         }
 
         Assertions.assertEquals(HttpStatus.OK, response.code());
-        cookies = parseCookies(response);
+        return parseCookies(response);
 
     }
 

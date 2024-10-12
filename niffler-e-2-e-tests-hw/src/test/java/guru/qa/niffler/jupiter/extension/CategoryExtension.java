@@ -1,20 +1,19 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.CategoryApiClient;
-import guru.qa.niffler.ex.CategoryStatusException;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.utils.CategoryUtils;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
-import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.util.Optional;
-
-import static guru.qa.niffler.helper.StringHelper.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterEachCallback {
@@ -23,78 +22,71 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
     private final CategoryApiClient categoryApiClient = new CategoryApiClient();
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) {
 
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
-                .ifPresent(anno -> {
+        Arrays.stream(context.getRequiredTestMethod().getParameters())
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
+                        && parameter.getType().isAssignableFrom(UserModel.class))
+                .forEach(
+                        parameter -> {
+                            var parameterName = parameter.getName();
+                            var userAnno = parameter.getAnnotation(CreateNewUser.class);
 
-                    UserModel user = context
-                            .getStore(CreateNewUserExtension.NAMESPACE)
-                            .get(context.getUniqueId(), UserModel.class);
+                            if (userAnno.categories().length > 0) {
 
-                    log.info("User from CreateNewUser {}", user);
+                                @SuppressWarnings("unchecked")
+                                Map<String, UserModel> usersMap = ((Map<String, UserModel>) context
+                                        .getStore(CreateNewUserExtension.NAMESPACE)
+                                        .get(context.getUniqueId()));
+                                var user = usersMap.get(parameterName);
 
-                    var username = getUsernameOrThrowException(
-                            context
-                                    .getStore(CreateNewUserExtension.NAMESPACE)
-                                    .get(context.getUniqueId(), UserModel.class),
-                            anno.username());
+                                List<CategoryJson> categories = new ArrayList<>();
+                                Category categoryAnno = userAnno.categories()[0];
 
-                    // If active category with same name exists -> throw exception
-                    getUserCategories(username, anno.name(), true).ifPresent(category -> {
-                        throw new CategoryStatusException("Active category [%s] already exists".formatted(anno.name()));
-                    });
+                                CategoryJson category = new CategoryMapper()
+                                        .updateFromAnno(
+                                                CategoryUtils.generate().setUsername(user.getUsername()),
+                                                categoryAnno
+                                        );
 
-                    CategoryJson category = new CategoryMapper()
-                            .updateFromAnno(CategoryUtils.generate().setUsername(username), anno);
+                                category = categoryApiClient.createCategory(category.setArchived(false));
+                                if (categoryAnno.isArchived())
+                                    category = categoryApiClient.updateCategory(category.setArchived(true));
 
-                    var isArchive = category.isArchived();
-                    category = categoryApiClient.createCategory(category);
-                    if (isArchive) categoryApiClient.updateCategory(category.setArchived(true));
+                                categories.add(category);
 
-                    context.getStore(NAMESPACE)
-                            .put(context.getUniqueId(), category);
+                                context.getStore(NAMESPACE).put(
+                                        context.getUniqueId(),
+                                        usersMap.put(parameterName, user.setCategories(categories))
+                                );
 
-                    log.info("Category successfully created: {}", category);
+                                log.info("Created new categories for user = [{}]: {}", user.getUsername(), user.getCategories());
 
-                });
+                            }
+                        }
+                );
 
     }
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) {
 
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
-                .ifPresent(anno -> {
+        Arrays.stream(context.getRequiredTestMethod().getParameters())
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) && parameter.getType().isAssignableFrom(UserModel.class))
+                .forEach(
+                        parameter -> {
+                            var parameterName = parameter.getName();
 
-                    var category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+                            @SuppressWarnings("unchecked")
+                            Map<String, UserModel> usersMap = (Map<String, UserModel>) context.getStore(CreateNewUserExtension.NAMESPACE)
+                                    .get(context.getUniqueId());
 
-                    if (!category.isArchived()) categoryApiClient.updateCategory(category.setArchived(true));
-                    log.info("Successfully updated status to [archived] for category: {}", category.getName());
+                            usersMap.get(parameterName).getCategories()
+                                    .forEach(category -> categoryApiClient.updateCategory(category.setArchived(true)));
 
-                });
+                        }
 
-    }
-
-    private Optional<CategoryJson> getUserCategories(@NonNull String username, @NonNull String categoryName, boolean excludeArchived) {
-        return categoryApiClient.getAllCategories(username, excludeArchived).stream()
-                .filter(category -> category.getName().equals(categoryName))
-                .findFirst();
-    }
-
-    private String getUsernameOrThrowException(UserModel user, String annoUsername) {
-
-        if (user == null) user = new UserModel();
-        var username = user.getUsername();
-
-        if (isNullOrEmpty(username) && isNullOrEmpty(annoUsername)) {
-            throw new IllegalArgumentException("Username should contains in @Spending or should add @CreateNewUser on test");
-        } else if (isNotNullOrEmpty(username) && isNotNullOrEmpty(annoUsername) && !user.getUsername().equals(annoUsername)) {
-            throw new IllegalArgumentException("You can not set different usernames in @Spending(username=[%s]) and @CreateNewUser(username=[%s]) annotations"
-                    .formatted(username, annoUsername));
-        } else {
-            return isNotNullOrBlank(username) ? username : annoUsername;
-        }
+                );
 
     }
 

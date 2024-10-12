@@ -3,7 +3,8 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.UserFromQueue;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
 import guru.qa.niffler.model.StaticUser;
 import guru.qa.niffler.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,8 @@ import java.util.Random;
 import static guru.qa.niffler.enums.UserType.*;
 
 @Slf4j
-@ExtendWith({BrowserExtension.class})
+@WebTest
+@ExtendWith({UsersQueueExtension.class})
 class PeopleWebTest {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl();

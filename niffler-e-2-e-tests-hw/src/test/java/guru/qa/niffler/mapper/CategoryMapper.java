@@ -11,14 +11,11 @@ public class CategoryMapper {
 
         return CategoryJson.builder()
                 .id(category.getId())
+                .username(category.getUsername())
                 .name(
                         anno.name().isEmpty()
                                 ? category.getName()
                                 : anno.name())
-                .username(
-                        anno.username().isEmpty()
-                                ? category.getUsername()
-                                : anno.username())
                 .archived(
                         anno.isArchived() || (anno.generateIsArchived() && new Random().nextBoolean()))
                 .build();

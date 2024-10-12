@@ -8,25 +8,35 @@ import guru.qa.niffler.model.UserModel;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
-import org.junit.platform.commons.support.AnnotationSupport;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class CreateNewUserExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateNewUserExtension.class);
-    private final RegisterModelMapper registerModelMapper = new RegisterModelMapper();
-    private final AuthApiClient authApiClient = new AuthApiClient();
+    private RegisterModelMapper registerModelMapper = new RegisterModelMapper();
+    private AuthApiClient authApiClient = new AuthApiClient();
+    private UserModelMapper userMapper = new UserModelMapper();
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) {
 
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), CreateNewUser.class)
-                .ifPresent(anno -> {
-                    UserModel user = new UserModelMapper().updateFromAnno(UserUtils.generateValidUser(), anno);
+        Arrays.stream(context.getRequiredTestMethod().getParameters())
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) && parameter.getType().isAssignableFrom(UserModel.class))
+                .forEach(parameter -> {
 
+                    var parameterName = parameter.getName();
+                    var parameterAnno = parameter.getAnnotation(CreateNewUser.class);
+                    UserModel user = userMapper.updateFromAnno(UserUtils.generateValidUser(), parameterAnno);
                     authApiClient.register(registerModelMapper.fromUserModel(user));
-                    context.getStore(NAMESPACE)
-                            .put(context.getUniqueId(), user);
+
+                    @SuppressWarnings("unchecked")
+                    Map<String, UserModel> usersMap = ((Map<String, UserModel>) context.getStore(NAMESPACE)
+                            .getOrComputeIfAbsent(context.getUniqueId(), map -> new HashMap<>()));
+                    usersMap.put(parameterName, user);
 
                     log.info("Created new user: {}", user);
 
@@ -41,6 +51,10 @@ public class CreateNewUserExtension implements BeforeEachCallback, ParameterReso
 
     @Override
     public UserModel resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), UserModel.class);
+        @SuppressWarnings("unchecked")
+        Map<String, UserModel> usersMap = (Map<String, UserModel>) extensionContext.getStore(NAMESPACE)
+                .get(extensionContext.getUniqueId(), Map.class);
+        return usersMap.get(parameterContext.getParameter().getName());
     }
+
 }

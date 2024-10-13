@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
@@ -143,7 +144,7 @@ public class UserCreateInBdTest {
                         CurrencyValues.RUB,
                         null,
                         null
-                ), "all"
+                ), FriendshipStatus.ACCEPTED
         );
 
     }

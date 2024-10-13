@@ -2,7 +2,10 @@ package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserDao;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.mapper.UserEntityRowMapper;
 import guru.qa.niffler.data.repository.UserRepository;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -84,7 +87,7 @@ public class UserRepositoryJdbc implements UserRepository {
 
             frienshipPs.setObject(1, list.get(0).getId());
             frienshipPs.setObject(2, list.get(1).getId());
-            frienshipPs.setString(3, "PENDING");
+            frienshipPs.setString(3, FriendshipStatus.PENDING.toString());
             frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
             frienshipPs.executeUpdate();
 
@@ -131,7 +134,7 @@ public class UserRepositoryJdbc implements UserRepository {
             for (UserEntity ue : list) {
                 frienshipPs.setObject(1, list.get(i).getId());
                 frienshipPs.setObject(2, list.get(j).getId());
-                frienshipPs.setString(3, "ACCEPTED");
+                frienshipPs.setString(3, FriendshipStatus.ACCEPTED.toString());
                 frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
                 frienshipPs.executeUpdate();
                 i++;
@@ -149,26 +152,37 @@ public class UserRepositoryJdbc implements UserRepository {
     public Optional<UserEntity> findById(UUID id) {
 
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM public.user WHERE id = ?"
+                "SELECT * FROM public.user AS u, friendship AS f " +
+                        "WHERE u.id = ? AND (u.id=f.requester_id OR (u.id=f.addressee_id AND f.status='PENDING'))"
         )) {
             ps.setObject(1, id);
             ps.execute();
-
             try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    UserEntity ue = new UserEntity();
-                    ue.setId(rs.getObject("id", UUID.class));
-                    ue.setUsername(rs.getString("username"));
-                    ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
-                    ue.setFirstname(rs.getString("firstname"));
-                    ue.setSurname(rs.getString("surname"));
-                    ue.setPhoto(rs.getBytes("photo"));
-                    ue.setPhotoSmall(rs.getBytes("photo_small"));
-                    ue.setFullname(rs.getString("full_name"));
-                    return Optional.of(ue);
-                } else {
-                    return Optional.empty();
+                UserEntity user = null;
+                List<FriendshipEntity> listRequests = new ArrayList<>();
+                List<FriendshipEntity> listAddressees = new ArrayList<>();
+                while (rs.next()) {
+                    if(user == null) {
+                        user = UserEntityRowMapper.instance.mapRow(rs, 1);
+                    }
+                    FriendshipEntity fu = new FriendshipEntity();
+                    fu.setRequester(rs.getObject("requester_id", UserEntity.class));
+                    fu.setAddressee(rs.getObject("addressee_id", UserEntity.class));
+                    fu.setStatus(FriendshipStatus.valueOf(rs.getString("status")));
+                    fu.setCreatedDate(rs.getDate("created_date"));
+                    if (user.getId() == fu.getRequester().getId()) {
+                        listRequests.add(fu);
+                    } else {
+                        listAddressees.add(fu);
+                    }
                 }
+              if (user == null) {
+                  return Optional.empty();
+              }  else {
+                  user.setFriendshipAddressees(listAddressees);
+                  user.setFriendshipRequests(listRequests);
+                  return Optional.of(user);
+              }
             }
 
         } catch (SQLException e) {

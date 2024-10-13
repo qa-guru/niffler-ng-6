@@ -8,6 +8,7 @@ import guru.qa.niffler.data.dao.impl.*;
 import guru.qa.niffler.data.entity.Authority;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import guru.qa.niffler.data.repository.AuthUserRepository;
@@ -267,36 +268,38 @@ public class AuthUserDbClient {
         );
     }
 
-    public void createUsersFriendShipJdbc(UserJson userJson1, UserJson userJson2, String typeFriendShip) {
-        List<UserJson> userList = new ArrayList<>();
-        userList.add(userJson1);
-        userList.add(userJson2);
-        for (UserJson userJson : userList) {
-            AuthUserEntity authUser = new AuthUserEntity();
-            authUser.setUsername(userJson.username());
-            authUser.setPassword(pe.encode("12345"));
-            authUser.setEnabled(true);
-            authUser.setAccountNonExpired(true);
-            authUser.setAccountNonLocked(true);
-            authUser.setCredentialsNonExpired(true);
-            AuthUserEntity createdAuthUser = new AuthUserDaoJdbc().create(authUser);
-            AuthAuthorityEntity[] userAuthority = Arrays.stream(Authority.values()).map(
-                    e -> {
-                        AuthAuthorityEntity ae = new AuthAuthorityEntity();
-                        ae.setUser(createdAuthUser);
-                        ae.setAuthority(e);
-                        return ae;
-                    }
-            ).toArray(AuthAuthorityEntity[]::new);
-            new AuthAuthorityDaoJdbc().create(userAuthority);
-        }
-        if(typeFriendShip.equals("PENDING")){
-            new UserRepositoryJdbc().createUsersFriendshipPending(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
-        } else {
-            new UserRepositoryJdbc().createUsersFriendshipAccepted(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
-        }
-
-
+    public void createUsersFriendShipJdbc(UserJson userJson1, UserJson userJson2, FriendshipStatus value) {
+         xaTxTemplate.execute(() -> {
+            List<UserJson> userList = new ArrayList<>();
+            userList.add(userJson1);
+            userList.add(userJson2);
+            for (UserJson userJson : userList) {
+                AuthUserEntity authUser = new AuthUserEntity();
+                authUser.setUsername(userJson.username());
+                authUser.setPassword(pe.encode("12345"));
+                authUser.setEnabled(true);
+                authUser.setAccountNonExpired(true);
+                authUser.setAccountNonLocked(true);
+                authUser.setCredentialsNonExpired(true);
+                authUser.setAuthorities(
+                        Arrays.stream(Authority.values()).map(
+                                e -> {
+                                    AuthAuthorityEntity ae = new AuthAuthorityEntity();
+                                    ae.setUser(authUser);
+                                    ae.setAuthority(e);
+                                    return ae;
+                                }
+                        ).toList()
+                );
+                authUserRepository.create(authUser);
+            }
+            if (value.equals(FriendshipStatus.PENDING)) {
+                new UserRepositoryJdbc().createUsersFriendshipPending(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+            } else {
+                new UserRepositoryJdbc().createUsersFriendshipAccepted(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+            }
+             return null;
+         });
     }
 
 }

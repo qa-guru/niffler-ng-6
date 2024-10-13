@@ -23,20 +23,33 @@ public class SpendEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
+
     @Column(nullable = false)
     private String username;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CurrencyValues currency;
+
     @Column(name = "spend_date", columnDefinition = "DATE", nullable = false)
     private Date spendDate;
+
     @Column(nullable = false)
     private Double amount;
+
     @Column(nullable = false)
     private String description;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = PERSIST)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private CategoryEntity category;
+
+    public SpendEntity(UUID id) {
+        this.id = id;
+    }
+
+    public SpendEntity() {
+    }
 
     public static SpendEntity fromJson(SpendJson json) {
         SpendEntity se = new SpendEntity();

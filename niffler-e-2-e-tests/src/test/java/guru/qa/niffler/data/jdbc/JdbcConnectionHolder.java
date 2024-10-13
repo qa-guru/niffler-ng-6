@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.tpl;
+package guru.qa.niffler.data.jdbc;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JdbcConnectionHolder implements AutoCloseable {
+
     private final DataSource dataSource;
     private final Map<Long, Connection> threadConnections = new ConcurrentHashMap<>();
 

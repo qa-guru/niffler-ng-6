@@ -21,26 +21,41 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
+
     @Column(nullable = false, unique = true)
     private String username;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CurrencyValues currency;
+
     @Column()
     private String firstname;
+
     @Column()
     private String surname;
+
     @Column(name = "full_name")
     private String fullname;
+
     @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
+
     @Column(name = "photo_small", columnDefinition = "bytea")
     private byte[] photoSmall;
 
     @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipEntity> friendshipRequests = new ArrayList<>();
+
     @OneToMany(mappedBy = "addressee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipEntity> friendshipAddressees = new ArrayList<>();
+
+    public UserEntity(UUID id) {
+        this.id = id;
+    }
+
+    public UserEntity() {
+    }
 
     public void addFriends(FriendshipStatus status, UserEntity... friends) {
         List<FriendshipEntity> friendsEntities = Stream.of(friends)

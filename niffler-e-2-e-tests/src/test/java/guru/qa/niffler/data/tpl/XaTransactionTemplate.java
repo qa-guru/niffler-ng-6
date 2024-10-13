@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.tpl;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
+import guru.qa.niffler.data.jdbc.Connections;
+import guru.qa.niffler.data.jdbc.JdbcConnectionHolders;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
@@ -8,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class XaTransactionTemplate {
+
     private final JdbcConnectionHolders holders;
     private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
 

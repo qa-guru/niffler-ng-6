@@ -1,8 +1,9 @@
-package guru.qa.niffler.data.tpl;
+package guru.qa.niffler.data.jdbc;
 
 import java.util.List;
 
 public class JdbcConnectionHolders implements AutoCloseable {
+
     private final List<JdbcConnectionHolder> holders;
 
     public JdbcConnectionHolders(List<JdbcConnectionHolder> holders) {

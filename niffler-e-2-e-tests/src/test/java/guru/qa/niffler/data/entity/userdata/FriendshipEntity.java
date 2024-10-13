@@ -15,16 +15,20 @@ import java.util.Objects;
 @Table(name = "friendship")
 @IdClass(FriendShipId.class)
 public class FriendshipEntity implements Serializable {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "requester_id", referencedColumnName = "id")
     private UserEntity requester;
+
     @Id
     @ManyToOne
     @JoinColumn(name = "addressee_id", referencedColumnName = "id")
     private UserEntity addressee;
+
     @Column(name = "created_date", columnDefinition = "DATE", nullable = false)
     private Date createdDate;
+
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
 

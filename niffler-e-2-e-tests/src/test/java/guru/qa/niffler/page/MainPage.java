@@ -16,7 +16,8 @@ public class MainPage {
     private final SelenideElement profileButton = $x("//a[@href='/profile']");
     private final SelenideElement friendButton = $x("(//a[@class='link nav-link'])[2]");
     private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
-
+    private final SelenideElement statComponent = $("#stat");
+    private final SelenideElement spendingTable = $("#spendings");
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
@@ -51,6 +52,11 @@ public class MainPage {
     public MainPage clickAllPeopleButton() {
         menuButton.click();
         allPeopleButton.click();
+        return this;
+    }
+    public MainPage checkThatPageLoaded() {
+        statComponent.should(visible).shouldHave(text("Statistics"));
+        spendingTable.should(visible).shouldHave(text("History of Spendings"));
         return this;
     }
 

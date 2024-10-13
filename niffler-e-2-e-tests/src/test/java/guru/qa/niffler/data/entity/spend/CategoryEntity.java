@@ -19,12 +19,22 @@ public class CategoryEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String username;
+
     @Column(nullable = false)
     private boolean archived;
+
+    public CategoryEntity(UUID id) {
+        this.id = id;
+    }
+
+    public CategoryEntity() {
+    }
 
     public static CategoryEntity fromJson(CategoryJson json) {
         CategoryEntity ce = new CategoryEntity();

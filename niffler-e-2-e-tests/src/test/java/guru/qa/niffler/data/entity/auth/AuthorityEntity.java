@@ -18,12 +18,21 @@ public class AuthorityEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;
+
+    public AuthorityEntity(UUID id) {
+        this.id = id;
+    }
+
+    public AuthorityEntity() {
+    }
 
     @Override
     public final boolean equals(Object o) {

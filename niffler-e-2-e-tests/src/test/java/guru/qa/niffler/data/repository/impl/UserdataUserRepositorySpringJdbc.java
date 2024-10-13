@@ -1,49 +1,56 @@
 package guru.qa.niffler.data.repository.impl;
 
-import guru.qa.niffler.data.dao.UdUserDao;
-import guru.qa.niffler.data.dao.impl.UdUserDaoSpringJdbc;
+import guru.qa.niffler.data.dao.UserdataUserDao;
+import guru.qa.niffler.data.dao.impl.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
 
-  private final UdUserDao udUserDao = new UdUserDaoSpringJdbc();
+  private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
 
+  @Nonnull
   @Override
   public UserEntity create(UserEntity user) {
-    return udUserDao.create(user);
+    return userdataUserDao.create(user);
   }
 
+  @Nonnull
   @Override
   public UserEntity update(UserEntity user) {
-    return udUserDao.update(user);
+    return userdataUserDao.update(user);
   }
 
+  @Nonnull
   @Override
   public Optional<UserEntity> findById(UUID id) {
-    return udUserDao.findById(id);
+    return userdataUserDao.findById(id);
   }
 
+  @Nonnull
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    return udUserDao.findByUsername(username);
+    return userdataUserDao.findByUsername(username);
   }
 
   @Override
   public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
     requester.addFriends(FriendshipStatus.PENDING, addressee);
-    udUserDao.update(requester);
+    userdataUserDao.update(requester);
   }
 
   @Override
   public void addFriend(UserEntity requester, UserEntity addressee) {
     requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
     addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
-    udUserDao.update(requester);
-    udUserDao.update(addressee);
+    userdataUserDao.update(requester);
+    userdataUserDao.update(addressee);
   }
 }

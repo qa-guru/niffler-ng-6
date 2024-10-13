@@ -5,6 +5,8 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +18,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jdbc.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 
   private static final Config CFG = Config.getInstance();
   private final String url = CFG.spendJdbcUrl();
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public SpendEntity create(SpendEntity spend) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -54,6 +59,8 @@ public class SpendDaoJdbc implements SpendDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public Optional<SpendEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -75,6 +82,8 @@ public class SpendDaoJdbc implements SpendDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public List<SpendEntity> findAll() {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -94,6 +103,8 @@ public class SpendDaoJdbc implements SpendDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public SpendEntity update(SpendEntity spend) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(

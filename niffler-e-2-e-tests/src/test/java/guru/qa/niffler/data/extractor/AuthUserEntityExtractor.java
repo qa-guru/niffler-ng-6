@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class AuthUserEntityExtractor implements ResultSetExtractor<AuthUserEntit
    * FROM "user" u join authority a on u.id = a.user_id WHERE u.id = 'e0e60e7f-07de-44e4-9f91-d4347f96fd7c'
    */
   @Override
+  @Nullable
   public AuthUserEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
     Map<UUID, AuthUserEntity> userCache = new ConcurrentHashMap<>();
 

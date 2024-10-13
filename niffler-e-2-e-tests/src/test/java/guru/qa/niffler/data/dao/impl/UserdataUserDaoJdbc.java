@@ -1,11 +1,13 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +18,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jdbc.Connections.holder;
 
-public class UdUserDaoJdbc implements UdUserDao {
+@ParametersAreNonnullByDefault
+public class UserdataUserDaoJdbc implements UserdataUserDao {
 
   private static final Config CFG = Config.getInstance();
   private final String url = CFG.userdataJdbcUrl();
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public UserEntity create(UserEntity user) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -46,6 +51,8 @@ public class UdUserDaoJdbc implements UdUserDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public UserEntity update(UserEntity user) {
     try (PreparedStatement usersPs = holder(url).connection().prepareStatement(
@@ -90,6 +97,8 @@ public class UdUserDaoJdbc implements UdUserDao {
     return user;
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -114,6 +123,8 @@ public class UdUserDaoJdbc implements UdUserDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public Optional<UserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -138,6 +149,8 @@ public class UdUserDaoJdbc implements UdUserDao {
     }
   }
 
+  @SuppressWarnings("resource")
+  @Nonnull
   @Override
   public List<UserEntity> findAll() {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(

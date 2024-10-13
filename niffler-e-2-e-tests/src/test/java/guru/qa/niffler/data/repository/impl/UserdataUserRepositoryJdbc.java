@@ -1,12 +1,11 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UserEntityRowMapper;
-import guru.qa.niffler.data.repository.UserRepository;
+import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.model.CurrencyValues;
 
 import java.sql.*;
@@ -17,11 +16,11 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
-public class UserRepositoryJdbc implements UserRepository {
+public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     private static final Config CFG = Config.getInstance();
 
     @Override
-    public UserEntity createUser(UserEntity user) {
+    public UserEntity create(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO public.user(username, currency, firstname, surname, photo, photo_small, full_name)" +
                         "VALUES (?, ?, ? ,?, ?, ?, ?)",
@@ -51,42 +50,40 @@ public class UserRepositoryJdbc implements UserRepository {
         }
     }
 
-    public void createUsersFriendshipPending(UserEntity user1, UserEntity user2) {
-        try (PreparedStatement userPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO public.user(username, currency, firstname, surname, photo, photo_small, full_name)" +
-                        "VALUES (?, ?, ? ,?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
-        );
-             PreparedStatement frienshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                     "INSERT INTO public.friendship(requester_id, addressee_id, status, created_date) " +
-                             "VALUES (?, ?, ?, ?);"
-             )
-        ) {
-            List<UserEntity> list = new ArrayList<>();
-            list.add(user1);
-            list.add(user2);
-            for (UserEntity user : list) {
-                userPs.setString(1, user.getUsername());
-                userPs.setString(2, user.getCurrency().name());
-                userPs.setString(3, user.getFirstname());
-                userPs.setString(4, user.getSurname());
-                userPs.setBytes(5, user.getPhoto());
-                userPs.setBytes(6, user.getPhotoSmall());
-                userPs.setString(7, user.getFullname());
-                userPs.executeUpdate();
-                final UUID generationKey;
-                try (ResultSet rs = userPs.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        generationKey = rs.getObject("id", UUID.class);
-                    } else {
-                        throw new SQLException("Can't find id in ResultSet");
-                    }
-                }
-                user.setId(generationKey);
-            }
+    @Override
+    public UserEntity update(UserEntity authUser) {
+        return null;
+    }
 
-            frienshipPs.setObject(1, list.get(0).getId());
-            frienshipPs.setObject(2, list.get(1).getId());
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+        try (
+                PreparedStatement frienshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                        "INSERT INTO public.friendship(requester_id, addressee_id, status, created_date) " +
+                                "VALUES (?, ?, ?, ?);"
+                )
+        ) {
+            frienshipPs.setObject(1, requester.getId());
+            frienshipPs.setObject(2, addressee.getId());
+            frienshipPs.setString(3, FriendshipStatus.ACCEPTED.toString());
+            frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
+            frienshipPs.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addInvitation(UserEntity requester, UserEntity addressee) {
+        try (
+                PreparedStatement frienshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                        "INSERT INTO public.friendship(requester_id, addressee_id, status, created_date) " +
+                                "VALUES (?, ?, ?, ?);"
+                )
+        ) {
+
+            frienshipPs.setObject(1, requester.getId());
+            frienshipPs.setObject(2, addressee.getId());
             frienshipPs.setString(3, FriendshipStatus.PENDING.toString());
             frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
             frienshipPs.executeUpdate();
@@ -95,58 +92,6 @@ public class UserRepositoryJdbc implements UserRepository {
             throw new RuntimeException(e);
         }
     }
-
-    public void createUsersFriendshipAccepted(UserEntity user1, UserEntity user2) {
-        try (PreparedStatement userPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO public.user(username, currency, firstname, surname, photo, photo_small, full_name)" +
-                        "VALUES (?, ?, ? ,?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
-        );
-             PreparedStatement frienshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                     "INSERT INTO public.friendship(requester_id, addressee_id, status, created_date) " +
-                             "VALUES (?, ?, ?, ?);"
-             )
-        ) {
-            List<UserEntity> list = new ArrayList<>();
-            list.add(user1);
-            list.add(user2);
-            for (UserEntity user : list) {
-                userPs.setString(1, user.getUsername());
-                userPs.setString(2, user.getCurrency().name());
-                userPs.setString(3, user.getFirstname());
-                userPs.setString(4, user.getSurname());
-                userPs.setBytes(5, user.getPhoto());
-                userPs.setBytes(6, user.getPhotoSmall());
-                userPs.setString(7, user.getFullname());
-                userPs.executeUpdate();
-                final UUID generationKey;
-                try (ResultSet rs = userPs.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        generationKey = rs.getObject("id", UUID.class);
-                    } else {
-                        throw new SQLException("Can't find id in ResultSet");
-                    }
-                }
-                user.setId(generationKey);
-            }
-            int i = 0;
-            int j = 1;
-            for (UserEntity ue : list) {
-                frienshipPs.setObject(1, list.get(i).getId());
-                frienshipPs.setObject(2, list.get(j).getId());
-                frienshipPs.setString(3, FriendshipStatus.ACCEPTED.toString());
-                frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
-                frienshipPs.executeUpdate();
-                i++;
-                j--;
-            }
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @Override
     public Optional<UserEntity> findById(UUID id) {
@@ -249,7 +194,7 @@ public class UserRepositoryJdbc implements UserRepository {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void remove(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM public.user WHERE id = ?"
         )) {

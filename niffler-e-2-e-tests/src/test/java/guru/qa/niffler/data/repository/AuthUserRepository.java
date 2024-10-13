@@ -17,6 +17,6 @@ public interface AuthUserRepository {
 
     List<AuthUserEntity> findAll();
 
-    void delete(AuthUserEntity authUser);
+    void remove(AuthUserEntity authUser);
 
 }

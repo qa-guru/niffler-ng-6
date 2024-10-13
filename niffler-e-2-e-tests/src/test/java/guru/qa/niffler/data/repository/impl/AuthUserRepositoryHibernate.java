@@ -53,7 +53,7 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     }
 
     @Override
-    public void delete(AuthUserEntity authUser) {
+    public void remove(AuthUserEntity authUser) {
 
     }
 }

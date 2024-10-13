@@ -1,7 +1,6 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserDao;
 import guru.qa.niffler.data.dao.impl.*;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
@@ -12,8 +11,7 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.AuthUserRepsitoryJdbc;
-import guru.qa.niffler.data.repository.impl.UserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
@@ -27,7 +25,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -265,7 +262,7 @@ public class AuthUserDbClient {
                             AuthUserEntity authUser = authUserEntity(username, "12345");
                             authUserRepository.create(authUser);
                             UserEntity addressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addIncomeInvitation(targetEntity, addressee);
+                            userdataUserRepository.addInvitation(targetEntity, addressee);
                             return null;
                         }
                 );
@@ -285,7 +282,7 @@ public class AuthUserDbClient {
                             AuthUserEntity authUser = authUserEntity(username, "12345");
                             authUserRepository.create(authUser);
                             UserEntity addressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addOutcomeInvitation(targetEntity, addressee);
+                            userdataUserRepository.addInvitation(addressee, targetEntity);
                             return null;
                         }
                 );
@@ -350,9 +347,14 @@ public class AuthUserDbClient {
                 authUserRepository.create(authUser);
             }
             if (value.equals(FriendshipStatus.PENDING)) {
-                new UserRepositoryJdbc().createUsersFriendshipPending(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+                UserEntity requester = new UserdataUserRepositoryJdbc().create(UserEntity.fromJson(userJson1));
+                UserEntity addressee = new UserdataUserRepositoryJdbc().create(UserEntity.fromJson(userJson2));
+                new UserdataUserRepositoryJdbc().addInvitation(requester, addressee);
             } else {
-                new UserRepositoryJdbc().createUsersFriendshipAccepted(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+                UserEntity requester = new UserdataUserRepositoryJdbc().create(UserEntity.fromJson(userJson1));
+                UserEntity addressee = new UserdataUserRepositoryJdbc().create(UserEntity.fromJson(userJson2));
+                new UserdataUserRepositoryJdbc().addFriend(requester, addressee);
+                new UserdataUserRepositoryJdbc().addFriend(addressee, requester);
             }
             return null;
         });

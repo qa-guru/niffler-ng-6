@@ -1,21 +1,26 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
-public class AuthUserRepsitoryJdbc implements AuthUserRepository {
+public class AuthUserRepsitorySpringJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
 
@@ -78,42 +83,14 @@ public class AuthUserRepsitoryJdbc implements AuthUserRepository {
 
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM public.user u INNER JOIN public.authority a ON u.id = a.user_id WHERE id=?"
-        )) {
-            ps.setObject(1, id);
-            ps.execute();
-            try (ResultSet rs = ps.getResultSet()) {
-                AuthUserEntity user = null;
-                List<AuthAuthorityEntity> list = new ArrayList<>();
-                while (rs.next()) {
-                    if (user == null) {
-                        user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
-                    }
-                    AuthAuthorityEntity authority = new AuthAuthorityEntity();
-                    authority.setId(rs.getObject("id", UUID.class));
-                    authority.setUser(user);
-                    authority.setAuthority(Authority.valueOf(rs.getString("authority")));
-                    list.add(authority);
-                    AuthUserEntity aue = new AuthUserEntity();
-                    aue.setId(rs.getObject("id", UUID.class));
-                    aue.setUsername(rs.getString("username"));
-                    aue.setPassword(rs.getString("password"));
-                    aue.setEnabled(rs.getBoolean("enabled"));
-                    aue.setAccountNonLocked(rs.getBoolean("account_non_expired"));
-                    aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-                    aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-                }
-                if (user == null) {
-                    return Optional.empty();
-                } else {
-                    user.setAuthorities(list);
-                    return Optional.of(user);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM public.user u INNER JOIN public.authority a ON u.id = a.user_id WHERE id=?",
+                        AuthUserEntityRowMapper.instance,
+                        id
+                )
+        );
     }
 
     @Override

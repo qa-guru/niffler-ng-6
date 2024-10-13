@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.entity.auth;
 
-import guru.qa.niffler.data.entity.Authority;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

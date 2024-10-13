@@ -8,6 +8,8 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
@@ -106,20 +108,20 @@ public class UserCreateInBdTest {
         System.out.println(user);
     }
 
-    @Test
-    void createUserFromRepository() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
-        UserJson user = authUserDbClient.createUserRepository(new UserJson(
-                null,
-                "Ignat-createUserRepository1",
-                null,
-                null,
-                RandomDataUtils.randomName(),
-                CurrencyValues.RUB,
-                null,
-                null
-        ));
-        System.out.println(user);
+    static AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+
+    @ValueSource(strings = {
+            "Ignat-1205"
+    })
+    @ParameterizedTest
+    void createUserFromRepository(String username) {
+
+        UserJson user = authUserDbClient.createUserRepository(
+                username,
+                "12345"
+                );
+        authUserDbClient.addIncomeInvitation(user, 1);
+        authUserDbClient.addOutcomeInvitation(user, 1);
     }
 
     @Test
@@ -127,7 +129,7 @@ public class UserCreateInBdTest {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
         authUserDbClient.createUsersFriendShipJdbc(new UserJson(
                         null,
-                        "friend3",
+                        "friend7",
                         null,
                         null,
                         RandomDataUtils.randomName(),
@@ -137,14 +139,14 @@ public class UserCreateInBdTest {
                 ),
                 new UserJson(
                         null,
-                        "friend4",
+                        "friend8",
                         null,
                         null,
                         RandomDataUtils.randomName(),
                         CurrencyValues.RUB,
                         null,
                         null
-                ), FriendshipStatus.ACCEPTED
+                ), FriendshipStatus.PENDING
         );
 
     }

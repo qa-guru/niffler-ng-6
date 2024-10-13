@@ -13,7 +13,9 @@ import java.util.UUID;
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
+
     private static final Config CFG = Config.getInstance();
+
     private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
     @Override
@@ -21,6 +23,12 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         entityManager.joinTransaction();
         entityManager.persist(user);
         return user;
+    }
+
+    @Override
+    public UserEntity update(UserEntity user) {
+        entityManager.joinTransaction();
+        return entityManager.merge(user);
     }
 
     @Override
@@ -44,15 +52,9 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     }
 
     @Override
-    public UserEntity update(UserEntity user) {
+    public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
         entityManager.joinTransaction();
-        return entityManager.merge(user);
-    }
-
-    @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        addressee.addFriends(FriendshipStatus.PENDING, requester);
+        requester.addFriends(FriendshipStatus.PENDING, addressee);
     }
 
     @Override
@@ -60,12 +62,5 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         entityManager.joinTransaction();
         requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
         addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
-    }
-
-    @Override
-    public void remove(UserEntity user) {
-        entityManager.joinTransaction();
-        UserEntity attachedUser = entityManager.contains(user) ? user : entityManager.merge(user);
-        entityManager.remove(attachedUser);
     }
 }

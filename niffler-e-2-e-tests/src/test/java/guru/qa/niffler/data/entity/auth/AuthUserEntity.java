@@ -1,6 +1,13 @@
 package guru.qa.niffler.data.entity.auth;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -43,6 +50,13 @@ public class AuthUserEntity implements Serializable {
 
     @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private List<AuthorityEntity> authorities = new ArrayList<>();
+
+    public AuthUserEntity(UUID id) {
+        this.id = id;
+    }
+
+    public AuthUserEntity() {
+    }
 
     public void addAuthorities(AuthorityEntity... authorities) {
         for (AuthorityEntity authority : authorities) {

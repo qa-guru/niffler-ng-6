@@ -1,6 +1,15 @@
 package guru.qa.niffler.data.entity.auth;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -26,6 +35,13 @@ public class AuthorityEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;
+
+    public AuthorityEntity(UUID id) {
+        this.id = id;
+    }
+
+    public AuthorityEntity() {
+    }
 
     @Override
     public final boolean equals(Object o) {

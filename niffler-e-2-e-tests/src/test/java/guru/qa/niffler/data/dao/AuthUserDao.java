@@ -7,13 +7,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AuthUserDao {
+
     AuthUserEntity create(AuthUserEntity user);
 
     Optional<AuthUserEntity> findById(UUID id);
 
-    Optional<AuthUserEntity> findByUsername(String userName);
+    Optional<AuthUserEntity> findByUsername(String username);
 
     List<AuthUserEntity> findAll();
-
-    void delete(AuthUserEntity user);
 }

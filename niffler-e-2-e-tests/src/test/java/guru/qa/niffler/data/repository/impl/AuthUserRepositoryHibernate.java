@@ -12,7 +12,9 @@ import java.util.UUID;
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class AuthUserRepositoryHibernate implements AuthUserRepository {
+
     private static final Config CFG = Config.getInstance();
+
     private final EntityManager entityManager = em(CFG.authJdbcUrl());
 
     @Override
@@ -20,12 +22,6 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
         entityManager.joinTransaction();
         entityManager.persist(user);
         return user;
-    }
-
-    @Override
-    public AuthUserEntity update(AuthUserEntity user) {
-        entityManager.joinTransaction();
-        return entityManager.merge(user);
     }
 
     @Override
@@ -39,19 +35,12 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     public Optional<AuthUserEntity> findByUsername(String username) {
         try {
             return Optional.of(
-                    entityManager.createQuery("select u from UserEntity u where u.username =: username", AuthUserEntity.class)
+                    entityManager.createQuery("select u from AuthUserEntity u where u.username =: username", AuthUserEntity.class)
                             .setParameter("username", username)
                             .getSingleResult()
             );
         } catch (NoResultException e) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public void remove(AuthUserEntity user) {
-        entityManager.joinTransaction();
-        AuthUserEntity attachedUser = entityManager.contains(user) ? user : entityManager.merge(user);
-        entityManager.remove(attachedUser);
     }
 }

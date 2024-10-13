@@ -13,4 +13,8 @@ public class CategoryUtils {
                 .archived(false).build();
     }
 
+    public static CategoryJson generateForUser(String username) {
+        return generate().setUsername(username);
+    }
+
 }

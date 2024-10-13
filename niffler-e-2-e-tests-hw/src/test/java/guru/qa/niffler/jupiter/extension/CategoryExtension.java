@@ -1,11 +1,11 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.CategoryApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.service.CategoryDbClient;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterEachCallback {
+public class CategoryExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
-    private final CategoryApiClient categoryApiClient = new CategoryApiClient();
+    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -29,6 +29,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                         && parameter.getType().isAssignableFrom(UserModel.class))
                 .forEach(
                         parameter -> {
+
                             var parameterName = parameter.getName();
                             var userAnno = parameter.getAnnotation(CreateNewUser.class);
 
@@ -45,14 +46,11 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
                                 CategoryJson category = new CategoryMapper()
                                         .updateDtoFromAnno(
-                                                CategoryUtils.generate().setUsername(user.getUsername()),
+                                                CategoryUtils.generateForUser(user.getUsername()),
                                                 categoryAnno
                                         );
 
-                                category = categoryApiClient.createCategory(category.setArchived(false));
-                                if (categoryAnno.isArchived())
-                                    category = categoryApiClient.updateCategory(category.setArchived(true));
-
+                                category = categoryDbClient.create(category);
                                 categories.add(category);
 
                                 context.getStore(NAMESPACE).put(
@@ -64,28 +62,6 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
                             }
                         }
-                );
-
-    }
-
-    @Override
-    public void afterEach(ExtensionContext context) {
-
-        Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) && parameter.getType().isAssignableFrom(UserModel.class))
-                .forEach(
-                        parameter -> {
-                            var parameterName = parameter.getName();
-
-                            @SuppressWarnings("unchecked")
-                            Map<String, UserModel> usersMap = (Map<String, UserModel>) context.getStore(CreateNewUserExtension.NAMESPACE)
-                                    .get(context.getUniqueId());
-
-                            usersMap.get(parameterName).getCategories()
-                                    .forEach(category -> categoryApiClient.updateCategory(category.setArchived(true)));
-
-                        }
-
                 );
 
     }

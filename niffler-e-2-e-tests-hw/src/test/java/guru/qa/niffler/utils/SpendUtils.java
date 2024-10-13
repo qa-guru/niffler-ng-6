@@ -38,6 +38,12 @@ public class SpendUtils {
                 .build();
     }
 
+    public static SpendJson generateForUser(String username) {
+         var spend = generate().setUsername(username);
+         spend.getCategory().setUsername(username);
+         return spend;
+    }
+
     private static Date generateDate() {
 
         var randomDate = switch (EnumHelper.getRandomEnum(Period.class)) {

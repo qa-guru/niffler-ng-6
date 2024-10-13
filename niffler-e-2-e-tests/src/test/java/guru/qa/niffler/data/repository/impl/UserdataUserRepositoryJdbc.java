@@ -57,7 +57,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
                 "SELECT * FROM \"user\" WHERE id = ?")) {
             ps.setObject(1, id);
             ps.execute();
-
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
                     UserEntity user = new UserEntity();
@@ -80,12 +79,11 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public Optional<UserEntity> findByUsername(String userName) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE username = ?")) {
-            ps.setString(1, username);
+            ps.setString(1, userName);
             ps.execute();
-
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
                     UserEntity user = new UserEntity();
@@ -107,34 +105,35 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         }
     }
 
+
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public UserEntity update(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
-                        "VALUES (?, ?, ?, ?)")) {
-
-            ps.setObject(1, requester.getId());
-            ps.setObject(2, addressee.getId());
-            ps.setString(3, FriendshipStatus.PENDING.name());
-            ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-
+                "UPDATE \"user\" SET currency = ?, firstname = ?, surname = ?, photo = ?, " +
+                        "photo_small = ?, full_name = ? WHERE id = ?")) {
+            ps.setString(1, user.getCurrency().name());
+            ps.setString(2, user.getFirstname());
+            ps.setString(3, user.getSurname());
+            ps.setBytes(4, user.getPhoto());
+            ps.setBytes(5, user.getPhotoSmall());
+            ps.setString(6, user.getFullname());
+            ps.setObject(7, user.getId());
             ps.executeUpdate();
+            return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
                         "VALUES (?, ?, ?, ?)")) {
-
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
             ps.setString(3, FriendshipStatus.PENDING.name());
             ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -152,15 +151,24 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
             ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
             ps.addBatch();
-
             // Запись для второго пользователя
             ps.setObject(1, addressee.getId());
             ps.setObject(2, requester.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
             ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
             ps.addBatch();
-
             ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                "DELETE FROM \"user\" WHERE id = ?")) {
+            ps.setObject(1, user.getId());
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

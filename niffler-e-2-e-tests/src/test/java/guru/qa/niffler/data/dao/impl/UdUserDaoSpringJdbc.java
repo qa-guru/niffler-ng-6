@@ -57,4 +57,14 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         )
     );
   }
+
+  @Override
+  public Optional<UserEntity> findAllByUsername(String username) {
+    return Optional.empty();
+  }
+
+  @Override
+  public void deleteSpend(UserEntity user) {
+
+  }
 }

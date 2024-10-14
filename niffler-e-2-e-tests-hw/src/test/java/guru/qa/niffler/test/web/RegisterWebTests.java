@@ -24,7 +24,7 @@ class RegisterWebTests {
 
     @Test
     void canRegisterUserWithCorrectCredentialsTest() {
-        UserModel user = UserUtils.generateValidUser();
+        UserModel user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
 
@@ -33,7 +33,7 @@ class RegisterWebTests {
 
     @Test
     void canNotRegisterIfUsernameIsExistTest() {
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user)
                 .goToLoginPage()
@@ -45,7 +45,7 @@ class RegisterWebTests {
 
     @Test
     void canNotRegisterIfPasswordAndPasswordConfirmationNotEqualTest() {
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user.setPassword(FAKE.internet().password()));
         registerPage.assertPasswordHasError("Passwords should be equal");
@@ -53,7 +53,7 @@ class RegisterWebTests {
 
     @Test
     void canNotRegisterIfUsernameIsTooShortTest() {
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(2));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
@@ -62,7 +62,7 @@ class RegisterWebTests {
 
     @Test
     void canNotRegisterIfUsernameIsTooLongTest() {
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(51));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
                 .signUp(user);
@@ -72,7 +72,7 @@ class RegisterWebTests {
     @Test
     void canNotRegisterIfPasswordIsTooShortTest() {
 
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         var password = FAKE.lorem().characters(2);
         user.setPassword(password).setPasswordConfirmation(password);
 
@@ -87,7 +87,7 @@ class RegisterWebTests {
     @Test
     void canNotRegisterIfPasswordIsTooLongTest() {
 
-        var user = UserUtils.generateValidUser();
+        var user = UserUtils.generateUser();
         var password = FAKE.lorem().characters(13);
         user.setPassword(password).setPasswordConfirmation(password);
 

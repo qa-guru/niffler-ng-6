@@ -1,48 +1,38 @@
 package guru.qa.niffler.mapper;
 
-import guru.qa.niffler.data.entity.UserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UserMapper {
+public class AuthUserMapper {
 
-    public UserEntity toEntity(UserModel userModel) {
-        return UserEntity.builder()
-                .id(userModel.getId())
-                .username(userModel.getUsername())
-                .currency(userModel.getCurrency())
-                .firstName(userModel.getFirstName())
-                .surname(userModel.getSurname())
-                .photo(userModel.getPhoto())
-                .photoSmall(userModel.getPhotoSmall())
-                .fullName(userModel.getFullName())
+    public AuthUserEntity toEntity(AuthUserJson authUserJson) {
+        return AuthUserEntity.builder()
+                .id(authUserJson.getId())
+                .username(authUserJson.getUsername())
+                .accountNonExpired(authUserJson.isAccountNonExpired())
+                .accountNonLocked(authUserJson.isAccountNonLocked())
+                .credentialsNonExpired(authUserJson.isCredentialsNonExpired())
+                .enabled(authUserJson.isEnabled())
+                .password(authUserJson.getPassword())
                 .build();
     }
 
-    public AuthUserJson toAuthDto(UserModel userModel) {
+    public AuthUserJson toDto(AuthUserEntity authUserEntity) {
         return AuthUserJson.builder()
-                .id(userModel.getId())
-                .username(userModel.getUsername())
-                .accountNonExpired(true)
-                .accountNonLocked(true)
-                .credentialsNonExpired(true)
-                .enabled(true)
-                .password(userModel.getPassword())
-                .build();
-    }
-
-    public UserModel toDto(UserEntity userEntity) {
-        return UserModel.builder()
-                .id(userEntity.getId())
-                .username(userEntity.getUsername())
-                .currency(userEntity.getCurrency())
-                .firstName(userEntity.getFirstName())
-                .surname(userEntity.getSurname())
-                .photo(userEntity.getPhoto())
-                .photoSmall(userEntity.getPhotoSmall())
-                .fullName(userEntity.getFullName())
+                .id(authUserEntity.getId())
+                .username(authUserEntity.getUsername())
+                .enabled(authUserEntity.isEnabled())
+                .accountNonExpired(authUserEntity.isAccountNonExpired())
+                .accountNonLocked(authUserEntity.isAccountNonLocked())
+                .enabled(authUserEntity.isEnabled())
+                .credentialsNonExpired(authUserEntity.isCredentialsNonExpired())
+                .password(authUserEntity.getPassword())
                 .build();
     }
 

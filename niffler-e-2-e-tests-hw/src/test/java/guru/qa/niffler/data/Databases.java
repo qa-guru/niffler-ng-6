@@ -52,13 +52,17 @@ public class Databases {
         }
     }
 
-    public static <T> T xaTransaction(XaFunction<T>... actions) {
+    public static <T> T xaTransaction(int isolationLevel, XaFunction<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             T result = null;
             for (XaFunction<T> action : actions) {
-                result = action.function.apply(connection(action.jdbcUrl));
+                Connection connection = connection(action.jdbcUrl());
+                if (connection.getTransactionIsolation() != isolationLevel) { // INFO: without it half tests down. Reason: Cannot change transaction isolation level in the middle of a transaction.
+                    connection.setTransactionIsolation(isolationLevel);
+                }
+                result = action.function.apply(connection);
             }
             ut.commit();
             return result;
@@ -95,12 +99,14 @@ public class Databases {
         }
     }
 
-    public static void xaTransaction(XaConsumer... actions) {
+    public static void xaTransaction(int isolationLevel, XaConsumer... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             for (XaConsumer action : actions) {
-                action.function.accept(connection(action.jdbcUrl));
+                Connection connection = connection(action.jdbcUrl());
+                connection.setTransactionIsolation(isolationLevel);
+                action.function.accept(connection);
             }
             ut.commit();
         } catch (Exception e) {
@@ -126,6 +132,7 @@ public class Databases {
                     props.put("user", "postgres");
                     props.put("password", "secret");
                     dsBean.setXaProperties(props);
+                    dsBean.setPoolSize(3);
                     dsBean.setMaxPoolSize(10);
                     return dsBean;
                 }

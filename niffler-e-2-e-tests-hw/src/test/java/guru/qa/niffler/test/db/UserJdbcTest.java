@@ -22,6 +22,7 @@ class UserJdbcTest {
     @Test
     void shouldGetUserByIdTest() {
         var user = userDbClient.create(UserUtils.generateValidUser());
+        log.info(user.toString());
         var foundedUser = userDbClient.findById(user.getId()).orElse(new UserModel());
         assertEquals(user, foundedUser);
     }

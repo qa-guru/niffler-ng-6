@@ -19,6 +19,7 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-vault-config:${project.ext.springVaultVersion}"
     implementation "org.flywaydb:flyway-core:${project.ext.flywayVersion}"
     implementation "org.flywaydb:flyway-database-postgresql:${project.ext.flywayVersion}"
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
     annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     compileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"
     runtimeOnly "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"

@@ -20,6 +20,7 @@ public class LoginTest {
     private static final String HISTORY_OF_SPENDING_TEXT = "History of Spendings";
     private static final String FAILED_LOGIN_MESSAGE = "Неверные учетные данные пользователя";
     MainPage mainPage = new MainPage();
+
     @User(
             categories = {
                     @Category(name = "cat_1", archived = false),

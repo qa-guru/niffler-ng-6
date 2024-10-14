@@ -25,9 +25,9 @@ public class SpendDaoJdbc implements SpendDao {
     public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                       INSERT INTO spend (username, spend_date, currency, amount, description, category_id)
-                       VALUES ( ?, ?, ?, ?, ?, ?)
-                    """,
+                           INSERT INTO spend (username, spend_date, currency, amount, description, category_id)
+                           VALUES ( ?, ?, ?, ?, ?, ?)
+                        """,
                 Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, spend.getUsername());
@@ -98,13 +98,13 @@ public class SpendDaoJdbc implements SpendDao {
     public SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                      UPDATE "spend"
-                        SET spend_date  = ?,
-                            currency    = ?,
-                            amount      = ?,
-                            description = ?
-                        WHERE id = ?
-                    """);
+                          UPDATE "spend"
+                            SET spend_date  = ?,
+                                currency    = ?,
+                                amount      = ?,
+                                description = ?
+                            WHERE id = ?
+                        """);
         ) {
             ps.setDate(1, new java.sql.Date(spend.getSpendDate().getTime()));
             ps.setString(2, spend.getCurrency().name());

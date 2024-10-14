@@ -28,9 +28,9 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                     """
-                           INSERT INTO "user" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) 
-                           VALUES (?,?,?,?,?,?)
-                        """,
+                               INSERT INTO "user" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) 
+                               VALUES (?,?,?,?,?,?)
+                            """,
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, user.getUsername());
@@ -54,8 +54,8 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(
                             """
-                                    SELECT * FROM "user" WHERE id = ?
-                                """,
+                                        SELECT * FROM "user" WHERE id = ?
+                                    """,
                             AuthUserEntityRowMapper.instance,
                             id
                     )
@@ -73,8 +73,8 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(
                             """
-                                   SELECT * FROM "user" WHERE username = ?
-                                """,
+                                       SELECT * FROM "user" WHERE username = ?
+                                    """,
                             AuthUserEntityRowMapper.instance,
                             username
                     )
@@ -89,8 +89,8 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         return jdbcTemplate.query(
                 """
-                       SELECT * FROM "user"
-                    """,
+                           SELECT * FROM "user"
+                        """,
                 AuthUserEntityRowMapper.instance
         );
     }

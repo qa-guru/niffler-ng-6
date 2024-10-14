@@ -28,9 +28,9 @@ public class SpendDaoSpringJdbc implements SpendDao {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                     """
-                            INSERT INTO spend (username, spend_date, currency, amount, description, category_id) 
-                            VALUES ( ?, ?, ?, ?, ?, ?)
-                        """,
+                                INSERT INTO spend (username, spend_date, currency, amount, description, category_id) 
+                                VALUES ( ?, ?, ?, ?, ?, ?)
+                            """,
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, spend.getUsername());
@@ -69,8 +69,8 @@ public class SpendDaoSpringJdbc implements SpendDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         return jdbcTemplate.query(
                 """
-                       SELECT * FROM "spend"
-                    """,
+                           SELECT * FROM "spend"
+                        """,
                 SpendEntityRowMapper.instance
         );
     }
@@ -79,13 +79,13 @@ public class SpendDaoSpringJdbc implements SpendDao {
     public SpendEntity update(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         jdbcTemplate.update("""
-              UPDATE "spend"
-                SET spend_date  = ?,
-                    currency    = ?,
-                    amount      = ?,
-                    description = ?
-                WHERE id = ?
-            """,
+                          UPDATE "spend"
+                            SET spend_date  = ?,
+                                currency    = ?,
+                                amount      = ?,
+                                description = ?
+                            WHERE id = ?
+                        """,
                 new java.sql.Date(spend.getSpendDate().getTime()),
                 spend.getCurrency().name(),
                 spend.getAmount(),

@@ -25,9 +25,9 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryEntity create(CategoryEntity category) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                        INSERT INTO category (username, name, archived) 
-                        VALUES (?, ?, ?)
-                    """,
+                            INSERT INTO category (username, name, archived) 
+                            VALUES (?, ?, ?)
+                        """,
                 Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, category.getUsername());
@@ -95,11 +95,11 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryEntity update(CategoryEntity category) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                      UPDATE "category"
-                        SET name     = ?,
-                            archived = ?
-                        WHERE id = ?
-                    """);
+                          UPDATE "category"
+                            SET name     = ?,
+                                archived = ?
+                            WHERE id = ?
+                        """);
         ) {
             ps.setString(1, category.getName());
             ps.setBoolean(2, category.isArchived());

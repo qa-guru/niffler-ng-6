@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.api.UsersApiClient;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -13,6 +14,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.Date;
 
 public class JdbcTest {
+
+
+    @Test
+    void createUserTest() {
+        // Инициализируем API-клиент
+        UsersApiClient usersApiClient = new UsersApiClient();
+        // Создаем пользователя с использованием API-клиента
+        String username = "testuser1234";
+        String password = "12345";
+        UserJson createdUser = usersApiClient.createUser(username, password);
+        // Вывод результата в консоль, если нужно для отладки (опционально)
+        System.out.println("Создан пользователь: " + createdUser);
+    }
 
     @Test
     void txTest() {

@@ -24,9 +24,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     public AuthUserEntity create(AuthUserEntity user) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                        INSERT INTO "user" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) 
-                        VALUES (?, ?, ?, ?, ?, ?)
-                    """,
+                            INSERT INTO "user" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) 
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        """,
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
@@ -55,8 +55,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement("""
-                SELECT * FROM "user" WHERE id = ?
-        """)) {
+                        SELECT * FROM "user" WHERE id = ?
+                """)) {
             ps.setObject(1, id);
 
             ps.execute();
@@ -78,8 +78,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement("""
-                SELECT * FROM "user" WHERE username = ?
-        """)) {
+                        SELECT * FROM "user" WHERE username = ?
+                """)) {
             ps.setString(1, username);
 
             ps.execute();
@@ -102,8 +102,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     public List<AuthUserEntity> findAll() {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 """
-                    SELECT * FROM "user" 
-                    """)) {
+                        SELECT * FROM "user" 
+                        """)) {
             ps.execute();
             List<AuthUserEntity> result = new ArrayList<>();
             try (ResultSet rs = ps.getResultSet()) {

@@ -68,6 +68,11 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
             frienshipPs.setString(3, FriendshipStatus.ACCEPTED.toString());
             frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
             frienshipPs.executeUpdate();
+            frienshipPs.setObject(1, addressee.getId());
+            frienshipPs.setObject(2, requester.getId());
+            frienshipPs.setString(3, FriendshipStatus.ACCEPTED.toString());
+            frienshipPs.setDate(4, new Date(new java.util.Date().getTime()));
+            frienshipPs.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

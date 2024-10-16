@@ -1,4 +1,4 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.service.db;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
@@ -11,14 +11,11 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
-import javax.swing.text.html.Option;
-
 import static guru.qa.niffler.data.Databases.transaction;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public class SpendDbClient {
+public class SpendDbClient  {
 
     private static final Config CFG = Config.getInstance();
 

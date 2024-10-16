@@ -1,22 +1,18 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.AuthUserDbClient;
+import guru.qa.niffler.service.db.UserDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 public class UserCreateInBdTest {
     @Test
     void createUserInJdbc() {
-        UserJson user = new AuthUserDbClient().createUserJdbc(new UserJson(
+        UserJson user = new UserDbClient().createUserJdbc(new UserJson(
                 null,
                 RandomDataUtils.randomUsername(),
                 null,
@@ -31,7 +27,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserInJdbcTx() {
-        UserJson user = new AuthUserDbClient().createUserJdbcTx(new UserJson(
+        UserJson user = new UserDbClient().createUserJdbcTx(new UserJson(
                 null,
                 "Ignat-jdbcTx",
                 null,
@@ -46,7 +42,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserSpringInDb() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserDbClient authUserDbClient = new UserDbClient();
         UserJson user = authUserDbClient.createUserSpring(new UserJson(
                 null,
                 "Ignat-spring",
@@ -62,7 +58,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserSpringInDbTxXa() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserDbClient authUserDbClient = new UserDbClient();
         UserJson user = authUserDbClient.createUserSpringTxXa(new UserJson(
                 null,
                 "Ignat-springTx1",
@@ -78,7 +74,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserSpringCtmInDbTx() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserDbClient authUserDbClient = new UserDbClient();
         UserJson user = authUserDbClient.createUserJdbcCtmTx(new UserJson(
                 null,
                 "Ignat-springTxCtm3",
@@ -94,7 +90,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserSpringInDbTx() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserDbClient authUserDbClient = new UserDbClient();
         UserJson user = authUserDbClient.createUserJdbcSpringTx(new UserJson(
                 null,
                 "Ignat-springTxCtm2",
@@ -108,7 +104,7 @@ public class UserCreateInBdTest {
         System.out.println(user);
     }
 
-    static AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+    static UserDbClient authUserDbClient = new UserDbClient();
 
     @ValueSource(strings = {
             "Ignat-1205"
@@ -126,7 +122,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createFriendship() {
-        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        UserDbClient authUserDbClient = new UserDbClient();
         authUserDbClient.createUsersFriendShipJdbc(new UserJson(
                         null,
                         "friend7",

@@ -1,4 +1,4 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.service.db;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.*;
@@ -32,7 +32,7 @@ import java.util.List;
 import static guru.qa.niffler.data.tpl.DataSources.dataSource;
 
 
-public class AuthUserDbClient {
+public class UserDbClient {
 
     private final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();

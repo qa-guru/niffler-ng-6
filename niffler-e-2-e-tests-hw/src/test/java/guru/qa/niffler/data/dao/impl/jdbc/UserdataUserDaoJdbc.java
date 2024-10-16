@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.UserEntity;

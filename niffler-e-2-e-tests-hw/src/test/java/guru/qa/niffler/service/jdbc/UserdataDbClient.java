@@ -1,8 +1,8 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
+import guru.qa.niffler.data.dao.impl.jdbc.UserdataUserDaoJdbc;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserModel;
 import lombok.extern.slf4j.Slf4j;

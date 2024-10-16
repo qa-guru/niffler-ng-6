@@ -1,9 +1,9 @@
-package guru.qa.niffler.test.db;
+package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.CategoryDbClient;
+import guru.qa.niffler.service.jdbc.CategoryDbClient;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ class CategoryJdbcTest {
     @Test
     void shouldRemoveCategoryTest(@CreateNewUser UserModel user) {
         CategoryJson category = categoryDbClient.create(CategoryUtils.generate().setUsername(user.getUsername()));
-        categoryDbClient.delete(category.getId());
+        categoryDbClient.delete(category);
         assertEquals(0, categoryDbClient.findAllByUsername(user.getUsername()).size());
     }
 

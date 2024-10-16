@@ -1,8 +1,8 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.dao.impl.jdbc.CategoryDaoJdbc;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
 import lombok.extern.slf4j.Slf4j;

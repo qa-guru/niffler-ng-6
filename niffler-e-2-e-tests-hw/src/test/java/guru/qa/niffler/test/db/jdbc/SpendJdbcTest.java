@@ -1,9 +1,9 @@
-package guru.qa.niffler.test.db;
+package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.jdbc.SpendDbClient;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -34,11 +34,10 @@ class SpendJdbcTest {
     @Test
     void shouldGetSpendByUsernameAndDescriptionTest(@CreateNewUser UserModel user) {
         var spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        var foundedSpend = spendDbClient.findByUsernameAndDescription(
+        var foundedSpends = spendDbClient.findByUsernameAndDescription(
                         user.getUsername(),
-                        spend.getDescription())
-                .orElse(new SpendJson());
-        assertEquals(spend, foundedSpend);
+                        spend.getDescription());
+        assertTrue(foundedSpends.contains(spend));
     }
 
     @Test
@@ -56,7 +55,7 @@ class SpendJdbcTest {
     @Test
     void shouldRemoveSpendTest(@CreateNewUser UserModel user) {
         SpendJson spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        spendDbClient.delete(spend.getId());
+        spendDbClient.delete(spend);
         assertEquals(0, spendDbClient.findAllByUsername(user.getUsername()).size());
     }
 

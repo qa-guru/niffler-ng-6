@@ -1,7 +1,7 @@
-package guru.qa.niffler.test.db;
+package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.data.entity.auth.AuthUserJson;
-import guru.qa.niffler.service.AuthUserDbClient;
+import guru.qa.niffler.service.jdbc.AuthUserDbClient;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class AuthUserTest {
+class AuthUserJdbcTest {
 
     private final AuthUserDbClient authUserDbClient = new AuthUserDbClient();
 
@@ -40,7 +40,7 @@ class AuthUserTest {
     @Test
     void shouldRemoveUserTest() {
         var user = authUserDbClient.create(UserUtils.generateAuthUser());
-        authUserDbClient.delete(user.getId());
+        authUserDbClient.delete(user);
         assertNull(authUserDbClient.findByUsername(user.getUsername()).orElse(null));
     }
 

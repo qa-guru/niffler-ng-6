@@ -1,7 +1,8 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.dao.SpendDao;
+import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.model.CurrencyValues;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,24 +13,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CategoryDaoJdbc implements CategoryDao {
+public class SpendDaoJdbc implements SpendDao {
 
     private final Connection connection;
 
-    public CategoryDaoJdbc(Connection connection) {
+    public SpendDaoJdbc(Connection connection) {
         this.connection = connection;
     }
 
-    public CategoryEntity create(CategoryEntity category) {
+    public SpendEntity create(SpendEntity spend) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO category (username, name, archived) VALUES (?, ?, ?)",
+                "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS
         )) {
 
-            ps.setString(1, category.getUsername());
-            ps.setString(2, category.getName());
-            ps.setBoolean(3, category.isArchived());
+            ps.setString(1, spend.getUsername());
+            ps.setDate(2, spend.getSpendDate());
+            ps.setString(3, spend.getCurrency().name());
+            ps.setDouble(4, spend.getAmount());
+            ps.setString(5, spend.getDescription());
+            ps.setObject(6, spend.getCategory().getId());
 
             ps.executeUpdate();
 
@@ -37,9 +42,10 @@ public class CategoryDaoJdbc implements CategoryDao {
                 if (rs.next()) {
                     return fromResultSet(rs);
                 } else {
-                    throw new SQLException("Could find 'id' in ResultSet");
+                    throw new SQLException("Could not find 'id' in ResultSet");
                 }
             }
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -47,11 +53,11 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    public Optional<CategoryEntity> findById(UUID id) {
-
+    @Override
+    public Optional<SpendEntity> findById(UUID id) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE id = ?"
+                "SELECT * FROM spend WHERE id = ?"
         )) {
 
             ps.setObject(1, id);
@@ -70,15 +76,14 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> findByUsernameAndName(String username, String categoryName) {
-
+    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ? AND name = ?"
+                "SELECT * FROM spend WHERE username = ? AND description = ?"
         )) {
 
             ps.setString(1, username);
-            ps.setString(2, categoryName);
+            ps.setString(2, description);
             ps.execute();
 
             try (ResultSet rs = ps.getResultSet()) {
@@ -94,22 +99,20 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
-
+    public List<SpendEntity> findAllByUsername(String username) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ?"
+                "SELECT * FROM spend WHERE username = ?"
         )) {
 
             ps.setString(1, username);
             ps.execute();
 
             try (ResultSet rs = ps.getResultSet()) {
-                List<CategoryEntity> categories = new ArrayList<>();
+                List<SpendEntity> spends = new ArrayList<>();
                 while (rs.next())
-                    categories.add(fromResultSet(rs));
-                return categories;
-
+                    spends.add(fromResultSet(rs));
+                return spends;
             }
 
         } catch (SQLException e) {
@@ -119,12 +122,12 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public void delete(CategoryEntity category) {
+    public void delete(SpendEntity spend) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM category WHERE id = ?"
+                "DELETE FROM spend WHERE id = ?"
         )) {
-            ps.setObject(1, category.getId());
+            ps.setObject(1, spend.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -133,12 +136,15 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    private CategoryEntity fromResultSet(ResultSet rs) throws SQLException {
-        return CategoryEntity.builder()
+    private SpendEntity fromResultSet(ResultSet rs) throws SQLException {
+        return SpendEntity.builder()
                 .id(rs.getObject("id", UUID.class))
                 .username(rs.getString("username"))
-                .name(rs.getString("name"))
-                .archived(rs.getBoolean("archived"))
+                .spendDate(rs.getDate("spend_date"))
+                .currency(CurrencyValues.valueOf(rs.getString("currency")))
+                .amount(rs.getDouble("amount"))
+                .description(rs.getString("description"))
+                .category(new CategoryDaoJdbc(connection).findById(rs.getObject("category_id", UUID.class)).orElse(null))
                 .build();
     }
 

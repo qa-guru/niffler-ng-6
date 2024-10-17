@@ -5,7 +5,7 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.CategoryDbClient;
+import guru.qa.niffler.service.jdbc.CategoryDbClient;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;

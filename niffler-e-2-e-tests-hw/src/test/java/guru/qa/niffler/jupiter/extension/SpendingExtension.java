@@ -5,7 +5,8 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.jdbc.CategoryDbClient;
+import guru.qa.niffler.service.jdbc.SpendDbClient;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
+    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
     private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
@@ -49,6 +51,15 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                                 SpendUtils.generateForUser(user.getUsername()),
                                                 spendAnno
                                         );
+
+                                // for db creation
+                                var category = spend.getCategory();
+                                category = categoryDbClient
+                                        .findByUsernameAndName(user.getUsername(), category.getName())
+                                        .orElse(categoryDbClient.create(category));
+                                spend.setCategory(category);
+                                // end for db creation
+
                                 spendings.add(spendDbClient.create(spend));
 
                                 context.getStore(NAMESPACE).put(

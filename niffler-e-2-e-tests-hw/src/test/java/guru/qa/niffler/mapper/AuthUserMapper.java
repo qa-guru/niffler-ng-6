@@ -5,9 +5,6 @@ import guru.qa.niffler.data.entity.auth.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthUserMapper {
 

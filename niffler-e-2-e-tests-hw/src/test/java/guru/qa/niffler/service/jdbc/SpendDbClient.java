@@ -1,7 +1,6 @@
 package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.dao.impl.jdbc.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.jdbc.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.CategoryEntity;
@@ -53,12 +52,14 @@ public class SpendDbClient {
         );
     }
 
-    public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
+    public List<SpendJson> findByUsernameAndDescription(String username, String description) {
         log.info("Get spend by username = [{}] and description = [{}]", username, description);
         return transaction(connection -> {
                     return new SpendDaoJdbc(connection)
                             .findByUsernameAndDescription(username, description)
-                            .map(spendMapper::toDto);
+                            .stream()
+                            .map(spendMapper::toDto)
+                            .toList();
                 },
                 SPEND_JDBC_URL,
                 TRANSACTION_ISOLATION_LEVEL
@@ -78,12 +79,10 @@ public class SpendDbClient {
         );
     }
 
-    public void delete(UUID id) {
-        log.info("Remove spend by id = [{}]", id);
+    public void delete(SpendJson spend) {
+        log.info("Remove spend by id: {}", spend);
         transaction(connection -> {
-                    SpendDao spendDao = new SpendDaoJdbc(connection);
-                    new SpendDaoJdbc(connection).findById(id)
-                            .ifPresent(spendDao::delete);
+                    new SpendDaoJdbc(connection).delete(spendMapper.toEntity(spend));
                     return null;
                 },
                 SPEND_JDBC_URL,

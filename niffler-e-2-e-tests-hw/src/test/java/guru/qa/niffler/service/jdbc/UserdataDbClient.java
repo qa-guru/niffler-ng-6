@@ -1,7 +1,6 @@
 package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.dao.impl.jdbc.UserdataUserDaoJdbc;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserModel;
@@ -59,13 +58,10 @@ public class UserdataDbClient {
         );
     }
 
-    public void delete(UUID id) {
-        log.info("Remove user by id = [{}]", id);
+    public void delete(UserModel user) {
+        log.info("Remove user by id: {}", user);
         transaction(connection -> {
-                    UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc(connection);
-                    userdataUserDao.findById(id)
-                            .ifPresent(userdataUserDao::delete);
-                    return null;
+                    new UserdataUserDaoJdbc(connection).delete(userMapper.toEntity(user));
                 },
                 USERDATA_JDBC_URL,
                 TRANSACTION_ISOLATION_LEVEL

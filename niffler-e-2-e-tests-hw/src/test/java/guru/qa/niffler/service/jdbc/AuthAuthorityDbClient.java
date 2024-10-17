@@ -62,6 +62,19 @@ public class AuthAuthorityDbClient {
         );
     }
 
+    public List<AuthAuthorityJson> findAll() {
+        log.info("Get all authorities");
+        return transaction(connection -> {
+                    return new AuthAuthorityDaoJdbc(connection)
+                            .findAll().stream()
+                            .map(authorityMapper::toDto)
+                            .toList();
+                },
+                AUTH_JDBC_URL,
+                TRANSACTION_ISOLATION_LEVEL
+        );
+    }
+
     public void delete(AuthAuthorityJson... authorities) {
         log.info("Remove authorities: {}", Arrays.toString(authorities));
         transaction(connection -> {
@@ -71,10 +84,6 @@ public class AuthAuthorityDbClient {
                                     .map(authorityMapper::toEntity)
                                     .toArray(AuthAuthorityEntity[]::new)
                     );
-//                    for (AuthAuthorityJson authorityJson : authorities) {
-//                        authorityDao.findById(authorityJson.getId())
-//                                .ifPresent(authorityDao::delete);
-//                    }
                     return null;
                 },
                 AUTH_JDBC_URL,

@@ -12,9 +12,11 @@ public interface SpendDao {
 
     Optional<SpendEntity> findById(UUID id);
 
-    Optional<SpendEntity> findByUsernameAndDescription(String username, String description);
+    List<SpendEntity> findByUsernameAndDescription(String username, String description);
 
     List<SpendEntity> findAllByUsername(String username);
+
+    List<SpendEntity> findAll();
 
     void delete(SpendEntity spend);
 

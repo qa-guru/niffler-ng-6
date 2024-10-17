@@ -13,7 +13,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-import static guru.qa.niffler.enums.UserType.*;
+import static guru.qa.niffler.enums.UserType.WITH_INCOME_REQUEST;
+import static guru.qa.niffler.enums.UserType.WITH_OUTCOME_REQUEST;
 
 @Slf4j
 public class UsersQueueExtension implements

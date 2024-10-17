@@ -59,6 +59,7 @@ public class SpendMapper {
                                         anno.category().isEmpty()
                                                 ? spend.getCategory().getName()
                                                 : anno.category())
+                                .username(spend.getUsername())
                                 .archived(false)
                                 .build())
                 .currency(

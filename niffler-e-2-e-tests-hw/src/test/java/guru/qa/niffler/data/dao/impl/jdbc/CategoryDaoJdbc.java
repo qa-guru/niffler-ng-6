@@ -23,7 +23,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryEntity create(CategoryEntity category) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO category (username, name, archived) VALUES (?, ?, ?)",
+                "INSERT INTO \"category\" (username, name, archived) VALUES (?, ?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS
         )) {
 
@@ -51,7 +51,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE id = ?"
+                "SELECT * FROM \"category\" WHERE id = ?"
         )) {
 
             ps.setObject(1, id);
@@ -74,7 +74,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ? AND name = ?"
+                "SELECT * FROM \"category\" WHERE username = ? AND name = ?"
         )) {
 
             ps.setString(1, username);
@@ -98,7 +98,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ?"
+                "SELECT * FROM \"category\" WHERE username = ?"
         )) {
 
             ps.setString(1, username);
@@ -119,10 +119,34 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
+    public List<CategoryEntity> findAll() {
+
+
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"category\""
+        )) {
+
+            ps.execute();
+
+            try (ResultSet rs = ps.getResultSet()) {
+                List<CategoryEntity> categories = new ArrayList<>();
+                while (rs.next())
+                    categories.add(fromResultSet(rs));
+                return categories;
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
     public void delete(CategoryEntity category) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM category WHERE id = ?"
+                "DELETE FROM \"category\" WHERE id = ?"
         )) {
             ps.setObject(1, category.getId());
             ps.executeUpdate();

@@ -1,7 +1,6 @@
 package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.dao.impl.jdbc.AuthUserDaoJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserJson;
 import guru.qa.niffler.mapper.AuthUserMapper;
@@ -59,13 +58,10 @@ public class AuthUserDbClient {
         );
     }
 
-    public void delete(UUID id) {
-        log.info("Remove user by id = [{}]", id);
+    public void delete(AuthUserJson authUserJson) {
+        log.info("Remove user: {}", authUserJson);
         transaction(connection -> {
-                    AuthUserDao userDao = new AuthUserDaoJdbc(connection);
-                    userDao.findById(id)
-                            .ifPresent(userDao::delete);
-                    return null;
+                    new AuthUserDaoJdbc(connection).delete(authUserMapper.toEntity(authUserJson));
                 },
                 AUTH_JDBC_URL,
                 TRANSACTION_ISOLATION_LEVEL

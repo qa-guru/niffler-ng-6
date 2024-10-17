@@ -21,29 +21,38 @@ class UserJdbcTest {
     @Test
     void shouldCreateNewUserInTwoDbTest() {
 
-        var authUser = UserUtils.generateAuthUser();
-        var user = UserUtils.generateUser().setUsername(authUser.getUsername());
+        var user = UserUtils.generateUser();
 
         userDbClient.createUserInAuthAndUserdataDBs(user);
-        authUser = authDbClient.findByUsername(authUser.getUsername()).orElse(new AuthUserJson());
-        user = userdataDbClient.findByUsername(authUser.getUsername()).orElse(new UserModel());
 
-        assertEquals(authUser.getUsername(), user.getUsername());
+        assertAll("Users from niffler-auth and niffler-userdata should have id", () -> {
+            assertNotNull(authDbClient
+                    .findByUsername(user.getUsername())
+                    .orElse(new AuthUserJson())
+                    .getId());
+            assertNotNull(userdataDbClient
+                    .findByUsername(user.getUsername())
+                    .orElse(new UserModel())
+                    .getId());
+        });
 
     }
 
     @Test
     void shouldDeleteUserFromTwoDbTest() {
 
-        var authUser = UserUtils.generateAuthUser();
-        var user = UserUtils.generateUser().setUsername(authUser.getUsername());
+        var user = UserUtils.generateUser();
 
         userDbClient.createUserInAuthAndUserdataDBs(user);
-        log.info("Created user: {}", new AuthUserDbClient().findByUsername(user.getUsername()).toString());
         userDbClient.deleteUserFromAuthAndUserdataDBs(user);
-        assertAll("User should not exists in userdata and auth dbs", () -> {
-            assertTrue(authDbClient.findByUsername(authUser.getUsername()).isEmpty());
-            assertTrue(userdataDbClient.findByUsername(authUser.getUsername()).isEmpty());
+
+        assertAll("User should not exists in niffler-auth and niffler-userdata", () -> {
+            assertTrue(authDbClient
+                    .findByUsername(user.getUsername())
+                    .isEmpty());
+            assertTrue(userdataDbClient
+                    .findByUsername(user.getUsername())
+                    .isEmpty());
         });
 
     }

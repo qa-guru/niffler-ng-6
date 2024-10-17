@@ -5,8 +5,14 @@ import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
@@ -18,12 +24,12 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void create(AuthAuthorityEntity... authorityEntities) {
+    public void create(AuthAuthorityEntity... authority) {
 
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
-            for (AuthAuthorityEntity authorityEntity : authorityEntities) {
+            for (AuthAuthorityEntity authorityEntity : authority) {
                 ps.setObject(1, authorityEntity.getUserId());
                 ps.setString(2, authorityEntity.getAuthority().name());
                 ps.addBatch();
@@ -83,11 +89,33 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void delete(AuthAuthorityEntity... authorityEntities) {
+    public List<AuthAuthorityEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"authority\""
+        )) {
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                List<AuthAuthorityEntity> authorities = new ArrayList<>();
+                while (rs.next() && rs.getObject("id", UUID.class) != null) {
+                    AuthAuthorityEntity authorityEntity = new AuthAuthorityEntity();
+                    authorityEntity.setId(rs.getObject("id", UUID.class));
+                    authorityEntity.setUserId(rs.getObject("user_id", UUID.class));
+                    authorityEntity.setAuthority(Authority.valueOf(rs.getString("authority")));
+                    authorities.add(authorityEntity);
+                }
+                return authorities;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void delete(AuthAuthorityEntity... authority) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM \"authority\" WHERE id = ?"
         )) {
-            for (AuthAuthorityEntity authorityEntity : authorityEntities) {
+            for (AuthAuthorityEntity authorityEntity : authority) {
                 ps.setObject(1, authorityEntity.getId());
                 ps.addBatch();
                 ps.clearParameters();

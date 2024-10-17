@@ -1,7 +1,6 @@
 package guru.qa.niffler.service.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.impl.jdbc.CategoryDaoJdbc;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
@@ -70,12 +69,10 @@ public class CategoryDbClient {
         );
     }
 
-    public void delete(UUID id) {
-        log.info("Remove category by id = [{}]", id);
+    public void delete(CategoryJson categoryJson) {
+        log.info("Remove category: {}", categoryJson);
         transaction(connection -> {
-                    CategoryDao categoryDao = new CategoryDaoJdbc(connection);
-                    categoryDao.findById(id).ifPresent(categoryDao::delete);
-                    return null;
+                    new CategoryDaoJdbc(connection).delete(categoryMapper.toEntity(categoryJson));
                 },
                 SPEND_JDBC_URL,
                 TRANSACTION_ISOLATION_LEVEL

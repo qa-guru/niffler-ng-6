@@ -40,7 +40,7 @@ public class SpendUtils {
 
     public static SpendJson generateForUser(String username) {
          var spend = generate().setUsername(username);
-         spend.getCategory().setUsername(username);
+         spend.setCategory(spend.getCategory().setUsername(username));
          return spend;
     }
 

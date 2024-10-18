@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.UserdataDbClient;
+import guru.qa.niffler.service.impl.jdbc.UserdataDbClientJdbc;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class UserdataJdbcTest {
 
-    private final UserdataDbClient userdataDbClient = new UserdataDbClient();
+    private final UserdataDbClientJdbc userdataDbClient = new UserdataDbClientJdbc();
 
     @Test
     void shouldCreateNewUserTest() {

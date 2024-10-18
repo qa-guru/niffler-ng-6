@@ -5,7 +5,7 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.CategoryDbClient;
+import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class CategoryExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
-    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
+    private final CategoryDbClientJdbc categoryDbClient = new CategoryDbClientJdbc();
 
     @Override
     public void beforeEach(ExtensionContext context) {

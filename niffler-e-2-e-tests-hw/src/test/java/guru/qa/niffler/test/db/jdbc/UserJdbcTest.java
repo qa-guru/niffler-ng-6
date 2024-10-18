@@ -1,39 +1,51 @@
 package guru.qa.niffler.test.db.jdbc;
 
+import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.AuthUserJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.AuthUserDbClient;
-import guru.qa.niffler.service.jdbc.UserDbClient;
-import guru.qa.niffler.service.jdbc.UserdataDbClient;
+import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.AuthUserDbClient;
+import guru.qa.niffler.service.UserdataDbClient;
+import guru.qa.niffler.service.UsersDbClient;
+import guru.qa.niffler.service.impl.jdbc.AuthAuthorityDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.UsersDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.UserdataDbClientJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UsersDbClientSpringJdbc;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class UserJdbcTest {
 
-    private final AuthUserDbClient authDbClient = new AuthUserDbClient();
-    private final UserdataDbClient userdataDbClient = new UserdataDbClient();
-    private final UserDbClient userDbClient = new UserDbClient();
+    private final UsersDbClient usersDbClient = new UsersDbClientJdbc();
+
+    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientJdbc();
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientJdbc();
+    private final UserdataDbClient userdataDbClient = new UserdataDbClientJdbc();
 
     @Test
     void shouldCreateNewUserInTwoDbTest() {
 
-        var user = UserUtils.generateUser();
+        var user = usersDbClient.createUserInAuthAndUserdataDBs(UserUtils.generateUser());
 
-        userDbClient.createUserInAuthAndUserdataDBs(user);
+        var authUser = authUserDbClient.findByUsername(user.getUsername());
+        var authorities = authorityDbClient.findByUserId(authUser.orElse(new AuthUserJson()).getId());
+        var userdataUser = userdataDbClient.findByUsername(user.getUsername());
 
-        assertAll("Users from niffler-auth and niffler-userdata should have id", () -> {
-            assertNotNull(authDbClient
-                    .findByUsername(user.getUsername())
-                    .orElse(new AuthUserJson())
-                    .getId());
-            assertNotNull(userdataDbClient
-                    .findByUsername(user.getUsername())
-                    .orElse(new UserModel())
-                    .getId());
+        assertAll("Users from niffler-auth and niffler-userdata should exists and have authorities", () -> {
+            assertEquals(2, authorities.size());
+            assertTrue(authUser.isPresent());
+            assertTrue(userdataUser.isPresent());
         });
 
     }
@@ -41,18 +53,18 @@ class UserJdbcTest {
     @Test
     void shouldDeleteUserFromTwoDbTest() {
 
-        var user = UserUtils.generateUser();
+        var user = usersDbClient.createUserInAuthAndUserdataDBs(UserUtils.generateUser());
+        var authUser = authUserDbClient.findByUsername(user.getUsername()).orElse(new AuthUserJson());
+        usersDbClient.deleteUserFromAuthAndUserdataDBs(user);
 
-        userDbClient.createUserInAuthAndUserdataDBs(user);
-        userDbClient.deleteUserFromAuthAndUserdataDBs(user);
+        var authorities = authorityDbClient.findByUserId(authUser.getId());
+        var authUserAfterDelete = authUserDbClient.findByUsername(user.getUsername());
+        var userdataUser = userdataDbClient.findByUsername(user.getUsername());
 
         assertAll("User should not exists in niffler-auth and niffler-userdata", () -> {
-            assertTrue(authDbClient
-                    .findByUsername(user.getUsername())
-                    .isEmpty());
-            assertTrue(userdataDbClient
-                    .findByUsername(user.getUsername())
-                    .isEmpty());
+            assertTrue(authUserAfterDelete.isEmpty());
+            assertTrue(authorities.isEmpty());
+            assertTrue(userdataUser.isEmpty());
         });
 
     }

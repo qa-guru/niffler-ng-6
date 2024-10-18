@@ -3,7 +3,7 @@ package guru.qa.niffler.test.db.jdbc;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.SpendDbClient;
+import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class SpendJdbcTest {
 
-    private final SpendDbClient spendDbClient = new SpendDbClient();
+    private final SpendDbClientJdbc spendDbClient = new SpendDbClientJdbc();
 
     @Test
     void shouldCreateNewSpendTest(@CreateNewUser UserModel user) {

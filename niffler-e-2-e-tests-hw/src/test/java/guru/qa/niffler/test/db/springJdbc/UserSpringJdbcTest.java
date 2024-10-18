@@ -1,14 +1,18 @@
 package guru.qa.niffler.test.db.springJdbc;
 
+import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.AuthUserJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.AuthUserDbClient;
-import guru.qa.niffler.service.jdbc.UserdataDbClient;
-import guru.qa.niffler.service.springJdbc.AuthAuthorityDbClientSpringJdbc;
-import guru.qa.niffler.service.springJdbc.AuthUserDbClientSpringJdbc;
-import guru.qa.niffler.service.springJdbc.UserDbClientSpringJdbc;
-import guru.qa.niffler.service.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.UserdataDbClient;
+import guru.qa.niffler.service.UsersDbClient;
+import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.UserdataDbClientJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UsersDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -21,31 +25,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class UserSpringJdbcTest {
 
+    private final UsersDbClient usersDbClient = new UsersDbClientSpringJdbc();
+
+    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
+    private final AuthUserDbClientSpringJdbc authUserDbClient = new AuthUserDbClientSpringJdbc();
+    private final UserdataDbClient userdataDbClient = new UserdataDbClientSpringJdbc();
 
     @Test
     void shouldCreateNewUserInTwoDbTest() {
 
-        AuthUserDbClientSpringJdbc authUserDbClient = new AuthUserDbClientSpringJdbc();
-        var user = UserUtils.generateUser();
+        var user = usersDbClient.createUserInAuthAndUserdataDBs(UserUtils.generateUser());
 
-        new UserDbClientSpringJdbc().createUserInAuthAndUserdataDBs(user);
+        var authUser = authUserDbClient.findByUsername(user.getUsername());
+        var authorities = authorityDbClient.findByUserId(authUser.orElse(new AuthUserJson()).getId());
+        var userdataUser = userdataDbClient.findByUsername(user.getUsername());
 
-        assertAll("Users from niffler-auth and niffler-userdata should have id", () -> {
-            assertNotNull(new AuthUserDbClient()
-                    .findByUsername(user.getUsername())
-                    .orElse(new AuthUserJson())
-                    .getId());
-            assertEquals(2,
-                    new AuthAuthorityDbClientSpringJdbc()
-                            .findByUserId(authUserDbClient
-                                    .findByUsername(user.getUsername())
-                                    .orElse(new AuthUserJson())
-                                    .getId())
-                            .size());
-            assertNotNull(new UserdataDbClientSpringJdbc()
-                    .findByUsername(user.getUsername())
-                    .orElse(new UserModel())
-                    .getId());
+        assertAll("Users from niffler-auth and niffler-userdata should exists and have authorities", () -> {
+            assertEquals(2, authorities.size());
+            assertTrue(authUser.isPresent());
+            assertTrue(userdataUser.isPresent());
         });
 
     }
@@ -53,21 +51,20 @@ class UserSpringJdbcTest {
     @Test
     void shouldDeleteUserFromTwoDbTest() {
 
-        UserDbClientSpringJdbc userDbClient = new UserDbClientSpringJdbc();
-        var user = UserUtils.generateUser();
+        var user = usersDbClient.createUserInAuthAndUserdataDBs(UserUtils.generateUser());
+        var authUser = authUserDbClient.findByUsername(user.getUsername()).orElse(new AuthUserJson());
+        usersDbClient.deleteUserFromAuthAndUserdataDBs(user);
 
-        userDbClient.createUserInAuthAndUserdataDBs(user);
-        userDbClient.deleteUserFromAuthAndUserdataDBs(user);
-
-        List<AuthAuthorityJson> authorities = new AuthAuthorityDbClientSpringJdbc().findByUserId(user.getId());
-        Optional<AuthUserJson> authUser = new AuthUserDbClientSpringJdbc().findByUsername(user.getUsername());
-        Optional<UserModel> userdataUser = new UserdataDbClient().findByUsername(user.getUsername());
+        var authorities = authorityDbClient.findByUserId(authUser.getId());
+        var authUserAfterDelete = authUserDbClient.findByUsername(user.getUsername());
+        var userdataUser = userdataDbClient.findByUsername(user.getUsername());
 
         assertAll("User should not exists in niffler-auth and niffler-userdata", () -> {
+            assertTrue(authUserAfterDelete.isEmpty());
             assertTrue(authorities.isEmpty());
-            assertTrue(authUser.isEmpty());
             assertTrue(userdataUser.isEmpty());
         });
 
     }
+
 }

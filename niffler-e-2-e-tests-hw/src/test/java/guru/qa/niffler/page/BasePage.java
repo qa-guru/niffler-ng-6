@@ -10,6 +10,7 @@ public abstract class BasePage<T> {
             try {
                 shouldVisiblePageElements();
             } catch (Exception ignored) {
+                // NOP
             }
     }
 

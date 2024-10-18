@@ -5,8 +5,8 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.CategoryDbClient;
-import guru.qa.niffler.service.jdbc.SpendDbClient;
+import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -20,8 +20,8 @@ import java.util.Map;
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
-    private final SpendDbClient spendDbClient = new SpendDbClient();
+    private final CategoryDbClientJdbc categoryDbClient = new CategoryDbClientJdbc();
+    private final SpendDbClientJdbc spendDbClient = new SpendDbClientJdbc();
 
     @Override
     public void beforeEach(ExtensionContext context) {

@@ -2,8 +2,8 @@ package guru.qa.niffler.test.db.springJdbc;
 
 import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
-import guru.qa.niffler.service.springJdbc.AuthAuthorityDbClientSpringJdbc;
-import guru.qa.niffler.service.springJdbc.AuthUserDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -2,8 +2,8 @@ package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
-import guru.qa.niffler.service.jdbc.AuthAuthorityDbClient;
-import guru.qa.niffler.service.jdbc.AuthUserDbClient;
+import guru.qa.niffler.service.impl.jdbc.AuthAuthorityDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Slf4j
 class AuthAuthoritiesJdbcTest {
 
-    AuthAuthorityDbClient authAuthorityDbClient = new AuthAuthorityDbClient();
+    AuthAuthorityDbClientJdbc authAuthorityDbClient = new AuthAuthorityDbClientJdbc();
 
     @Test
     void shouldCreateNewAuthoritiesAndFindByUsernameTest() {
 
-        var user = new AuthUserDbClient().create(UserUtils.generateAuthUser());
+        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
         authAuthorityDbClient.create(
                 AuthAuthorityJson.builder()
                         .userId(user.getId())
@@ -38,7 +38,7 @@ class AuthAuthoritiesJdbcTest {
 
     @Test
     void shouldFindAuthorityById() {
-        var user = new AuthUserDbClient().create(UserUtils.generateAuthUser());
+        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
         authAuthorityDbClient.create(
                 AuthAuthorityJson.builder()
                         .userId(user.getId())
@@ -55,7 +55,7 @@ class AuthAuthoritiesJdbcTest {
 
     @Test
     void shouldDeleteAuthorities() {
-        var user = new AuthUserDbClient().create(UserUtils.generateAuthUser());
+        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
         authAuthorityDbClient.create(
                 AuthAuthorityJson.builder()
                         .userId(user.getId())
@@ -70,7 +70,6 @@ class AuthAuthoritiesJdbcTest {
         authAuthorityDbClient.delete(authorities.toArray(new AuthAuthorityJson[0]));
         authorities = authAuthorityDbClient.findByUserId(user.getId());
         log.info("Authorities: {}", authorities.toString());
-//        assertTrue();
     }
 
 }

@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.rowMapper;
 
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.springJdbc.CategoryDaoSpringJdbc;
 import guru.qa.niffler.data.entity.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
@@ -11,11 +10,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
-import static guru.qa.niffler.data.Databases.dataSource;
-
 public class SpendRowMapper implements RowMapper<SpendEntity> {
 
-    private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
     public static final SpendRowMapper INSTANCE = new SpendRowMapper();
 
     private SpendRowMapper() {
@@ -31,7 +27,7 @@ public class SpendRowMapper implements RowMapper<SpendEntity> {
                 .amount(rs.getDouble("amount"))
                 .description(rs.getString("description"))
                 .category(
-                        new CategoryDaoSpringJdbc(dataSource(SPEND_JDBC_URL))
+                        new CategoryDaoSpringJdbc()
                                 .findById(rs.getObject("category_id", UUID.class))
                                 .orElse(null)
                 )

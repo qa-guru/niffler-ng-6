@@ -1,14 +1,15 @@
 package guru.qa.niffler.data.dao.impl.springJdbc;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.UserEntity;
 import guru.qa.niffler.data.rowMapper.UserdataUserRowMapper;
+import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -17,15 +18,11 @@ import java.util.UUID;
 
 public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
-    private final DataSource dataSource;
-
-    public UserdataUserDaoSpringJdbc(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
 
     @Override
     public UserEntity create(UserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -53,7 +50,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
     @Override
     public Optional<UserEntity> findById(UUID id) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                         "SELECT * FROM \"user\" WHERE id = ?",
@@ -64,7 +61,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
             return Optional.ofNullable(
@@ -81,7 +78,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
     @Override
     public List<UserEntity> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"user\"",
                 UserdataUserRowMapper.INSTANCE
@@ -90,7 +87,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
     @Override
     public void delete(UserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"user\" WHERE id = ?",
                 user.getId()

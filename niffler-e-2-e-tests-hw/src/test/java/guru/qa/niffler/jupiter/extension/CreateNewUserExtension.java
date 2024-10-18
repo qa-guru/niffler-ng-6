@@ -3,9 +3,9 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.CategoryDbClient;
-import guru.qa.niffler.service.jdbc.SpendDbClient;
-import guru.qa.niffler.service.jdbc.UserDbClient;
+import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
+import guru.qa.niffler.service.impl.jdbc.UsersDbClientJdbcXa;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -30,12 +30,7 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                     var parameterName = parameter.getName();
                     var parameterAnno = parameter.getAnnotation(CreateNewUser.class);
                     UserModel user = userMapper.updateFromAnno(UserUtils.generateUser(), parameterAnno);
-                    new UserDbClient().createUserInAuthAndUserdataDBs(user);
-
-                    /* sometimes user absent in userdata db if create user by api
-                    authApiClient.register(registerModelMapper.fromUserModel(user));
-                    user.setId(userdataDbClient.findByUsername(user.getUsername()).get().getId());
-                    */
+                    new UsersDbClientJdbcXa().createUserInAuthAndUserdataDBs(user);
 
                     @SuppressWarnings("unchecked")
                     Map<String, UserModel> usersMap = ((Map<String, UserModel>) context.getStore(NAMESPACE)
@@ -65,13 +60,13 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
                             UserModel user = usersMap.get(parameterName);
 
-                            var spendDbClient = new SpendDbClient();
+                            var spendDbClient = new SpendDbClientJdbc();
                             spendDbClient.findAllByUsername(user.getUsername()).forEach(spendDbClient::delete);
 
-                            var categoryDbClient = new CategoryDbClient();
+                            var categoryDbClient = new CategoryDbClientJdbc();
                             categoryDbClient.findAllByUsername(user.getUsername()).forEach(categoryDbClient::delete);
 
-                            new UserDbClient().deleteUserFromAuthAndUserdataDBs(user);
+                            new UsersDbClientJdbcXa().deleteUserFromAuthAndUserdataDBs(user);
 
                         }
                 );

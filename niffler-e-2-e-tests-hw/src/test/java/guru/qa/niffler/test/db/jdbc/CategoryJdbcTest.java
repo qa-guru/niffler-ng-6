@@ -3,7 +3,7 @@ package guru.qa.niffler.test.db.jdbc;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.jdbc.CategoryDbClient;
+import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class CategoryJdbcTest {
 
-    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
+    private final CategoryDbClientJdbc categoryDbClient = new CategoryDbClientJdbc();
 
     @Test
     void shouldCreateNewCategoryTest(@CreateNewUser UserModel user) {

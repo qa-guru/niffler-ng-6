@@ -3,7 +3,7 @@ package guru.qa.niffler.test.db.springJdbc;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.springJdbc.CategoryDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.CategoryDbClientSpringJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

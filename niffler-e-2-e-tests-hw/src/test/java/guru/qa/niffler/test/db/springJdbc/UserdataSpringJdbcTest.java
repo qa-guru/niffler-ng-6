@@ -1,6 +1,9 @@
 package guru.qa.niffler.test.db.springJdbc;
 
-import guru.qa.niffler.service.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.UsersDbClient;
+import guru.qa.niffler.service.impl.jdbc.UsersDbClientJdbcXa;
+import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UsersDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

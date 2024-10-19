@@ -42,6 +42,11 @@ public class FriendshipDaoJdbc implements FriendshipDao {
             ps.setString(3, "ACCEPTED");
             ps.setDate(4, new Date(new java.util.Date().getTime()));
             ps.executeUpdate();
+            ps.setObject(1, addressee.getId());
+            ps.setObject(2, requester.getId());
+            ps.setString(3, "ACCEPTED");
+            ps.setDate(4, new Date(new java.util.Date().getTime()));
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

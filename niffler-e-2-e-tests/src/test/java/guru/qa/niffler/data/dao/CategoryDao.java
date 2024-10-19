@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface CategoryDao {
     CategoryEntity create(CategoryEntity category);
 
-    CategoryEntity updateArchived(CategoryEntity category);
+    CategoryEntity update(CategoryEntity category);
 
     Optional<CategoryEntity> findCategoryById(UUID id);
 

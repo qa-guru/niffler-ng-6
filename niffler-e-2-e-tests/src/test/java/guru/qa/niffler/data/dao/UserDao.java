@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface UserDao {
     UserEntity createUser(UserEntity user);
 
+    UserEntity update(UserEntity user);
+
     Optional<UserEntity> findById(UUID id);
 
     Optional<UserEntity> findByUsername(String username);

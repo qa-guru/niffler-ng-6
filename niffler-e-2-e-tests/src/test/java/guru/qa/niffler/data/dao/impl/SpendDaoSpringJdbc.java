@@ -33,7 +33,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
             );
             ps.setString(1,spend.getUsername());
             ps.setDate(2, new Date(spend.getSpendDate().getTime()));
-            ps.setObject(3, spend.getCurrency());
+            ps.setString(3, spend.getCurrency().name());
             ps.setDouble(4, spend.getAmount());
             ps.setString(5, spend.getDescription());
             ps.setObject(6, spend.getCategory().getId());
@@ -41,6 +41,27 @@ public class SpendDaoSpringJdbc implements SpendDao {
         }, kh);
         final UUID generatednKey = (UUID) kh.getKeys().get("id");
         spend.setId(generatednKey);
+        return spend;
+    }
+
+    @Override
+    public SpendEntity update(SpendEntity spend) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+        jdbcTemplate.update( con -> {
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE public.spend " +
+                            "SET username=?, spend_date=?, currency=?, amount=?, description=?, category_id=? " +
+                            " WHERE id=?;"
+            );
+            ps.setString(1,spend.getUsername());
+            ps.setDate(2, new Date(spend.getSpendDate().getTime()));
+            ps.setString(3, spend.getCurrency().name());
+            ps.setDouble(4, spend.getAmount());
+            ps.setString(5, spend.getDescription());
+            ps.setObject(6, spend.getCategory().getId());
+            ps.setObject(7, spend.getId());
+            return ps;
+        });
         return spend;
     }
 
@@ -65,6 +86,19 @@ public class SpendDaoSpringJdbc implements SpendDao {
                         SpendEntityRomManager.instance,
                         username
                 );
+    }
+
+    @Override
+    public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM spend WHERE username = ?, description=?",
+                        SpendEntityRomManager.instance,
+                        username,
+                        description
+                )
+        );
     }
 
     @Override

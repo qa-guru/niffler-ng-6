@@ -30,7 +30,8 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     @Override
     public UserEntity update(UserEntity authUser) {
-        return null;
+        entityManager.refresh(authUser);
+        return authUser;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     @Override
     public List<UserEntity> findAll() {
-        return List.of();
+        return entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class).getResultList();
     }
 
     @Override
@@ -69,6 +70,6 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     @Override
     public void remove(UserEntity authUser) {
-
+        entityManager.remove(authUser);
     }
 }

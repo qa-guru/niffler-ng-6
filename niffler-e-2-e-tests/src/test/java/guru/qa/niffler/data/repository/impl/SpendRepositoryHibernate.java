@@ -28,7 +28,8 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
     @Override
     public SpendEntity update(SpendEntity spend) {
-        return null;
+       entityManager.refresh(spend);
+       return spend;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndCatigoryName(String username, String name) {
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
         try {
             return Optional.of(entityManager.createQuery("select c from CategoryEntity c where c.username =: username and c.name =: name", CategoryEntity.class)
                     .setParameter("username", username)
@@ -73,11 +74,11 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
     @Override
     public void remove(SpendEntity spend) {
-
+        entityManager.remove(spend);
     }
 
     @Override
     public void removeCategory(CategoryEntity category) {
-
+        entityManager.remove(category);
     }
 }

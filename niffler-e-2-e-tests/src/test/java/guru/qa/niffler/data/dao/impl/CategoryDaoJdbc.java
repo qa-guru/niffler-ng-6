@@ -45,13 +45,14 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public CategoryEntity updateArchived(CategoryEntity category) {
+    public CategoryEntity update(CategoryEntity category) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "UPDATE public.category SET archived=? " +
+                "UPDATE public.category SET name=?, archived=? " +
                         "WHERE id = ?"
         )) {
-            ps.setBoolean(1, category.isArchived());
-            ps.setObject(2, category.getId());
+            ps.setString(1, category.getName());
+            ps.setBoolean(2, category.isArchived());
+            ps.setObject(3, category.getId());
             ps.executeUpdate();
             return category;
         } catch (SQLException e) {

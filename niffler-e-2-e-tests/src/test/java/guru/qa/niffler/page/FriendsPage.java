@@ -2,15 +2,16 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
 
 public class FriendsPage {
     private final SelenideElement emptyFriendList = $x("//p[text()='There are no users yet']");
     private final ElementsCollection friendList = $$("#requests tr");
+    private final SelenideElement searchInput = $("input[type='text']");
 
     private SelenideElement getFriendItem(String friendName) {
         return $x("//p[contains(text(), '" + friendName + "')]");
@@ -23,6 +24,7 @@ public class FriendsPage {
 
 
     public void shouldFriendItem(String value) {
+        searchFriend(value);
         getFriendItem(value).shouldHave(text(value));
     }
 
@@ -32,6 +34,7 @@ public class FriendsPage {
 
 
     public void shouldFriendName(String friendName) {
+        searchFriend(friendName);
         friendList.findBy(text(friendName)).shouldBe(visible);
     }
 
@@ -42,6 +45,13 @@ public class FriendsPage {
     public void shouldFriendRequestListVisible(String friendName) {
         SelenideElement friendRow = getFriendRow(friendName);
         friendRow.find(".MuiChip-label").shouldBe(visible);
+    }
+
+
+    public FriendsPage searchFriend(String friendName) {
+        searchInput.sendKeys(friendName);
+        searchInput.sendKeys(Keys.ENTER);
+        return new FriendsPage();
     }
 
 }

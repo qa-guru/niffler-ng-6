@@ -53,7 +53,7 @@ public class UserDbClient implements UserClient {
                     return UserJson.fromEntity(
                             userdataUserRepository.create(
                                     userEntity(username)
-                            )
+                            ),null
                     );
                 }
         );

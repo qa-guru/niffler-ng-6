@@ -18,7 +18,7 @@ public class SpendingWebTest {
     private static final Config CFG = Config.getInstance();
 
     @User(
-            username = "esa",
+            username = "esa-3",
             categories = @Category(
                     archived = false
             ),
@@ -39,6 +39,6 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription)
                 .save();
 
-        new MainPage().checkThatTableContainsSpending(newDescription);
+        new MainPage().toSearch(newDescription).checkThatTableContainsSpending(newDescription);
     }
 }

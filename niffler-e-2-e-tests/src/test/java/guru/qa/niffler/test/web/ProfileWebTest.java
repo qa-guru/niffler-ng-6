@@ -15,7 +15,7 @@ public class ProfileWebTest {
     private static final Config CFG = Config.getInstance();
 
     @User(
-            username = "esa",
+
             categories = @Category(
                     archived = true
     )

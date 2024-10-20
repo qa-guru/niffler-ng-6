@@ -14,10 +14,18 @@ public class MainPage {
     private final SelenideElement friendsLink = $("a[href='/people/friends']");
     private final SelenideElement allPeopleLink = $("a[href='/people/all']");
     private final SelenideElement statBlock = $("#stat");
+    private final SelenideElement fieldSearch = $("input[placeholder='Search']");
+    private final SelenideElement buttonSearch = $("button[id='input-submit']");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
+    }
+
+    public MainPage toSearch(String searchString){
+        fieldSearch.setValue(searchString);
+        buttonSearch.click();
+        return new MainPage();
     }
 
     public void checkThatTableContainsSpending(String spendingDescription) {

@@ -4,7 +4,7 @@ import guru.qa.niffler.model.CategoryJson;
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface CategoriesApi {
 
@@ -15,6 +15,6 @@ public interface CategoriesApi {
     Call<CategoryJson> updateCategory(@Body CategoryJson category);
 
     @GET("internal/categories/all")
-    Call<List<CategoryJson>> getCategories(@Query("username") String username,
-                                           @Query("excludeArchived") boolean excludeArchived);
+    Call<Optional<CategoryJson>> getCategories(@Query("username") String username,
+                                               @Query("name") String name);
 }

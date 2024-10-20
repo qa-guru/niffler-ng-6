@@ -12,6 +12,9 @@ public class FriendsPage {
     private final SelenideElement buttonToOpenAllPeoplePage = $("a[href='/people/all']");
     private final ElementsCollection listFriends = $$("#friends tr");
     private final ElementsCollection listRequests = $$("#requests tr");
+    private final SelenideElement fieldSearch = $("input[placeholder='Search']");
+    private final SelenideElement buttonSearch = $("button[id='input-submit']");
+
 
 
     public AllPeoplePage openAllPeoplePage() {
@@ -19,12 +22,18 @@ public class FriendsPage {
         return new AllPeoplePage();
     }
 
-    public void checkHaveFriend(String friendName) {
-        listFriends.find(text(friendName)).should(visible);
+    public FriendsPage toSearch(String searchString){
+        fieldSearch.setValue(searchString);
+        buttonSearch.click();
+        return new FriendsPage();
     }
 
-    public void checkIncomeInvitationFriend(String friendName) {
-        listRequests.find(text(friendName)).$$("td").find(text("Accept")).should(visible);
+    public void checkHaveFriend() {
+        listFriends.find(text("Unfriend")).should(visible);
+    }
+
+    public void checkIncomeInvitationFriend() {
+        listFriends.find(text("Accept")).should(visible);
     }
 
     public void checkNotHaveFriend() {

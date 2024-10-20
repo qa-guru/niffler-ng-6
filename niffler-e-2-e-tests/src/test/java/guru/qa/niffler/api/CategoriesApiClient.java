@@ -9,6 +9,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class CategoriesApiClient {
 
@@ -44,10 +45,10 @@ public class CategoriesApiClient {
 
     }
 
-    public List<CategoryJson> getCategories(String username, Boolean excludeArchived) {
-        final Response<List<CategoryJson>> response;
+    public Optional<CategoryJson> getCategories(String username, String name) {
+        final Response<Optional<CategoryJson>> response;
         try {
-            response = categoriesApi.getCategories(username, excludeArchived)
+            response = categoriesApi.getCategories(username, name)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);

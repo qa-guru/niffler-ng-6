@@ -14,53 +14,61 @@ import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
-  private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
+    private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
-  @Override
-  public UserEntity create(UserEntity user) {
-    entityManager.joinTransaction();
-    entityManager.persist(user);
-    return user;
-  }
-
-  @Override
-  public Optional<UserEntity> findById(UUID id) {
-    return Optional.ofNullable(
-        entityManager.find(UserEntity.class, id)
-    );
-  }
-
-  @Override
-  public Optional<UserEntity> findByUsername(String username) {
-    try {
-      return Optional.of(
-          entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class)
-              .setParameter("username", username)
-              .getSingleResult()
-      );
-    } catch (NoResultException e) {
-      return Optional.empty();
+    @Override
+    public UserEntity create(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.persist(user);
+        return user;
     }
-  }
 
-  @Override
-  public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-    entityManager.joinTransaction();
-    addressee.addFriends(FriendshipStatus.PENDING, requester);
-  }
+    @Override
+    public Optional<UserEntity> findById(UUID id) {
+        return Optional.ofNullable(
+                entityManager.find(UserEntity.class, id)
+        );
+    }
 
-  @Override
-  public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-    entityManager.joinTransaction();
-    requester.addFriends(FriendshipStatus.PENDING, addressee);
-  }
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        try {
+            return Optional.of(
+                    entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class)
+                            .setParameter("username", username)
+                            .getSingleResult()
+            );
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
 
-  @Override
-  public void addFriend(UserEntity requester, UserEntity addressee) {
-    entityManager.joinTransaction();
-    requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-    addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
-  }
+    @Override
+    public UserEntity update(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.merge(user);
+        return user;
+    }
+
+    @Override
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
+        entityManager.joinTransaction();
+        addressee.addFriends(FriendshipStatus.PENDING, requester);
+    }
+
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+        entityManager.joinTransaction();
+        requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
+        addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.remove(user);
+    }
+
 }

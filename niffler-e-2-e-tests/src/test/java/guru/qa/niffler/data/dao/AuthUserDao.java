@@ -14,4 +14,8 @@ public interface AuthUserDao {
 
   List<AuthUserEntity> findAll();
 
+  AuthUserEntity update(AuthUserEntity user);
+
+  void remove(UUID id);
+
 }

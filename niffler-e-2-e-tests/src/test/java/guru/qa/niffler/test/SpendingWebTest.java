@@ -1,8 +1,9 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.category.Category;
-import guru.qa.niffler.jupiter.spend.Spend;
+import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
+import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
@@ -26,6 +27,7 @@ public class SpendingWebTest extends BaseTest {
       currency = RUB
   )
   @Test
+  @DisabledByIssue("3")
   @Description("Проверка возможности редактирования трат")
   void categoryDescriptionShouldBeEditedByTableAction(SpendJson spend) {
     final String newSpendingName = "Обучение Advanced 3.0";

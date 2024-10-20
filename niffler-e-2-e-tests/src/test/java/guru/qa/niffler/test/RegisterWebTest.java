@@ -1,12 +1,10 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static guru.qa.niffler.enums.ErrorValuesEnum.PASSWORD_NOT_EQUALS;
 import static guru.qa.niffler.enums.ErrorValuesEnum.USER_ALREADY_EXIST;

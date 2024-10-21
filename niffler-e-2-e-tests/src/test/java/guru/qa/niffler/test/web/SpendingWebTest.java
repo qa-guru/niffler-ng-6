@@ -24,7 +24,8 @@ public class SpendingWebTest {
             )
     )
     @Test
-    void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {
+    void categoryDescriptionShouldBeChangedFromTable(SpendJson[] spends) {
+        SpendJson spend = spends[0];
         final String newDescription = "Обучение Niffler Next Generation";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)

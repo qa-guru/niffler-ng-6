@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -18,12 +19,14 @@ public class MainPage {
     private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
     private final SelenideElement statComponent = $("#stat");
     private final SelenideElement spendingTable = $("#spendings");
+    private final SelenideElement searchInput = $("input[type='text']");
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
     }
 
     public void checkThatTableContainsSpending(String spendingDescription) {
+        searchSpend(spendingDescription);
         tableRows.find(text(spendingDescription)).shouldBe(visible);
     }
 
@@ -58,6 +61,12 @@ public class MainPage {
         statComponent.should(visible).shouldHave(text("Statistics"));
         spendingTable.should(visible).shouldHave(text("History of Spendings"));
         return this;
+    }
+
+    public MainPage searchSpend(String spendingName) {
+        searchInput.sendKeys(spendingName);
+        searchInput.sendKeys(Keys.ENTER);
+        return new MainPage();
     }
 
 }

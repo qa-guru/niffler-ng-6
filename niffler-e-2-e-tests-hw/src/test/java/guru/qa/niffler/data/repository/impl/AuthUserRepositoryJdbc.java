@@ -7,7 +7,6 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.rowMapper.AuthUserRowMapper;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -13,71 +13,54 @@ import java.util.UUID;
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
-    private static final Config CFG = Config.getInstance();
-    private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
-    @Override
-    public UserEntity create(UserEntity user) {
-        entityManager.joinTransaction();
-        entityManager.persist(user);
-        return user;
-    }
+  private static final Config CFG = Config.getInstance();
 
-    @Override
-    public Optional<UserEntity> findById(UUID id) {
-        return Optional.ofNullable(
-                entityManager.find(UserEntity.class, id)
-        );
-    }
+  private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
-    @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        try {
-            return Optional.of(
-                    entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class)
-                            .setParameter("username", username)
-                            .getSingleResult()
-            );
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
-    }
+  @Override
+  public UserEntity create(UserEntity user) {
+    entityManager.joinTransaction();
+    entityManager.persist(user);
+    return user;
+  }
 
-    @Override
-    public UserEntity update(UserEntity user) {
-        entityManager.joinTransaction();
-        return entityManager.merge(user);
-    }
+  @Override
+  public UserEntity update(UserEntity user) {
+    entityManager.joinTransaction();
+    return entityManager.merge(user);
+  }
 
-    @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        addressee.addFriends(FriendshipStatus.PENDING, requester);
-    }
+  @Override
+  public Optional<UserEntity> findById(UUID id) {
+    return Optional.ofNullable(
+        entityManager.find(UserEntity.class, id)
+    );
+  }
 
-    @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        addressee.addFriends(FriendshipStatus.PENDING, requester);
+  @Override
+  public Optional<UserEntity> findByUsername(String username) {
+    try {
+      return Optional.of(
+          entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class)
+              .setParameter("username", username)
+              .getSingleResult()
+      );
+    } catch (NoResultException e) {
+      return Optional.empty();
     }
+  }
 
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.PENDING, addressee);
-    }
+  @Override
+  public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
+    entityManager.joinTransaction();
+    requester.addFriends(FriendshipStatus.PENDING, addressee);
+  }
 
-    @Override
-    public void addFriend(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-        addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
-    }
-
-    @Override
-    public void remove(UserEntity user) {
-        entityManager.joinTransaction();
-        UserEntity managedUser = entityManager.contains(user) ? user : entityManager.merge(user);
-        entityManager.remove(managedUser);
-    }
+  @Override
+  public void addFriend(UserEntity requester, UserEntity addressee) {
+    entityManager.joinTransaction();
+    requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
+    addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+  }
 }

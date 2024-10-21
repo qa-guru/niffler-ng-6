@@ -120,7 +120,7 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
   }
 
   @Override
-  public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+  public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
     UserType userAnnotationType = parameterContext.getParameter().getAnnotation(UserType.class);
     StaticUser userFromParam = getContextMap(extensionContext).get(userAnnotationType);
     if (userFromParam != null) {

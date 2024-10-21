@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.db.springJdbc;
 
-import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
+import guru.qa.niffler.model.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
 import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;

@@ -1,6 +1,6 @@
 package guru.qa.niffler.mapper;
 
-import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 

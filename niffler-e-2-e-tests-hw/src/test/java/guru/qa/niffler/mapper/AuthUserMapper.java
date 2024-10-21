@@ -1,7 +1,7 @@
 package guru.qa.niffler.mapper;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.auth.AuthUserJson;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
@@ -17,6 +17,10 @@ public class AuthUserMapper {
                 .credentialsNonExpired(authUserJson.isCredentialsNonExpired())
                 .enabled(authUserJson.isEnabled())
                 .password(authUserJson.getPassword())
+                .authorities(
+                        authUserJson.getAuthorities().stream()
+                                .map(new AuthAuthorityMapper()::toEntity)
+                                .toList())
                 .build();
     }
 
@@ -24,12 +28,16 @@ public class AuthUserMapper {
         return AuthUserJson.builder()
                 .id(authUserEntity.getId())
                 .username(authUserEntity.getUsername())
-                .enabled(authUserEntity.isEnabled())
-                .accountNonExpired(authUserEntity.isAccountNonExpired())
-                .accountNonLocked(authUserEntity.isAccountNonLocked())
-                .enabled(authUserEntity.isEnabled())
-                .credentialsNonExpired(authUserEntity.isCredentialsNonExpired())
+                .enabled(authUserEntity.getEnabled())
+                .accountNonExpired(authUserEntity.getAccountNonExpired())
+                .accountNonLocked(authUserEntity.getAccountNonLocked())
+                .enabled(authUserEntity.getEnabled())
+                .credentialsNonExpired(authUserEntity.getCredentialsNonExpired())
                 .password(authUserEntity.getPassword())
+                .authorities(
+                        authUserEntity.getAuthorities().stream()
+                                .map(new AuthAuthorityMapper()::toDto)
+                                .toList())
                 .build();
     }
 

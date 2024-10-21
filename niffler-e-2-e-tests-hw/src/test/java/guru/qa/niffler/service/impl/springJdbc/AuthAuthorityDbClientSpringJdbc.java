@@ -3,7 +3,7 @@ package guru.qa.niffler.service.impl.springJdbc;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.springJdbc.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
-import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
+import guru.qa.niffler.model.AuthAuthorityJson;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.mapper.AuthAuthorityMapper;
 import guru.qa.niffler.service.AuthAuthorityDbClient;

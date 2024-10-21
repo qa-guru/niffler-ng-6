@@ -1,10 +1,12 @@
 package guru.qa.niffler.mapper;
 
-import guru.qa.niffler.data.entity.UserEntity;
-import guru.qa.niffler.data.entity.auth.AuthUserJson;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
+
+import java.nio.charset.StandardCharsets;
 
 public class UserMapper {
 
@@ -15,8 +17,13 @@ public class UserMapper {
                 .currency(userModel.getCurrency())
                 .firstName(userModel.getFirstName())
                 .surname(userModel.getSurname())
-                .photo(userModel.getPhoto())
-                .photoSmall(userModel.getPhotoSmall())
+                .photo(userModel.getPhoto() != null
+                        ? userModel.getPhoto().getBytes(StandardCharsets.UTF_8)
+                        : null
+                )
+                .photoSmall(userModel.getPhotoSmall() != null
+                        ? userModel.getPhotoSmall().getBytes(StandardCharsets.UTF_8)
+                        : null)
                 .fullName(userModel.getFullName())
                 .build();
     }
@@ -40,8 +47,14 @@ public class UserMapper {
                 .currency(userEntity.getCurrency())
                 .firstName(userEntity.getFirstName())
                 .surname(userEntity.getSurname())
-                .photo(userEntity.getPhoto())
-                .photoSmall(userEntity.getPhotoSmall())
+                .photo(
+                        userEntity.getPhoto() != null && userEntity.getPhoto().length > 0
+                                ? new String(userEntity.getPhoto(), StandardCharsets.UTF_8)
+                                : null)
+                .photoSmall(
+                        userEntity.getPhotoSmall() != null && userEntity.getPhotoSmall().length > 0
+                                ? new String(userEntity.getPhotoSmall(), StandardCharsets.UTF_8)
+                                : null)
                 .fullName(userEntity.getFullName())
                 .build();
     }

@@ -77,12 +77,12 @@ dependencies {
     // DB
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
-    testImplementation "p6spy:p6spy:${p6spyVersion}"
-    testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
-    testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
     testImplementation "com.atomikos:transactions-jta:${atomicosVersion}:jakarta"
     testImplementation "com.atomikos:transactions-hibernate4:${atomicosVersion}:jakarta"
     testImplementation "com.atomikos:transactions-jdbc:${atomicosVersion}"
+    testImplementation "p6spy:p6spy:${p6spyVersion}"
+    testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
+    testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
     // Allure
     testImplementation "io.qameta.allure:allure-attachments:${allureVersion}"
     testImplementation("io.qameta.allure:allure-junit5:${allureVersion}") {
@@ -102,6 +102,7 @@ dependencies {
     testImplementation 'commons-io:commons-io:2.16.1'
     testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
+    testImplementation 'com.github.h-thurow:simple-jndi:0.24.0'
     // gRPC
     testImplementation "io.grpc:grpc-protobuf:${project.ext.grpcVersion}"
     testImplementation "io.grpc:grpc-stub:${project.ext.grpcVersion}"

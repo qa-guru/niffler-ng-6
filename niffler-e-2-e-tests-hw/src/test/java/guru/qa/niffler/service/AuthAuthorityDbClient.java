@@ -1,6 +1,6 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
+import guru.qa.niffler.model.AuthAuthorityJson;
 
 import java.util.List;
 import java.util.Optional;

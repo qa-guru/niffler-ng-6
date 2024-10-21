@@ -2,7 +2,7 @@ package guru.qa.niffler.service.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.jdbc.AuthUserDaoJdbc;
-import guru.qa.niffler.data.entity.auth.AuthUserJson;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.service.AuthUserDbClient;

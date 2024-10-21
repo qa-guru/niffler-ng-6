@@ -44,11 +44,11 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
                             userMapper.toAuthDto(userModel)));
             new AuthAuthorityDaoJdbc().create(
                     AuthAuthorityEntity.builder()
-                            .userId(authUserEntity.getId())
+                            .user(AuthUserEntity.builder().id(authUserEntity.getId()).build())
                             .authority(Authority.read)
                             .build(),
                     AuthAuthorityEntity.builder()
-                            .userId(authUserEntity.getId())
+                            .user(AuthUserEntity.builder().id(authUserEntity.getId()).build())
                             .authority(Authority.write)
                             .build());
             return null;

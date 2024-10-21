@@ -3,6 +3,7 @@ package guru.qa.niffler.data.dao.impl.jdbc;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,10 +26,9 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     public void create(AuthAuthorityEntity... authority) {
 
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
-                "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS)) {
+                "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)")) {
             for (AuthAuthorityEntity authorityEntity : authority) {
-                ps.setObject(1, authorityEntity.getUserId());
+                ps.setObject(1, authorityEntity.getUser());
                 ps.setString(2, authorityEntity.getAuthority().name());
                 ps.addBatch();
                 ps.clearParameters();
@@ -115,7 +115,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private AuthAuthorityEntity fromResultSet(ResultSet rs) throws SQLException {
         return AuthAuthorityEntity.builder()
                 .id(rs.getObject("id", UUID.class))
-                .userId(rs.getObject("user_id", UUID.class))
+                .user(AuthUserEntity.builder().id(rs.getObject("user_id", UUID.class)).build())
                 .authority(Authority.valueOf(rs.getString("authority")))
                 .build();
     }

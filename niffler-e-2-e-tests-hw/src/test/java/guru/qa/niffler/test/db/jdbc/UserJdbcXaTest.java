@@ -1,12 +1,11 @@
 package guru.qa.niffler.test.db.jdbc;
 
-import guru.qa.niffler.data.entity.auth.AuthUserJson;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.service.AuthAuthorityDbClient;
 import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.UserdataDbClient;
 import guru.qa.niffler.service.UsersDbClient;
 import guru.qa.niffler.service.impl.jdbc.*;
-import guru.qa.niffler.service.impl.springJdbc.*;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

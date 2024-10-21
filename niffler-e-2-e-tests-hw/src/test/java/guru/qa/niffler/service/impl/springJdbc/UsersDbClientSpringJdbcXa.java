@@ -35,13 +35,14 @@ public class UsersDbClientSpringJdbcXa implements UsersDbClient {
             AuthUserEntity authUserEntity = new AuthUserDaoSpringJdbc().create(
                     authUserMapper.toEntity(
                             userMapper.toAuthDto(userModel)));
+
             new AuthAuthorityDaoSpringJdbc().create(
                     AuthAuthorityEntity.builder()
-                            .userId(authUserEntity.getId())
+                            .user(AuthUserEntity.builder().id(authUserEntity.getId()).build())
                             .authority(Authority.read)
                             .build(),
                     AuthAuthorityEntity.builder()
-                            .userId(authUserEntity.getId())
+                            .user(AuthUserEntity.builder().id(authUserEntity.getId()).build())
                             .authority(Authority.write)
                             .build());
 

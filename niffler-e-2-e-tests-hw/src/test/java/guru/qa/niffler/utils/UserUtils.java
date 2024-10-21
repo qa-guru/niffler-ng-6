@@ -1,12 +1,15 @@
 package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.data.entity.auth.AuthUserJson;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.model.AuthAuthorityJson;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.helper.EnumHelper;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
 
 import java.util.Collections;
+import java.util.List;
 
 public class UserUtils {
 
@@ -23,8 +26,8 @@ public class UserUtils {
                 .currency(EnumHelper.getRandomEnum(CurrencyValues.class))
                 .firstName(firstName)
                 .surname(surname)
-                .photo(new byte[0])
-                .photoSmall(new byte[0])
+                .photo(null)
+                .photoSmall(null)
                 .fullName(firstName + " " + surname)
                 .categories(Collections.emptyList())
                 .spendings(Collections.emptyList())
@@ -40,6 +43,11 @@ public class UserUtils {
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .enabled(true)
+                .authorities(
+                        List.of(
+                                AuthAuthorityJson.builder().authority(Authority.read).build(),
+                                AuthAuthorityJson.builder().authority(Authority.write).build()
+                        ))
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package guru.qa.niffler.mapper;
 
-import guru.qa.niffler.data.entity.SpendEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.ex.InvalidDateException;
 import guru.qa.niffler.helper.DateHelper;
 import guru.qa.niffler.jupiter.annotation.Spending;

@@ -29,9 +29,9 @@ public class UserModel {
 
     private String surname;
 
-    private byte[] photo;
+    private String photo;
 
-    private byte[] photoSmall;
+    private String photoSmall;
 
     private String fullName;
 

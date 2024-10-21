@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.rowMapper;
 
-import guru.qa.niffler.data.entity.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

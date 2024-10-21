@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.db.jdbc;
 
-import guru.qa.niffler.data.entity.auth.AuthAuthorityJson;
+import guru.qa.niffler.model.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.service.impl.jdbc.AuthAuthorityDbClientJdbc;
 import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;

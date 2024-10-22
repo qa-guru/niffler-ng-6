@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SpendApiClient {
   private static final Config CFG = Config.getInstance();
 
-  private final OkHttpClient okHttpClient = getOkHttpClient();
-
   public OkHttpClient getOkHttpClient() {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(Level.BODY);

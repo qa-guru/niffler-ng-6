@@ -1,9 +1,9 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
@@ -11,17 +11,16 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 @WebTest
 public class RegistrationTest {
 
-  private static final Config CFG = Config.getInstance();
-
   @Test
   void shouldRegisterNewUser() {
     String newUsername = randomUsername();
     String password = "12345";
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
+    Selenide.open(LoginPage.URL, LoginPage.class)
         .doRegister()
         .fillRegisterPage(newUsername, password, password)
         .successSubmit()
-        .successLogin(newUsername, password)
+        .fillLoginPage(newUsername, password)
+        .submit(new MainPage())
         .checkThatPageLoaded();
   }
 
@@ -30,10 +29,10 @@ public class RegistrationTest {
     String existingUsername = "duck";
     String password = "12345";
 
-    LoginPage loginPage = Selenide.open(CFG.frontUrl(), LoginPage.class);
+    LoginPage loginPage = Selenide.open(LoginPage.URL, LoginPage.class);
     loginPage.doRegister()
         .fillRegisterPage(existingUsername, password, password)
-        .submit();
+        .errorSubmit();
     loginPage.checkError("Username `" + existingUsername + "` already exists");
   }
 
@@ -42,10 +41,10 @@ public class RegistrationTest {
     String newUsername = randomUsername();
     String password = "12345";
 
-    LoginPage loginPage = Selenide.open(CFG.frontUrl(), LoginPage.class);
+    LoginPage loginPage = Selenide.open(LoginPage.URL, LoginPage.class);
     loginPage.doRegister()
         .fillRegisterPage(newUsername, password, "bad password submit")
-        .submit();
+        .errorSubmit();
     loginPage.checkError("Passwords should be equal");
   }
 }

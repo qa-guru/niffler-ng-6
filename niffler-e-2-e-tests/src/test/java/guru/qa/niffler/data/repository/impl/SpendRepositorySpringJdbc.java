@@ -31,7 +31,7 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   @Override
   public SpendEntity create(SpendEntity spend) {
     final UUID categoryId = spend.getCategory().getId();
-    if (categoryId == null && categoryDao.findById(categoryId).isEmpty()) {
+    if (categoryId == null || categoryDao.findById(categoryId).isEmpty()) {
       spend.setCategory(
           categoryDao.create(spend.getCategory())
       );
@@ -51,6 +51,13 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   @Override
   public CategoryEntity createCategory(CategoryEntity category) {
     return categoryDao.create(category);
+  }
+
+  @Nonnull
+  @Override
+  public CategoryEntity updateCategory(CategoryEntity category) {
+    categoryDao.update(category);
+    return category;
   }
 
   @Nonnull

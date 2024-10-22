@@ -10,8 +10,10 @@ import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.FriendState;
+import guru.qa.niffler.model.rest.TestData;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,14 +21,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
+import static java.util.Objects.requireNonNull;
 
 @ParametersAreNonnullByDefault
 public class UsersDbClient implements UsersClient {
 
   private static final Config CFG = Config.getInstance();
+  private static final String defaultPassword = "12345";
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
   private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
@@ -40,11 +43,15 @@ public class UsersDbClient implements UsersClient {
   @Nonnull
   @Override
   public UserJson createUser(String username, String password) {
-    return Objects.requireNonNull(
+    return requireNonNull(
         xaTransactionTemplate.execute(
             () -> UserJson.fromEntity(
                 createNewUser(username, password),
                 null
+            ).addTestData(
+                new TestData(
+                    password
+                )
             )
         )
     );
@@ -58,15 +65,24 @@ public class UsersDbClient implements UsersClient {
       ).orElseThrow();
 
       for (int i = 0; i < count; i++) {
-        xaTransactionTemplate.execute(() -> {
-              final String username = randomUsername();
-              userdataUserRepository.addFriendshipRequest(
-                  createNewUser(username, "12345"),
-                  targetEntity
-              );
-              return null;
-            }
-        );
+        targetUser.testData()
+            .incomeInvitations()
+            .add(UserJson.fromEntity(
+                    requireNonNull(
+                        xaTransactionTemplate.execute(() -> {
+                              final String username = randomUsername();
+                              final UserEntity newUser = createNewUser(username, defaultPassword);
+                              userdataUserRepository.addFriendshipRequest(
+                                  newUser,
+                                  targetEntity
+                              );
+                              return newUser;
+                            }
+                        )
+                    ),
+                    FriendState.INVITE_RECEIVED
+                )
+            );
       }
     }
   }
@@ -79,15 +95,24 @@ public class UsersDbClient implements UsersClient {
       ).orElseThrow();
 
       for (int i = 0; i < count; i++) {
-        xaTransactionTemplate.execute(() -> {
-              String username = randomUsername();
-              userdataUserRepository.addFriendshipRequest(
-                  targetEntity,
-                  createNewUser(username, "12345")
-              );
-              return null;
-            }
-        );
+        targetUser.testData()
+            .outcomeInvitations()
+            .add(UserJson.fromEntity(
+                    requireNonNull(
+                        xaTransactionTemplate.execute(() -> {
+                              final String username = randomUsername();
+                              final UserEntity newUser = createNewUser(username, defaultPassword);
+                              userdataUserRepository.addFriendshipRequest(
+                                  targetEntity,
+                                  newUser
+                              );
+                              return newUser;
+                            }
+                        )
+                    ),
+                    FriendState.INVITE_RECEIVED
+                )
+            );
       }
     }
   }
@@ -100,15 +125,24 @@ public class UsersDbClient implements UsersClient {
       ).orElseThrow();
 
       for (int i = 0; i < count; i++) {
-        xaTransactionTemplate.execute(() -> {
-              String username = randomUsername();
-              userdataUserRepository.addFriend(
-                  targetEntity,
-                  createNewUser(username, "12345")
-              );
-              return null;
-            }
-        );
+        targetUser.testData()
+            .friends()
+            .add(UserJson.fromEntity(
+                    requireNonNull(
+                        xaTransactionTemplate.execute(() -> {
+                              final String username = randomUsername();
+                              final UserEntity newUser = createNewUser(username, defaultPassword);
+                              userdataUserRepository.addFriend(
+                                  targetEntity,
+                                  newUser
+                              );
+                              return newUser;
+                            }
+                        )
+                    ),
+                    FriendState.FRIEND
+                )
+            );
       }
     }
   }

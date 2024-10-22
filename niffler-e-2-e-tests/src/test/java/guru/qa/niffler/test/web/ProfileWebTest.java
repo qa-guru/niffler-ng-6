@@ -9,6 +9,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 @ExtendWith(BrowserExtension.class)
 public class ProfileWebTest {

@@ -5,6 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.extantion.UserExtension;
 import guru.qa.niffler.jupiter.extantion.UserQueueExtension;
 import guru.qa.niffler.jupiter.extantion.UserQueueExtension.StaticUser;
 import guru.qa.niffler.model.UserJson;
@@ -16,6 +17,7 @@ import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 
 import static guru.qa.niffler.jupiter.extantion.UserQueueExtension.UserType.Type.*;

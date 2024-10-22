@@ -1,57 +1,64 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.Keys;
+import guru.qa.niffler.page.component.SearchField;
+import io.qameta.allure.Step;
+import lombok.Getter;
 
+import java.util.List;
+
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.$;
 
 public class FriendsPage {
-    private final SelenideElement emptyFriendList = $x("//p[text()='There are no users yet']");
-    private final ElementsCollection friendList = $$("#requests tr");
-    private final SelenideElement searchInput = $("input[type='text']");
+    private final SelenideElement requestsTable = $("#requests");
+    private final SelenideElement friendsTable = $("#friends");
+    private final SelenideElement acceptButton = $(byText("Accept"));
+    private final SelenideElement declineButton = $(byText("Decline"));
+    private final SelenideElement confirmDeclineButton =
+            $(".MuiPaper-root button.MuiButtonBase-root.MuiButton-containedPrimary");
 
-    private SelenideElement getFriendItem(String friendName) {
-        return $x("//p[contains(text(), '" + friendName + "')]");
+    @Getter
+    private final SearchField searchField = new SearchField();
+
+    @Step("Проверка наличия имен в списке друзей")
+    public FriendsPage checkExistingFriends(List<String> expectedUsernames) {
+        for (String expectedUsername : expectedUsernames) {
+            searchField.search(expectedUsername);
+            friendsTable.$$("tr").find(text(expectedUsername)).should(visible);
+        }
+        return this;
     }
 
-    public void unfriend(String friendName) {
-        SelenideElement friendItem = getFriendItem(friendName);
-        friendItem.sibling(0).find("button").click();  // Пример, если кнопка "Unfriend" находится рядом
+    @Step("Проверка отсутствия имен в списке друзей")
+    public FriendsPage checkNoExistingFriends() {
+        friendsTable.$$("tr").shouldHave(size(0));
+        return this;
     }
 
-
-    public void shouldFriendItem(String value) {
-        searchFriend(value);
-        getFriendItem(value).shouldHave(text(value));
+    @Step("Проверка наличия приглашения")
+    public FriendsPage checkExistingInvitations(List<String> expectedUsernames) {
+        for (String expectedUsername : expectedUsernames) {
+            searchField.search(expectedUsername);
+            requestsTable.$$("tr").find(text(expectedUsername)).should(visible);
+        }
+        return this;
     }
 
-    public void shouldEmptyFriendList(String value) {
-        emptyFriendList.shouldHave(text(value));
+    @Step("Принять заявку в друзья")
+    public FriendsPage acceptFriend() {
+        acceptButton.click();
+        return this;
     }
 
-
-    public void shouldFriendName(String friendName) {
-        searchFriend(friendName);
-        friendList.findBy(text(friendName)).shouldBe(visible);
-    }
-
-    private SelenideElement getFriendRow(String friendName) {
-        return $x("//tr[.//p[contains(text(), '" + friendName + "')]]");
-    }
-
-    public void shouldFriendRequestListVisible(String friendName) {
-        SelenideElement friendRow = getFriendRow(friendName);
-        friendRow.find(".MuiChip-label").shouldBe(visible);
-    }
-
-
-    public FriendsPage searchFriend(String friendName) {
-        searchInput.sendKeys(friendName);
-        searchInput.sendKeys(Keys.ENTER);
-        return new FriendsPage();
+    @Step("Отклонить заявку в друзья")
+    public FriendsPage declineFriend() {
+        declineButton.click();
+        confirmDeclineButton.click();
+        return this;
     }
 
 }

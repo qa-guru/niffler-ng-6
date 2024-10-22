@@ -8,21 +8,21 @@ import java.util.UUID;
 
 public interface SpendRepository {
 
-  SpendEntity create(SpendEntity spend);
+    SpendEntity create(SpendEntity spend);
 
-  SpendEntity update(SpendEntity spend);
+    SpendEntity update(SpendEntity spend);
 
-  CategoryEntity createCategory(CategoryEntity category);
+    CategoryEntity createCategory(CategoryEntity category);
 
-  Optional<CategoryEntity> findCategoryById(UUID id);
+    Optional<CategoryEntity> findCategoryById(UUID id);
 
-  Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name);
+    Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name);
 
-  Optional<SpendEntity> findById(UUID id);
+    Optional<SpendEntity> findById(UUID id);
 
-  Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description);
+    Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description);
 
-  void remove(SpendEntity spend);
+    void remove(SpendEntity spend);
 
-  void removeCategory(CategoryEntity category);
+    void removeCategory(CategoryEntity category);
 }

@@ -4,6 +4,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -51,7 +52,7 @@ public class SpendEntity implements Serializable {
     public SpendEntity() {
     }
 
-    public static SpendEntity fromJson(SpendJson json) {
+    public static @NonNull SpendEntity fromJson(@NonNull SpendJson json) {
         SpendEntity se = new SpendEntity();
         se.setId(json.id());
         se.setUsername(json.username());

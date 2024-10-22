@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.enums.TypeEnum;
+import guru.qa.niffler.jupiter.annotation.UserType;
 import io.qameta.allure.Allure;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -11,20 +12,14 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-
-import static guru.qa.niffler.enums.TypeEnum.EMPTY;
 
 public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
@@ -38,10 +33,10 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
       String outcome) {
   }
 
-  private static final Queue<StaticUser> EMPTY_USERS = new ConcurrentLinkedDeque<>();
-  private static final Queue<StaticUser> WITH_FRIEND_USERS = new ConcurrentLinkedDeque<>();
-  private static final Queue<StaticUser> WITH_INCOME_REQUEST_USERS = new ConcurrentLinkedDeque<>();
-  private static final Queue<StaticUser> WITH_OUTCOME_REQUEST_USERS = new ConcurrentLinkedDeque<>();
+  private static final Queue<StaticUser> EMPTY_USERS = new ConcurrentLinkedQueue<>();
+  private static final Queue<StaticUser> WITH_FRIEND_USERS = new ConcurrentLinkedQueue<>();
+  private static final Queue<StaticUser> WITH_INCOME_REQUEST_USERS = new ConcurrentLinkedQueue<>();
+  private static final Queue<StaticUser> WITH_OUTCOME_REQUEST_USERS = new ConcurrentLinkedQueue<>();
 
 
   static {
@@ -65,21 +60,13 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
       case WITH_OUTCOME_REQUEST -> {
         return WITH_OUTCOME_REQUEST_USERS;
       }
-      default -> {
-        return null;
-      }
+      default -> throw new IllegalArgumentException("Unsupported user type: " + userType);
     }
   }
 
   private Map<UserType, StaticUser> getContextMap(ExtensionContext context) {
     return ((Map<UserType, StaticUser>) context.getStore(USER_QUEUE_NAMESPACE)
         .getOrComputeIfAbsent(context.getUniqueId(), key -> new HashMap<UserType, StaticUser>()));
-  }
-
-  @Target(ElementType.PARAMETER)
-  @Retention(RetentionPolicy.RUNTIME)
-  public @interface UserType {
-    TypeEnum value() default EMPTY;
   }
 
   @Override
@@ -96,12 +83,12 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
           }
           user.ifPresentOrElse(
               userFromStream -> getContextMap(context).put(userType, userFromStream),
-              () -> new IllegalStateException("Can't find user after 30 sec")
+              () -> {
+                throw new IllegalStateException("Can't find user after 30 sec");
+              }
           );
         });
-    Allure.getLifecycle().updateTestCase(testCase -> {
-      testCase.setStart(new Date().getTime());
-    });
+    Allure.getLifecycle().updateTestCase(testCase -> testCase.setStart(new Date().getTime()));
   }
 
   @Override

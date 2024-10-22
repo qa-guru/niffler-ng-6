@@ -1,8 +1,8 @@
 package guru.qa.niffler.test;
 
+import guru.qa.niffler.jupiter.annotation.UserType;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension.StaticUser;
-import guru.qa.niffler.jupiter.extension.UserQueueExtension.UserType;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.Test;

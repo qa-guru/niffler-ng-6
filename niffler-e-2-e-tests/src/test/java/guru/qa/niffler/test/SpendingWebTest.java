@@ -2,7 +2,9 @@ package guru.qa.niffler.test;
 
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
-import guru.qa.niffler.jupiter.annotation.Spend;
+import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.MainPage;
@@ -15,14 +17,18 @@ import static guru.qa.niffler.testData.DataConstant.MAIN_PASSWORD;
 import static guru.qa.niffler.testData.DataConstant.MAIN_USER;
 
 @Feature("UI:Работа с пользовательскими тратами")
+@WebTest
 public class SpendingWebTest extends BaseTest {
 
-  @Spend(
-      category = "Обучение",
-      description = "Обучение Advanced 2.0",
+
+  @User(
       username = MAIN_USER,
-      amount = 84550,
-      currency = RUB
+      spendings =  @Spending(
+          category = "Обучение",
+          description = "Обучение Advanced 2.0",
+          amount = 84550,
+          currency = RUB
+      )
   )
   @Test
   @DisabledByIssue("3")
@@ -37,9 +43,11 @@ public class SpendingWebTest extends BaseTest {
     new MainPage().checkThatTableContains(newSpendingName);
   }
 
-  @Category(
+  @User(
       username = MAIN_USER,
-      isArchived = true
+      categories = @Category(
+          isArchived = true
+      )
   )
   @Test
   @Description("Проверка отсутствия архивных категорий")
@@ -49,9 +57,11 @@ public class SpendingWebTest extends BaseTest {
         .checkCategoryIsNotPresent(category.name());
   }
 
-  @Category(
+  @User(
       username = MAIN_USER,
-      isArchived = false
+      categories = @Category(
+          isArchived = false
+      )
   )
   @Test
   @Description("Проверка отображения архивных категорий")

@@ -94,8 +94,10 @@ public class UserQueueExtension implements BeforeTestExecutionCallback, AfterTes
   @Override
   public void afterTestExecution(ExtensionContext context) throws Exception {
     Map<UserType, StaticUser> map = getContextMap(context);
-    for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
-      getQueueByUserType(e.getKey().value()).add(e.getValue());
+    if (map != null) {
+      for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
+        getQueueByUserType(e.getKey().value()).add(e.getValue());
+      }
     }
   }
 

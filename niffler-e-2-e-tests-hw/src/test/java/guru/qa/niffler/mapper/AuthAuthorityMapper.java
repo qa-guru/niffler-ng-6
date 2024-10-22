@@ -9,7 +9,7 @@ public class AuthAuthorityMapper {
     public AuthAuthorityEntity toEntity(AuthAuthorityJson authAuthorityJson) {
         return AuthAuthorityEntity.builder()
                 .id(authAuthorityJson.getId())
-                .user(AuthUserEntity.builder().id(authAuthorityJson.getUserId()).build())
+                .user(AuthUserEntity.builder().id(authAuthorityJson.getUser()).build())
                 .authority(authAuthorityJson.getAuthority())
                 .build();
     }
@@ -17,7 +17,7 @@ public class AuthAuthorityMapper {
     public AuthAuthorityJson toDto(AuthAuthorityEntity authAuthorityEntity) {
         return AuthAuthorityJson.builder()
                 .id(authAuthorityEntity.getId())
-                .userId(authAuthorityEntity.getUser().getId())
+                .user(authAuthorityEntity.getUser().getId())
                 .authority(authAuthorityEntity.getAuthority())
                 .build();
     }

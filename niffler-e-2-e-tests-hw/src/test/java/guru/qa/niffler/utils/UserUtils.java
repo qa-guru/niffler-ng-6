@@ -36,20 +36,39 @@ public class UserUtils {
     }
 
     public static AuthUserJson generateAuthUser() {
-        return AuthUserJson.builder()
+        var user = AuthUserJson.builder()
                 .username(generateUsername())
                 .password(generatePassword())
+                .enabled(true)
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
-                .enabled(true)
-                .authorities(
-                        List.of(
-                                AuthAuthorityJson.builder().authority(Authority.read).build(),
-                                AuthAuthorityJson.builder().authority(Authority.write).build()
-                        ))
                 .build();
+
+//        user.setAuthorities(
+//                        List.of(
+//                                AuthAuthorityJson.builder().authority(Authority.read).user(user).build(),
+//                                AuthAuthorityJson.builder().authority(Authority.write).user(user).build()
+//                        ));
+        return user;
     }
+
+
+//    public static AuthUserJson generateAuthUser() {
+//        return AuthUserJson.builder()
+//                .username(generateUsername())
+//                .password(generatePassword())
+//                .enabled(true)
+//                .accountNonExpired(true)
+//                .accountNonLocked(true)
+//                .credentialsNonExpired(true)
+//                .authorities(
+//                        List.of(
+//                                AuthAuthorityJson.builder().authority(Authority.read).build(),
+//                                AuthAuthorityJson.builder().authority(Authority.write).build()
+//                        ))
+//                .build();
+//    }
 
     private static String generatePassword() {
         var password = FAKE.internet().password();

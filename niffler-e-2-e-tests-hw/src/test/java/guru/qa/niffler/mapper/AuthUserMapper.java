@@ -6,6 +6,8 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
 
+import java.util.ArrayList;
+
 public class AuthUserMapper {
 
     public AuthUserEntity toEntity(AuthUserJson authUserJson) {
@@ -20,7 +22,8 @@ public class AuthUserMapper {
                 .authorities(
                         authUserJson.getAuthorities().stream()
                                 .map(new AuthAuthorityMapper()::toEntity)
-                                .toList())
+                                .toList()
+                )
                 .build();
     }
 

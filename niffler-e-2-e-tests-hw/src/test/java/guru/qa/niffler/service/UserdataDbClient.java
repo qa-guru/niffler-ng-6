@@ -1,5 +1,6 @@
 package guru.qa.niffler.service;
 
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.model.UserModel;
 
 import java.util.List;
@@ -16,6 +17,16 @@ public interface UserdataDbClient {
 
     List<UserModel> findAll();
 
-    void delete(UserModel userModel);
+    void sendInvitation(UserModel requester, UserModel addressee, FriendshipStatus status);
+
+    void getIncomeInvitationFromNewUsers(UserModel requester, int count);
+
+    void sendOutcomeInvitationToNewUsers(UserModel requester, int count);
+
+    void addFriend(UserModel requester, UserModel addressee);
+
+    void addNewFriends(UserModel requester, int count);
+
+    void remove(UserModel userModel);
 
 }

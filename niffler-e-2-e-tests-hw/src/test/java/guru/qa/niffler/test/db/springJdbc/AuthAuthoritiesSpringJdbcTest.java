@@ -2,6 +2,8 @@ package guru.qa.niffler.test.db.springJdbc;
 
 import guru.qa.niffler.model.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
 import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
@@ -15,18 +17,19 @@ import static guru.qa.niffler.utils.UserUtils.generateAuthUser;
 @Slf4j
 class AuthAuthoritiesSpringJdbcTest {
 
+    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientSpringJdbc();
+
     @Test
     void shouldCreateNewAuthoritiesAndFindByUsernameTest() {
 
-        var authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
-        var authUser = new AuthUserDbClientSpringJdbc()
-                .create(generateAuthUser());
+        var authUser = authUserDbClient.create(generateAuthUser());
 
         authorityDbClient.create(
                 Arrays.stream(Authority.values())
                         .map(authority ->
                                 AuthAuthorityJson.builder()
-                                        .userId(authUser.getId())
+                                        .user(authUser.getId())
                                         .authority(authority)
                                         .build())
                         .toArray(AuthAuthorityJson[]::new));
@@ -35,17 +38,15 @@ class AuthAuthoritiesSpringJdbcTest {
     }
 
     @Test
-    void shouldFindAuthorityById() {
+    void shouldFindAuthorityByIdTest() {
 
-        var authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
-        var authUser = new AuthUserDbClientSpringJdbc()
-                .create(generateAuthUser());
+        var authUser = authUserDbClient.create(generateAuthUser());
 
         authorityDbClient.create(
                 Arrays.stream(Authority.values())
                         .map(authority ->
                                 AuthAuthorityJson.builder()
-                                        .userId(authUser.getId())
+                                        .user(authUser.getId())
                                         .authority(authority)
                                         .build())
                         .toArray(AuthAuthorityJson[]::new));
@@ -61,17 +62,15 @@ class AuthAuthoritiesSpringJdbcTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void shouldFindAllTest() {
 
-        var authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
-        var authUser = new AuthUserDbClientSpringJdbc()
-                .create(generateAuthUser());
+        var authUser = authUserDbClient.create(generateAuthUser());
 
         authorityDbClient.create(
                 Arrays.stream(Authority.values())
                         .map(authority ->
                                 AuthAuthorityJson.builder()
-                                        .userId(authUser.getId())
+                                        .user(authUser.getId())
                                         .authority(authority)
                                         .build())
                         .toArray(AuthAuthorityJson[]::new));
@@ -81,17 +80,15 @@ class AuthAuthoritiesSpringJdbcTest {
     }
 
     @Test
-    void shouldDeleteAuthorities() {
+    void shouldDeleteAuthoritiesTest() {
 
-        var authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
-        var authUser = new AuthUserDbClientSpringJdbc()
-                .create(generateAuthUser());
+        var authUser = authUserDbClient.create(generateAuthUser());
 
         authorityDbClient.create(
                 Arrays.stream(Authority.values())
                         .map(authority ->
                                 AuthAuthorityJson.builder()
-                                        .userId(authUser.getId())
+                                        .user(authUser.getId())
                                         .authority(authority)
                                         .build())
                         .toArray(AuthAuthorityJson[]::new));

@@ -16,6 +16,6 @@ public interface AuthUserDbClient {
 
     List<AuthUserJson> findAll();
 
-    void delete(AuthUserJson authUser);
+    void remove(AuthUserJson authUser);
 
 }

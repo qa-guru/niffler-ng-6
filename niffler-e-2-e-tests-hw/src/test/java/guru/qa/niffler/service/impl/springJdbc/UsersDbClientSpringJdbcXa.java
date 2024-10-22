@@ -78,7 +78,7 @@ public class UsersDbClientSpringJdbcXa implements UsersDbClient {
 
             // Remove userdata user
             userdataDao.findByUsername(userModel.getUsername())
-                    .ifPresent(userdataDao::delete);
+                    .ifPresent(userdataDao::remove);
 
             return null;
 

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class AuthAuthorityJson {
 
     private UUID id;
-    private UUID userId;
+    private UUID user;
     private Authority authority;
 
 }

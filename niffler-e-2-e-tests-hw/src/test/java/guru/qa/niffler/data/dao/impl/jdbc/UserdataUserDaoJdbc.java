@@ -2,16 +2,14 @@ package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
@@ -119,7 +117,51 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
+        )) {
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, status.name());
+            ps.setDate(4, new java.sql.Date(new Date().getTime()));
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
+        )) {
+
+            var sqlDate = new java.sql.Date(new Date().getTime());
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.ACCEPTED.name());
+            ps.setDate(4, sqlDate);
+
+            ps.addBatch();
+            ps.clearParameters();
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.ACCEPTED.name());
+            ps.setDate(4, sqlDate);
+
+            ps.executeBatch();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void remove(UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"

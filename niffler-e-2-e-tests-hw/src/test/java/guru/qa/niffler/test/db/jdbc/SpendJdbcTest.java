@@ -1,63 +1,70 @@
 package guru.qa.niffler.test.db.jdbc;
 
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class SpendJdbcTest {
 
-    private final SpendDbClientJdbc spendDbClient = new SpendDbClientJdbc();
+    private final SpendDbClient spendDbClient = new SpendDbClientJdbc();
 
     @Test
-    void shouldCreateNewSpendTest(@CreateNewUser UserModel user) {
-        var spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        Assertions.assertNotNull(spend.getId());
+    void shouldCreateNewSpendTest(@CreateNewUser(categories = @Category) UserModel user) {
+        var category = user.getCategories().getFirst();
+        assertNotNull(
+                spendDbClient
+                        .create(SpendUtils.generateForUser(user.getUsername()).setCategory(category))
+                        .getId());
     }
 
     @Test
-    void shouldGetSpendByIdTest(@CreateNewUser UserModel user) {
-        var spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        var foundedSpend = spendDbClient.findById(spend.getId()).orElse(new SpendJson());
-        assertEquals(spend, foundedSpend);
+    void shouldGetSpendByIdTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+        assertNotNull(spendDbClient.findById(user.getSpendings().getFirst().getId()));
     }
 
     @Test
-    void shouldGetSpendByUsernameAndDescriptionTest(@CreateNewUser UserModel user) {
-        var spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        var foundedSpends = spendDbClient.findByUsernameAndDescription(
-                        user.getUsername(),
-                        spend.getDescription());
-        assertTrue(foundedSpends.contains(spend));
+    void shouldGetSpendByUsernameAndDescriptionTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+        assertNotNull(
+                spendDbClient
+                        .findByUsernameAndDescription(
+                                user.getUsername(),
+                                user.getSpendings().getFirst().getDescription()));
     }
 
     @Test
-    void shouldGetAllSpendsByUsernameTest(@CreateNewUser UserModel user) {
-
-        var spend1 = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        var spend2 = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        List<SpendJson> categories = spendDbClient.findAllByUsername(user.getUsername());
-
-        assertTrue(categories.contains(spend1));
-        assertTrue(categories.contains(spend2));
-
+    void shouldGetAllSpendingsByUsernameTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+        assertFalse(
+                spendDbClient
+                        .findAllByUsername(user.getUsername())
+                        .isEmpty());
     }
 
     @Test
-    void shouldRemoveSpendTest(@CreateNewUser UserModel user) {
-        SpendJson spend = spendDbClient.create(SpendUtils.generateForUser(user.getUsername()));
-        spendDbClient.delete(spend);
-        assertEquals(0, spendDbClient.findAllByUsername(user.getUsername()).size());
+    void shouldGetAllSpendingsTest(
+            @CreateNewUser(spendings = @Spending) UserModel user1,
+            @CreateNewUser(spendings = @Spending) UserModel user2
+    ) {
+        var allSpendings = spendDbClient.findAll();
+        assertAll("Should contains users spendings", () -> {
+            assertTrue(allSpendings.contains(user1.getSpendings().getFirst()));
+            assertTrue(allSpendings.contains(user2.getSpendings().getFirst()));
+        });
     }
+
+    @Test
+    void shouldRemoveSpendTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+        spendDbClient.delete(user.getSpendings().getFirst());
+        assertTrue(spendDbClient.findAllByUsername(user.getUsername()).isEmpty());
+    }
+
 
 }

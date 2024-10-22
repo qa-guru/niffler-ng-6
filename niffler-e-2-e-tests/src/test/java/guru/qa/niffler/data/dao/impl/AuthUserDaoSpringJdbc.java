@@ -11,16 +11,18 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
   private static final Config CFG = Config.getInstance();
+  private final String url = CFG.authJdbcUrl();
 
   @Override
   public AuthUserEntity create(AuthUserEntity user) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {
       PreparedStatement ps = con.prepareStatement(
@@ -44,13 +46,22 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             "SELECT * FROM \"user\" WHERE id = ?",
             AuthUserEntityRowMapper.instance,
             id
         )
+    );
+  }
+
+  @Override
+  public List<AuthUserEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    return jdbcTemplate.query(
+        "SELECT * FROM \"user\"",
+        AuthUserEntityRowMapper.instance
     );
   }
 }

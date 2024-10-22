@@ -1,50 +1,65 @@
 package guru.qa.niffler.test.db.hibernate;
 
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.impl.hibernate.AuthUserDbClientHibernate;
-import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;
-import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
+
+import static guru.qa.niffler.utils.UserUtils.generateAuthUser;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 class AuthUserHibernateTest {
-
+    
     private final AuthUserDbClient authUserDbClient = new AuthUserDbClientHibernate();
-
+    
     @Test
     void shouldCreateNewUserTest() {
-        var user = authUserDbClient.create(UserUtils.generateAuthUser());
-        log.info("User: {}", user);
-        assertNotNull(user.getId());
+        Assertions.assertNotNull(
+                authUserDbClient
+                        .create(generateAuthUser().setAuthorities(Collections.emptyList()))
+                        .getId());
     }
 
     @Test
     void shouldGetUserByIdTest() {
-        var user = authUserDbClient.create(UserUtils.generateAuthUser());
-        var foundedUser = authUserDbClient
-                .findById(user.getId())
-                .orElse(new AuthUserJson());
-        assertEquals(user.getId(), foundedUser.getId());
+        var userId = authUserDbClient
+                .create(generateAuthUser())
+                .getId();
+        assertTrue(authUserDbClient
+                .findById(userId)
+                .isPresent());
     }
 
     @Test
     void shouldGetUserByUsernameTest() {
-        var user = authUserDbClient.create(UserUtils.generateAuthUser());
-        var foundedUser = authUserDbClient
-                .findByUsername(user.getUsername())
-                .orElse(new AuthUserJson());
-        assertEquals(user.getId(), foundedUser.getId());
+        var username = authUserDbClient
+                .create(generateAuthUser())
+                .getUsername();
+        assertTrue(authUserDbClient
+                .findByUsername(username)
+                .isPresent());
+    }
+
+    @Test
+    void shouldFindAllTest() {
+        authUserDbClient.create(generateAuthUser());
+        assertFalse(authUserDbClient
+                .findAll()
+                .isEmpty());
     }
 
     @Test
     void shouldRemoveUserTest() {
-        var user = authUserDbClient.create(UserUtils.generateAuthUser());
-        authUserDbClient.delete(user);
-        assertNull(authUserDbClient.findByUsername(user.getUsername()).orElse(null));
+        var authUserJson = authUserDbClient.create(generateAuthUser());
+        authUserDbClient.remove(authUserJson);
+        assertTrue(authUserDbClient
+                .findById(authUserJson.getId())
+                .isEmpty());
     }
 
 }

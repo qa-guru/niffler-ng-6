@@ -32,10 +32,10 @@ public class UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private CurrencyValues currency;
 
-    @Column()
+    @Column(name = "firstname")
     private String firstName;
 
-    @Column()
+    @Column(name = "surname")
     private String surname;
 
     @Column(name = "full_name")
@@ -47,12 +47,12 @@ public class UserEntity implements Serializable {
     @Column(name = "photo_small", columnDefinition = "bytea")
     private byte[] photoSmall;
 
-    @Builder.Default
     @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<FriendshipEntity> friendshipRequests = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "addressee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<FriendshipEntity> friendshipAddressees = new ArrayList<>();
 
     public void addFriends(FriendshipStatus status, UserEntity... friends) {

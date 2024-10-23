@@ -5,7 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.Spending;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.SignInPage;
 import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,8 +25,8 @@ public class SpendingWebTest {
   void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {
     final String newDescription = "Обучение Niffler Next Generation";
 
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .login("duck", "12345")
+    Selenide.open(CFG.frontUrl(), SignInPage.class)
+        .signIn("duck", "12345")
         .editSpending(spend.description())
         .setNewSpendingDescription(newDescription)
         .save();

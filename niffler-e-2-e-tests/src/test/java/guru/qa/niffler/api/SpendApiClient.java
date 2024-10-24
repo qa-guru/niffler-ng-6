@@ -8,10 +8,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class SpendApiClient {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -45,7 +50,7 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public List<SpendJson> getSpends(String username, CurrencyValues filterCurrency, Date from, Date to) {
+    public @Nonnull List<SpendJson> getSpends(String username, @Nullable CurrencyValues filterCurrency, @Nullable Date from, @Nullable Date to) {
         final Response<List<SpendJson>> response;
         try {
             response = spendApi.getSpends(username, filterCurrency, from, to)
@@ -54,7 +59,9 @@ public class SpendApiClient {
             throw new AssertionError(e);
         }
         Assertions.assertEquals(200, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
     public SpendJson getSpend(String id, String username) {

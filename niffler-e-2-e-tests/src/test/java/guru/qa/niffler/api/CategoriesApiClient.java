@@ -7,10 +7,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class CategoriesApiClient {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -20,7 +23,7 @@ public class CategoriesApiClient {
 
     private final CategoriesApi categoriesApi = retrofit.create(CategoriesApi.class);
 
-    public CategoryJson addCategory(CategoryJson category) {
+    public @Nullable CategoryJson addCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = categoriesApi.addCategory(category)
@@ -32,7 +35,7 @@ public class CategoriesApiClient {
         return response.body();
     }
 
-    public CategoryJson updateCategory(CategoryJson category) {
+    public @Nullable CategoryJson updateCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = categoriesApi.updateCategory(category)
@@ -45,7 +48,7 @@ public class CategoriesApiClient {
 
     }
 
-    public Optional<CategoryJson> getCategories(String username, String name) {
+    public @Nullable Optional<CategoryJson> getCategories(String username, String name) {
         final Response<Optional<CategoryJson>> response;
         try {
             response = categoriesApi.getCategories(username, name)

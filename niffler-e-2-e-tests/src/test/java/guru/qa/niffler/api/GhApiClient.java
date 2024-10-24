@@ -9,11 +9,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
+@ParametersAreNonnullByDefault
 public class GhApiClient {
 
     private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
@@ -24,7 +26,7 @@ public class GhApiClient {
 
     private final GhApi ghApi = retrofit.create(GhApi.class);
 
-    public String issueState(String issueNumber) {
+    public  String issueState(@Nonnull String issueNumber) {
         final Response<JsonNode> response;
         try {
             response = ghApi.issue(

@@ -32,6 +32,7 @@ public class UsersQueueExtension implements
 
     static {
         EMPTY_USERS.add(new StaticUser("bee", "12345", true));
+        EMPTY_USERS.add(new StaticUser("bee1", "12345", true));
         NOT_EMPTY_USERS.add(new StaticUser("duck", "12345", false));
         NOT_EMPTY_USERS.add(new StaticUser("dima", "12345", false));
     }
@@ -46,42 +47,41 @@ public class UsersQueueExtension implements
     public void beforeEach(ExtensionContext context) throws Exception {
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
-                .findFirst()
-                .map(p -> p.getAnnotation(UserType.class))
-                .ifPresent(
-                        ut -> {
-                            Optional<StaticUser> user = Optional.empty();
-                            StopWatch sw = StopWatch.createStarted();
-                            while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                                user = Optional.ofNullable(ut.empty()
-                                        ? EMPTY_USERS.poll()
-                                        : NOT_EMPTY_USERS.poll());
-                            }
-                            Allure.getLifecycle().updateTestCase(testCase -> {
-                                testCase.setStart(new Date().getTime());
-                            });
-                            user.ifPresentOrElse(
-                                    u -> {
-                                        context.getStore(NAMESPACE)
-                                                .put(
-                                                        context.getUniqueId(),
-                                                        u
-                                                );
-                                    },
-                                    () -> new IllegalStateException("Can't find a user after 30 sec")
-                            );
-                        }
-                );
+                .map(p -> {
+                    UserType ut = p.getAnnotation(UserType.class);
+                    Optional<StaticUser> user = Optional.empty();
+                    StopWatch sw = StopWatch.createStarted();
+                    while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
+                        user = Optional.ofNullable(ut.empty()
+                                ? EMPTY_USERS.poll()
+                                : NOT_EMPTY_USERS.poll());
+                    }
+                    Allure.getLifecycle().updateTestCase(testCase -> {
+                        testCase.setStart(new Date().getTime());
+                    });
+                    user.ifPresentOrElse(
+                            u -> context.getStore(NAMESPACE).put(context.getUniqueId() + p.getName(), u),
+                            () -> new IllegalStateException("Can't find a user after 30 sec")
+                    );
+                    return user;
+                }).forEach(Optional::isPresent);
     }
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        StaticUser user = context.getStore(NAMESPACE).get(context.getUniqueId(), StaticUser.class);
-        if (user.empty()) {
-            EMPTY_USERS.add(user);
-        } else {
-            NOT_EMPTY_USERS.add(user);
-        }
+        Arrays.stream(context.getRequiredTestMethod().getParameters())
+                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
+                .forEach(p -> {
+                    String key = context.getUniqueId() + p.getName();
+                    StaticUser user = context.getStore(NAMESPACE).get(key, StaticUser.class);
+                    if (user != null) {
+                        if (user.empty()) {
+                            EMPTY_USERS.add(user);
+                        } else {
+                            NOT_EMPTY_USERS.add(user);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -92,6 +92,7 @@ public class UsersQueueExtension implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), StaticUser.class);
+        String key = extensionContext.getUniqueId() + parameterContext.getParameter().getName();
+        return extensionContext.getStore(NAMESPACE).get(key, StaticUser.class);
     }
 }

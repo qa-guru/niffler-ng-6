@@ -63,7 +63,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-        "select * from \"user\" u left join authority a on u.id = a.user_id where u.id = ?"
+        "select * from \"user\" u join authority a on u.id = a.user_id where u.id = ?"
     )) {
       ps.setObject(1, id);
 
@@ -82,16 +82,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
           ae.setId(rs.getObject("a.id", UUID.class));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorityEntities.add(ae);
-
-
-          AuthUserEntity result = new AuthUserEntity();
-          result.setId(rs.getObject("id", UUID.class));
-          result.setUsername(rs.getString("username"));
-          result.setPassword(rs.getString("password"));
-          result.setEnabled(rs.getBoolean("enabled"));
-          result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-          result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-          result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
         }
         if (user == null) {
           return Optional.empty();
@@ -104,4 +94,10 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
       throw new RuntimeException(e);
     }
   }
+
+  @Override
+  public Optional<AuthUserEntity> findByUsername(String username) {
+    return Optional.empty();
+  }
+
 }

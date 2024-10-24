@@ -80,7 +80,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
         txTemplateUserdata.execute(() -> {
             UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc();
             userdataUserDao.findByUsername(userModel.getUsername())
-                    .ifPresent(userdataUserDao::delete);
+                    .ifPresent(userdataUserDao::remove);
             return null;
         });
 

@@ -77,7 +77,7 @@ public class UsersDbClientJdbcXa implements UsersDbClient {
             // remove user from niffler-userdata, if exists
             UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc();
             userdataUserDao.findByUsername(userModel.getUsername())
-                    .ifPresent(userdataUserDao::delete);
+                    .ifPresent(userdataUserDao::remove);
 
             return null;
         });

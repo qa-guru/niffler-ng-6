@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.db.springJdbc;
 
+import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -11,18 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 class AuthUserSpringJdbcTest {
-
+    
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientSpringJdbc();
+    
     @Test
     void shouldCreateNewUserTest() {
         Assertions.assertNotNull(
-                new AuthUserDbClientSpringJdbc()
+                authUserDbClient
                         .create(generateAuthUser())
                         .getId());
     }
 
     @Test
     void shouldGetUserByIdTest() {
-        var authUserDbClient = new AuthUserDbClientSpringJdbc();
         var userId = authUserDbClient
                 .create(generateAuthUser())
                 .getId();
@@ -33,7 +35,6 @@ class AuthUserSpringJdbcTest {
 
     @Test
     void shouldGetUserByUsernameTest() {
-        var authUserDbClient = new AuthUserDbClientSpringJdbc();
         var username = authUserDbClient
                 .create(generateAuthUser())
                 .getUsername();
@@ -43,8 +44,7 @@ class AuthUserSpringJdbcTest {
     }
 
     @Test
-    void shouldFindAll() {
-        var authUserDbClient = new AuthUserDbClientSpringJdbc();
+    void shouldFindAllTest() {
         authUserDbClient
                 .create(generateAuthUser());
         assertFalse(authUserDbClient
@@ -54,10 +54,9 @@ class AuthUserSpringJdbcTest {
 
     @Test
     void shouldRemoveUserTest() {
-        var authUserDbClient = new AuthUserDbClientSpringJdbc();
         var authUserJson = authUserDbClient
                 .create(generateAuthUser());
-        authUserDbClient.delete(authUserJson);
+        authUserDbClient.remove(authUserJson);
         assertTrue(authUserDbClient
                 .findById(authUserJson.getId())
                 .isEmpty());

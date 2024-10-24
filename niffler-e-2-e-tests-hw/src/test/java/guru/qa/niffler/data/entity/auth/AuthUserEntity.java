@@ -1,15 +1,14 @@
 package guru.qa.niffler.data.entity.auth;
 
+import guru.qa.niffler.mapper.AuthAuthorityMapper;
+import guru.qa.niffler.model.AuthAuthorityJson;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -64,6 +63,15 @@ public class AuthUserEntity implements Serializable {
             this.authorities.add(authority);
             authority.setUser(this);
         }
+    }
+
+    public void addAuthorities(AuthAuthorityJson... authorities) {
+        Arrays.stream(authorities)
+                .map(new AuthAuthorityMapper()::toEntity)
+                .forEach(authority -> {
+                    authority.setUser(this);
+                    this.authorities.add(authority);
+                });
     }
 
     public void removeAuthority(AuthAuthorityEntity authority) {

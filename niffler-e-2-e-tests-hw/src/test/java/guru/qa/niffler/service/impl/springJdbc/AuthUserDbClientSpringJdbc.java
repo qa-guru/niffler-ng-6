@@ -60,7 +60,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public void delete(AuthUserJson authUser) {
+    public void remove(AuthUserJson authUser) {
         log.info("Remove user: {}", authUser);
         txTemplate.execute(status -> {
             new AuthUserDaoSpringJdbc()

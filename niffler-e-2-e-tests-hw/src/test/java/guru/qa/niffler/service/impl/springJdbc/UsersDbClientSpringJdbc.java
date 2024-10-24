@@ -90,7 +90,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
             var userdataDao = new UserdataUserDaoSpringJdbc();
             userdataDao
                     .findByUsername(userModel.getUsername())
-                    .ifPresent(userdataDao::delete);
+                    .ifPresent(userdataDao::remove);
             return null;
         });
 

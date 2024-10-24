@@ -2,6 +2,7 @@ package guru.qa.niffler.test.db.springJdbc;
 
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.UserdataDbClient;
 import guru.qa.niffler.service.UsersDbClient;
 import guru.qa.niffler.service.impl.springJdbc.*;
@@ -17,7 +18,7 @@ class UserSpringJdbcXaTest {
     private final UsersDbClient usersDbClient = new UsersDbClientSpringJdbcXa();
 
     private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
-    private final AuthUserDbClientSpringJdbc authUserDbClient = new AuthUserDbClientSpringJdbc();
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientSpringJdbc();
     private final UserdataDbClient userdataDbClient = new UserdataDbClientSpringJdbc();
 
     @Test

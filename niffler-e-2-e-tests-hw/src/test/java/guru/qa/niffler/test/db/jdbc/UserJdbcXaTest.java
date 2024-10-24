@@ -5,7 +5,11 @@ import guru.qa.niffler.service.AuthAuthorityDbClient;
 import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.UserdataDbClient;
 import guru.qa.niffler.service.UsersDbClient;
-import guru.qa.niffler.service.impl.jdbc.*;
+import guru.qa.niffler.service.impl.jdbc.UsersDbClientJdbcXa;
+import guru.qa.niffler.service.impl.springJdbc.AuthAuthorityDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.impl.springJdbc.UsersDbClientSpringJdbcXa;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -16,9 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserJdbcXaTest {
 
     private final UsersDbClient usersDbClient = new UsersDbClientJdbcXa();
-    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientJdbc();;
-    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientJdbc();
-    private final UserdataDbClient userdataDbClient = new UserdataDbClientJdbc();
+
+    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientSpringJdbc();
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientSpringJdbc();
+    private final UserdataDbClient userdataDbClient = new UserdataDbClientSpringJdbc();
 
     @Test
     void shouldCreateNewUserInTwoDbTest() {

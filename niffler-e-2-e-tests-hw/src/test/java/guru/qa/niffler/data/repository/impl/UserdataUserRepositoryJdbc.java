@@ -113,19 +113,21 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     }
 
-    @Override
-    public void delete(UserEntity user) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
+        try (PreparedStatement frPs = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
+                        "VALUES ( ?, ?, ?, ?)")
+        ) {
+            frPs.setObject(1, requester.getId());
+            frPs.setObject(2, addressee.getId());
+            frPs.setString(3, status.name());
+            frPs.setDate(4, new java.sql.Date(new Date().getTime()));
 
-        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
-                "DELETE FROM \"user\" WHERE id = ?"
-        )) {
-            ps.setObject(1, user.getId());
-            ps.executeUpdate();
+            frPs.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void addFriend(UserEntity requester, UserEntity addressee) {
@@ -153,21 +155,19 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         }
     }
 
-    public void createInvitation(UserEntity requester, UserEntity addressee) {
-        try (PreparedStatement frPs = holder(USERDATA_JDBC_URL).connection().prepareStatement(
-                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
-                        "VALUES ( ?, ?, ?, ?)")
-        ) {
-            frPs.setObject(1, requester.getId());
-            frPs.setObject(2, addressee.getId());
-            frPs.setString(3, FriendshipStatus.PENDING.name());
-            frPs.setDate(4, new java.sql.Date(new Date().getTime()));
+    @Override
+    public void remove(UserEntity user) {
 
-            frPs.executeUpdate();
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "DELETE FROM \"user\" WHERE id = ?"
+        )) {
+            ps.setObject(1, user.getId());
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 

@@ -1,75 +1,104 @@
 package guru.qa.niffler.test.db.jdbc;
 
-import guru.qa.niffler.model.AuthAuthorityJson;
 import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.model.AuthAuthorityJson;
+import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.impl.jdbc.AuthAuthorityDbClientJdbc;
 import guru.qa.niffler.service.impl.jdbc.AuthUserDbClientJdbc;
-import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Arrays;
+
+import static guru.qa.niffler.utils.UserUtils.generateAuthUser;
 
 @Slf4j
 class AuthAuthoritiesJdbcTest {
 
-    AuthAuthorityDbClientJdbc authAuthorityDbClient = new AuthAuthorityDbClientJdbc();
+    private final AuthAuthorityDbClient authorityDbClient = new AuthAuthorityDbClientJdbc();
+    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientJdbc();
 
     @Test
     void shouldCreateNewAuthoritiesAndFindByUsernameTest() {
 
-        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
-        authAuthorityDbClient.create(
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.read)
-                        .build(),
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.write)
-                        .build()
-        );
+        var authUser = authUserDbClient.create(generateAuthUser());
 
-        var authorities = authAuthorityDbClient.findByUserId(user.getId());
-        assertEquals(2, authorities.size());
+        authorityDbClient.create(
+                Arrays.stream(Authority.values())
+                        .map(authority ->
+                                AuthAuthorityJson.builder()
+                                        .user(authUser.getId())
+                                        .authority(authority)
+                                        .build())
+                        .toArray(AuthAuthorityJson[]::new));
+        Assertions.assertEquals(2, authorityDbClient.findByUserId(authUser.getId()).size());
 
     }
 
     @Test
-    void shouldFindAuthorityById() {
-        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
-        authAuthorityDbClient.create(
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.read)
-                        .build(),
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.write)
-                        .build()
-        );
-        var authorities = authAuthorityDbClient.findByUserId(user.getId());
-        assertNotNull(authAuthorityDbClient.findById(authorities.getFirst().getId()).orElse(null));
+    void shouldFindAuthorityByIdTest() {
+
+        var authUser = authUserDbClient.create(generateAuthUser());
+
+        authorityDbClient.create(
+                Arrays.stream(Authority.values())
+                        .map(authority ->
+                                AuthAuthorityJson.builder()
+                                        .user(authUser.getId())
+                                        .authority(authority)
+                                        .build())
+                        .toArray(AuthAuthorityJson[]::new));
+
+        Assertions.assertNotNull(
+                authorityDbClient.findById(
+                        authorityDbClient
+                                .findByUserId(authUser.getId())
+                                .getFirst()
+                                .getId()
+                ));
+
     }
 
     @Test
-    void shouldDeleteAuthorities() {
-        var user = new AuthUserDbClientJdbc().create(UserUtils.generateAuthUser());
-        authAuthorityDbClient.create(
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.read)
-                        .build(),
-                AuthAuthorityJson.builder()
-                        .userId(user.getId())
-                        .authority(Authority.write)
-                        .build()
-        );
-        var authorities = authAuthorityDbClient.findByUserId(user.getId());
-        authAuthorityDbClient.delete(authorities.toArray(new AuthAuthorityJson[0]));
-        authorities = authAuthorityDbClient.findByUserId(user.getId());
-        log.info("Authorities: {}", authorities.toString());
+    void shouldFindAllTest() {
+
+        var authUser = authUserDbClient.create(generateAuthUser());
+
+        authorityDbClient.create(
+                Arrays.stream(Authority.values())
+                        .map(authority ->
+                                AuthAuthorityJson.builder()
+                                        .user(authUser.getId())
+                                        .authority(authority)
+                                        .build())
+                        .toArray(AuthAuthorityJson[]::new));
+
+        Assertions.assertFalse(authorityDbClient.findAll().isEmpty());
+
+    }
+
+    @Test
+    void shouldDeleteAuthoritiesTest() {
+
+        var authUser = authUserDbClient.create(generateAuthUser());
+
+        authorityDbClient.create(
+                Arrays.stream(Authority.values())
+                        .map(authority ->
+                                AuthAuthorityJson.builder()
+                                        .user(authUser.getId())
+                                        .authority(authority)
+                                        .build())
+                        .toArray(AuthAuthorityJson[]::new));
+
+        authorityDbClient.delete(authorityDbClient
+                .findByUserId(authUser.getId())
+                .toArray(AuthAuthorityJson[]::new));
+
+        Assertions.assertTrue(authorityDbClient.findByUserId(authUser.getId()).isEmpty());
+
     }
 
 }

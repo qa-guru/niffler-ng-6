@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.dao;
 
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public interface UserdataUserDao {
 
     List<UserEntity> findAll();
 
-    void delete(UserEntity user);
+    void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status);
+
+    void addFriend(UserEntity requester, UserEntity addressee);
+
+    void remove(UserEntity user);
 
 }

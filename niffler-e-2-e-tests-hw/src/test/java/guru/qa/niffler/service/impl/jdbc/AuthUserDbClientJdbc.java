@@ -59,7 +59,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public void delete(AuthUserJson authUserJson) {
+    public void remove(AuthUserJson authUserJson) {
         log.info("Remove user: {}", authUserJson);
         jdbcTxTemplate.execute(() -> {
                     new AuthUserDaoJdbc()

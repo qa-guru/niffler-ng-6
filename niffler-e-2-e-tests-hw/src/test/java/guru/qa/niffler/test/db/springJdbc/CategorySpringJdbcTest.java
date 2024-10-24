@@ -3,6 +3,7 @@ package guru.qa.niffler.test.db.springJdbc;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.service.CategoryDbClient;
 import guru.qa.niffler.service.impl.springJdbc.CategoryDbClientSpringJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class CategorySpringJdbcTest {
-
+    
+    private final CategoryDbClient categoryDbClient = new CategoryDbClientSpringJdbc();
+    
     @Test
     void shouldCreateNewCategoryTest(@CreateNewUser UserModel user) {
         assertNotNull(
-                new CategoryDbClientSpringJdbc()
+                categoryDbClient
                         .create(CategoryUtils.generateForUser(user.getUsername()))
                         .getId());
     }
@@ -24,14 +27,14 @@ class CategorySpringJdbcTest {
     @Test
     void shouldGetCategoryByIdTest(@CreateNewUser(categories = @Category) UserModel user) {
         assertNotNull(
-                new CategoryDbClientSpringJdbc()
+                categoryDbClient
                         .findById(user.getCategories().getFirst().getId()));
     }
 
     @Test
     void shouldGetCategoryByUsernameAndNameTest(@CreateNewUser(categories = @Category) UserModel user) {
         assertNotNull(
-                new CategoryDbClientSpringJdbc()
+                categoryDbClient
                         .findByUsernameAndName(
                                 user.getUsername(),
                                 user.getCategories().getFirst().getName()));
@@ -40,17 +43,17 @@ class CategorySpringJdbcTest {
     @Test
     void shouldGetAllCategoriesByUsernameTest(@CreateNewUser(categories = @Category) UserModel user) {
         assertFalse(
-                new CategoryDbClientSpringJdbc()
+                categoryDbClient
                         .findAllByUsername(user.getUsername())
                         .isEmpty());
     }
 
     @Test
-    void shouldGetAllCategories(
+    void shouldGetAllCategoriesTest(
             @CreateNewUser(categories = @Category) UserModel user1,
             @CreateNewUser(categories = @Category) UserModel user2
     ) {
-        var allCategories = new CategoryDbClientSpringJdbc().findAll();
+        var allCategories = categoryDbClient.findAll();
         assertAll("Should contains users categories", () -> {
             assertTrue(allCategories.contains(user1.getCategories().getFirst()));
             assertTrue(allCategories.contains(user2.getCategories().getFirst()));
@@ -59,9 +62,8 @@ class CategorySpringJdbcTest {
 
     @Test
     void shouldRemoveCategoryTest(@CreateNewUser(categories = @Category) UserModel user) {
-        CategoryDbClientSpringJdbc categoryClient = new CategoryDbClientSpringJdbc();
-        categoryClient.delete(user.getCategories().getFirst());
-        assertTrue(categoryClient.findAllByUsername(user.getUsername()).isEmpty());
+        categoryDbClient.delete(user.getCategories().getFirst());
+        assertTrue(categoryDbClient.findAllByUsername(user.getUsername()).isEmpty());
     }
 
 }

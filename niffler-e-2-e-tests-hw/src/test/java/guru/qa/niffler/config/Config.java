@@ -14,6 +14,8 @@ public interface Config {
 
     String frontUrl();
 
+    String gatewayUrl();
+
     String spendUrl();
 
     String spendJdbcUrl();

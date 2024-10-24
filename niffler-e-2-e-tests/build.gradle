@@ -3,7 +3,7 @@ buildscript {
         grpcVersion = '1.66.0'
         junitVersion = '5.11.0'
         allureVersion = '2.29.0'
-        selenideVersion = '7.4.2'
+        selenideVersion = '7.5.0'
         retrofitVersion = '2.11.0'
         okhttp3Version = '3.14.9'
         logbackVersion = '1.4.11'

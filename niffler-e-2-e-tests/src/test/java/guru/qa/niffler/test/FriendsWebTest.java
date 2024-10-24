@@ -1,12 +1,11 @@
 package guru.qa.niffler.test;
 
 import guru.qa.niffler.jupiter.annotation.UserType;
-import guru.qa.niffler.jupiter.extension.UserQueueExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.UserQueueExtension.StaticUser;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import static guru.qa.niffler.enums.TypeEnum.WITH_INCOME_REQUEST;
 import static guru.qa.niffler.enums.TypeEnum.WITH_OUTCOME_REQUEST;
 
 @Feature("UI:Авторизация пользователя в системе")
-@ExtendWith(UserQueueExtension.class)
+@WebTest
 public class FriendsWebTest extends BaseTest {
 
   @Test

@@ -1,6 +1,7 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -11,6 +12,7 @@ import static guru.qa.niffler.enums.ErrorValuesEnum.USER_ALREADY_EXIST;
 import static guru.qa.niffler.testData.DataConstant.MAIN_USER;
 
 @Feature("UI:Регистрация пользователя в системе")
+@WebTest
 public class RegisterWebTest extends BaseTest {
 
   @Test

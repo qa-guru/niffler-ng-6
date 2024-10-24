@@ -1,5 +1,6 @@
 package guru.qa.niffler.test;
 
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import static guru.qa.niffler.testData.DataConstant.MAIN_PASSWORD;
 import static guru.qa.niffler.testData.DataConstant.MAIN_USER;
 
 @Feature("UI:Авторизация пользователя в системе")
+@WebTest
 public class LoginTest extends BaseTest {
 
   @Test

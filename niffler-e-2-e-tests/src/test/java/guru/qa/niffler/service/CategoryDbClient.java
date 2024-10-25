@@ -20,15 +20,6 @@ public class CategoryDbClient {
     }
   }
 
-  public CategoryJson updateCategory(CategoryJson category) {
-    if (category.id() != null) {
-      categoryDao.update(CategoryEntity.fromJson(category));
-    } else {
-      throw new RuntimeException("For category update id is required");
-    }
-    return null;
-  }
-
   public List<CategoryJson> findAllByUsername(String username) {
     return categoryDao.findAllByUsername(username).stream()
         .map(CategoryJson::fromEntity)

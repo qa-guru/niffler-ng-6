@@ -1,6 +1,5 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.service.CategoryDbClient;
@@ -19,7 +18,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
   public static final Namespace CATEGORY_NAMESPACE = Namespace.create(CategoryExtension.class);
   private final CategoryDbClient categoryDbClient = new CategoryDbClient();
-  private final Faker faker = new Faker();
 
   @Override
   public void beforeEach(ExtensionContext context) {
@@ -31,7 +29,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                     null,
                     "Тестовая " + randomCategoryName(),
                     anno.username(),
-                    false
+                    anno.categories()[0].isArchived()
                 );
                 CategoryJson createdCategory = categoryDbClient.createCategory(categoryJson);
                 context.getStore(CATEGORY_NAMESPACE).put(context.getUniqueId(), createdCategory);
@@ -42,21 +40,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
   @Override
   public void afterTestExecution(ExtensionContext context) {
-    AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-        .ifPresent(
-            anno -> {
-              CategoryJson categoryJson = context.getStore(CategoryExtension.CATEGORY_NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-              if (categoryJson != null) {
-                CategoryJson categoryJsonForPatching = new CategoryJson(
-                    categoryJson.id(),
-                    categoryJson.name(),
-                    categoryJson.username(),
-                    true
-                );
-                categoryDbClient.updateCategory(categoryJsonForPatching);
-              }
-            }
-        );
   }
 
   @Override

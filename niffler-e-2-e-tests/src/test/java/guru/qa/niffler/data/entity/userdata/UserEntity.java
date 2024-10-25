@@ -4,6 +4,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -105,7 +106,7 @@ public class UserEntity implements Serializable {
         }
     }
 
-    public static UserEntity fromJson(UserJson json) {
+    public static @NonNull UserEntity fromJson(@NonNull UserJson json) {
         UserEntity ue = new UserEntity();
         ue.setId(json.id());
         ue.setUsername(json.username());

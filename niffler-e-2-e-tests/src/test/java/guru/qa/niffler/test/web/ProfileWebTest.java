@@ -35,7 +35,6 @@ public class ProfileWebTest {
                 .shouldBeVisibleSuccessMessage()
                 .clickShowArchivedButton()
                 .shouldForCategoryName(category.name());
-        ;
     }
 
     @User(

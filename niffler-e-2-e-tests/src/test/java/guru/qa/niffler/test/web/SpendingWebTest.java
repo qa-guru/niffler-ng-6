@@ -39,6 +39,6 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription)
                 .save();
 
-        new MainPage().toSearch(newDescription).checkThatTableContainsSpending(newDescription);
+        new MainPage().checkThatTableContainsSpending(newDescription);
     }
 }

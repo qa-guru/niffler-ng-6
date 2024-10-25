@@ -9,10 +9,12 @@ public class SearchField {
     public SearchField(SelenideElement self) {
         this.self = self;
     }
+
     public SearchField search(String query) {
-        self.setValue(query);
+        self.setValue(query).sendKeys("Enter");
         return this;
     }
+
     public SearchField clearIfNotEmpty() {
         if (!"".equals(self.getValue())) {
             self.$("#input-clear").click();

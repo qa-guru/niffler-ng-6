@@ -2,13 +2,16 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
+import org.junit.jupiter.api.Assertions;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class SpendingTable {
 
-    private final SelenideElement self = $("spendings");
+    private final SelenideElement self = $("#spendings");
+    private final SearchField searchField = new SearchField($("input[placeholder='Search']"));
 
     public SpendingTable selectPeriod(DataFilterValues period) {
         self.$("#period").click();
@@ -17,6 +20,9 @@ public class SpendingTable {
     }
 
     public EditSpendingPage editSpending(String description) {
+        searchField.search(description);
+        self.$$("td").find(text(description)).$$("td").get(5).click();
+        return new EditSpendingPage();
     }
 
     public SpendingTable deleteSpending(String description) {
@@ -26,13 +32,21 @@ public class SpendingTable {
     }
 
     public SpendingTable searchSpendingByDescription(String description) {
-
+        searchField.search(description);
+        return this;
     }
 
     public SpendingTable checkTableContains(String... expectedSpends) {
+        for (String expectedSpend : expectedSpends) {
+            searchField.search(expectedSpend);
+            self.$$("td").find(text(expectedSpend)).should(visible);
+        }
+        return this;
     }
 
     public SpendingTable checkTableSize(int expectedSize) {
+        Assertions.assertTrue(expectedSize == self.$$("tr").size());
+        return this;
     }
 
     public enum DataFilterValues {

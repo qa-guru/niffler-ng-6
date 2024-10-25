@@ -6,6 +6,9 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserRestClient implements UserClient {
 
     private final FriendApiClient friendApiClient = new FriendApiClient();
@@ -17,25 +20,31 @@ public class UserRestClient implements UserClient {
     }
 
     @Override
-    public void createIncomeInvitations(UserJson targetUser, int count) {
+    public List<String> createIncomeInvitations(UserJson targetUser, int count) {
+        List<String> usernames = new ArrayList<>();
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
                 authUserApiClient.registerUser(/*stub  username*/);
                 friendApiClient.sendInvitation(targetUser.username(), username);
+                usernames.add(username);
             }
         }
+        return usernames;
     }
 
     @Override
-    public void createOutcomeInvitations(UserJson targetUser, int count) {
+    public List<String> createOutcomeInvitations(UserJson targetUser, int count) {
+        List<String> usernames = new ArrayList<>();
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
                 authUserApiClient.registerUser(/*stub  username*/);
                 friendApiClient.sendInvitation(username, targetUser.username());
+                usernames.add(username);
             }
         }
+        return usernames;
     }
 
     @Override

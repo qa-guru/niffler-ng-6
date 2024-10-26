@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
-public class PeoplePage extends GlobalTemplatePage {
+public class PeoplePage {
 
     private static final String ACCEPT_BUTTON_TEXT = "Accept";
     private static final String DECLINE_BUTTON_TEXT = "Decline";

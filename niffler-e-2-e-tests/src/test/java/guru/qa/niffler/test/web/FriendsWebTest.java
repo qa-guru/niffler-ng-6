@@ -21,8 +21,9 @@ public class FriendsWebTest {
     void friendShouldBePresentInFriendsTable(@UserType(WITH_FRIEND) StaticUser user) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn(user.username(), user.password())
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuFriendsButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuFriends()
                 .checkThatFriendPresentInFriendsList(user.friend());
     }
 
@@ -31,8 +32,9 @@ public class FriendsWebTest {
     void friendsTableShouldBeEmptyForNewUser(@UserType(EMPTY) StaticUser user) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn(user.username(), user.password())
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuFriendsButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuFriends()
                 .checkThatFriendsListIsEmpty();
     }
 
@@ -41,8 +43,9 @@ public class FriendsWebTest {
     void incomingInvitationBePresentInFriendsTable(@UserType(WITH_INCOMING_REQUEST) StaticUser user) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn(user.username(), user.password())
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuFriendsButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuFriends()
                 .checkThatIncomingRequestPresentInFriendsList(user.incoming());
     }
 
@@ -51,8 +54,9 @@ public class FriendsWebTest {
     void outgoingInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTGOING_REQUEST) StaticUser user) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn(user.username(), user.password())
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuFriendsButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuFriends()
                 .clickAllPeopleTab()
                 .checkThatOutgoingRequestPresentInAllPeoplesList(user.outgoing());
     }

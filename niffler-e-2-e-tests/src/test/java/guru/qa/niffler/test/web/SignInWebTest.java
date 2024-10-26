@@ -9,8 +9,6 @@ import guru.qa.niffler.page.SignInPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @ExtendWith(BrowserExtension.class)
 public class SignInWebTest {
 
@@ -29,6 +27,7 @@ public class SignInWebTest {
         new MainPage()
                 .checkStatisticsModuleDisplayed()
                 .checkSpendingModuleDisplayed()
+                .getPageHeader()
                 .checkThatGlobalHeaderDisplayed();
     }
 
@@ -37,7 +36,7 @@ public class SignInWebTest {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn("duck", "547658h67d38456h384765h873465f873465h89f");
 
-        assertTrue(new SignInPage().isBadCredentialsErrorMessageDisplayed());
+        new SignInPage().shouldDisplayLoginErrorMessage();
     }
 
 }

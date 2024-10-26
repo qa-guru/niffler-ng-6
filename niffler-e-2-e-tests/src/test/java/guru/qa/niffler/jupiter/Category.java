@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @ExtendWith({CategoryExtension.class, CategoryResolverExtension.class})
 public @interface Category {
 
-    String categoryName() default "";
+    String name() default "";
     String username();
     boolean archived();
 }

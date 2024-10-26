@@ -1,11 +1,16 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import lombok.Getter;
 
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class SignInPage {
+
+  @Getter
+  HeaderComponent pageHeader = new HeaderComponent();
+
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
   private final SelenideElement submitButton = $("button[type='submit']");
@@ -24,8 +29,10 @@ public class SignInPage {
     return new SignUpPage();
   }
 
-  public boolean isBadCredentialsErrorMessageDisplayed() {
+  public void shouldDisplayLoginErrorMessage() {
     String expectedError = "Bad credentials";
-    return errorMessage.shouldHave(Condition.text(expectedError)).isDisplayed();
+    errorMessage.shouldHave(text(expectedError)).shouldBe(visible);
   }
+
+
 }

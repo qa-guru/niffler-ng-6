@@ -20,7 +20,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 .ifPresent(anno -> {
                     CategoryJson category = new CategoryJson(
                             null,
-                            anno.categoryName().isEmpty() ? generateCategoryName() : anno.categoryName(),
+                            anno.name().isEmpty() ? generateCategoryName() : anno.name(),
                             anno.username(),
                             anno.archived()
                     );

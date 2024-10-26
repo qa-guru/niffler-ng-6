@@ -7,7 +7,6 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
@@ -51,16 +50,15 @@ public class SpendingWebTest {
         String description = randomSentence(2);
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.username(), user.testData().password())
+                .login(user.username(), user.testData().password())
                 .getHeader()
                 .addSpendingPage()
                 .setSpendingCategory(category)
                 .setNewSpendingDescription(description)
                 .setSpendingAmount("10")
                 .getCalendar()
-                .selectDateInCalendar(new Date());
-
-        new EditSpendingPage().save();
+                .selectDateInCalendar(new Date())
+                .checkAlert("New spending is successfully created");
         new MainPage().checkThatTableContainsSpending(description);
     }
 }

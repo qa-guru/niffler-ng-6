@@ -14,11 +14,16 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import io.qameta.allure.Step;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
@@ -36,89 +41,83 @@ public class UsersDbClient implements UsersClient {
             CFG.userdataJdbcUrl()
     );
 
+    @Nonnull
     @Override
-    @Step("Создать пользователя с username: {username}")
+    @Step("Создание нового пользователя: {username}")
     public UserJson createUser(String username, String password) {
-        return xaTransactionTemplate.execute(() -> UserJson.fromEntity(
+        return Objects.requireNonNull(
+                xaTransactionTemplate.execute(() -> UserJson.fromEntity(
                         createNewUser(username, password),
                         null
-                )
+                ))
         );
     }
 
+    @NotNull
     @Override
-    @Step("Добавить входящее приглашение от пользователя: {targetUser}")
-    public void addIncomeInvitation(UserJson targetUser, int count) {
+    @Step("Добавление {count} входящих приглашений пользователю: {targetUser.username}")
+    public List<String> addIncomeInvitation(UserJson targetUser, int count) {
+        List<String> incomes = new ArrayList<>();
         if (count > 0) {
-            UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
-            ).orElseThrow();
-
+            UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
             for (int i = 0; i < count; i++) {
+                String username = randomUsername();
                 xaTransactionTemplate.execute(() -> {
-                            final String username = randomUsername();
-                            userdataUserRepository.addFriendshipRequest(
-                                    createNewUser(username, "12345"),
-                                    targetEntity
-                            );
-                            return null;
-                        }
-                );
+                    userdataUserRepository.addFriendshipRequest(createNewUser(username, "12345"), targetEntity);
+                    return null;
+                });
+                incomes.add(username);
             }
         }
+        return incomes;
     }
 
+    @NotNull
     @Override
-    @Step("Добавить исходящее приглашение от пользователя: {targetUser}")
-    public void addOutcomeInvitation(UserJson targetUser, int count) {
+    @Step("Добавление {count} исходящих приглашений пользователю: {targetUser.username}")
+    public List<String> addOutcomeInvitation(UserJson targetUser, int count) {
+        List<String> outcomes = new ArrayList<>();
         if (count > 0) {
-            UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
-            ).orElseThrow();
-
+            UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
             for (int i = 0; i < count; i++) {
+                String username = randomUsername();
                 xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            userdataUserRepository.addFriendshipRequest(
-                                    targetEntity,
-                                    createNewUser(username, "12345")
-                            );
-                            return null;
-                        }
-                );
+                    userdataUserRepository.addFriendshipRequest(targetEntity, createNewUser(username, "12345"));
+                    return null;
+                });
+                outcomes.add(username);
             }
         }
+        return outcomes;
     }
 
+    @NotNull
     @Override
-    @Step("Добавить друга: {targetUser}")
-    public void addFriend(UserJson targetUser, int count) {
+    @Step("Добавление {count} друзей пользователю: {targetUser.username}")
+    public List<String> addFriend(UserJson targetUser, int count) {
+        List<String> friends = new ArrayList<>();
         if (count > 0) {
-            UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
-            ).orElseThrow();
-
+            UserEntity targetEntity = userdataUserRepository.findById(targetUser.id()).orElseThrow();
             for (int i = 0; i < count; i++) {
+                String username = randomUsername();
                 xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            userdataUserRepository.addFriend(
-                                    targetEntity,
-                                    createNewUser(username, "12345")
-                            );
-                            return null;
-                        }
-                );
+                    userdataUserRepository.addFriend(targetEntity, createNewUser(username, "12345"));
+                    return null;
+                });
+                friends.add(username);
             }
         }
+        return friends;
     }
 
-    @Step("Создать нового пользователя: {username}")
+    @Nonnull
     private UserEntity createNewUser(String username, String password) {
         AuthUserEntity authUser = authUserEntity(username, password);
         authUserRepository.create(authUser);
         return userdataUserRepository.create(userEntity(username));
     }
 
+    @Nonnull
     private UserEntity userEntity(String username) {
         UserEntity ue = new UserEntity();
         ue.setUsername(username);
@@ -126,6 +125,7 @@ public class UsersDbClient implements UsersClient {
         return ue;
     }
 
+    @Nonnull
     private AuthUserEntity authUserEntity(String username, String password) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(username);

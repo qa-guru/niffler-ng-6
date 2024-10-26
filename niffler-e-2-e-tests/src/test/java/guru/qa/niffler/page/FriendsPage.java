@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage> {
     private final SelenideElement requestsTable = $("#requests");
     private final SelenideElement friendsTable = $("#friends");
     private final SelenideElement acceptButton = $(byText("Accept"));
@@ -22,7 +22,7 @@ public class FriendsPage {
             $(".MuiPaper-root button.MuiButtonBase-root.MuiButton-containedPrimary");
 
     @Getter
-    private final SearchField searchField = new SearchField();
+    private final SearchField searchField = new SearchField<>($("input[type='text']"), this);
 
     @Step("Проверка наличия имен в списке друзей")
     public FriendsPage checkExistingFriends(List<String> expectedUsernames) {

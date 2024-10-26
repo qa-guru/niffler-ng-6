@@ -1,24 +1,28 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Step;
-import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Condition.empty;
 
-public class SearchField {
-    private final SelenideElement searchField = $("input[type='text']");
+public class SearchField<T extends BasePage<?>> extends BaseComponent<T> {
 
-    @Step("Поиск по значению: {value}")
-    public SearchField search(String value) {
-        searchField.sendKeys(value);
-        searchField.sendKeys(Keys.ENTER);
-        return this;
+    public SearchField(SelenideElement searchFieldElement, T page) {
+        super(searchFieldElement, page);
     }
 
-    @Step("Очистить строку поиска")
-    public SearchField clearIfNotEmpty() {
-        searchField.clear();
+    @Step("Поиск по значению: {value}")
+    public T search(String value) {
+        self.setValue(value).pressEnter();
+        return page;
+    }
+
+    @Step("Очистить строку поиска, если она не пустая")
+    public SearchField<T> clearIfNotEmpty() {
+        if (!self.shouldBe(empty).exists()) {
+            self.clear();
+        }
         return this;
     }
 }

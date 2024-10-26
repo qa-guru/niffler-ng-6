@@ -13,18 +13,20 @@ public class ProfileWebTest {
 
     @Category(
             username = "duck",
-            archived = true
+            archived = true,
+            name = "Archived category"
     )
     @Test
     void archivedCategoryShouldBePresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn("duck", "12345")
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuProfileButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuProfile()
                 .checkThatCategoryIsNotPresentInCategoriesList(category.name())
-                .toggleShowArchived(true)
+                .toggleShowArchived()
                 .checkThatCategoryIsPresentInCategoriesList(category.name())
-                .toggleShowArchived(false)
+                .toggleShowArchived()
                 .checkThatCategoryIsNotPresentInCategoriesList(category.name());
     }
 
@@ -36,8 +38,9 @@ public class ProfileWebTest {
     void activeCategoryShouldBePresentInCategoriesList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .signIn("duck", "12345")
-                .clickHeaderUserAccountButton()
-                .clickHeaderUserAccountMenuProfileButton()
+                .getPageHeader()
+                .clickUserAvatar()
+                .clickUserMenuProfile()
                 .checkThatCategoryIsPresentInCategoriesList(category.name());
     }
 }

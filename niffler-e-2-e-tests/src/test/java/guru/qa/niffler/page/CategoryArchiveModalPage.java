@@ -28,10 +28,4 @@ public class CategoryArchiveModalPage {
         archiveCategoryModalArchiveButton.click();
         return new MainPage();
     }
-
-
-
-
-
-
 }

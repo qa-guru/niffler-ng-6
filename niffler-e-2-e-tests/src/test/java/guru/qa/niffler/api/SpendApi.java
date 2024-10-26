@@ -17,22 +17,16 @@ public interface SpendApi {
     Call<SpendJson> editSpend(@Body SpendJson spend);
 
     @GET("internal/spends/{id}")
-    Call<SpendJson> getSpend(@Path("id") String id,
-                             @Query("username") String username);
+    Call<SpendJson> getSpend(@Path("id") String id);
 
     @GET("internal/spends/all")
-    Call<List<SpendJson>> getSpends(
-            @Query("username") String username,
-            @Query("filterCurrency") CurrencyValues filterCurrency,
-            @Query("from") String from,
-            @Query("to") String to
-    );
+    Call<List<SpendJson>> allSpends(@Query("username") String username,
+                                    @Query("filterCurrency") CurrencyValues filterCurrency,
+                                    @Query("from") String from,
+                                    @Query("to") String to);
 
     @DELETE("internal/spends/remove")
-    Call<Void> deleteSpends(
-            @Query("username") String username,
-            @Query("ids") List<String> ids
-    );
+    Call<Void> removeSpends(@Query("username") String username, @Query("ids") List<String> ids);
 
     @POST("internal/categories/add")
     Call<CategoryJson> addCategory(@Body CategoryJson category);
@@ -41,8 +35,5 @@ public interface SpendApi {
     Call<CategoryJson> updateCategory(@Body CategoryJson category);
 
     @GET("internal/categories/all")
-    Call<List<CategoryJson>> getCategories(
-            @Query("username") String username,
-            @Query("excludeArchived") boolean excludeArchived
-    );
+    Call<List<CategoryJson>> allCategories(@Query("username") String username);
 }

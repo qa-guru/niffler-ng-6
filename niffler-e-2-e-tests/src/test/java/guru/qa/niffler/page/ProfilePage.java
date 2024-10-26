@@ -2,57 +2,90 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
+import guru.qa.niffler.config.Config;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.*;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class ProfilePage {
-    private final SelenideElement archiveButton = $$(".MuiIconButton-sizeMedium").get(1);
-    private final SelenideElement archiveButtonSubmit = $x("//button[text()='Archive']");
-    private final ElementsCollection categoryList = $$(".MuiChip-root");
-    private final SelenideElement activeCategoryList = $(".MuiChip-filled");
-    private final SelenideElement successMessage = $(".MuiTypography-body1");
-    private final SelenideElement showArchivedButton = $x("//span[text()='Show archived']");
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
-    @Step("Проверить название категории {categoryName}")
-    public ProfilePage shouldForCategoryName(String categoryName) {
-        categoryList.filterBy(text(categoryName))
-                .first()
-                .shouldHave(text(categoryName));
+@ParametersAreNonnullByDefault
+public class ProfilePage extends BasePage<ProfilePage> {
+
+    public static String url = Config.getInstance().frontUrl() + "profile";
+
+    private final SelenideElement avatar = $("#image__input").parent().$("img");
+    private final SelenideElement userName = $("#username");
+    private final SelenideElement nameInput = $("#name");
+    private final SelenideElement photoInput = $("input[type='file']");
+    private final SelenideElement submitButton = $("button[type='submit']");
+    private final SelenideElement categoryInput = $("input[name='category']");
+    private final SelenideElement archivedSwitcher = $(".MuiSwitch-input");
+    private final ElementsCollection bubbles = $$(".MuiChip-filled.MuiChip-colorPrimary");
+    private final ElementsCollection bubblesArchived = $$(".MuiChip-filled.MuiChip-colorDefault");
+
+
+    @Nonnull
+    public ProfilePage setName(String name) {
+        nameInput.clear();
+        nameInput.setValue(name);
         return this;
     }
 
-    @Step("Проверить название категории {value}")
-    public ProfilePage shouldActiveCategoryList(String value) {
-        activeCategoryList.shouldHave(text(value));
+    @Nonnull
+    public ProfilePage uploadPhotoFromClasspath(String path) {
+        photoInput.uploadFromClasspath(path);
         return this;
     }
 
-    @Step("Нажать на кнопку Архивные")
-    public ProfilePage clickArchiveButton() {
-        archiveButton.click();
+    @Nonnull
+    public ProfilePage addCategory(String category) {
+        categoryInput.setValue(category).pressEnter();
         return this;
     }
 
-    @Step("Нажать на кнопку подтверждения")
-    public ProfilePage clickArchiveButtonSubmit() {
-        archiveButtonSubmit.click();
+    @Nonnull
+    public ProfilePage checkCategoryExists(String category) {
+        bubbles.find(text(category)).shouldBe(visible);
         return this;
     }
 
-    @Step("Проверить видимость успешного сообщения")
-    public ProfilePage shouldBeVisibleSuccessMessage() {
-        successMessage.shouldBe(visible);
+    @Nonnull
+    public ProfilePage checkArchivedCategoryExists(String category) {
+        archivedSwitcher.click();
+        bubblesArchived.find(text(category)).shouldBe(visible);
         return this;
     }
 
-    @Step("Нажать на кнопку Показать архивные")
-    public ProfilePage clickShowArchivedButton() {
-        showArchivedButton.click();
+    @Nonnull
+    public ProfilePage checkUsername(String username) {
+        this.userName.should(value(username));
         return this;
     }
 
+    @Nonnull
+    public ProfilePage checkName(String name) {
+        nameInput.shouldHave(value(name));
+        return this;
+    }
 
+    @Nonnull
+    public ProfilePage checkPhotoExist() {
+        avatar.should(attributeMatching("src", "data:image.*"));
+        return this;
+    }
+
+    @Nonnull
+    public ProfilePage checkThatCategoryInputDisabled() {
+        categoryInput.should(disabled);
+        return this;
+    }
+
+    @Nonnull
+    public ProfilePage submitProfile() {
+        submitButton.click();
+        return this;
+    }
 }

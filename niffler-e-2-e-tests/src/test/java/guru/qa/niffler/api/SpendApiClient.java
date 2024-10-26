@@ -1,33 +1,33 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.service.SpendClient;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import static org.apache.hc.core5.http.HttpStatus.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient implements SpendClient {
+public class SpendApiClient extends RestClient {
 
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().spendUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build();
+    private final SpendApi spendApi;
 
-    private final SpendApi spendApi = retrofit.create(SpendApi.class);
+    public SpendApiClient() {
+        super(CFG.spendUrl());
+        this.spendApi = retrofit.create(SpendApi.class);
+    }
 
-    public @Nullable SpendJson createSpend(SpendJson spend) {
+    @Nullable
+    public SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
             response = spendApi.addSpend(spend)
@@ -35,29 +35,11 @@ public class SpendApiClient implements SpendClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_CREATED, response.code());
+        assertEquals(201, response.code());
         return response.body();
     }
 
-    @Override
-    public @Nullable CategoryJson createCategory(CategoryJson category) {
-        try {
-            Response<CategoryJson> response = spendApi.addCategory(category).execute();
-            if (response.isSuccessful()) {
-                return response.body();
-            } else {
-                throw new RuntimeException("Failed to create category: " + response.errorBody().string());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error while creating category", e);
-        }
-    }
-
-    @Override
-    public void removeCategory(CategoryJson category) {
-        throw new UnsupportedOperationException("Deleting a category is not supported by API");
-    }
-
+    @Nullable
     public SpendJson editSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -66,46 +48,54 @@ public class SpendApiClient implements SpendClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
+        assertEquals(200, response.code());
         return response.body();
     }
 
-    public SpendJson getSpend(String id, String username) {
+    @Nullable
+    public SpendJson getSpend(String id) {
         final Response<SpendJson> response;
         try {
-            response = spendApi.getSpend(id, username)
+            response = spendApi.getSpend(id)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
+        assertEquals(200, response.code());
         return response.body();
     }
 
-    public List<SpendJson> getSpends(String username, CurrencyValues filterCurrency, String from, String to) {
+    @Nonnull
+    public List<SpendJson> allSpends(String username,
+                                     @Nullable CurrencyValues currency,
+                                     @Nullable String from,
+                                     @Nullable String to) {
         final Response<List<SpendJson>> response;
         try {
-            response = spendApi.getSpends(username, filterCurrency, from, to)
+            response = spendApi.allSpends(username, currency, from, to)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
-        return response.body();
+        assertEquals(200, response.code());
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
-    public void deleteSpends(String username, List<String> ids) {
-        Response<Void> response;
+    public void removeSpends(String username, String... ids) {
+        final Response<Void> response;
         try {
-            response = spendApi.deleteSpends(username, ids)
+            response = spendApi.removeSpends(username, Arrays.stream(ids).toList())
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_ACCEPTED, response.code());
+        assertEquals(200, response.code());
     }
 
-    public CategoryJson addCategory(CategoryJson category) {
+    @Nullable
+    public CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = spendApi.addCategory(category)
@@ -113,10 +103,11 @@ public class SpendApiClient implements SpendClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
+        assertEquals(200, response.code());
         return response.body();
     }
 
+    @Nullable
     public CategoryJson updateCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
@@ -125,19 +116,22 @@ public class SpendApiClient implements SpendClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
+        assertEquals(200, response.code());
         return response.body();
     }
 
-    public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
+    @Nonnull
+    public List<CategoryJson> allCategory(String username) {
         final Response<List<CategoryJson>> response;
         try {
-            response = spendApi.getCategories(username, excludeArchived)
+            response = spendApi.allCategories(username)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(SC_OK, response.code());
-        return response.body();
+        assertEquals(200, response.code());
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 }

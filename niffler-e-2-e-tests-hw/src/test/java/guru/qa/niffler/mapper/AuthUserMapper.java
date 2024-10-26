@@ -1,17 +1,15 @@
 package guru.qa.niffler.mapper;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
-
-import java.util.ArrayList;
 
 public class AuthUserMapper {
 
     public AuthUserEntity toEntity(AuthUserJson authUserJson) {
-        return AuthUserEntity.builder()
+        var authUser = AuthUserEntity.builder()
                 .id(authUserJson.getId())
                 .username(authUserJson.getUsername())
                 .accountNonExpired(authUserJson.isAccountNonExpired())
@@ -25,6 +23,9 @@ public class AuthUserMapper {
                                 .toList()
                 )
                 .build();
+        authUser.getAuthorities()
+                .forEach(a -> a.setUser(authUser));
+        return authUser;
     }
 
     public AuthUserJson toDto(AuthUserEntity authUserEntity) {

@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.db.springJdbc;
 
-import guru.qa.niffler.service.AuthUserDbClient;
-import guru.qa.niffler.service.impl.springJdbc.AuthUserDbClientSpringJdbc;
+import guru.qa.niffler.service.AuthUserClient;
+import guru.qa.niffler.service.db.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,51 +13,51 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class AuthUserSpringJdbcTest {
     
-    private final AuthUserDbClient authUserDbClient = new AuthUserDbClientSpringJdbc();
+    private final AuthUserClient authUserClient = new AuthUserDbClientSpringJdbc();
     
     @Test
     void shouldCreateNewUserTest() {
         Assertions.assertNotNull(
-                authUserDbClient
+                authUserClient
                         .create(generateAuthUser())
                         .getId());
     }
 
     @Test
     void shouldGetUserByIdTest() {
-        var userId = authUserDbClient
+        var userId = authUserClient
                 .create(generateAuthUser())
                 .getId();
-        assertTrue(authUserDbClient
+        assertTrue(authUserClient
                 .findById(userId)
                 .isPresent());
     }
 
     @Test
     void shouldGetUserByUsernameTest() {
-        var username = authUserDbClient
+        var username = authUserClient
                 .create(generateAuthUser())
                 .getUsername();
-        assertTrue(authUserDbClient
+        assertTrue(authUserClient
                 .findByUsername(username)
                 .isPresent());
     }
 
     @Test
     void shouldFindAllTest() {
-        authUserDbClient
+        authUserClient
                 .create(generateAuthUser());
-        assertFalse(authUserDbClient
+        assertFalse(authUserClient
                 .findAll()
                 .isEmpty());
     }
 
     @Test
     void shouldRemoveUserTest() {
-        var authUserJson = authUserDbClient
+        var authUserJson = authUserClient
                 .create(generateAuthUser());
-        authUserDbClient.remove(authUserJson);
-        assertTrue(authUserDbClient
+        authUserClient.remove(authUserJson);
+        assertTrue(authUserClient
                 .findById(authUserJson.getId())
                 .isEmpty());
     }

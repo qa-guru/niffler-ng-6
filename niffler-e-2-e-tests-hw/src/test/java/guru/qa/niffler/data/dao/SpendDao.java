@@ -18,6 +18,8 @@ public interface SpendDao {
 
     List<SpendEntity> findAll();
 
-    void delete(SpendEntity spend);
+    SpendEntity update(SpendEntity entity);
+
+    void remove(SpendEntity spend);
 
 }

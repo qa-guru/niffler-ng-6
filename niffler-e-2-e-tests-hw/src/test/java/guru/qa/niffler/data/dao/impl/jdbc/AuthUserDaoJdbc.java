@@ -2,6 +2,7 @@ package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -127,6 +128,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                     authUserEntity.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     users.add(authUserEntity);
                 }
+
                 return users;
 
             }
@@ -137,7 +139,51 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public void delete(AuthUserEntity userEntity) {
+    public AuthUserEntity update(AuthUserEntity user) {
+        try (
+                PreparedStatement userPs = holder(AUTH_JDBC_URL).connection().prepareStatement(
+                        "UPDATE \"user\" SET username = ?, password = ?, enabled = ?, account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ?");
+
+                PreparedStatement authorityPs = holder(AUTH_JDBC_URL).connection().prepareStatement(
+                        "UPDATE \"authority\" SET user_id = ?, authority = ? WHERE id = ?")
+        ) {
+
+            userPs.setString(1, user.getUsername());
+            userPs.setString(2, user.getPassword());
+            userPs.setBoolean(3, user.getEnabled());
+            userPs.setBoolean(4, user.getAccountNonExpired());
+            userPs.setBoolean(5, user.getAccountNonLocked());
+            userPs.setBoolean(6, user.getCredentialsNonExpired());
+            userPs.setObject(7, user.getId());
+
+            userPs.executeUpdate();
+
+            final UUID generatedKey;
+            try (ResultSet rs = userPs.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedKey = rs.getObject("id", UUID.class);
+                } else {
+                    throw new SQLException("Can`t find id in ResultSet");
+                }
+            }
+            user.setId(generatedKey);
+
+            for (AuthAuthorityEntity a : user.getAuthorities()) {
+                authorityPs.setObject(1, a.getUser().getId());
+                authorityPs.setString(2, a.getAuthority().name());
+                authorityPs.setObject(3, a.getId());
+                authorityPs.addBatch();
+                authorityPs.clearParameters();
+            }
+            authorityPs.executeBatch();
+            return user;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void remove(AuthUserEntity userEntity) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"
         )) {

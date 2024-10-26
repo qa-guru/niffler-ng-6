@@ -140,8 +140,35 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
+    public CategoryEntity update(CategoryEntity category) {
+
+        try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
+                "UPDATE \"category\" SET username = ?, name = ?, archived = ? WHERE id = ?"
+        )) {
+
+            ps.setString(1, category.getUsername());
+            ps.setString(2, category.getName());
+            ps.setBoolean(3, category.isArchived());
+            ps.setObject(4, category.getId());
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return fromResultSet(rs);
+                } else {
+                    throw new SQLException("Could find 'id' in ResultSet");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     @Override
-    public void delete(CategoryEntity category) {
+    public void remove(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"category\" WHERE id = ?"

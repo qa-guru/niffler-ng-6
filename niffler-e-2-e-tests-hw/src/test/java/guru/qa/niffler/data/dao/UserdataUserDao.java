@@ -17,6 +17,8 @@ public interface UserdataUserDao {
 
     List<UserEntity> findAll();
 
+    UserEntity update(UserEntity user);
+
     void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status);
 
     void addFriend(UserEntity requester, UserEntity addressee);

@@ -92,8 +92,29 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
+    public CategoryEntity update(CategoryEntity category) {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
+        jdbcTemplate.update(connection -> {
+
+                    PreparedStatement ps = connection.prepareStatement(
+                            "UPDATE \"category\" SET name = ?, username = ?, archived = ? WHERE id = ?"
+                    );
+                    ps.setString(1, category.getName());
+                    ps.setString(2, category.getUsername());
+                    ps.setBoolean(3, category.isArchived());
+                    ps.setObject(4, category.getId());
+                    return ps;
+
+                }
+        );
+
+        return category;
+
+    }
+
     @Override
-    public void delete(CategoryEntity category) {
+    public void remove(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"category\" WHERE id = ?",

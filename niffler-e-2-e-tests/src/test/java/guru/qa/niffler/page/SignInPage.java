@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.component.HeaderComponent;
 import lombok.Getter;
 
 import static com.codeborne.selenide.Condition.*;
@@ -33,6 +34,4 @@ public class SignInPage {
     String expectedError = "Bad credentials";
     errorMessage.shouldHave(text(expectedError)).shouldBe(visible);
   }
-
-
 }

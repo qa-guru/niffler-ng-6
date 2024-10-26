@@ -9,6 +9,7 @@ buildscript {
         logbackVersion = '1.4.11'
         slf4jVersion = '2.0.9'
         springJdbcVersion = '6.1.12'
+        atomikosVersion = '6.0.0'
         springCryptoVersion = '6.3.1'
         p6spyVersion = '3.9.1'
         hibernateVersion = '6.6.0.Final'
@@ -74,6 +75,9 @@ dependencies {
     testImplementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
     testImplementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
     // DB
+    testImplementation "com.atomikos:transactions-jdbc:${atomikosVersion}"
+    testImplementation "com.atomikos:transactions-jta:${atomikosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-hibernate4:${atomikosVersion}:jakarta"
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
     testImplementation "p6spy:p6spy:${p6spyVersion}"

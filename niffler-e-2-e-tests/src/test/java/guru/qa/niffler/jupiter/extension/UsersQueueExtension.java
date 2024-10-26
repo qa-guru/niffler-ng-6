@@ -2,7 +2,6 @@ package guru.qa.niffler.jupiter.extension;
 
 import io.qameta.allure.Allure;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.kafka.common.protocol.types.Field;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -24,23 +23,35 @@ public class UsersQueueExtension implements
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
 
-    public record StaticUser(String username, String password, boolean empty) {
+    public record StaticUser(
+            String username,
+            String password,
+            String friend,
+            String incoming,
+            String outgoing) {
     }
 
     private static final Queue<StaticUser> EMPTY_USERS = new ConcurrentLinkedQueue<>();
-    private static final Queue<StaticUser> NOT_EMPTY_USERS = new ConcurrentLinkedQueue<>();
+    private static final Queue<StaticUser> WITH_FRIEND_USERS = new ConcurrentLinkedQueue<>();
+    private static final Queue<StaticUser> WITH_INCOMING_REQUEST_USERS = new ConcurrentLinkedQueue<>();
+    private static final Queue<StaticUser> WITH_OUTGOING_REQUEST_USERS = new ConcurrentLinkedQueue<>();
 
     static {
-        EMPTY_USERS.add(new StaticUser("bee", "12345", true));
-        EMPTY_USERS.add(new StaticUser("bee1", "12345", true));
-        NOT_EMPTY_USERS.add(new StaticUser("duck", "12345", false));
-        NOT_EMPTY_USERS.add(new StaticUser("dima", "12345", false));
+        EMPTY_USERS.add(new StaticUser("bee", "12345", null, null, null));
+        WITH_FRIEND_USERS.add(new StaticUser("duck", "12345", "dima", null, null));
+        WITH_FRIEND_USERS.add(new StaticUser("dima", "12345", "duck", null, null));
+        WITH_INCOMING_REQUEST_USERS.add(new StaticUser("bill", "12345", null, "comrade", null));
+        WITH_OUTGOING_REQUEST_USERS.add(new StaticUser("comrade", "12345", null, null, "bill"));
     }
 
     @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface UserType {
-        boolean empty() default true;
+        Type value() default Type.EMPTY;
+
+        enum Type {
+            EMPTY, WITH_FRIEND, WITH_INCOMING_REQUEST, WITH_OUTGOING_REQUEST
+        }
     }
 
     @Override
@@ -52,13 +63,15 @@ public class UsersQueueExtension implements
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                        user = Optional.ofNullable(ut.empty()
-                                ? EMPTY_USERS.poll()
-                                : NOT_EMPTY_USERS.poll());
+                        user = switch (ut.value()) {
+                            case WITH_FRIEND -> Optional.ofNullable(WITH_FRIEND_USERS.poll());
+                            case WITH_INCOMING_REQUEST -> Optional.ofNullable(WITH_INCOMING_REQUEST_USERS.poll());
+                            case WITH_OUTGOING_REQUEST -> Optional.ofNullable(WITH_OUTGOING_REQUEST_USERS.poll());
+                            default -> Optional.ofNullable(EMPTY_USERS.poll());
+                        };
                     }
-                    Allure.getLifecycle().updateTestCase(testCase -> {
-                        testCase.setStart(new Date().getTime());
-                    });
+                    Allure.getLifecycle().updateTestCase(testCase -> testCase.setStart(new Date().getTime()));
+
                     user.ifPresentOrElse(
                             u -> context.getStore(NAMESPACE).put(context.getUniqueId() + p.getName(), u),
                             () -> new IllegalStateException("Can't find a user after 30 sec")
@@ -75,10 +88,12 @@ public class UsersQueueExtension implements
                     String key = context.getUniqueId() + p.getName();
                     StaticUser user = context.getStore(NAMESPACE).get(key, StaticUser.class);
                     if (user != null) {
-                        if (user.empty()) {
-                            EMPTY_USERS.add(user);
-                        } else {
-                            NOT_EMPTY_USERS.add(user);
+                        UserType ut = p.getAnnotation(UserType.class);
+                        switch (ut.value()) {
+                            case WITH_FRIEND -> WITH_FRIEND_USERS.add(user);
+                            case WITH_INCOMING_REQUEST -> WITH_INCOMING_REQUEST_USERS.add(user);
+                            case WITH_OUTGOING_REQUEST -> WITH_OUTGOING_REQUEST_USERS.add(user);
+                            default -> EMPTY_USERS.add(user);
                         }
                     }
                 });

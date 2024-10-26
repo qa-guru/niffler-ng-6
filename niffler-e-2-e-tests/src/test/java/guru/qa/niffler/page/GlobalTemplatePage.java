@@ -32,4 +32,9 @@ public class GlobalTemplatePage {
         headerUserAccountMenuProfileButton.click();
         return new UserProfilePage();
     }
+
+    public PeoplePage clickHeaderUserAccountMenuFriendsButton() {
+        headerUserAccountMenuFriendsButton.click();
+        return new PeoplePage();
+    }
 }

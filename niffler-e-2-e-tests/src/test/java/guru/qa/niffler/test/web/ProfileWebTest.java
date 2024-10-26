@@ -13,8 +13,7 @@ public class ProfileWebTest {
 
     @Category(
             username = "duck",
-            archived = true,
-            name = "Archived category"
+            archived = true
     )
     @Test
     void archivedCategoryShouldBePresentInCategoriesList(CategoryJson category) {

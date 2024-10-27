@@ -1,15 +1,12 @@
 package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.data.entity.auth.Authority;
-import guru.qa.niffler.model.AuthAuthorityJson;
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.helper.EnumHelper;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
 
 import java.util.Collections;
-import java.util.List;
 
 public class UserUtils {
 
@@ -36,7 +33,7 @@ public class UserUtils {
     }
 
     public static AuthUserJson generateAuthUser() {
-        var user = AuthUserJson.builder()
+        return AuthUserJson.builder()
                 .username(generateUsername())
                 .password(generatePassword())
                 .enabled(true)
@@ -44,31 +41,7 @@ public class UserUtils {
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .build();
-
-//        user.setAuthorities(
-//                        List.of(
-//                                AuthAuthorityJson.builder().authority(Authority.read).user(user).build(),
-//                                AuthAuthorityJson.builder().authority(Authority.write).user(user).build()
-//                        ));
-        return user;
     }
-
-
-//    public static AuthUserJson generateAuthUser() {
-//        return AuthUserJson.builder()
-//                .username(generateUsername())
-//                .password(generatePassword())
-//                .enabled(true)
-//                .accountNonExpired(true)
-//                .accountNonLocked(true)
-//                .credentialsNonExpired(true)
-//                .authorities(
-//                        List.of(
-//                                AuthAuthorityJson.builder().authority(Authority.read).build(),
-//                                AuthAuthorityJson.builder().authority(Authority.write).build()
-//                        ))
-//                .build();
-//    }
 
     private static String generatePassword() {
         var password = FAKE.internet().password();

@@ -1,8 +1,8 @@
 package guru.qa.niffler.mapper;
 
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserModel;
 

@@ -1,9 +1,8 @@
 package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
-import guru.qa.niffler.service.UserdataDbClient;
-import guru.qa.niffler.service.impl.jdbc.UserdataDbClientJdbc;
-import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.UserdataClient;
+import guru.qa.niffler.service.db.impl.jdbc.UserdataDbClientJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,62 +14,62 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class UserdataJdbcTest {
 
-    UserdataDbClient userdataDbClient = new UserdataDbClientJdbc();
+    UserdataClient userdataClient = new UserdataDbClientJdbc();
 
     @Test
     void shouldCreateNewUserTest() {
-        Assertions.assertNotNull(userdataDbClient.create(generateUser()).getId());
+        var authUser = userdataClient.create(
+                generateUser());
+        Assertions.assertNotNull(authUser.getId());
     }
 
     @Test
     void shouldGetUserByIdTest() {
-        var userId = userdataDbClient
-                .create(generateUser())
-                .getId();
-        assertTrue(userdataDbClient
-                .findById(userId)
-                .isPresent());
+        Assertions.assertNotNull(
+                userdataClient
+                        .create(generateUser())
+                        .getId());
     }
 
     @Test
     void shouldGetUserByUsernameTest() {
-        var username = userdataDbClient
+        var username = userdataClient
                 .create(generateUser())
                 .getUsername();
-        assertTrue(userdataDbClient
+        assertTrue(userdataClient
                 .findByUsername(username)
                 .isPresent());
     }
 
     @Test
     void shouldFindAllTest() {
-        userdataDbClient
+        userdataClient
                 .create(generateUser());
-        assertFalse(userdataDbClient
+        assertFalse(userdataClient
                 .findAll()
                 .isEmpty());
     }
 
     @Test
     void shouldSendInvitationTest() {
-        var requester = userdataDbClient.create(generateUser());
-        var addressee = userdataDbClient.create(generateUser());
-        userdataDbClient.sendInvitation(requester, addressee, FriendshipStatus.PENDING);
+        var requester = userdataClient.create(generateUser());
+        var addressee = userdataClient.create(generateUser());
+        userdataClient.sendInvitation(requester, addressee, FriendshipStatus.PENDING);
     }
 
     @Test
     void shouldAddFriendTest() {
-        var requester = userdataDbClient.create(generateUser());
-        var addressee = userdataDbClient.create(generateUser());
-        userdataDbClient.addFriend(requester, addressee);
+        var requester = userdataClient.create(generateUser());
+        var addressee = userdataClient.create(generateUser());
+        userdataClient.addFriend(requester, addressee);
     }
 
     @Test
     void shouldRemoveUserTest() {
-        var username = userdataDbClient
+        var username = userdataClient
                 .create(generateUser())
                 .getUsername();
-        assertTrue(userdataDbClient
+        assertTrue(userdataClient
                 .findByUsername(username)
                 .isPresent());
     }

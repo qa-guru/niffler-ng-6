@@ -88,6 +88,26 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        jdbcTemplate.update(connection -> {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ?, full_name = ? WHERE id = ?"
+                    );
+                    ps.setString(1, user.getUsername());
+                    ps.setString(2, user.getCurrency().name());
+                    ps.setString(3, user.getFirstName());
+                    ps.setString(4, user.getSurname());
+                    ps.setBytes(5, user.getPhoto());
+                    ps.setBytes(6, user.getPhotoSmall());
+                    ps.setString(7, user.getFullName());
+                    return ps;
+                }
+        );
+        return user;
+    }
+
+    @Override
     public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {

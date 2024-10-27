@@ -1,12 +1,14 @@
 package guru.qa.niffler.jupiter.extension;
 
+import guru.qa.niffler.data.dao.CategoryDao;
+import guru.qa.niffler.data.dao.impl.springJdbc.CategoryDaoSpringJdbc;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
-import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -20,8 +22,8 @@ import java.util.Map;
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-    private final CategoryDbClientJdbc categoryDbClient = new CategoryDbClientJdbc();
-    private final SpendDbClientJdbc spendDbClient = new SpendDbClientJdbc();
+    private final CategoryDao categoryDbClient = new CategoryDaoSpringJdbc();
+    private final SpendClient spendClient = new SpendDbClientSpringJdbc();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -54,13 +56,13 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
                                 // for db creation
                                 var category = spend.getCategory();
-                                category = categoryDbClient
-                                        .findByUsernameAndName(user.getUsername(), category.getName())
-                                        .orElse(categoryDbClient.create(category));
+                                category = spendClient
+                                        .findCategoryByUsernameAndName(user.getUsername(), category.getName())
+                                        .orElse(spendClient.createCategory(category));
                                 spend.setCategory(category);
                                 // end for db creation
 
-                                spendings.add(spendDbClient.create(spend));
+                                spendings.add(spendClient.create(spend));
 
                                 context.getStore(NAMESPACE).put(
                                         context.getUniqueId(),

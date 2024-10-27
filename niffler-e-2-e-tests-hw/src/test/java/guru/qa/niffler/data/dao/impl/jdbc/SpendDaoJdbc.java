@@ -142,8 +142,39 @@ public class SpendDaoJdbc implements SpendDao {
 
     }
 
+    public SpendEntity update(SpendEntity spend) {
+
+        try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
+                "UPDATE \"spend\" SET username = ?, spend_date = ?, currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?"
+        )) {
+
+            ps.setString(1, spend.getUsername());
+            ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
+            ps.setString(3, spend.getCurrency().name());
+            ps.setDouble(4, spend.getAmount());
+            ps.setString(5, spend.getDescription());
+            ps.setObject(6, spend.getCategory().getId());
+            ps.setObject(7, spend.getId());
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return fromResultSet(rs);
+                } else {
+                    throw new SQLException("Could not find 'id' in ResultSet");
+                }
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     @Override
-    public void delete(SpendEntity spend) {
+    public void remove(SpendEntity spend) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"spend\" WHERE id = ?"

@@ -16,6 +16,8 @@ public interface AuthUserDao {
 
     List<AuthUserEntity> findAll();
 
-    void delete(AuthUserEntity user);
+    AuthUserEntity update(AuthUserEntity user);
+
+    void remove(AuthUserEntity user);
 
 }

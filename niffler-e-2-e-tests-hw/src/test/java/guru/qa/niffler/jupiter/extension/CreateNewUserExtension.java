@@ -3,9 +3,10 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserModel;
-import guru.qa.niffler.service.impl.jdbc.CategoryDbClientJdbc;
-import guru.qa.niffler.service.impl.jdbc.SpendDbClientJdbc;
-import guru.qa.niffler.service.impl.jdbc.UsersDbClientJdbcXa;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.UsersClient;
+import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
+import guru.qa.niffler.service.db.impl.springJdbc.UsersDbClientSpringJdbc;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
@@ -19,6 +20,8 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateNewUserExtension.class);
     private static final UserMapper userMapper = new UserMapper();
+    private UsersClient usersClient = new UsersDbClientSpringJdbc();
+    private SpendClient spendClient = new SpendDbClientSpringJdbc();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -29,8 +32,10 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
                     var parameterName = parameter.getName();
                     var parameterAnno = parameter.getAnnotation(CreateNewUser.class);
-                    UserModel user = userMapper.updateFromAnno(UserUtils.generateUser(), parameterAnno);
-                    new UsersDbClientJdbcXa().createUserInAuthAndUserdataDBs(user);
+                    UserModel user = usersClient.createUser(
+                            userMapper.updateFromAnno(
+                                    UserUtils.generateUser(),
+                                    parameterAnno));
 
                     @SuppressWarnings("unchecked")
                     Map<String, UserModel> usersMap = ((Map<String, UserModel>) context.getStore(NAMESPACE)
@@ -60,13 +65,9 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
                             UserModel user = usersMap.get(parameterName);
 
-                            var spendDbClient = new SpendDbClientJdbc();
-                            spendDbClient.findAllByUsername(user.getUsername()).forEach(spendDbClient::delete);
-
-                            var categoryDbClient = new CategoryDbClientJdbc();
-                            categoryDbClient.findAllByUsername(user.getUsername()).forEach(categoryDbClient::delete);
-
-                            new UsersDbClientJdbcXa().deleteUserFromAuthAndUserdataDBs(user);
+                            spendClient.findAllByUsername(user.getUsername()).forEach(spendClient::remove);
+                            spendClient.findAllCategoriesByUsername(user.getUsername()).forEach(spendClient::removeCategory);
+                            usersClient.removeUser(user);
 
                         }
                 );

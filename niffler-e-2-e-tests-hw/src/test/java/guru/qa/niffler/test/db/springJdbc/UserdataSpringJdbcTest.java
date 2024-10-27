@@ -1,11 +1,8 @@
 package guru.qa.niffler.test.db.springJdbc;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
-import guru.qa.niffler.service.UserdataDbClient;
-import guru.qa.niffler.service.UsersDbClient;
-import guru.qa.niffler.service.impl.springJdbc.UserdataDbClientSpringJdbc;
-import guru.qa.niffler.service.impl.springJdbc.UsersDbClientSpringJdbc;
+import guru.qa.niffler.service.UserdataClient;
+import guru.qa.niffler.service.db.impl.springJdbc.UserdataDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,81 +14,62 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 class UserdataSpringJdbcTest {
 
-    UsersDbClient usersDbClient = new UsersDbClientSpringJdbc();
-    UserdataDbClient userdataDbClient = new UserdataDbClientSpringJdbc();
+    UserdataClient userdataClient = new UserdataDbClientSpringJdbc();
 
     @Test
     void shouldCreateNewUserTest() {
-        Assertions.assertNotNull(userdataDbClient.create(generateUser()).getId());
+        var authUser = userdataClient.create(
+                generateUser());
+        Assertions.assertNotNull(authUser.getId());
     }
 
     @Test
     void shouldGetUserByIdTest() {
-        var userId = userdataDbClient
-                .create(generateUser())
-                .getId();
-        assertTrue(userdataDbClient
-                .findById(userId)
-                .isPresent());
+        Assertions.assertNotNull(
+                userdataClient
+                        .create(generateUser())
+                        .getId());
     }
 
     @Test
     void shouldGetUserByUsernameTest() {
-        var username = userdataDbClient
+        var username = userdataClient
                 .create(generateUser())
                 .getUsername();
-        assertTrue(userdataDbClient
+        assertTrue(userdataClient
                 .findByUsername(username)
                 .isPresent());
     }
 
     @Test
     void shouldFindAllTest() {
-        userdataDbClient
+        userdataClient
                 .create(generateUser());
-        assertFalse(userdataDbClient
+        assertFalse(userdataClient
                 .findAll()
                 .isEmpty());
     }
 
     @Test
-    void shouldGetIncomeInvitationTest() {
-        var requester = userdataDbClient.create(generateUser());
-        var addressee = userdataDbClient.create(generateUser());
-        userdataDbClient.sendInvitation(requester, addressee, FriendshipStatus.PENDING);
-    }
-
-    @Test
-    void shouldGetIncomeInvitationsTest() {
-        var requester = usersDbClient.createUserInAuthAndUserdataDBs(generateUser());
-        userdataDbClient.getIncomeInvitationFromNewUsers(requester, new Faker().random().nextInt(1, 5));
-    }
-
-    @Test
-    void shouldSendOutcomeInvitationTest() {
-        var requester = usersDbClient.createUserInAuthAndUserdataDBs(generateUser());
-        userdataDbClient.sendOutcomeInvitationToNewUsers(requester, new Faker().random().nextInt(1, 5));
+    void shouldSendInvitationTest() {
+        var requester = userdataClient.create(generateUser());
+        var addressee = userdataClient.create(generateUser());
+        userdataClient.sendInvitation(requester, addressee, FriendshipStatus.PENDING);
     }
 
     @Test
     void shouldAddFriendTest() {
-        var requester = userdataDbClient.create(generateUser());
-        var addressee = userdataDbClient.create(generateUser());
-        userdataDbClient.addFriend(requester, addressee);
-    }
-
-    @Test
-    void shouldAddFriendsTest() {
-        var requester = userdataDbClient.create(generateUser());
-        userdataDbClient.addNewFriends(requester, new Faker().random().nextInt(1, 5));
+        var requester = userdataClient.create(generateUser());
+        var addressee = userdataClient.create(generateUser());
+        userdataClient.addFriend(requester, addressee);
     }
 
     @Test
     void shouldRemoveUserTest() {
-        var username = userdataDbClient
+        var username = userdataClient
                 .create(generateUser())
                 .getUsername();
-        assertTrue(userdataDbClient
+        assertTrue(userdataClient
                 .findByUsername(username)
                 .isPresent());
     }

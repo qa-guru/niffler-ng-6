@@ -77,7 +77,30 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void delete(AuthAuthorityEntity... authority) {
+    public void update(AuthAuthorityEntity... authority) {
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
+        jdbcTemplate.batchUpdate(
+                "UPDATE \"authority\" SET user_id = ?, authority = ? WHERE id = ?",
+                new BatchPreparedStatementSetter() {
+
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setObject(1, authority[i].getUser().getId());
+                        ps.setString(2, authority[i].getAuthority().name());
+                        ps.setObject(3, authority[i].getId());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return authority.length;
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void remove(AuthAuthorityEntity... authority) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.batchUpdate(
                 "DELETE FROM \"authority\" WHERE id = ?",

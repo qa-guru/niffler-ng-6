@@ -16,6 +16,8 @@ public interface AuthAuthorityDao {
 
     List<AuthAuthorityEntity> findAll();
 
-    void delete(AuthAuthorityEntity... authority);
+    void update(AuthAuthorityEntity... authority);
+
+    void remove(AuthAuthorityEntity... authority);
 
 }

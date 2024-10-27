@@ -117,6 +117,38 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ?, full_name = ? WHERE id = ?"
+        )) {
+
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getCurrency().name());
+            ps.setString(3, user.getFirstName());
+            ps.setString(4, user.getSurname());
+            ps.setBytes(5, user.getPhoto());
+            ps.setBytes(6, user.getPhotoSmall());
+            ps.setString(7, user.getFullName());
+            ps.setObject(8, user.getId());
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return fromResultSet(rs);
+                } else {
+                    throw new SQLException("Could not find 'id' in ResultSet");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
     public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"

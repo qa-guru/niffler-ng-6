@@ -29,11 +29,7 @@ public class SpendDbClient {
               } else {
                 spendEntity.setCategory(CategoryEntity.fromJson(spend.category()));
               }
-              if (spend.id() == null) {
-                return SpendJson.fromEntity(new SpendDaoJdbc(connection).create(spendEntity));
-              } else {
-                return SpendJson.fromEntity(spendEntity);
-              }
+              return SpendJson.fromEntity(new SpendDaoJdbc(connection).create(spendEntity));
             }, CFG.spendJDBCUrl()
         )
     );

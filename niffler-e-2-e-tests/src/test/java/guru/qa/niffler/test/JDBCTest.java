@@ -16,7 +16,7 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 
 public class JDBCTest {
 
-  @Test()
+ @Test
   void spendTest() {
     final SpendDbClient spendDbClient = new SpendDbClient();
 
@@ -41,7 +41,7 @@ public class JDBCTest {
     spendDbClient.deleteSpend(spendJson);
   }
 
-  @Test()
+ @Test
   void categoryTest() {
     final CategoryDbClient categoryDbClient = new CategoryDbClient();
 
@@ -58,7 +58,7 @@ public class JDBCTest {
     categoryDbClient.deleteCategory(categoryJson);
   }
 
-  @Test()
+ @Test
   void userdataTest() {
     final UdDbClient udDbClient = new UdDbClient();
 

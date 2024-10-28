@@ -54,11 +54,7 @@ public class UdDbClient {
 
   public UserJson createUserdata(UserJson userJson) {
     return transaction(connection -> {
-          if (userJson.id() == null) {
-            return UserJson.fromEntity(new UdUserDaoJdbc(connection).create(UdUserEntity.fromJson(userJson)));
-          } else {
-            return userJson;
-          }
+          return UserJson.fromEntity(new UdUserDaoJdbc(connection).create(UdUserEntity.fromJson(userJson)));
         }, CFG.userdataJDBCUrl(), TransactionLevelEnum.TRANSACTION_SERIALIZABLE
     );
   }

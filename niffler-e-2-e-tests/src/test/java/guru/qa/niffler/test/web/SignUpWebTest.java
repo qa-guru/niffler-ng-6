@@ -9,8 +9,6 @@ import guru.qa.niffler.page.SignUpSuccessfulPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class SignUpWebTest {
 
     private static final Config CFG = Config.getInstance();
@@ -47,15 +45,15 @@ public class SignUpWebTest {
                 .clickSignUpButton()
                 .signUp(randomUsername, "12345");
 
-        assertTrue(new SignUpPage().isUserAlreadyExistsErrorMessageDisplayed(randomUsername));
+        new SignUpPage().shouldDisplayUserAlreadyExistsError(randomUsername);
     }
 
     @Test
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         Selenide.open(CFG.frontUrl(), SignInPage.class)
                 .clickSignUpButton()
-                .signUp(randomUsername, "12345", false);
+                .signUp(randomUsername, "12345", "123456");
 
-        assertTrue(new SignUpPage().isPasswordMismatchErrorMessageDisplayed());
+        new SignUpPage().shouldDisplayPasswordMismatchError();
     }
 }

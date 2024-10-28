@@ -3,12 +3,18 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import lombok.Getter;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class MainPage extends GlobalTemplatePage {
+public class MainPage {
+
+  // Lombok annotation to generate getter for the field, similar to
+  // public HeaderComponent getPageHeader() {return pageHeader;}
+  @Getter
+  HeaderComponent pageHeader = new HeaderComponent();
 
   private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
   private final SelenideElement statsModule = $("#stat");

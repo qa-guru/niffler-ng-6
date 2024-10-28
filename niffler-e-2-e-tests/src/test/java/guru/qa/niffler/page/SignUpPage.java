@@ -1,8 +1,8 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class SignUpPage {
@@ -29,27 +29,23 @@ public class SignUpPage {
     }
 
     public void signUp(String username, String password) {
-        signUp(username, password, true);
+        signUp(username, password, password);
     }
 
-    public void signUp(String username, String password, boolean confirmPasswordMatches) {
+    public void signUp(String username, String password1, String password2) {
         setUsername(username);
-        setPassword(password);
-        if (confirmPasswordMatches) {
-            setPasswordConfirmation(password);
-        } else {
-            setPasswordConfirmation(password + 6732542);
-        }
+        setPassword(password1);
+        setPasswordConfirmation(password2);
         submitRegistration();
     }
 
-    public boolean isUserAlreadyExistsErrorMessageDisplayed(String username) {
+    public void shouldDisplayUserAlreadyExistsError(String username) {
         String expectedError = "Username `" + username + "` already exists";
-        return errorMessage.shouldHave(Condition.text(expectedError)).isDisplayed();
+        errorMessage.shouldHave(text(expectedError)).shouldBe(visible);
     }
 
-    public boolean isPasswordMismatchErrorMessageDisplayed() {
+    public void shouldDisplayPasswordMismatchError() {
         String expectedError = "Passwords should be equal";
-        return errorMessage.shouldHave(Condition.text(expectedError)).isDisplayed();
+        errorMessage.shouldHave(text(expectedError)).shouldBe(visible);
     }
 }

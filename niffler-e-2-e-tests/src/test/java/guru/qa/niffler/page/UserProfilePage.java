@@ -7,7 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class UserProfilePage extends GlobalTemplatePage {
+public class UserProfilePage {
 
     private final SelenideElement userAvatar = $(".MuiAvatar-root");
     private final SelenideElement usernameField = $("#username");
@@ -35,10 +35,8 @@ public class UserProfilePage extends GlobalTemplatePage {
         return this;
     }
 
-    public UserProfilePage toggleShowArchived(boolean shouldBeChecked) {
-        if (showArchivedCheckbox.isSelected() != shouldBeChecked) {
-            showArchivedCheckbox.click();
-        }
+    public UserProfilePage toggleShowArchived() {
+        showArchivedCheckbox.click();
         return this;
     }
 

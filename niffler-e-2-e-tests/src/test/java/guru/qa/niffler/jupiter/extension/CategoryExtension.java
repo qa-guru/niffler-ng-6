@@ -21,7 +21,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                             null,
                             anno.name().isEmpty() ? generateCategoryName() : anno.name(),
                             anno.username(),
-                            anno.archived()
+                            false
                     );
                     CategoryJson createdCategory = categoriesApiClient.createCategory(category);
                     if (anno.archived()) {

@@ -4,6 +4,8 @@ import guru.qa.niffler.enums.CurrencyValuesEnum;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.service.AuthAuthorityDbClient;
+import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.service.CategoryDbClient;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UdDbClient;
@@ -13,10 +15,11 @@ import java.util.Date;
 import java.util.UUID;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
+import static guru.qa.niffler.utils.RandomDataUtils.randomUserName;
 
-public class JDBCTest {
+public class HWTest {
 
- @Test
+  @Test
   void spendTest() {
     final SpendDbClient spendDbClient = new SpendDbClient();
 
@@ -37,11 +40,10 @@ public class JDBCTest {
         )
     );
     System.out.println(spendDbClient.findSpendById(spendJson.id()));
-    System.out.println(spendDbClient.findAllByUsername("max"));
     spendDbClient.deleteSpend(spendJson);
   }
 
- @Test
+  @Test
   void categoryTest() {
     final CategoryDbClient categoryDbClient = new CategoryDbClient();
 
@@ -54,11 +56,10 @@ public class JDBCTest {
         )
     );
     System.out.println(categoryDbClient.findCategoryById(categoryJson.id()));
-    System.out.println(categoryDbClient.findAllByUsername("max"));
-    categoryDbClient.deleteCategory(categoryJson);
+    categoryDbClient.deleteCategory(categoryJson.id());
   }
 
- @Test
+  @Test
   void userdataTest() {
     final UdDbClient udDbClient = new UdDbClient();
 
@@ -74,8 +75,33 @@ public class JDBCTest {
             "smallPhoto"
         )
     );
-    System.out.println(udDbClient.findUserdataById(userJson.id()));
-    System.out.println(udDbClient.findAllByUsername("test-userName"));
-    udDbClient.deleteUserdata(userJson);
+  }
+
+  @Test
+  void springJDBCTest() {
+    final UdDbClient udDbClient = new UdDbClient();
+
+    UserJson userJson = udDbClient.createUserSpringJDBC(
+        new UserJson(
+            null,
+            randomUserName(),
+            null,
+            null,
+            null,
+            CurrencyValuesEnum.RUB,
+            null,
+            null
+        )
+    );
+    System.out.println(userJson);
+  }
+
+  @Test
+  void findAllTest() {
+    System.out.println(new AuthAuthorityDbClient().findAll());
+    System.out.println(new AuthUserDbClient().findAll());
+    System.out.println(new CategoryDbClient().findAll());
+    System.out.println(new SpendDbClient().findAll());
+    System.out.println(new UdDbClient().findAll());
   }
 }

@@ -53,7 +53,7 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public Optional<SpendEntity> findSpendById(UUID id) {
+  public Optional<SpendEntity> findById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM spend WHERE id = ?"
     )) {
@@ -69,7 +69,7 @@ public class SpendDaoJdbc implements SpendDao {
           se.setAmount(rs.getDouble("amount"));
           se.setDescription(rs.getString("description"));
           se.setCategory(
-              new CategoryDaoJdbc(connection).findCategoryById(rs.getObject("category_id", UUID.class))
+              new CategoryDaoJdbc(connection).findById(rs.getObject("category_id", UUID.class))
                   .stream()
                   .findFirst()
                   .orElse(null)
@@ -85,11 +85,10 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public List<SpendEntity> findAllByUsername(String username) {
+  public List<SpendEntity> findAll() {
     try (PreparedStatement ps = connection.prepareStatement(
-        "SELECT * FROM spend WHERE username = ?"
+        "SELECT * FROM spend"
     )) {
-      ps.setString(1, username);
       ps.execute();
 
       List<SpendEntity> lse = new ArrayList<>();
@@ -103,7 +102,7 @@ public class SpendDaoJdbc implements SpendDao {
           se.setAmount(rs.getDouble("amount"));
           se.setDescription(rs.getString("description"));
           se.setCategory(
-              new CategoryDaoJdbc(connection).findCategoryById(rs.getObject("category_id", UUID.class))
+              new CategoryDaoJdbc(connection).findById(rs.getObject("category_id", UUID.class))
                   .stream()
                   .findFirst()
                   .orElse(null)
@@ -119,11 +118,11 @@ public class SpendDaoJdbc implements SpendDao {
   }
 
   @Override
-  public void deleteSpend(SpendEntity spend) {
+  public void deleteById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM spend WHERE id = ?"
     )) {
-      ps.setObject(1, spend.getId());
+      ps.setObject(1, id);
       ps.executeUpdate();
 
     } catch (SQLException e) {

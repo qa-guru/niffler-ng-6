@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
@@ -21,38 +22,49 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public AuthAuthorityEntity create(AuthAuthorityEntity authority) {
+  public void create(AuthAuthorityEntity... authority) {
     try (PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO authority (user_id, authority) " +
-            "VALUES(?, ?)",
+        "INSERT INTO authority (user_id, authority) VALUES(?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS
     )) {
-      ps.setObject(1, authority.getUserId());
-      ps.setObject(2, authority.getAuthority());
+      ps.setObject(1, authority[0].getUserId());
+      ps.setObject(2, authority[0].getAuthority());
 
       ps.executeUpdate();
-
-      final UUID generatedKey;
-      try (ResultSet rs = ps.getGeneratedKeys()) {
-        if (rs.next()) {
-          generatedKey = rs.getObject("id", UUID.class);
-        } else {
-          throw new SQLException("Can't find id in ResultSet");
-        }
-      }
-      authority.setId(generatedKey);
-      return authority;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public List<AuthAuthorityEntity> findAuthoritiesByUserId(UUID userId) {
+  public Optional<AuthAuthorityEntity> findById(UUID userId) {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM authority WHERE user_id = ?"
     )) {
       ps.setObject(1, userId);
+      ps.execute();
+
+      try (ResultSet rs = ps.getResultSet()) {
+        if (rs.next()) {
+          AuthAuthorityEntity ue = new AuthAuthorityEntity();
+          ue.setId(rs.getObject("id", UUID.class));
+          ue.setUserId(rs.getObject("user_id", UUID.class));
+          ue.setAuthority(rs.getObject("authority", AuthorityEnum.class));
+
+          return Optional.of(ue);
+        } else {
+          return Optional.empty();
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public List<AuthAuthorityEntity> findAll() {
+    try (PreparedStatement ps = connection.prepareStatement(
+        "SELECT * FROM authority")) {
       ps.execute();
 
       List<AuthAuthorityEntity> lae = new ArrayList<>();
@@ -73,7 +85,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
   }
 
   @Override
-  public void deleteAuthorityById(UUID id) {
+  public void deleteById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM authority WHERE id = ?"
     )) {

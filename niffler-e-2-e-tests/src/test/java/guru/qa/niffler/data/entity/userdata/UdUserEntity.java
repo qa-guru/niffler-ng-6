@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class UserEntity implements Serializable {
+public class UdUserEntity implements Serializable {
   private UUID id;
   private String username;
   private CurrencyValuesEnum currency;
@@ -20,15 +21,15 @@ public class UserEntity implements Serializable {
   private byte[] photo;
   private byte[] photoSmall;
 
-  public static UserEntity fromJson(UserJson json) {
-    UserEntity ue = new UserEntity();
+  public static UdUserEntity fromJson(UserJson json) {
+    UdUserEntity ue = new UdUserEntity();
     ue.setId(json.id());
     ue.setUsername(json.username());
     ue.setCurrency(json.currency());
     ue.setFirstname(json.firstname());
     ue.setSurname(json.surname());
-    ue.setPhoto(json.photo().getBytes());
-    ue.setPhotoSmall(json.photoSmall().getBytes());
+    ue.setPhoto(json.photo() != null ? json.photo().getBytes(StandardCharsets.UTF_8) : null);
+    ue.setPhotoSmall(json.photoSmall() != null ? json.photoSmall().getBytes(StandardCharsets.UTF_8) : null);
     ue.setFullname(json.fullname());
     return ue;
   }

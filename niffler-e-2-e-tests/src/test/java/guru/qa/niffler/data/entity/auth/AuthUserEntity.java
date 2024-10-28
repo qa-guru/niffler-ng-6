@@ -3,6 +3,7 @@ package guru.qa.niffler.data.entity.auth;
 import guru.qa.niffler.model.AuthUserJson;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class AuthUserEntity implements Serializable {
   public static AuthUserEntity fromJson(AuthUserJson json) {
     AuthUserEntity aue = new AuthUserEntity();
     aue.setUsername(json.username());
-    aue.setPassword(json.password());
+    aue.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(json.password()));
     aue.setEnabled(json.enabled());
     aue.setAccountNonExpired(json.accountNonExpired());
     aue.setAccountNonLocked(json.accountNonLocked());

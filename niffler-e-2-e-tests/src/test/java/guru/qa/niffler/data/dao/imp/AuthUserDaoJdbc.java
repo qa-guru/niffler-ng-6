@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   @Override
   public AuthUserEntity create(AuthUserEntity user) {
     try (PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO public.user (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
+        "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
             "VALUES(?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS
     )) {
@@ -53,11 +55,11 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   }
 
   @Override
-  public Optional<AuthUserEntity> findUserByUsername(String username) {
+  public Optional<AuthUserEntity> findById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
-        "SELECT * FROM public.user WHERE username = ?"
+        "SELECT * FROM \"user\" WHERE id = ?"
     )) {
-      ps.setObject(1, username);
+      ps.setObject(1, id);
       ps.execute();
       try (ResultSet rs = ps.getResultSet()) {
         if (rs.next()) {
@@ -81,12 +83,28 @@ public class AuthUserDaoJdbc implements AuthUserDao {
   }
 
   @Override
-  public void deleteUserByUsername(String username) {
+  public List<AuthUserEntity> findAll() {
     try (PreparedStatement ps = connection.prepareStatement(
-        "DELETE FROM public.user WHERE username = ?"
+        "SELECT * FROM \"user\""
     )) {
-      ps.setObject(1, username);
-      ps.executeUpdate();
+      ps.execute();
+
+      List<AuthUserEntity> lse = new ArrayList<>();
+      try (ResultSet rs = ps.getResultSet()) {
+        while (rs.next()) {
+          AuthUserEntity ue = new AuthUserEntity();
+          ue.setId(rs.getObject("id", UUID.class));
+          ue.setUsername(rs.getString("username"));
+          ue.setPassword(rs.getString("currency"));
+          ue.setEnabled(rs.getBoolean("enabled"));
+          ue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+          ue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+          ue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+
+          lse.add(ue);
+        }
+        return lse;
+      }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

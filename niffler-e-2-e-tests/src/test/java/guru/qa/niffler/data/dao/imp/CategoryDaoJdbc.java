@@ -49,7 +49,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
@@ -74,11 +74,9 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public List<CategoryEntity> findAllByUsername(String username) {
+  public List<CategoryEntity> findAll() {
     try (PreparedStatement ps = connection.prepareStatement(
-        "SELECT * FROM category WHERE username = ?"
-    )) {
-      ps.setString(1, username);
+        "SELECT * FROM category")) {
       ps.execute();
 
       List<CategoryEntity> lce = new ArrayList<>();
@@ -100,11 +98,11 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public void deleteCategory(CategoryEntity category) {
+  public void deleteById(UUID id) {
     try (PreparedStatement ps = connection.prepareStatement(
         "DELETE FROM category WHERE id = ?"
     )) {
-      ps.setObject(1, category.getId());
+      ps.setObject(1, id);
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);

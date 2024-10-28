@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserdataDao {
+public interface UdUserDao {
   UserEntity create(UserEntity user);
 
   Optional<UserEntity> findUserdataById(UUID id);

@@ -30,6 +30,12 @@ public @interface CreateNewUser {
 
     String fullName() default "";
 
+    int incomeInvitations() default 0;
+
+    int outcomeInvitations() default 0;
+
+    int friends() default 0;
+
     Category[] categories() default {};
 
     Spending[] spendings() default {};

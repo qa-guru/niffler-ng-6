@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.rowMapper.CategoryRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import lombok.NonNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,7 +21,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
 
-    public CategoryEntity create(CategoryEntity category) {
+    public CategoryEntity create(@NonNull CategoryEntity category) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -46,7 +47,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     }
 
-    public Optional<CategoryEntity> findById(UUID id) {
+    public Optional<CategoryEntity> findById(@NonNull UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
@@ -57,7 +58,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> findByUsernameAndName(String username, String categoryName) {
+    public Optional<CategoryEntity> findByUsernameAndName(@NonNull String username, @NonNull String categoryName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -74,7 +75,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public List<CategoryEntity> findAllByUsername(@NonNull String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"category\" WHERE username = ?",
@@ -92,7 +93,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
-    public CategoryEntity update(CategoryEntity category) {
+    public CategoryEntity update(@NonNull CategoryEntity category) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         jdbcTemplate.update(connection -> {
@@ -114,7 +115,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public void remove(CategoryEntity category) {
+    public void remove(@NonNull CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"category\" WHERE id = ?",

@@ -4,7 +4,8 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
@@ -27,7 +28,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
-                        && parameter.getType().isAssignableFrom(UserModel.class))
+                        && parameter.getType().isAssignableFrom(UserJson.class))
                 .forEach(
                         parameter -> {
 
@@ -37,7 +38,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
                             if (userAnno.categories().length > 0) {
 
                                 @SuppressWarnings("unchecked")
-                                Map<String, UserModel> usersMap = ((Map<String, UserModel>) context
+                                Map<String, UserJson> usersMap = ((Map<String, UserJson>) context
                                         .getStore(CreateNewUserExtension.NAMESPACE)
                                         .get(context.getUniqueId()));
                                 var user = usersMap.get(parameterName);
@@ -56,10 +57,10 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
 
                                 context.getStore(NAMESPACE).put(
                                         context.getUniqueId(),
-                                        usersMap.put(parameterName, user.setCategories(categories))
+                                        usersMap.put(parameterName, user.setTestData(new TestData().setCategories(categories)))
                                 );
 
-                                log.info("Created new categories for user = [{}]: {}", user.getUsername(), user.getCategories());
+                                log.info("Created new categories for user = [{}]: {}", user.getUsername(), user.getTestData().getCategories());
 
                             }
                         }

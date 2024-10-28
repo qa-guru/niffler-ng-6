@@ -6,6 +6,7 @@ import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.service.db.AuthUserDbClient;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -23,7 +24,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     private final AuthUserMapper authUserMapper = new AuthUserMapper();
 
     @Override
-    public AuthUserJson create(AuthUserJson authUserJson) {
+    public AuthUserJson create(@NonNull AuthUserJson authUserJson) {
         log.info("Creating new user by DTO: {}", authUserJson);
         return txTemplate.execute(status ->
                 authUserMapper.toDto(
@@ -32,7 +33,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findById(UUID id) {
+    public Optional<AuthUserJson> findById(@NonNull UUID id) {
         log.info("Get user by id = [{}]", id);
         return txTemplate.execute(status ->
                 new AuthUserDaoSpringJdbc()
@@ -41,7 +42,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findByUsername(String username) {
+    public Optional<AuthUserJson> findByUsername(@NonNull String username) {
         log.info("Get user by username = [{}]", username);
         return txTemplate.execute(status ->
                 new AuthUserDaoSpringJdbc()
@@ -60,7 +61,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public void remove(AuthUserJson authUser) {
+    public void remove(@NonNull AuthUserJson authUser) {
         log.info("Remove user: {}", authUser);
         txTemplate.execute(status -> {
             new AuthUserDaoSpringJdbc()

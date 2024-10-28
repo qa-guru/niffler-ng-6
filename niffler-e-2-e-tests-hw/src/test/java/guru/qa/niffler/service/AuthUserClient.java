@@ -1,6 +1,7 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.AuthUserJson;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,14 +9,14 @@ import java.util.UUID;
 
 public interface AuthUserClient {
 
-    AuthUserJson create(AuthUserJson authUserJson);
+    AuthUserJson create(@NonNull AuthUserJson authUserJson);
 
-    Optional<AuthUserJson> findById(UUID id);
+    Optional<AuthUserJson> findById(@NonNull UUID id);
 
-    Optional<AuthUserJson> findByUsername(String username);
+    Optional<AuthUserJson> findByUsername(@NonNull String username);
 
     List<AuthUserJson> findAll();
 
-    void remove(AuthUserJson authUser);
+    void remove(@NonNull AuthUserJson authUser);
 
 }

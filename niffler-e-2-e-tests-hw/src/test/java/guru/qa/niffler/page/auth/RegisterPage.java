@@ -1,7 +1,7 @@
 package guru.qa.niffler.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.BasePage;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -28,13 +28,13 @@ public class RegisterPage extends BasePage<RegisterPage> {
         super(checkPageElementVisible);
     }
 
-    public ConfirmRegistrationPage signUp(@NonNull UserModel user) {
+    public ConfirmRegistrationPage signUp(@NonNull UserJson user) {
         fillRegistrationData(user);
         submit();
         return new ConfirmRegistrationPage();
     }
 
-    public RegisterPage fillRegistrationData(@NonNull UserModel user) {
+    public RegisterPage fillRegistrationData(@NonNull UserJson user) {
 
         log.info("Fill registration data: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());

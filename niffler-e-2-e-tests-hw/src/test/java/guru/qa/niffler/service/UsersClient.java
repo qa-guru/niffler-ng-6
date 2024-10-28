@@ -1,17 +1,17 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 
 public interface UsersClient {
 
-    UserModel createUser(UserModel userModel);
+    UserJson createUser(UserJson userJson);
 
-    void getIncomeInvitationFromNewUsers(UserModel requester, int count);
+    void getIncomeInvitationFromNewUsers(UserJson requester, int count);
 
-    void sendOutcomeInvitationToNewUsers(UserModel requester, int count);
+    void sendOutcomeInvitationToNewUsers(UserJson requester, int count);
 
-    void addNewFriends(UserModel requester, int count);
+    void addNewFriends(UserJson requester, int count);
 
-    void removeUser(UserModel userModel);
+    void removeUser(UserJson userJson);
 
 }

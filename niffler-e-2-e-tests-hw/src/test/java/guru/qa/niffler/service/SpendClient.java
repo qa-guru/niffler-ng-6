@@ -2,6 +2,7 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,8 @@ public interface SpendClient {
 
     List<SpendJson> findAll();
 
+    SpendJson update(SpendJson spendJson);
+
     void remove(SpendJson spendJson);
 
     CategoryJson createCategory(CategoryJson spendJson);
@@ -32,6 +35,8 @@ public interface SpendClient {
     List<CategoryJson> findAllCategoriesByUsername(String username);
 
     List<CategoryJson> findAllCategories();
+
+    CategoryJson updateCategory(CategoryJson categoryJson);
 
     void removeCategory(CategoryJson categoryJson);
 

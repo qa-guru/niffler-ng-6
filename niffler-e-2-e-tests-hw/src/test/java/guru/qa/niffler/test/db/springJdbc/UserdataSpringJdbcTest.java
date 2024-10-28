@@ -54,7 +54,7 @@ class UserdataSpringJdbcTest {
     void shouldSendInvitationTest() {
         var requester = userdataClient.create(generateUser());
         var addressee = userdataClient.create(generateUser());
-        userdataClient.sendInvitation(requester, addressee, FriendshipStatus.PENDING);
+        userdataClient.sendInvitation(requester, addressee);
     }
 
     @Test

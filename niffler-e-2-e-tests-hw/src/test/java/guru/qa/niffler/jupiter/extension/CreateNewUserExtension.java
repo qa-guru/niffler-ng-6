@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
@@ -27,18 +27,18 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
     public void beforeEach(ExtensionContext context) {
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) && parameter.getType().isAssignableFrom(UserModel.class))
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) && parameter.getType().isAssignableFrom(UserJson.class))
                 .forEach(parameter -> {
 
                     var parameterName = parameter.getName();
                     var parameterAnno = parameter.getAnnotation(CreateNewUser.class);
-                    UserModel user = usersClient.createUser(
+                    UserJson user = usersClient.createUser(
                             userMapper.updateFromAnno(
                                     UserUtils.generateUser(),
                                     parameterAnno));
 
                     @SuppressWarnings("unchecked")
-                    Map<String, UserModel> usersMap = ((Map<String, UserModel>) context.getStore(NAMESPACE)
+                    Map<String, UserJson> usersMap = ((Map<String, UserJson>) context.getStore(NAMESPACE)
                             .getOrComputeIfAbsent(context.getUniqueId(), map -> new HashMap<>()));
                     usersMap.put(parameterName, user);
 
@@ -53,17 +53,17 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
-                        && parameter.getType().isAssignableFrom(UserModel.class))
+                        && parameter.getType().isAssignableFrom(UserJson.class))
                 .forEach(
                         parameter -> {
                             var parameterName = parameter.getName();
 
                             @SuppressWarnings("unchecked")
-                            Map<String, UserModel> usersMap = (Map<String, UserModel>) context
+                            Map<String, UserJson> usersMap = (Map<String, UserJson>) context
                                     .getStore(CreateNewUserExtension.NAMESPACE)
                                     .get(context.getUniqueId());
 
-                            UserModel user = usersMap.get(parameterName);
+                            UserJson user = usersMap.get(parameterName);
 
                             spendClient.findAllByUsername(user.getUsername()).forEach(spendClient::remove);
                             spendClient.findAllCategoriesByUsername(user.getUsername()).forEach(spendClient::removeCategory);
@@ -76,13 +76,13 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(UserModel.class);
+        return parameterContext.getParameter().getType().isAssignableFrom(UserJson.class);
     }
 
     @Override
-    public UserModel resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public UserJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         @SuppressWarnings("unchecked")
-        Map<String, UserModel> usersMap = (Map<String, UserModel>) extensionContext.getStore(NAMESPACE)
+        Map<String, UserJson> usersMap = (Map<String, UserJson>) extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class);
         return usersMap.get(parameterContext.getParameter().getName());
     }

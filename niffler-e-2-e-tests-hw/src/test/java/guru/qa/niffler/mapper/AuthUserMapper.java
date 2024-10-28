@@ -4,11 +4,12 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
+import lombok.NonNull;
 
 public class AuthUserMapper {
 
-    public AuthUserEntity toEntity(AuthUserJson authUserJson) {
+    public AuthUserEntity toEntity(@NonNull AuthUserJson authUserJson) {
         var authUser = AuthUserEntity.builder()
                 .id(authUserJson.getId())
                 .username(authUserJson.getUsername())
@@ -45,8 +46,8 @@ public class AuthUserMapper {
                 .build();
     }
 
-    public UserModel updateFromAnno(UserModel user, CreateNewUser anno) {
-        return UserModel.builder()
+    public UserJson updateFromAnno(UserJson user, CreateNewUser anno) {
+        return UserJson.builder()
                 .id(user.getId())
                 .username(
                         anno.username().isEmpty()

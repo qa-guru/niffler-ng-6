@@ -55,7 +55,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
                 .setParameter("username", username)
                 .setParameter("description", description)
                 .getResultList();
-        return spends.isEmpty() ? Optional.empty() : Optional.of(spends.getFirst());
+        return Optional.ofNullable(spends.getFirst());
 
     }
 

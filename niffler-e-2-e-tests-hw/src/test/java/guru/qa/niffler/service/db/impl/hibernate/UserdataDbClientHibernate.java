@@ -6,8 +6,9 @@ import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -25,15 +26,15 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     private final UserdataUserRepository userRepository = new UserdataUserRepositoryHibernate();
 
     @Override
-    public UserModel create(UserModel userModel) {
-        log.info("Creating new user by DTO: {}", userModel);
+    public UserJson create(@NonNull UserJson userJson) {
+        log.info("Creating new user by DTO: {}", userJson);
         return xaTxTemplate.execute(() ->
                 userMapper.toDto(
-                        userRepository.create(userMapper.toEntity(userModel))));
+                        userRepository.create(userMapper.toEntity(userJson))));
     }
 
     @Override
-    public Optional<UserModel> findById(UUID id) {
+    public Optional<UserJson> findById(@NonNull UUID id) {
         log.info("Get user by id = [{}]", id);
         return xaTxTemplate.execute(() ->
                 userRepository
@@ -42,7 +43,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserModel> findByUsername(String username) {
+    public Optional<UserJson> findByUsername(@NonNull String username) {
         log.info("Get user by username = [{}]", username);
         return xaTxTemplate.execute(() ->
                 userRepository
@@ -52,7 +53,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public List<UserModel> findAll() {
+    public List<UserJson> findAll() {
         log.info("Get all users");
         return xaTxTemplate.execute(() ->
                 userRepository
@@ -63,21 +64,21 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(UserModel requester, UserModel addressee, FriendshipStatus status) {
+    public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
         log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
 
                     userRepository.sendInvitation(
                             userMapper.toEntity(requester),
                             userMapper.toEntity(addressee),
-                            status);
+                            FriendshipStatus.PENDING);
                     return null;
                 }
         );
     }
 
     @Override
-    public void addFriend(UserModel requester, UserModel addressee) {
+    public void addFriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
         log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.addFriend(
@@ -89,7 +90,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void remove(UserModel user) {
+    public void remove(@NonNull UserJson user) {
         log.info("Remove user by id: {}", user);
         xaTxTemplate.execute(() -> {
                     userRepository.remove(userMapper.toEntity(user));

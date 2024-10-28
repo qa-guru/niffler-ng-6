@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 
 public class SelenideCondition {
 
-    public static WebElementCondition child(By childSelector, WebElementCondition condition) {
+    public static WebElementCondition child(@NonNull By childSelector, @NonNull WebElementCondition condition) {
         return new WebElementCondition("child " + childSelector + " with " + condition.getName()) {
             @NonNull
             @Override

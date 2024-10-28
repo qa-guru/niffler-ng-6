@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
+import lombok.NonNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
 
-    public UserEntity create(UserEntity user) {
+    public UserEntity create(@NonNull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, currency, firstname, surname, photo, photo_small, full_name) " +
@@ -50,7 +51,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
+    public Optional<UserEntity> findById(@NonNull UUID id) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE id = ?"
@@ -72,7 +73,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public Optional<UserEntity> findByUsername(@NonNull String username) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE username = ?"
@@ -117,7 +118,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public UserEntity update(UserEntity user) {
+    public UserEntity update(@NonNull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ?, full_name = ? WHERE id = ?"
@@ -149,7 +150,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
+    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee, @NonNull FriendshipStatus status) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
         )) {
@@ -165,7 +166,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void addFriend(UserEntity requester, UserEntity addressee) {
+    public void addFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
         )) {
@@ -193,7 +194,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void remove(UserEntity user) {
+    public void remove(@NonNull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"

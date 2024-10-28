@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GitHubApiClient {
+public class GitHubApiClientRetrofit {
 
     private static final String GITHUB_TOKEN = System.getenv("GITHUB_TOKEN");
     private static final String GITHUB_TOKEN_NAME = System.getenv("GITHUB_TOKEN_NAME") != null

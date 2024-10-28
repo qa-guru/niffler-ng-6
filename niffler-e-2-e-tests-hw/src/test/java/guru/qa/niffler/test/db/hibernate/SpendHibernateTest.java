@@ -2,7 +2,7 @@ package guru.qa.niffler.test.db.hibernate;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.hibernate.SpendDbClientHibernate;
 import guru.qa.niffler.utils.CategoryUtils;
@@ -20,7 +20,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldCreateNewSpendTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         var category = spendClient.createCategory(CategoryUtils.generateForUser(user.getUsername()));
         assertNotNull(spendClient
@@ -30,7 +30,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetSpendByIdTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         var category = spendClient.createCategory(CategoryUtils.generateForUser(user.getUsername()));
         var spend = spendClient.create(SpendUtils.generateForUser(user.getUsername()).setCategory(category));
@@ -40,7 +40,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetFirstSpendByUsernameAndDescriptionTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         var category = spendClient.createCategory(CategoryUtils.generateForUser(user.getUsername()));
         var spend = spendClient.create(SpendUtils.generateForUser(user.getUsername()).setCategory(category));
@@ -51,8 +51,8 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetSpendsByUsernameAndDescriptionTest(
-            @CreateNewUser UserModel user1,
-            @CreateNewUser UserModel user2
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
     ) {
         String spendDesc = new Faker().lorem().characters(5, 20);
 
@@ -87,8 +87,8 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetAllSpendingsByUsernameTest(
-            @CreateNewUser UserModel user1,
-            @CreateNewUser UserModel user2
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
     ) {
 
         String spendName = new Faker().lorem().characters(5, 20);
@@ -119,8 +119,8 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetAllSpendingsTest(
-            @CreateNewUser UserModel user1,
-            @CreateNewUser UserModel user2
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
     ) {
         var spend1 = spendClient.create(SpendUtils.generateForUser(user1.getUsername()));
         var spend2 = spendClient.create(SpendUtils.generateForUser(user2.getUsername()));
@@ -133,7 +133,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldRemoveSpendTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
 
         var spend = spendClient.create(SpendUtils.generateForUser(user.getUsername()));
@@ -145,7 +145,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldCreateNewCategoryTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         assertNotNull(spendClient
                 .createCategory(CategoryUtils.generateForUser(user.getUsername()))
@@ -154,7 +154,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetCategoryByIdTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         var category = spendClient.createCategory(
                 CategoryUtils.generateForUser(user.getUsername()));
@@ -165,7 +165,7 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetCategoryByUsernameAndNameTest(
-            @CreateNewUser UserModel user
+            @CreateNewUser UserJson user
     ) {
         var category = spendClient.createCategory(
                 CategoryUtils.generateForUser(user.getUsername()));
@@ -176,8 +176,8 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetAllCategoriesByUsernameTest(
-            @CreateNewUser UserModel user1,
-            @CreateNewUser UserModel user2
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
     ) {
         var category1User1 = spendClient.createCategory(
                 CategoryUtils.generateForUser(user1.getUsername()));
@@ -195,8 +195,8 @@ class SpendHibernateTest {
 
     @Test
     void shouldGetAllCategories(
-            @CreateNewUser UserModel user1,
-            @CreateNewUser UserModel user2
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
     ) {
         var category1 = spendClient.createCategory(CategoryUtils.generateForUser(user1.getUsername()));
         var category2 = spendClient.createCategory(CategoryUtils.generateForUser(user2.getUsername()));
@@ -208,7 +208,7 @@ class SpendHibernateTest {
     }
 
     @Test
-    void shouldRemoveCategoryTest(@CreateNewUser UserModel user) {
+    void shouldRemoveCategoryTest(@CreateNewUser UserJson user) {
         var category = spendClient.createCategory(CategoryUtils.generateForUser(user.getUsername()));
         spendClient.removeCategory(category);
         assertTrue(spendClient.findAllCategoriesByUsername(user.getUsername()).isEmpty());

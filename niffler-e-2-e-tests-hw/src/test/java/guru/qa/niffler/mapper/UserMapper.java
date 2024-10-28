@@ -4,44 +4,45 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
+import lombok.NonNull;
 
 import java.nio.charset.StandardCharsets;
 
 public class UserMapper {
 
-    public UserEntity toEntity(UserModel userModel) {
+    public UserEntity toEntity(@NonNull UserJson userJson) {
         return UserEntity.builder()
-                .id(userModel.getId())
-                .username(userModel.getUsername())
-                .currency(userModel.getCurrency())
-                .firstName(userModel.getFirstName())
-                .surname(userModel.getSurname())
-                .photo(userModel.getPhoto() != null
-                        ? userModel.getPhoto().getBytes(StandardCharsets.UTF_8)
+                .id(userJson.getId())
+                .username(userJson.getUsername())
+                .currency(userJson.getCurrency())
+                .firstName(userJson.getFirstName())
+                .surname(userJson.getSurname())
+                .photo(userJson.getPhoto() != null
+                        ? userJson.getPhoto().getBytes(StandardCharsets.UTF_8)
                         : null
                 )
-                .photoSmall(userModel.getPhotoSmall() != null
-                        ? userModel.getPhotoSmall().getBytes(StandardCharsets.UTF_8)
+                .photoSmall(userJson.getPhotoSmall() != null
+                        ? userJson.getPhotoSmall().getBytes(StandardCharsets.UTF_8)
                         : null)
-                .fullName(userModel.getFullName())
+                .fullName(userJson.getFullName())
                 .build();
     }
 
-    public AuthUserJson toAuthDto(UserModel userModel) {
+    public AuthUserJson toAuthDto(@NonNull UserJson userJson) {
         return AuthUserJson.builder()
-                .id(userModel.getId())
-                .username(userModel.getUsername())
+                .id(userJson.getId())
+                .username(userJson.getUsername())
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .enabled(true)
-                .password(userModel.getPassword())
+                .password(userJson.getPassword())
                 .build();
     }
 
-    public UserModel toDto(UserEntity userEntity) {
-        return UserModel.builder()
+    public UserJson toDto(@NonNull UserEntity userEntity) {
+        return UserJson.builder()
                 .id(userEntity.getId())
                 .username(userEntity.getUsername())
                 .currency(userEntity.getCurrency())
@@ -59,8 +60,8 @@ public class UserMapper {
                 .build();
     }
 
-    public UserModel updateFromAnno(UserModel user, CreateNewUser anno) {
-        return UserModel.builder()
+    public UserJson updateFromAnno(@NonNull UserJson user, CreateNewUser anno) {
+        return UserJson.builder()
                 .id(user.getId())
                 .username(
                         anno.username().isEmpty()

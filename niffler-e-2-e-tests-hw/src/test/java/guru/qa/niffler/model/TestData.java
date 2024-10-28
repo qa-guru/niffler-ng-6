@@ -5,40 +5,22 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@ToString
-public class UserModel {
-
-    private UUID id;
-
-    private String username;
-
-    private String password;
-
-    private String passwordConfirmation;
-
-    private CurrencyValues currency;
-
-    private String firstName;
-
-    private String surname;
-
-    private String photo;
-
-    private String photoSmall;
-
-    private String fullName;
+public class TestData {
 
     @Builder.Default
     private List<CategoryJson> categories = new ArrayList<>();
 
     @Builder.Default
     private List<SpendJson> spendings = new ArrayList<>();
+
+    private Integer invitations;
+
+    private Integer friends;
 
 }

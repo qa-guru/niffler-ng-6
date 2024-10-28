@@ -4,19 +4,17 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.helper.EnumHelper;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserModel;
-
-import java.util.Collections;
+import guru.qa.niffler.model.UserJson;
 
 public class UserUtils {
 
     private static final Faker FAKE = new Faker();
 
-    public static UserModel generateUser() {
+    public static UserJson generateUser() {
         var password = generatePassword();
         var firstName = FAKE.name().firstName();
         var surname = FAKE.name().lastName();
-        return UserModel.builder()
+        return UserJson.builder()
                 .username(generateUsername())
                 .password(password)
                 .passwordConfirmation(password)
@@ -26,8 +24,6 @@ public class UserUtils {
                 .photo(null)
                 .photoSmall(null)
                 .fullName(firstName + " " + surname)
-                .categories(Collections.emptyList())
-                .spendings(Collections.emptyList())
                 .build();
 
     }

@@ -6,8 +6,9 @@ import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -29,16 +30,16 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
 
     @Override
-    public UserModel create(UserModel userModel) {
-        log.info("Creating new user by DTO: {}", userModel);
+    public UserJson create(@NonNull UserJson userJson) {
+        log.info("Creating new user by DTO: {}", userJson);
         return txTemplate.execute(status ->
                 userMapper.toDto(
                         userdataUserDao.create(
-                                userMapper.toEntity(userModel))));
+                                userMapper.toEntity(userJson))));
     }
 
     @Override
-    public Optional<UserModel> findById(UUID id) {
+    public Optional<UserJson> findById(@NonNull UUID id) {
         log.info("Get user by id = [{}]", id);
         return txTemplate.execute(status ->
                 userdataUserDao
@@ -47,7 +48,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserModel> findByUsername(String username) {
+    public Optional<UserJson> findByUsername(@NonNull String username) {
         log.info("Get user by username = [{}]", username);
         return txTemplate.execute(status ->
                 userdataUserDao
@@ -56,7 +57,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public List<UserModel> findAll() {
+    public List<UserJson> findAll() {
         log.info("Get all users");
         return txTemplate.execute(status ->
                 userdataUserDao
@@ -66,19 +67,19 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(UserModel requester, UserModel addressee, FriendshipStatus friendshipStatus) {
-        log.info("Send invitation from = [{}] to = [{}]", requester.getUsername(), addressee.getUsername());
+    public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+        log.info("Send invitation from = [{}] to = [{}]", requester.getUsername());
         txTemplate.execute(status -> {
             userdataUserDao.sendInvitation(
                     userMapper.toEntity(requester),
                     userMapper.toEntity(addressee),
-                    friendshipStatus);
+                    FriendshipStatus.PENDING);
             return null;
         });
     }
 
     @Override
-    public void addFriend(UserModel requester, UserModel addressee) {
+    public void addFriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
         log.info("Make friends [{}] and [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataUserDao.addFriend(
@@ -89,11 +90,11 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void remove(UserModel userModel) {
-        log.info("Remove user: {}", userModel);
+    public void remove(@NonNull UserJson userJson) {
+        log.info("Remove user: {}", userJson);
         txTemplate.execute(status -> {
             new UserdataUserDaoSpringJdbc()
-                    .remove(userMapper.toEntity(userModel));
+                    .remove(userMapper.toEntity(userJson));
             return null;
         });
     }

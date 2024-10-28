@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.rowMapper.AuthAuthorityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import lombok.NonNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +21,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
 
     @Override
-    public void create(AuthAuthorityEntity... authority) {
+    public void create(@NonNull AuthAuthorityEntity... authority) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.batchUpdate(
@@ -42,7 +43,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public Optional<AuthAuthorityEntity> findById(UUID id) {
+    public Optional<AuthAuthorityEntity> findById(@NonNull UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -58,7 +59,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public List<AuthAuthorityEntity> findByUserId(UUID userId) {
+    public List<AuthAuthorityEntity> findByUserId(@NonNull UUID userId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"authority\" WHERE user_id = ?",
@@ -77,7 +78,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void update(AuthAuthorityEntity... authority) {
+    public void update(@NonNull AuthAuthorityEntity... authority) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.batchUpdate(
@@ -100,7 +101,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void remove(AuthAuthorityEntity... authority) {
+    public void remove(@NonNull AuthAuthorityEntity... authority) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.batchUpdate(
                 "DELETE FROM \"authority\" WHERE id = ?",

@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
 
     @Override
-    public void create(AuthAuthorityEntity... authority) {
+    public void create(@NonNull AuthAuthorityEntity... authority) {
 
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)")) {
@@ -41,7 +42,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public Optional<AuthAuthorityEntity> findById(UUID id) {
+    public Optional<AuthAuthorityEntity> findById(@NonNull UUID id) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"authority\" WHERE id = ?"
         )) {
@@ -60,7 +61,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public List<AuthAuthorityEntity> findByUserId(UUID userId) {
+    public List<AuthAuthorityEntity> findByUserId(@NonNull UUID userId) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"authority\" WHERE user_id = ?"
         )) {
@@ -97,7 +98,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void update(AuthAuthorityEntity... authority) {
+    public void update(@NonNull AuthAuthorityEntity... authority) {
 
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"authority\" SET user_id = ?, authority = ? WHERE id = ?")) {
@@ -116,7 +117,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void remove(AuthAuthorityEntity... authority) {
+    public void remove(@NonNull AuthAuthorityEntity... authority) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"authority\" WHERE id = ?"
         )) {

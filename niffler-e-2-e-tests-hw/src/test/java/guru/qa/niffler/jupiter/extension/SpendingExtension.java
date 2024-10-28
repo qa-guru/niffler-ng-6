@@ -3,10 +3,10 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.CategoryDaoSpringJdbc;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
 import guru.qa.niffler.utils.SpendUtils;
@@ -22,6 +22,7 @@ import java.util.Map;
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
+    private static final SpendMapper spendMapper = new SpendMapper();
     private final CategoryDao categoryDbClient = new CategoryDaoSpringJdbc();
     private final SpendClient spendClient = new SpendDbClientSpringJdbc();
 
@@ -30,7 +31,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
-                        && parameter.getType().isAssignableFrom(UserModel.class))
+                        && parameter.getType().isAssignableFrom(UserJson.class))
                 .forEach(
                         parameter -> {
 
@@ -40,36 +41,29 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                             if (userAnno.spendings().length > 0) {
 
                                 @SuppressWarnings("unchecked")
-                                Map<String, UserModel> usersMap = (Map<String, UserModel>) context
+                                Map<String, UserJson> usersMap = (Map<String, UserJson>) context
                                         .getStore(CreateNewUserExtension.NAMESPACE)
                                         .get(context.getUniqueId());
-                                UserModel user = usersMap.get(parameterName);
+                                UserJson user = usersMap.get(parameterName);
 
-                                Spending spendAnno = userAnno.spendings()[0];
                                 List<SpendJson> spendings = new ArrayList<>();
-
-                                SpendJson spend = new SpendMapper()
-                                        .updateFromAnno(
-                                                SpendUtils.generateForUser(user.getUsername()),
-                                                spendAnno
-                                        );
-
-                                // for db creation
-                                var category = spend.getCategory();
-                                category = spendClient
-                                        .findCategoryByUsernameAndName(user.getUsername(), category.getName())
-                                        .orElse(spendClient.createCategory(category));
-                                spend.setCategory(category);
-                                // end for db creation
-
-                                spendings.add(spendClient.create(spend));
+                                Arrays.stream(userAnno.spendings())
+                                        .forEach(spendAnno -> {
+                                            spendings.add(
+                                                    spendClient.create(
+                                                            spendMapper.updateFromAnno(
+                                                                    SpendUtils.generateForUser(user.getUsername()),
+                                                                    spendAnno
+                                                            )
+                                                    ));
+                                        });
 
                                 context.getStore(NAMESPACE).put(
                                         context.getUniqueId(),
-                                        usersMap.put(parameterName, user.setSpendings(spendings))
+                                        usersMap.put(parameterName, user.setTestData(new TestData().setSpendings(spendings)))
                                 );
 
-                                log.info("Created new spendings for user = [{}]: {}", user.getUsername(), user.getSpendings());
+                                log.info("Created new spendings for user = [{}]: {}", user.getUsername(), user.getTestData().getSpendings());
                             }
 
                         }

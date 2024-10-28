@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class SpendingWebTests {
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
 
     @Test
-    void canCreateSpendingTest(@CreateNewUser UserModel user) {
+    void canCreateSpendingTest(@CreateNewUser UserJson user) {
 
         var spend = SpendUtils.generate();
 
@@ -36,13 +36,13 @@ class SpendingWebTests {
     }
 
     @Test
-    void canEditSpendingTest(@CreateNewUser(spendings = @Spending) UserModel user) {
+    void canEditSpendingTest(@CreateNewUser(spendings = @Spending) UserJson user) {
 
         var newSpend = SpendUtils.generate();
 
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
-                .openEditSpendingPage(user.getSpendings().getFirst())
+                .openEditSpendingPage(user.getTestData().getSpendings().getFirst())
                 .editSpending(newSpend)
                 .openEditSpendingPage(newSpend)
                 .shouldHaveData(newSpend);
@@ -51,8 +51,8 @@ class SpendingWebTests {
 
     @Test
     @Spending
-    void canCreateNewSpendingWithExistsDescriptionTest(@CreateNewUser(spendings = @Spending) UserModel user) {
-        var spend = user.getSpendings().getFirst();
+    void canCreateNewSpendingWithExistsDescriptionTest(@CreateNewUser(spendings = @Spending) UserJson user) {
+        var spend = user.getTestData().getSpendings().getFirst();
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)

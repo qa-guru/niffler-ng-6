@@ -8,7 +8,7 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.page.auth.LoginPage;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ProfileWebTests {
     final ProfilePage profile = new ProfilePage();
 
     @Test
-    void canAddNameTest(@CreateNewUser UserModel user) {
+    void canAddNameTest(@CreateNewUser UserJson user) {
 
         var name = FAKE.name().fullName();
 
@@ -46,7 +46,7 @@ class ProfileWebTests {
     }
 
     @Test
-    void canUploadAvatarTest(@CreateNewUser UserModel user) {
+    void canUploadAvatarTest(@CreateNewUser UserJson user) {
 
         var file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("img/cat.jpeg")).getFile());
 
@@ -64,7 +64,7 @@ class ProfileWebTests {
     }
 
     @Test
-    void canCreateNewCategoryTest(@CreateNewUser UserModel user) {
+    void canCreateNewCategoryTest(@CreateNewUser UserJson user) {
 
         var categoryName = FAKE.company().industry();
 
@@ -81,9 +81,9 @@ class ProfileWebTests {
     }
 
     @Test
-    void canNotCreateCategoryWithExistsNameTest(@CreateNewUser(categories = @Category) UserModel user) {
+    void canNotCreateCategoryWithExistsNameTest(@CreateNewUser(categories = @Category) UserJson user) {
 
-        var categoryName = user.getCategories().getFirst().getName();
+        var categoryName = user.getTestData().getCategories().getFirst().getName();
 
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
@@ -96,7 +96,7 @@ class ProfileWebTests {
     }
 
     @Test
-    void canEditCategoryNameTest(@CreateNewUser(categories = @Category) UserModel user) {
+    void canEditCategoryNameTest(@CreateNewUser(categories = @Category) UserJson user) {
 
         var newCategoryName = FAKE.company().industry();
 
@@ -105,7 +105,7 @@ class ProfileWebTests {
                 .getHeader()
                 .openUserMenu()
                 .goToProfilePage()
-                .editCategoryName(user.getCategories().getFirst().getName(), newCategoryName);
+                .editCategoryName(user.getTestData().getCategories().getFirst().getName(), newCategoryName);
 
         Selenide.refresh();
         profile.shouldCategoryExists(newCategoryName);
@@ -113,9 +113,9 @@ class ProfileWebTests {
     }
 
     @Test
-    void canSetCategoryArchivedTest(@CreateNewUser(categories = @Category) UserModel user) {
+    void canSetCategoryArchivedTest(@CreateNewUser(categories = @Category) UserJson user) {
 
-        var categoryName = user.getCategories().getFirst().getName();
+        var categoryName = user.getTestData().getCategories().getFirst().getName();
 
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
@@ -131,9 +131,9 @@ class ProfileWebTests {
     }
 
     @Test
-    void canSetCategoryUnarchivedTest(@CreateNewUser(categories = @Category(isArchived = true)) UserModel user) {
+    void canSetCategoryUnarchivedTest(@CreateNewUser(categories = @Category(isArchived = true)) UserJson user) {
 
-        var categoryName = user.getCategories().getFirst().getName();
+        var categoryName = user.getTestData().getCategories().getFirst().getName();
 
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())

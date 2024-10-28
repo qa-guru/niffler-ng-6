@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.rowMapper.AuthUserRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import lombok.NonNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,7 +23,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
 
     @Override
-    public AuthUserEntity create(AuthUserEntity user) {
+    public AuthUserEntity create(@NonNull AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -49,7 +50,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public Optional<AuthUserEntity> findById(@NonNull UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -66,7 +67,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public Optional<AuthUserEntity> findByUsername(@NonNull String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -92,7 +93,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity user) {
+    public AuthUserEntity update(@NonNull AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -112,7 +113,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     }
 
     @Override
-    public void remove(AuthUserEntity user) {
+    public void remove(@NonNull AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"user\" WHERE id = ?",

@@ -13,11 +13,13 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class CategoryApiClient {
+public class CategoryApiClientRetrofit {
 
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Config.getInstance().spendUrl())
@@ -31,7 +33,7 @@ public class CategoryApiClient {
 
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
-    public CategoryJson createCategory(@NonNull CategoryJson category) {
+    public CategoryJson create(@NonNull CategoryJson category) {
 
         log.info("Create new category: {}", category);
         final Response<CategoryJson> response;
@@ -45,7 +47,18 @@ public class CategoryApiClient {
         return response.body();
     }
 
-    public List<CategoryJson> getAllCategories(@NonNull String username, boolean excludeArchived) {
+    public Optional<CategoryJson> findById(@NonNull UUID id) {
+        throw new UnsupportedOperationException("Find category by id not supported for Api client");
+    }
+
+    public Optional<CategoryJson> findByUsernameAndName(@NonNull String username, @NonNull String name) {
+        return Optional.ofNullable(
+                findAllByUsername(username, false).stream()
+                        .filter(category -> category.getName().equals(name))
+                        .toList().getFirst());
+    }
+
+    public List<CategoryJson> findAllByUsername(@NonNull String username, boolean excludeArchived) {
         log.info("Get all categories of user: [{}]", username);
         final Response<List<CategoryJson>> response;
         try {
@@ -58,7 +71,7 @@ public class CategoryApiClient {
         return response.body();
     }
 
-    public CategoryJson updateCategory(@NonNull CategoryJson category) {
+    public CategoryJson update(@NonNull CategoryJson category) {
         log.info("Update category to: {}", category);
         final Response<CategoryJson> response;
         try {

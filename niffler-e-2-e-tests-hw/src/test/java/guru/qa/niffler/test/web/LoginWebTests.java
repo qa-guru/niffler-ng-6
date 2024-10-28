@@ -6,7 +6,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +26,14 @@ class LoginWebTests {
     final LoginPage loginPage = new LoginPage();
 
     @Test
-    void shouldLoginWithCorrectCredentialsTest(@CreateNewUser UserModel user) {
+    void shouldLoginWithCorrectCredentialsTest(@CreateNewUser UserJson user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword());
         mainPage.shouldVisiblePageElements();
     }
 
     @Test
-    void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(@CreateNewUser UserModel user) {
+    void shouldDisplayErrorMessageIfPasswordIsIncorrectTest(@CreateNewUser UserJson user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), FAKE.internet().password());
         loginPage.shouldVisibleBadCredentialsError();
@@ -47,7 +47,7 @@ class LoginWebTests {
     }
 
     @Test
-    void canSignOutTest(@CreateNewUser UserModel user) {
+    void canSignOutTest(@CreateNewUser UserJson user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()

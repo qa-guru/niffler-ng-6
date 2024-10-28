@@ -1,7 +1,6 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,18 +8,18 @@ import java.util.UUID;
 
 public interface UserdataClient {
 
-    UserModel create(UserModel userModel);
+    UserJson create(UserJson userJson);
 
-    Optional<UserModel> findById(UUID id);
+    Optional<UserJson> findById(UUID id);
 
-    Optional<UserModel> findByUsername(String username);
+    Optional<UserJson> findByUsername(String username);
 
-    List<UserModel> findAll();
+    List<UserJson> findAll();
 
-    void sendInvitation(UserModel requester, UserModel addressee, FriendshipStatus status);
+    void sendInvitation(UserJson requester, UserJson addressee);
 
-    void addFriend(UserModel requester, UserModel addressee);
+    void addFriend(UserJson requester, UserJson addressee);
 
-    void remove(UserModel userModel);
+    void remove(UserJson userJson);
 
 }

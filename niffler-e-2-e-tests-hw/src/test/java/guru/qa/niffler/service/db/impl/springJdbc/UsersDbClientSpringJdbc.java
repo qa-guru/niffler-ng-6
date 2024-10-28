@@ -13,9 +13,10 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.ex.UserNotFoundException;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserModel;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UsersDbClient;
 import guru.qa.niffler.utils.UserUtils;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -35,11 +36,11 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(AUTH_JDBC_URL, USERDATA_JDBC_URL, SPEND_JDBC_URL);
 
     @Override
-    public UserModel createUser(UserModel userModel) {
+    public UserJson createUser(@NonNull UserJson userJson) {
 
-        log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", userModel);
+        log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", userJson);
 
-        var authUserEntity = authUserMapper.toEntity(userMapper.toAuthDto(userModel));
+        var authUserEntity = authUserMapper.toEntity(userMapper.toAuthDto(userJson));
         authUserEntity.setAuthorities(
                 List.of(AuthAuthorityEntity.builder().authority(Authority.read).user(authUserEntity).build(),
                         AuthAuthorityEntity.builder().authority(Authority.write).user(authUserEntity).build())
@@ -49,14 +50,14 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
             authUserRepository.create(authUserEntity);
             return userMapper.toDto(
                     userdataUserRepository.create(
-                            userMapper.toEntity(userModel)));
+                            userMapper.toEntity(userJson)));
 
         });
 
     }
 
     @Override
-    public void getIncomeInvitationFromNewUsers(UserModel requester, int count) {
+    public void getIncomeInvitationFromNewUsers(@NonNull UserJson requester, int count) {
 
         if (count > 0) {
             UserEntity requesterEntity = userdataUserRepository.findById(
@@ -80,7 +81,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public void sendOutcomeInvitationToNewUsers(UserModel requester, int count) {
+    public void sendOutcomeInvitationToNewUsers(@NonNull UserJson requester, int count) {
 
         if (count > 0) {
             UserEntity requesterEntity = userdataUserRepository.findById(
@@ -103,7 +104,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public void addNewFriends(UserModel requester, int count) {
+    public void addNewFriends(@NonNull UserJson requester, int count) {
 
         if (count > 0) {
             UserEntity requesterEntity = userdataUserRepository.findById(
@@ -125,12 +126,12 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public void removeUser(UserModel userModel) {
-        log.info("Remove user from niffler-auth and niffler-userdata with username = [{}]", userModel.getUsername());
+    public void removeUser(@NonNull UserJson userJson) {
+        log.info("Remove user from niffler-auth and niffler-userdata with username = [{}]", userJson.getUsername());
         xaTxTemplate.execute(() -> {
-            authUserRepository.findByUsername(userModel.getUsername())
+            authUserRepository.findByUsername(userJson.getUsername())
                     .ifPresent(authUserRepository::remove);
-            userdataUserRepository.findByUsername(userModel.getUsername())
+            userdataUserRepository.findByUsername(userJson.getUsername())
                     .ifPresent(userdataUserRepository::remove);
             return null;
         });

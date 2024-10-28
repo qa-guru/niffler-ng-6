@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.rowMapper.UserdataUserRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import lombok.NonNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,7 +24,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
 
     @Override
-    public UserEntity create(UserEntity user) {
+    public UserEntity create(@NonNull UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -51,7 +52,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
+    public Optional<UserEntity> findById(@NonNull UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
@@ -62,7 +63,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public Optional<UserEntity> findByUsername(@NonNull String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -88,7 +89,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public UserEntity update(UserEntity user) {
+    public UserEntity update(@NonNull UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -108,7 +109,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
+    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee, @NonNull FriendshipStatus status) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -123,7 +124,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void addFriend(UserEntity requester, UserEntity addressee) {
+    public void addFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -152,7 +153,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void remove(UserEntity user) {
+    public void remove(@NonNull UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"user\" WHERE id = ?",

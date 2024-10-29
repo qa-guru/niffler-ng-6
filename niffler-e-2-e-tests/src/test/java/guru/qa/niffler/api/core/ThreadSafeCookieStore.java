@@ -7,54 +7,55 @@ import java.net.URI;
 import java.util.List;
 
 public enum ThreadSafeCookieStore implements CookieStore {
-    INSTANCE;
-    private final ThreadLocal<CookieStore> threadSafeCookieStore = ThreadLocal.withInitial(
-            ThreadSafeCookieStore::inMemoryCookieStore
-    );
+  INSTANCE;
 
-    private static CookieStore inMemoryCookieStore() {
-        return new CookieManager().getCookieStore();
-    }
+  private final ThreadLocal<CookieStore> threadSafeCookieStore = ThreadLocal.withInitial(
+      ThreadSafeCookieStore::inMemoryCookieStore
+  );
 
-    @Override
-    public void add(URI uri, HttpCookie cookie) {
-        getStore().add(uri, cookie);
-    }
+  private static CookieStore inMemoryCookieStore() {
+    return new CookieManager().getCookieStore();
+  }
 
-    @Override
-    public List<HttpCookie> get(URI uri) {
-        return getStore().get(uri);
-    }
+  @Override
+  public void add(URI uri, HttpCookie cookie) {
+    getStore().add(uri, cookie);
+  }
 
-    @Override
-    public List<HttpCookie> getCookies() {
-        return getStore().getCookies();
-    }
+  @Override
+  public List<HttpCookie> get(URI uri) {
+    return getStore().get(uri);
+  }
 
-    @Override
-    public List<URI> getURIs() {
-        return getStore().getURIs();
-    }
+  @Override
+  public List<HttpCookie> getCookies() {
+    return getStore().getCookies();
+  }
 
-    @Override
-    public boolean remove(URI uri, HttpCookie cookie) {
-        return getStore().remove(uri, cookie);
-    }
+  @Override
+  public List<URI> getURIs() {
+    return getStore().getURIs();
+  }
 
-    @Override
-    public boolean removeAll() {
-        return getStore().removeAll();
-    }
+  @Override
+  public boolean remove(URI uri, HttpCookie cookie) {
+    return getStore().remove(uri, cookie);
+  }
 
-    private CookieStore getStore() {
-        return threadSafeCookieStore.get();
-    }
+  @Override
+  public boolean removeAll() {
+    return getStore().removeAll();
+  }
 
-    public String cookieValue(String cookieName) {
-        return getCookies().stream()
-                .filter(c -> c.getName().equals(cookieName))
-                .map(HttpCookie::getValue)
-                .findFirst()
-                .orElseThrow();
-    }
+  private CookieStore getStore() {
+    return threadSafeCookieStore.get();
+  }
+
+  public String cookieValue(String cookieName) {
+    return getCookies().stream()
+        .filter(c -> c.getName().equals(cookieName))
+        .map(HttpCookie::getValue)
+        .findFirst()
+        .orElseThrow();
+  }
 }

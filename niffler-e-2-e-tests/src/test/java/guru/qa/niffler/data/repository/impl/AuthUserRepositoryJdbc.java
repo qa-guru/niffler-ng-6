@@ -8,41 +8,47 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
-    private final AuthUserDao authUserDao = new AuthUserDaoJdbc();
-    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoJdbc();
+  private final AuthUserDao authUserDao = new AuthUserDaoJdbc();
+  private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoJdbc();
 
-    @Override
-    public AuthUserEntity create(AuthUserEntity user) {
-        authUserDao.create(user);
-        authAuthorityDao.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
-        return user;
-    }
+  @Nonnull
+  @Override
+  public AuthUserEntity create(AuthUserEntity user) {
+    authUserDao.create(user);
+    authAuthorityDao.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
+    return user;
+  }
 
-    @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
-        Optional<AuthUserEntity> userEntity = authUserDao.findById(id);
-        userEntity
-                .ifPresent(authUserEntity ->
-                        authUserEntity.addAuthorities(
-                                authAuthorityDao.findAllByUserId(authUserEntity.getId()).toArray(new AuthorityEntity[0])
-                        )
-                );
-        return userEntity;
-    }
-
-    @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
-        Optional<AuthUserEntity> userEntity = authUserDao.findByUsername(username);
-        userEntity.ifPresent(authUserEntity ->
-                authUserEntity.addAuthorities(
-                        authAuthorityDao.findAllByUserId(authUserEntity.getId()).toArray(new AuthorityEntity[0])
-                )
+  @Nonnull
+  @Override
+  public Optional<AuthUserEntity> findById(UUID id) {
+    Optional<AuthUserEntity> userEntity = authUserDao.findById(id);
+    userEntity
+        .ifPresent(authUserEntity ->
+            authUserEntity.addAuthorities(
+                authAuthorityDao.findAllByUserId(authUserEntity.getId()).toArray(new AuthorityEntity[0])
+            )
         );
-        return userEntity;
-    }
+    return userEntity;
+  }
+
+  @Nonnull
+  @Override
+  public Optional<AuthUserEntity> findByUsername(String username) {
+    Optional<AuthUserEntity> userEntity = authUserDao.findByUsername(username);
+    userEntity.ifPresent(authUserEntity ->
+        authUserEntity.addAuthorities(
+            authAuthorityDao.findAllByUserId(authUserEntity.getId()).toArray(new AuthorityEntity[0])
+        )
+    );
+    return userEntity;
+  }
 }

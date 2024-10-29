@@ -1,30 +1,42 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.Nonnull;
+
 public interface Config {
 
-    static Config getInstance() {
-        return "docker".equals(System.getProperty("test.env"))
-                ? DockerConfig.INSTANCE
-                : LocalConfig.INSTANCE;
-    }
+  static @Nonnull Config getInstance() {
+    return "docker".equals(System.getProperty("test.env"))
+        ? DockerConfig.INSTANCE
+        : LocalConfig.INSTANCE;
+  }
 
-    String frontUrl();
+  @Nonnull
+  String frontUrl();
 
-    String spendUrl();
+  @Nonnull
+  String authUrl();
 
-    String ghUrl();
+  @Nonnull
+  String authJdbcUrl();
 
-    String authUrl();
+  @Nonnull
+  String gatewayUrl();
 
-    String gatewayUrl();
+  @Nonnull
+  String userdataUrl();
 
-    String userdataUrl();
+  @Nonnull
+  String userdataJdbcUrl();
 
-    String authJdbcUrl();
+  @Nonnull
+  String spendUrl();
 
-    String userdataJdbcUrl();
+  @Nonnull
+  String spendJdbcUrl();
 
-    String spendJdbcUrl();
+  @Nonnull
+  String currencyJdbcUrl();
 
-    String currencyJdbcUrl();
+  @Nonnull
+  String ghUrl();
 }

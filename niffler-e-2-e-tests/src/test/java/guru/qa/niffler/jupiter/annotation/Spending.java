@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.annotation;
 
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.rest.CurrencyValues;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Spending {
-    String category() default "";
+  String category() default "";
 
-    String description();
+  String description();
 
-    double amount();
+  double amount();
 
-    CurrencyValues currency() default CurrencyValues.RUB;
+  CurrencyValues currency() default CurrencyValues.RUB;
 }

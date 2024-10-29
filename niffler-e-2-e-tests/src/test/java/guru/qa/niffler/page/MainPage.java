@@ -1,88 +1,41 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
-import lombok.Getter;
-import org.openqa.selenium.Keys;
+
+import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
 
-public class MainPage {
-    private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
-    private final SelenideElement statisticsHeader = $x("//h2[text()='Statistics']");
-    private final SelenideElement historyHeader = $x("//h2[text()='History of Spendings']");
-    private final SelenideElement menuButton = $("[aria-label=Menu]");
-    private final SelenideElement profileButton = $x("//a[@href='/profile']");
-    private final SelenideElement friendButton = $x("(//a[@class='link nav-link'])[2]");
-    private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
-    private final SelenideElement statComponent = $("#stat");
-    private final SelenideElement spendingTable = $("#spendings");
-    private final SelenideElement searchInput = $("input[type='text']");
-    @Getter
-    private final Header header = new Header();
+public class MainPage extends BasePage<MainPage> {
 
-    @Step("Отредактировать трату {spendingDescription}")
-    public EditSpendingPage editSpending(String spendingDescription) {
-        tableRows.find(text(spendingDescription)).$$("td").get(5).click();
-        return new EditSpendingPage();
-    }
+  public static final String URL = CFG.frontUrl() + "main";
 
-    @Step("Проверка наличия траты {spendingDescription}")
-    public void checkThatTableContainsSpending(String spendingDescription) {
-        searchSpend(spendingDescription);
-        tableRows.find(text(spendingDescription)).shouldBe(visible);
-    }
+  protected final Header header = new Header();
+  protected final SpendingTable spendingTable = new SpendingTable();
+  protected final StatComponent statComponent = new StatComponent();
 
-    @Step("Проверка текста статистики {value}")
-    public MainPage shouldStatisticsHeader(String value) {
-        statisticsHeader.shouldHave(text(value));
-        return this;
-    }
+  @Nonnull
+  public Header getHeader() {
+    return header;
+  }
 
-    @Step("Проверка заголовка истории {value}")
-    public MainPage shouldHistoryHeader(String value) {
-        historyHeader.shouldHave(text(value));
-        return this;
-    }
+  @Nonnull
+  public SpendingTable getSpendingTable() {
+    spendingTable.getSelf().scrollIntoView(true);
+    return spendingTable;
+  }
 
-    @Step("Нажать на кнопку Профиль")
-    public MainPage clickProfileButton() {
-        menuButton.click();
-        profileButton.click();
-        return this;
-    }
-
-    @Step("Нажать на кнопку Друзья")
-    public MainPage clickFriendButton() {
-        menuButton.click();
-        friendButton.click();
-        return this;
-    }
-
-    @Step("Нажать на кнопку Все люди")
-    public MainPage clickAllPeopleButton() {
-        menuButton.click();
-        allPeopleButton.click();
-        return this;
-    }
-
-    @Step("Проверка загрузки страницы")
-    public MainPage checkThatPageLoaded() {
-        statComponent.should(visible).shouldHave(text("Statistics"));
-        spendingTable.should(visible).shouldHave(text("History of Spendings"));
-        return this;
-    }
-
-    @Step("Найти трату: {spendingName}")
-    public MainPage searchSpend(String spendingName) {
-        searchInput.sendKeys(spendingName);
-        searchInput.sendKeys(Keys.ENTER);
-        return new MainPage();
-    }
-
+  @Step("Check that page is loaded")
+  @Override
+  @Nonnull
+  public MainPage checkThatPageLoaded() {
+    header.getSelf().should(visible).shouldHave(text("Niffler"));
+    statComponent.getSelf().should(visible).shouldHave(text("Statistics"));
+    spendingTable.getSelf().should(visible).shouldHave(text("History of Spendings"));
+    return this;
+  }
 }

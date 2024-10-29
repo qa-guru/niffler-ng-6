@@ -3,57 +3,81 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
+
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class RegisterPage {
-    private final SelenideElement usernameInput = $("input[name='username']");
-    private final SelenideElement passwordInput = $("input[name='password']");
-    private final SelenideElement passwordSubmitInput = $("input[name='passwordSubmit']");
-    private final SelenideElement successRegisterMessage = $(".form__paragraph_success");
-    private final SelenideElement submitButton = $("button[type='submit']");
-    private final SelenideElement signInButton = $(".form_sign-in");
-    private final SelenideElement formError = $(".form__error");
+public class RegisterPage extends BasePage<RegisterPage> {
 
-    @Step("Заполнить имя пользователя: {username}")
-    public RegisterPage setUsername(String username) {
-        usernameInput.setValue(username);
-        return this;
-    }
+  public static final String URL = CFG.authUrl() + "register";
 
-    @Step("Заполнить пароль пользователя: {password}")
-    public RegisterPage setPassword(String password) {
-        passwordInput.setValue(password);
-        return this;
-    }
+  private final SelenideElement usernameInput = $("input[name='username']");
+  private final SelenideElement passwordInput = $("input[name='password']");
+  private final SelenideElement passwordSubmitInput = $("input[name='passwordSubmit']");
+  private final SelenideElement submitButton = $("button[type='submit']");
+  private final SelenideElement proceedLoginButton = $(".form_sign-in");
+  private final SelenideElement errorContainer = $(".form__error");
 
-    @Step("Заполнить подтверждения пароль пользователя: {passwordSubmit}")
-    public RegisterPage setPasswordSubmit(String passwordSubmit) {
-        passwordSubmitInput.setValue(passwordSubmit);
-        return this;
-    }
+  @Step("Fill register page with credentials: username: {0}, password: {1}, submit password: {2}")
+  @Nonnull
+  public RegisterPage fillRegisterPage(String login, String password, String passwordSubmit) {
+    setUsername(login);
+    setPassword(password);
+    setPasswordSubmit(passwordSubmit);
+    return this;
+  }
 
-    @Step("Нажать на кнопку подтверждения")
-    public RegisterPage clickSubmitButton() {
-        submitButton.click();
-        return this;
-    }
+  @Step("Set username: {0}")
+  @Nonnull
+  public RegisterPage setUsername(String username) {
+    usernameInput.setValue(username);
+    return this;
+  }
 
-    @Step("Нажать кнопку Войти")
-    public LoginPage clickSignInButton() {
-        signInButton.click();
-        return new LoginPage();
-    }
+  @Step("Set password: {0}")
+  @Nonnull
+  public RegisterPage setPassword(String password) {
+    passwordInput.setValue(password);
+    return this;
+  }
 
-    @Step("Проверить успешное сообщение о регистрации: {value}")
-    public RegisterPage shouldSuccessRegister(String value) {
-        successRegisterMessage.shouldHave(text(value));
-        return this;
-    }
+  @Step("Confirm password: {0}")
+  @Nonnull
+  public RegisterPage setPasswordSubmit(String password) {
+    passwordSubmitInput.setValue(password);
+    return this;
+  }
 
-    @Step("Проверить ошибку регистрации: {value}")
-    public RegisterPage shouldErrorRegister(String value) {
-        formError.shouldHave(text(value));
-        return this;
-    }
+  @Step("Submit register")
+  @Nonnull
+  public LoginPage successSubmit() {
+    submitButton.click();
+    proceedLoginButton.click();
+    return new LoginPage();
+  }
+
+  @Step("Submit register")
+  @Nonnull
+  public RegisterPage errorSubmit() {
+    submitButton.click();
+    return this;
+  }
+
+  @Step("Check that page is loaded")
+  @Override
+  @Nonnull
+  public RegisterPage checkThatPageLoaded() {
+    usernameInput.should(visible);
+    passwordInput.should(visible);
+    passwordSubmitInput.should(visible);
+    return this;
+  }
+
+  @Nonnull
+  public RegisterPage checkAlertMessage(String errorMessage) {
+    errorContainer.shouldHave(text(errorMessage));
+    return this;
+  }
 }

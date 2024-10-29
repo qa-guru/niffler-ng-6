@@ -4,6 +4,8 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.repository.UserdataUserRepository;
+import guru.qa.niffler.data.repository.impl.springJdbc.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserJson;
@@ -22,8 +24,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
     private static final UserMapper userMapper = new UserMapper();
-
-    private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
+    private UserdataUserRepository userdataRepository = new UserdataUserRepositorySpringJdbc();
     private final TransactionTemplate txTemplate = new TransactionTemplate(
             new JdbcTransactionManager(DataSources.dataSource(USERDATA_JDBC_URL))
     );
@@ -34,7 +35,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
         log.info("Creating new user by DTO: {}", userJson);
         return txTemplate.execute(status ->
                 userMapper.toDto(
-                        userdataUserDao.create(
+                        userdataRepository.create(
                                 userMapper.toEntity(userJson))));
     }
 
@@ -42,7 +43,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public Optional<UserJson> findById(@NonNull UUID id) {
         log.info("Get user by id = [{}]", id);
         return txTemplate.execute(status ->
-                userdataUserDao
+                userdataRepository
                         .findById(id)
                         .map(userMapper::toDto));
     }
@@ -51,7 +52,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public Optional<UserJson> findByUsername(@NonNull String username) {
         log.info("Get user by username = [{}]", username);
         return txTemplate.execute(status ->
-                userdataUserDao
+                userdataRepository
                         .findByUsername(username)
                         .map(userMapper::toDto));
     }
@@ -60,7 +61,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public List<UserJson> findAll() {
         log.info("Get all users");
         return txTemplate.execute(status ->
-                userdataUserDao
+                userdataRepository
                         .findAll().stream()
                         .map(userMapper::toDto)
                         .toList());
@@ -70,10 +71,20 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
         log.info("Send invitation from = [{}] to = [{}]", requester.getUsername());
         txTemplate.execute(status -> {
-            userdataUserDao.sendInvitation(
+            userdataRepository.sendInvitation(
                     userMapper.toEntity(requester),
-                    userMapper.toEntity(addressee),
-                    FriendshipStatus.PENDING);
+                    userMapper.toEntity(addressee));
+            return null;
+        });
+    }
+
+    @Override
+    public void declineInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+        log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
+        txTemplate.execute(status -> {
+            userdataRepository.removeInvitation(
+                    userMapper.toEntity(requester),
+                    userMapper.toEntity(addressee));
             return null;
         });
     }
@@ -82,7 +93,18 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public void addFriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
         log.info("Make friends [{}] and [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
-            userdataUserDao.addFriend(
+            userdataRepository.addFriend(
+                    userMapper.toEntity(requester),
+                    userMapper.toEntity(addressee));
+            return null;
+        });
+    }
+
+    @Override
+    public void unfriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+        log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
+        txTemplate.execute(status -> {
+            userdataRepository.removeFriend(
                     userMapper.toEntity(requester),
                     userMapper.toEntity(addressee));
             return null;

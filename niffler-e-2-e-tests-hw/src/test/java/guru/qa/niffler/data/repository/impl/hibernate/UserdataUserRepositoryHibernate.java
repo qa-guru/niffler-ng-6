@@ -53,9 +53,15 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     }
 
     @Override
-    public void sendInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
         em.joinTransaction();
-        addressee.addFriends(status, requester);
+        addressee.addFriends(FriendshipStatus.PENDING, requester);
+    }
+
+    @Override
+    public void removeInvitation(UserEntity requester, UserEntity addressee) {
+        em.joinTransaction();
+        addressee.removeInvites(requester);
     }
 
     @Override
@@ -63,6 +69,13 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         em.joinTransaction();
         requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
         addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+    }
+
+    @Override
+    public void removeFriend(UserEntity requester, UserEntity addressee) {
+        em.joinTransaction();
+        requester.removeFriends(addressee);
+        addressee.removeFriends(requester);
     }
 
     @Override

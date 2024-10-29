@@ -109,7 +109,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee, @NonNull FriendshipStatus status) {
+    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -117,8 +117,22 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
             );
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
-            ps.setString(3, status.name());
+            ps.setString(3, FriendshipStatus.PENDING.name());
             ps.setDate(4, new java.sql.Date(new Date().getTime()));
+            return ps;
+        });
+    }
+
+    @Override
+    public void removeInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
+            );
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.PENDING.name());
             return ps;
         });
     }
@@ -145,6 +159,31 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
             ps.setObject(2, requester.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
             ps.setDate(4, sqlDate);
+
+            ps.executeBatch();
+
+            return ps;
+        });
+    }
+
+    @Override
+    public void removeFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
+            );
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setObject(3, FriendshipStatus.ACCEPTED.name());
+
+            ps.addBatch();
+            ps.clearParameters();
+
+            ps.setObject(1, addressee.getId());
+            ps.setObject(2, requester.getId());
+            ps.setObject(3, FriendshipStatus.ACCEPTED.name());
 
             ps.executeBatch();
 

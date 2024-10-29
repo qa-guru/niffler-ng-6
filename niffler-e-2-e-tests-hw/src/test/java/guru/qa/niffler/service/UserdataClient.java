@@ -18,7 +18,11 @@ public interface UserdataClient {
 
     void sendInvitation(UserJson requester, UserJson addressee);
 
+    void declineInvitation(UserJson requester, UserJson addressee);
+
     void addFriend(UserJson requester, UserJson addressee);
+
+    void unfriend(UserJson requester, UserJson addressee);
 
     void remove(UserJson userJson);
 

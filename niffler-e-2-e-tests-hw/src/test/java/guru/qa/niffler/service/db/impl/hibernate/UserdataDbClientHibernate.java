@@ -65,13 +65,23 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
 
     @Override
     public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
-        log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
+        log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
-
                     userRepository.sendInvitation(
                             userMapper.toEntity(requester),
-                            userMapper.toEntity(addressee),
-                            FriendshipStatus.PENDING);
+                            userMapper.toEntity(addressee));
+                    return null;
+                }
+        );
+    }
+
+    @Override
+    public void declineInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+        log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
+        xaTxTemplate.execute(() -> {
+                    userRepository.removeInvitation(
+                            userMapper.toEntity(requester),
+                            userMapper.toEntity(addressee));
                     return null;
                 }
         );
@@ -82,6 +92,18 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
         log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.addFriend(
+                            userMapper.toEntity(requester),
+                            userMapper.toEntity(addressee));
+                    return null;
+                }
+        );
+    }
+
+    @Override
+    public void unfriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+        log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
+        xaTxTemplate.execute(() -> {
+                    userRepository.removeFriend(
                             userMapper.toEntity(requester),
                             userMapper.toEntity(addressee));
                     return null;

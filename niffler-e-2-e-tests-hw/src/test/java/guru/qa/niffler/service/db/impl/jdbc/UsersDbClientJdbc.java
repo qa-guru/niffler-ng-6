@@ -66,11 +66,10 @@ public class UsersDbClientJdbc implements UsersDbClient {
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
                             var addressee = createRandomUserIn2Dbs();
-                            log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
+                            log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
                             userdataUserRepository.sendInvitation(
                                     requesterEntity,
-                                    addressee,
-                                    FriendshipStatus.PENDING);
+                                    addressee);
                             return null;
                         }
 
@@ -90,11 +89,10 @@ public class UsersDbClientJdbc implements UsersDbClient {
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
                             var addressee = createRandomUserIn2Dbs();
-                            log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
+                            log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
                             userdataUserRepository.sendInvitation(
                                     addressee,
-                                    requesterEntity,
-                                    FriendshipStatus.PENDING);
+                                    requesterEntity);
                             return null;
                         }
                 );

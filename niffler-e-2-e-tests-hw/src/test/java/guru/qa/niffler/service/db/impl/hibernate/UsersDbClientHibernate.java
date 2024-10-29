@@ -3,7 +3,6 @@ package guru.qa.niffler.service.db.impl.hibernate;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
@@ -68,11 +67,10 @@ public class UsersDbClientHibernate implements UsersDbClient {
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
                             var addressee = createRandomUserIn2Dbs();
-                            log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
+                            log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
                             userdataUserRepository.sendInvitation(
                                     requesterEntity,
-                                    addressee,
-                                    FriendshipStatus.PENDING);
+                                    addressee);
                             return null;
                         }
 
@@ -95,8 +93,7 @@ public class UsersDbClientHibernate implements UsersDbClient {
                             log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
                             userdataUserRepository.sendInvitation(
                                     addressee,
-                                    requesterEntity,
-                                    FriendshipStatus.PENDING);
+                                    requesterEntity);
                             return null;
                         }
                 );

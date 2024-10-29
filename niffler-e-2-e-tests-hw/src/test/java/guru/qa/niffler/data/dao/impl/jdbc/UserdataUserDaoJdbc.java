@@ -150,14 +150,29 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee, @NonNull FriendshipStatus status) {
+    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
         )) {
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
-            ps.setString(3, status.name());
+            ps.setString(3, FriendshipStatus.PENDING.name());
             ps.setDate(4, new java.sql.Date(new Date().getTime()));
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void removeInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
+        )) {
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.PENDING.name());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -185,6 +200,32 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
             ps.setObject(2, addressee.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
             ps.setDate(4, sqlDate);
+
+            ps.executeBatch();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void removeFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
+        )) {
+
+            var sqlDate = new java.sql.Date(new Date().getTime());
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.ACCEPTED.name());
+
+            ps.addBatch();
+            ps.clearParameters();
+
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setString(3, FriendshipStatus.ACCEPTED.name());
 
             ps.executeBatch();
 

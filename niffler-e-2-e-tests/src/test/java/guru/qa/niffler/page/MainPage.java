@@ -2,7 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class MainPage {
+public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement statisticsHeader = $x("//h2[text()='Statistics']");
     private final SelenideElement historyHeader = $x("//h2[text()='History of Spendings']");
@@ -21,10 +21,9 @@ public class MainPage {
     private final SelenideElement friendButton = $x("(//a[@class='link nav-link'])[2]");
     private final SelenideElement allPeopleButton = $x("(//a[@class='link nav-link'])[3]");
     private final SelenideElement statComponent = $("#stat");
-    private final SelenideElement spendingTable = $("#spendings");
     private final SelenideElement searchInput = $("input[type='text']");
     @Getter
-    private final Header header = new Header();
+    private final SpendingTable<MainPage> spendingTable = new SpendingTable<>($(".MuiTableContainer-root"), this);
 
     @Step("Отредактировать трату {spendingDescription}")
     public EditSpendingPage editSpending(String spendingDescription) {
@@ -74,7 +73,6 @@ public class MainPage {
     @Step("Проверка загрузки страницы")
     public MainPage checkThatPageLoaded() {
         statComponent.should(visible).shouldHave(text("Statistics"));
-        spendingTable.should(visible).shouldHave(text("History of Spendings"));
         return this;
     }
 

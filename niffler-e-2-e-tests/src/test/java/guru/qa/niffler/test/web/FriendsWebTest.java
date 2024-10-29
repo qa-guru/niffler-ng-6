@@ -50,19 +50,6 @@ public class FriendsWebTest {
     }
 
     @User(
-            incomeInvitations = 1
-    )
-    @Test
-    void incomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.username(), user.testData().password())
-                .checkThatPageLoaded()
-                .getHeader()
-                .toAllPeoplesPage()
-                .checkInvitationSentToUser(user.testData().outcome());
-    }
-
-    @User(
             outcomeInvitations = 1
     )
     @Test

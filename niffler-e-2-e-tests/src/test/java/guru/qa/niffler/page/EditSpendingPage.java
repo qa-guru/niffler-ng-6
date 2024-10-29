@@ -7,13 +7,14 @@ import lombok.Getter;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class EditSpendingPage {
+public class EditSpendingPage extends BasePage<EditSpendingPage>{
     private final SelenideElement descriptionInput = $("#description");
     private final SelenideElement saveButton = $("#save");
     private final SelenideElement amountInput = $("#amount");
     private final SelenideElement categoryInput = $("#category");
+    private final SelenideElement calendarInput = $("input[name='date']");
     @Getter
-    private final Calendar calendar = new Calendar();
+    private final Calendar<EditSpendingPage> calendar = new Calendar<>(calendarInput, this);
 
     @Step("Задать новое название затраты {description}")
     public EditSpendingPage setNewSpendingDescription(String description) {

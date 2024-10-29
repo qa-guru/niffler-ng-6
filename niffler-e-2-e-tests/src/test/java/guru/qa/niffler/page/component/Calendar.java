@@ -1,24 +1,27 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Step;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.codeborne.selenide.Selenide.$;
+@ParametersAreNonnullByDefault
+public class Calendar<T extends BasePage<?>> extends BaseComponent<T> {
 
-public class Calendar {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-    private final SelenideElement calendarInput = $("#:rc:");
+    public Calendar(SelenideElement calendarInput, T page) {
+        super(calendarInput, page);
+    }
 
     @Step("Выбор даты в календаре: {date}")
-    public Calendar selectDateInCalendar(Date date) {
+    public T selectDateInCalendar(Date date) {
         String formattedDate = dateFormat.format(date);
-
-        calendarInput.clear();
-        calendarInput.setValue(formattedDate);
-        return this;
+        self.clear();
+        self.setValue(formattedDate).pressEnter();
+        return getPage();
     }
 }

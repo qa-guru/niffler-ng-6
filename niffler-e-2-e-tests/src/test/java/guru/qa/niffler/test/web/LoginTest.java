@@ -27,6 +27,6 @@ public class LoginTest {
     Selenide.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(randomUsername(), "BAD")
         .submit(new LoginPage())
-        .checkError("Bad credentials");
+        .checkError("Неверные учетные данные пользователя");
   }
 }

@@ -7,8 +7,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 
+@ParametersAreNonnullByDefault
 public class FriendApiClient {
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Config.getInstance().userdataUrl())
@@ -17,7 +20,7 @@ public class FriendApiClient {
 
     private final FriendApi friendApi = retrofit.create(FriendApi.class);
 
-    public UserJson sendInvitation(String username, String targetUsername) {
+    public @Nullable UserJson sendInvitation(String username, String targetUsername) {
         final Response<UserJson> response;
         try {
             response = friendApi.sendInvitation(username, targetUsername)
@@ -29,7 +32,7 @@ public class FriendApiClient {
         return response.body();
     }
 
-    public UserJson acceptInvitation(String username, String targetUsername) {
+    public @Nullable UserJson acceptInvitation(String username, String targetUsername) {
         final Response<UserJson> response;
         try {
             response = friendApi.acceptInvitation(username, targetUsername)

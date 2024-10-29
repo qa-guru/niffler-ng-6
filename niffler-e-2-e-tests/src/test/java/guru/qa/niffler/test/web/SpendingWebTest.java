@@ -9,6 +9,7 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -23,7 +24,7 @@ public class SpendingWebTest {
                     archived = false
             ),
             spendings = @Spending(
-                    category = "Обучение",
+                    category = "Обучение3",
                     description = "Обучение Advanced 2.0",
                     amount = 79990
             )
@@ -36,9 +37,15 @@ public class SpendingWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .editSpending(spend.description())
-                .setNewSpendingDescription(newDescription)
-                .save();
-
+                .setNewSpendingDescription(newDescription);
         new MainPage().checkThatTableContainsSpending(newDescription);
+    }
+
+    @Test
+    void createSpending() {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("esa", "12345")
+                .openNewSpending()
+                .createNewSpending();
     }
 }

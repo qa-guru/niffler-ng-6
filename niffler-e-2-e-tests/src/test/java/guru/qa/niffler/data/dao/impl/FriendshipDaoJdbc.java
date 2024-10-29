@@ -5,12 +5,14 @@ import guru.qa.niffler.data.dao.FriendshipDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.UserJson;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class FriendshipDaoJdbc implements FriendshipDao {
 
     private static  final Config CFG = Config.getInstance();

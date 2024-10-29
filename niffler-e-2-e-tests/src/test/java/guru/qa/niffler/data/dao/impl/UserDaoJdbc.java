@@ -5,6 +5,8 @@ import guru.qa.niffler.data.dao.UserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class UserDaoJdbc implements UserDao {
     private static final Config CFG = Config.getInstance();
 
@@ -49,7 +52,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public UserEntity update(UserEntity user) {
+    public @Nullable UserEntity update(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "UPDATE public.user " +
                         "SET username=?, currency=?, firstname=?, surname=?, photo=?, photo_small=?, full_name=? " +

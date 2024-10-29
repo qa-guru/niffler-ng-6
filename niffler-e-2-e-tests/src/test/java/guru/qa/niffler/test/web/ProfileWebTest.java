@@ -7,6 +7,7 @@ import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -43,5 +44,14 @@ public class ProfileWebTest {
                 .openProfilePage()
                 .turnOnShowArchivedCategory()
                 .checkArchivedCategoryIsDisplay(category.name());
+    }
+
+    @Test
+    void changeName() {
+        String name = RandomDataUtils.randomName();
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("esa", "12345")
+                .openProfilePage()
+                .changeName(name);
     }
 }

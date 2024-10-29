@@ -44,7 +44,6 @@ public class FriendsWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-
                 .checkNotHaveFriend();
         new FriendsPage().openAllPeoplePage().checkNotHaveOutcomeInvitation();
     }
@@ -73,22 +72,22 @@ public class FriendsWebTest {
     @User
     @Test
     void acceptFriend(UserJson user) {
-        List<String> users = authUserDbClient.createIncomeInvitations(user, 1);
+        List<String> users = authUserDbClient.createOutcomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .acceptFriendship(users.get(1));
+                .acceptFriendship(users.get(0));
         new FriendsPage().checkHaveFriend();
     }
 
     @User
     @Test
     void declineFriend(UserJson user) {
-        List<String> users = authUserDbClient.createIncomeInvitations(user, 1);
+        List<String> users = authUserDbClient.createOutcomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .declineFriendship(users.get(1));
+                .declineFriendship(users.get(0));
         new FriendsPage().checkNotHaveFriend();
     }
 

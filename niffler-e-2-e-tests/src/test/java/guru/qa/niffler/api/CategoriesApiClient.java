@@ -48,8 +48,8 @@ public class CategoriesApiClient {
 
     }
 
-    public @Nullable Optional<CategoryJson> getCategories(String username, String name) {
-        final Response<Optional<CategoryJson>> response;
+    public @Nullable List<CategoryJson> getCategories(String username, String name) {
+        final Response<List<CategoryJson>> response;
         try {
             response = categoriesApi.getCategories(username, name)
                     .execute();

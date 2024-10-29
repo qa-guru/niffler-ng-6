@@ -38,7 +38,7 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public SpendJson updateSpend(SpendJson spend) {
+    public @Nullable SpendJson updateSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
             response = spendApi.editSpend(spend)
@@ -64,7 +64,7 @@ public class SpendApiClient {
                 : Collections.emptyList();
     }
 
-    public SpendJson getSpend(String id, String username) {
+    public @Nullable SpendJson getSpend(String id, String username) {
         final Response<SpendJson> response;
         try {
             response = spendApi.getSpend(id, username)

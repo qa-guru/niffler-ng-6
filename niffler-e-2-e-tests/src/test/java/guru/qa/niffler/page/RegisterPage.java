@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
@@ -17,26 +18,31 @@ public class RegisterPage {
     private final SelenideElement msgPasswordsShouldBeEqual = $(withText("Passwords should be equal"));
 
 
+    @Step("Водим имя пользователя")
     public RegisterPage setUsername(String username) {
         usernameInput.setValue(username);
         return new RegisterPage();
     }
 
+    @Step("Водим пароль")
     public RegisterPage setPassword(String password) {
         passwordInput.setValue(password);
         return new RegisterPage();
     }
 
+    @Step("Водим проверочный пароль")
     public RegisterPage setPasswordSubmit(String password) {
         passwordSubmitInput.setValue(password);
         return new RegisterPage();
     }
 
+    @Step("Подтверждаем регистрацию нового пользователя")
     public LoginPage submitRegistration() {
         submitButton.click();
         return new LoginPage();
     }
 
+    @Step("Регистрируем нового пользователя в системе")
     public LoginPage createUser(String username, String password) {
         usernameInput.setValue(username);
         passwordInput.setValue(password);
@@ -46,10 +52,12 @@ public class RegisterPage {
         return new LoginPage();
     }
 
+    @Step("Проверяем отображение сообщения о, том что пользователь уже зарегистрирован в системе")
     public void checkMsgUserAlreadyExistIsDisplayed() {
         msgUsernameAlreadyExist.should(visible);
     }
 
+    @Step("Проверяем, что пароли совпадают ")
     public void checkPasswordsShouldBeEqual() {
         msgPasswordsShouldBeEqual.should(visible);
     }

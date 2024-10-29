@@ -24,6 +24,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
 import static guru.qa.niffler.data.tpl.DataSources.dataSource;
 
 
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 
     private final Config CFG = Config.getInstance();

@@ -7,6 +7,8 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
@@ -50,7 +53,7 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
-    public SpendEntity update(SpendEntity spend) {
+    public @Nullable SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "UPDATE public.spend " +
                         "SET username=?, spend_date=?, currency=?, amount=?, description=?, category_id=? " +

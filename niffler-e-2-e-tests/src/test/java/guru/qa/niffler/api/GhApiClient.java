@@ -26,7 +26,7 @@ public class GhApiClient {
 
     private final GhApi ghApi = retrofit.create(GhApi.class);
 
-    public  String issueState(@Nonnull String issueNumber) {
+    public  String issueState(String issueNumber) {
         final Response<JsonNode> response;
         try {
             response = ghApi.issue(

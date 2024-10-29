@@ -11,7 +11,7 @@ public class SearchField {
     }
 
     public SearchField search(String query) {
-        self.setValue(query).sendKeys("Enter");
+        self.setValue(query).pressEnter();
         return this;
     }
 

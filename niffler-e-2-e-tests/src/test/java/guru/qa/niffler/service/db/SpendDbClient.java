@@ -5,17 +5,19 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.SpendRepositoryJdbc;
-import guru.qa.niffler.data.repository.impl.SpendRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static guru.qa.niffler.data.Databases.transaction;
 
+import java.util.List;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
@@ -54,7 +56,7 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
+    public List<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
         return xaTxTemplate.execute(() -> {
                     Optional<CategoryEntity> ce = spendRepository.findCategoryByUsernameAndCategoryName(username, name);
                     return ce.map(CategoryJson::fromEntity);

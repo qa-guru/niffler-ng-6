@@ -76,7 +76,7 @@ public class UsersQueueExtension implements
                     UserType ut = p.getAnnotation(UserType.class);
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
-                    while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 5) {
+                    while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
                         user = getUserFromQueue(ut.value());
                     }
                     Allure.getLifecycle().updateTestCase(

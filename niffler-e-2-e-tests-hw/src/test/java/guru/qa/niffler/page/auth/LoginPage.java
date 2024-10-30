@@ -3,6 +3,7 @@ package guru.qa.niffler.page.auth;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.MainPage;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,25 +31,36 @@ public class LoginPage extends BasePage<LoginPage> {
         super(checkPageElementVisible);
     }
 
+    @Step("Sign in by username = [{}] and password = [{}]")
     public MainPage login(String username, String password) {
         log.info("Sign in for user [{}]", username);
-        fillData(username, password);
+        fillUsername(username);
+        fillPassword(password);
         return submit();
     }
 
-    public LoginPage fillData(String username, String password) {
-        log.info("Fill authorization data: username = [{}], password = [{}]", username, password);
+    @Step("Fill username = [{}]")
+    private LoginPage fillUsername(String username) {
+        log.info("Fill username = [{}]", username);
         usernameInput.setValue(username);
+        return this;
+    }
+
+    @Step("Fill password = [{}]")
+    private LoginPage fillPassword(String password) {
+        log.info("Fill password = [{}]", password);
         passwordInput.setValue(password);
         return this;
     }
 
+    @Step("Submit")
     public MainPage submit() {
         log.info("Submitting sign in");
         submitButton.click();
         return new MainPage();
     }
 
+    @Step("Set show password = [{}]")
     public void showPassword(boolean status) {
         if (status != showPasswordButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password visible = [{}]", status);
@@ -58,12 +70,14 @@ public class LoginPage extends BasePage<LoginPage> {
         }
     }
 
+    @Step("Click on 'Create new account'")
     public RegisterPage goToRegisterPage() {
         log.info("Go to 'RegisterPage'");
         createNewAccountButton.click();
         return new RegisterPage();
     }
 
+    @Step("Should visible bad credentials error")
     public LoginPage shouldVisibleBadCredentialsError() {
         badCredentialsError.shouldBe(visible);
         return this;
@@ -78,6 +92,7 @@ public class LoginPage extends BasePage<LoginPage> {
     }
 
     @Override
+    @Step("Should visible 'Login' page")
     public LoginPage shouldVisiblePageElements() {
 
         log.info("Assert login page elements are visible");

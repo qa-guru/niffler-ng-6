@@ -4,6 +4,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.AppHeader;
 import guru.qa.niffler.page.BasePage;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -40,6 +41,7 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Step("Filter users by query = [{}]")
     public T filterByQuery(String query) {
         log.info("Filter users by query = [{}]", query);
         searchInput.click();
@@ -48,6 +50,7 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Step("Go to previous page")
     public T previousPage() {
         log.info("Show previous page");
         previousPageButton.shouldHave(cssClass("colorPrimary")).click();
@@ -55,6 +58,7 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Step("Go to next page")
     public T nextPage() {
         log.info("Show next page");
         nextPageButton.shouldHave(cssClass("colorPrimary")).click();

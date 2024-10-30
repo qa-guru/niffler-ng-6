@@ -18,6 +18,7 @@ import guru.qa.niffler.utils.UserUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -39,6 +40,7 @@ public class UsersDbClientHibernate implements UsersDbClient {
 
         log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", userJson);
 
+        var userPassword = userJson.getPassword();
         var authUserEntity = authUserMapper.toEntity(userMapper.toAuthDto(userJson));
         authUserEntity.setAuthorities(
                 List.of(AuthAuthorityEntity.builder().authority(Authority.read).user(authUserEntity).build(),
@@ -46,81 +48,87 @@ public class UsersDbClientHibernate implements UsersDbClient {
         );
 
         return xaTxTemplate.execute(() -> {
-            authUserRepository.create(authUserEntity);
-            return userMapper.toDto(
-                    userdataUserRepository.create(
-                            userMapper.toEntity(userJson)));
+                    authUserRepository.create(authUserEntity);
+                    return userMapper.toDto(
+                            userdataUserRepository.create(
+                                    userMapper.toEntity(userJson)));
 
-        });
+                })
+                .setPassword(userPassword);
 
 
     }
 
     @Override
-    public void getIncomeInvitationFromNewUsers(@NonNull UserJson requester, int count) {
+    public List<UserJson> getIncomeInvitationFromNewUsers(@NonNull UserJson to, int count) {
 
+        List<UserJson> users = new ArrayList<>();
         if (count > 0) {
-            UserEntity requesterEntity = userdataUserRepository.findById(
-                    requester.getId()
-            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + requester.getId() + "] not found"));
+            UserEntity toUserEntity = userdataUserRepository.findById(
+                    to.getId()
+            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + to.getId() + "] not found"));
 
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
-                            var addressee = createRandomUserIn2Dbs();
-                            log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
-                            userdataUserRepository.sendInvitation(
-                                    requesterEntity,
-                                    addressee);
-                            return null;
-                        }
-
-                );
+                    var fromUserEntity = createRandomUserIn2Dbs();
+                    users.add(userMapper.toDto(fromUserEntity));
+                    log.info("Create invitation from [{}] to [{}] with status PENDING", toUserEntity.getUsername(), fromUserEntity.getUsername());
+                    userdataUserRepository.sendInvitation(
+                            fromUserEntity,
+                            toUserEntity);
+                    return null;
+                });
             }
         }
+        return users;
     }
 
     @Override
-    public void sendOutcomeInvitationToNewUsers(@NonNull UserJson requester, int count) {
+    public List<UserJson> sendOutcomeInvitationToNewUsers(@NonNull UserJson from, int count) {
 
+        List<UserJson> users = new ArrayList<>();
         if (count > 0) {
-            UserEntity requesterEntity = userdataUserRepository.findById(
-                    requester.getId()
-            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + requester.getId() + "] not found"));
+            UserEntity fromEntity = userdataUserRepository.findById(
+                    from.getId()
+            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + from.getId() + "] not found"));
 
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
-                            var addressee = createRandomUserIn2Dbs();
-                            log.info("Create invitation from [{}] to [{}] with status", requester.getUsername(), addressee.getUsername());
-                            userdataUserRepository.sendInvitation(
-                                    addressee,
-                                    requesterEntity);
-                            return null;
-                        }
-                );
+                    var toEntity = createRandomUserIn2Dbs();
+                    users.add(userMapper.toDto(toEntity));
+                    log.info("Create invitation from [{}] to [{}] with status", fromEntity.getUsername(), toEntity.getUsername());
+                    userdataUserRepository.sendInvitation(
+                            fromEntity,
+                            toEntity);
+                    return null;
+                });
             }
         }
+        return users;
     }
 
     @Override
-    public void addNewFriends(@NonNull UserJson requester, int count) {
+    public List<UserJson> addNewFriends(@NonNull UserJson userJson, int count) {
 
+        List<UserJson> users = new ArrayList<>();
         if (count > 0) {
-            UserEntity requesterEntity = userdataUserRepository.findById(
-                    requester.getId()
-            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + requester.getId() + "] not found"));
+            UserEntity fromEntity = userdataUserRepository.findById(
+                    userJson.getId()
+            ).orElseThrow(() -> new UserNotFoundException("User with id = [" + userJson.getId() + "] not found"));
 
             for (int i = 0; i < count; i++) {
                 xaTxTemplate.execute(() -> {
-                            var addressee = createRandomUserIn2Dbs();
-                            log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
-                            userdataUserRepository.addFriend(
-                                    requesterEntity,
-                                    addressee);
-                            return null;
-                        }
-                );
+                    var toEntity = createRandomUserIn2Dbs();
+                    users.add(userMapper.toDto(toEntity));
+                    log.info("Make users are friends: [{}], [{}]", fromEntity.getUsername(), toEntity.getUsername());
+                    userdataUserRepository.addFriend(
+                            fromEntity,
+                            toEntity);
+                    return null;
+                });
             }
         }
+        return users;
     }
 
     @Override

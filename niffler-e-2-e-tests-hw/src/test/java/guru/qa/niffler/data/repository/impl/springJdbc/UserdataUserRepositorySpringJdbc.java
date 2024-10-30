@@ -1,8 +1,7 @@
 package guru.qa.niffler.data.repository.impl.springJdbc;
 
 import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.jdbc.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
 
-    private final UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc();
+    private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
 
     @Override
     public UserEntity create(UserEntity user) {

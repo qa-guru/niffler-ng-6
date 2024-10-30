@@ -13,6 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,10 +53,14 @@ public class CategoryApiClientRetrofit {
     }
 
     public Optional<CategoryJson> findByUsernameAndName(@NonNull String username, @NonNull String name) {
-        return Optional.ofNullable(
-                findAllByUsername(username, false).stream()
-                        .filter(category -> category.getName().equals(name))
-                        .toList().getFirst());
+        try {
+            return Optional.of(
+                    findAllByUsername(username, false).stream()
+                            .filter(category -> category.getName().equals(name))
+                            .toList().getFirst());
+        } catch (NoSuchElementException ex) {
+            return Optional.empty();
+        }
     }
 
     public List<CategoryJson> findAllByUsername(@NonNull String username, boolean excludeArchived) {

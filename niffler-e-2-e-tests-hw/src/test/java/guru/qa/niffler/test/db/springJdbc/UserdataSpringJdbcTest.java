@@ -1,6 +1,5 @@
 package guru.qa.niffler.test.db.springJdbc;
 
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.db.impl.springJdbc.UserdataDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;

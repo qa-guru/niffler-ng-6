@@ -1,15 +1,12 @@
 package guru.qa.niffler.data.jpa;
 
 import guru.qa.niffler.data.tpl.DataSources;
-import guru.qa.niffler.data.tpl.JdbcConnectionHolder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static guru.qa.niffler.data.tpl.Connections.holders;
 
 public class EntityManagers {
 

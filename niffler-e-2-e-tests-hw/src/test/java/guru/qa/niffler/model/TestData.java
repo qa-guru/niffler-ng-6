@@ -1,6 +1,9 @@
 package guru.qa.niffler.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
@@ -19,8 +22,13 @@ public class TestData {
     @Builder.Default
     private List<SpendJson> spendings = new ArrayList<>();
 
-    private Integer invitations;
+    @Builder.Default
+    private List<UserJson> incomeInvitations = new ArrayList<>();
 
-    private Integer friends;
+    @Builder.Default
+    private List<UserJson> outcomeInvitations = new ArrayList<>();
+
+    @Builder.Default
+    private List<UserJson> friends = new ArrayList<>();
 
 }

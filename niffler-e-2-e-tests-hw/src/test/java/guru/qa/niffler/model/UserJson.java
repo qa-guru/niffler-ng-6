@@ -1,7 +1,6 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jaxb.userdata.FriendState;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -45,12 +44,11 @@ public class UserJson implements Serializable {
     @JsonProperty("fullname")
     private String fullName;
 
-    @JsonProperty("friendState")
-    private FriendState friendState;
-
-    private transient TestData testData;
+    @Builder.Default
+    private transient TestData testData = new TestData();
 
     public UserJson addTestData(TestData testData) {
+
         return UserJson.builder()
                 .id(this.id)
                 .username(this.username)

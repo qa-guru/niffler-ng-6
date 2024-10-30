@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.repository;
 
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import java.util.List;

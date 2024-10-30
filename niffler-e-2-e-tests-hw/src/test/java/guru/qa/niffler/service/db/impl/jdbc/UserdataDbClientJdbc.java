@@ -1,9 +1,6 @@
 package guru.qa.niffler.service.db.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.jdbc.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.jdbc.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
@@ -16,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static guru.qa.niffler.data.entity.userdata.FriendshipStatus.PENDING;
 
 
 @Slf4j

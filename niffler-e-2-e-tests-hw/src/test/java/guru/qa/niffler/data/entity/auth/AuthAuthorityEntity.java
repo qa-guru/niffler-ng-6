@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "authority")
 public class AuthAuthorityEntity implements Serializable {
@@ -31,7 +31,7 @@ public class AuthAuthorityEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @ToString.Include
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;

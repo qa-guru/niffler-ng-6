@@ -1,12 +1,12 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.SignInPage;
 import guru.qa.niffler.page.SignUpPage;
 import guru.qa.niffler.page.SignUpSuccessfulPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,7 @@ public class SignUpWebTest {
 
     @BeforeEach
     void setUp() {
-        Faker faker = new Faker();
-        randomUsername = faker.name().username();
+        randomUsername = RandomDataUtils.randomUsername();
     }
 
     @Test

@@ -1,9 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.api.CategoriesApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -54,8 +54,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     }
 
     private String generateCategoryName() {
-        Faker faker = new Faker();
-        return faker.color().name() + " " + faker.animal().name() + " " + faker.number().digit();
+        return RandomDataUtils.randomCategoryName();
     }
 
     @Override

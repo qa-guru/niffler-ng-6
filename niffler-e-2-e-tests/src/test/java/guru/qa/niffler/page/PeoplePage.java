@@ -46,7 +46,6 @@ public class PeoplePage {
                                     .shouldHave(exactText(name));
                             r.$$("button").findBy(exactText(UNFRIEND_BUTTON_TEXT))
                                     .shouldBe(visible)
-                                    .shouldBe(enabled)
                                     .shouldBe(enabled);
                         },
                         () -> {

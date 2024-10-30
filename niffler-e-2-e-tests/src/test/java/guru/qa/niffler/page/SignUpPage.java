@@ -32,10 +32,10 @@ public class SignUpPage {
         signUp(username, password, password);
     }
 
-    public void signUp(String username, String password1, String password2) {
+    public void signUp(String username, String password, String passwordConfirmation) {
         setUsername(username);
-        setPassword(password1);
-        setPasswordConfirmation(password2);
+        setPassword(password);
+        setPasswordConfirmation(passwordConfirmation);
         submitRegistration();
     }
 

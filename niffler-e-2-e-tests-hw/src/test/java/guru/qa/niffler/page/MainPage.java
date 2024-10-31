@@ -9,6 +9,8 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.spending.EditSpendingPage;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
@@ -60,6 +63,7 @@ public class MainPage extends BasePage<MainPage> {
         return new AppHeader();
     }
 
+    @Step("Filter spendings by description = [{}]")
     public MainPage filterSpendingsByDescription(@NonNull String query) {
         log.info("Filtering spendings by query {}", query);
         spendingsSearchInputContainer.click();
@@ -67,6 +71,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @Step("Filter spendings by period = [{}]")
     public MainPage filterSpendingsByPeriod(@NonNull Period period) {
         log.info("Filtering spendings by period: [{}]", period);
         spendingsPeriodSelector.click();
@@ -74,6 +79,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @Step("Filter spendings by currency = [{}]")
     public MainPage filterSpendingsByCurrency(@NonNull CurrencyValues currency) {
         log.info("Filtering spendings by currency: [{}]", currency);
         currencySelector.click();
@@ -81,13 +87,16 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @Step("Filter spendings by criteria:")
     public MainPage filterSpendings(@NonNull SpendJson spend) {
 
-        if (spend.getDescription() != null)
+        if (spend.getDescription() != null && spend.getDescription().isEmpty()) {
             filterSpendingsByDescription(spend.getDescription());
+        }
 
-        if (spend.getSpendDate() != null)
+        if (spend.getSpendDate() != null) {
             filterSpendingsByPeriod(getMinPeriodFromNowToDate(spend.getSpendDate()));
+        }
 
         if (spend.getCurrency() != null)
             filterSpendingsByCurrency(spend.getCurrency());
@@ -96,24 +105,51 @@ public class MainPage extends BasePage<MainPage> {
 
     }
 
+    @Step("Create new spending with name = [{spend.description}]")
     public MainPage createNewSpending(@NonNull SpendJson spend) {
         log.info("Go to 'Create new spending' page");
         getHeader().goToCreateSpendingPage();
         return new AddNewSpendingPage(true).createNewSpending(spend);
     }
 
-    public EditSpendingPage openEditSpendingPage(@NonNull String spendingName, int index) {
-        filterSpendingsByDescription(spendingName);
-        getSpendingContainer(spendingName, index).$x(".//button[@aria-label='Edit spending']")
-                .as("['Spending " + spendingName + "' edit button]").click();
+    @Step("Open edit spending page")
+    public EditSpendingPage openEditSpendingPage(@NonNull String spendDescription, int index) {
+
+        if (index < 0)
+            throw new IllegalArgumentException("Index must be greater than 0");
+
+        filterSpendingsByDescription(spendDescription);
+
+        log.info("Open edit spending page with description = [{}] and index = [{}]", spendDescription, index);
+        Allure.step("Open edit spending page with description = [" + spendDescription + "] and index = [" + index + "]",
+                () -> getSpendingContainer(spendDescription, index).$x(".//button[@aria-label='Edit spending']")
+                        .as("['Spending " + spendDescription + "' edit button]").click());
+
         return new EditSpendingPage();
     }
 
+    @Step("Open edit spending page with spend criteria and index = [{index}]:")
     public EditSpendingPage openEditSpendingPage(@NonNull SpendJson spend, int index) {
+
+        if (index < 0)
+            throw new IllegalArgumentException("Index must be greater than 0");
+
+        var logText = "Open edit spending page with: description = [%s], category = [%s], amount = [%s], date = [%s] and index = [%s]"
+                .formatted(
+                        spend.getDescription(),
+                        spend.getCategory().getName(),
+                        getAmountWithCurrencySymbol(spend),
+                        new SimpleDateFormat("MMM dd, yyyy"),
+                        index);
+
         filterSpendings(spend);
-        getSpendingContainer(spend, index).$x(".//button[@aria-label='Edit spending']")
-                .as("['Spending " + spend.getDescription() + "' edit button]").click();
+
+        log.info(logText);
+        Allure.step(logText, () -> getSpendingContainer(spend, index).$x(".//button[@aria-label='Edit spending']")
+                .as("['Spending " + spend.getDescription() + "' edit button]").click());
+
         return new EditSpendingPage();
+
     }
 
     public EditSpendingPage openEditSpendingPage(@NonNull String spendingName) {
@@ -122,6 +158,171 @@ public class MainPage extends BasePage<MainPage> {
 
     public EditSpendingPage openEditSpendingPage(@NonNull SpendJson spend) {
         return openEditSpendingPage(spend, 0);
+    }
+
+    @Step("Select spending by description = [{}]")
+    public MainPage selectSpending(String spendingDescription) {
+        filterSpendingsByDescription(spendingDescription);
+        log.info("Select spending by description = [{}]", spendingDescription);
+        Allure.step("Select spending by description = [" + spendingDescription + "]", () ->
+                getSpendingContainer(spendingDescription, 0).$x(".//td[1]//input").shouldBe(visible).click());
+        return this;
+    }
+
+    @Step("Select spending by criteria = [{}]")
+    public MainPage selectSpending(SpendJson spend) {
+        filterSpendings(spend);
+        String logText = "Select spending with criteria: category = [%s], amount = [%s %s], description = [%s], date = [%s]"
+                .formatted(
+                        spend.getCategory(),
+                        spend.getAmount(),
+                        spend.getCurrency().getSymbol(),
+                        spend.getDescription(),
+                        new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
+        log.info(logText);
+        Allure.step(logText, () ->
+        getSpendingContainer(spend, 0).$x(".//td[1]//input").shouldBe(visible).click());
+        return this;
+    }
+
+    @Step("Select spendings by criteria")
+    public MainPage selectSpendings(List<SpendJson> spends) {
+        log.info("Select spendings");
+        spends.forEach(this::selectSpending);
+        return this;
+    }
+
+    @Step("Select all spendings in current spending table page")
+    public MainPage selectAllSpendings() {
+        log.info("Select all spendings");
+        allSpendingsSelector.shouldBe(visible).click();
+        return this;
+    }
+
+    @Step("Remove selected spendings")
+    public MainPage deleteSpendings() {
+        log.info("Delete all spendings");
+        deleteSpendingButton.shouldBe(visible).click();
+        return this;
+    }
+
+    @Step("Go to previous spending table page")
+    private MainPage goToPreviousPageOfSpendingsTable() {
+        log.info("Go to previous page of spendings table");
+        previousPageButton.shouldBe(visible).click();
+        return this;
+    }
+
+    @Step("Go to next spending table page")
+    private MainPage goToNextPageOfSpendingTable() {
+        log.info("Go to next page of spendings table");
+        nextPageButton.shouldBe(visible).click();
+        return this;
+    }
+
+    @Step("Should visible spending with description = [{}]")
+    public MainPage shouldHaveSpend(@NonNull String description) {
+        filterSpendingsByDescription(description);
+        log.info("Should have spend with description = [{}]", description);
+        Allure.step("Should have spend with description = [" + description + "]", () ->
+                getSpendingContainer(description, 0).shouldBe(visible));
+        return this;
+    }
+
+    @Step("Should visible spend by criteria")
+    public MainPage shouldHaveSpend(@NonNull SpendJson spend) {
+
+        filterSpendings(spend);
+
+        String logText = "Should visible spend with criteria: category = [%s], amount = [%s %s], description = [%s], date = [%s]"
+                .formatted(
+                        spend.getCategory(),
+                        spend.getAmount(),
+                        spend.getCurrency().getSymbol(),
+                        spend.getDescription(),
+                        new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
+        log.info(logText);
+        Allure.step(logText, () -> getSpendingContainer(spend, 0).shouldBe(visible));
+
+        return this;
+    }
+
+    @Step("Should have spends")
+    public MainPage shouldHaveSpends(@NonNull String description, int count) {
+        filterSpendingsByDescription(description);
+        log.info("Should visible [{}] spends with description = [{}]", count, description);
+        Allure.step("Should visible [" + count + "] spends with description = [" + description + "]", () ->
+                spendingRows
+                        .filterBy(child(byXpath(".//td[4]//span"), exactText(description)))
+                        .shouldHave(size(count))
+        );
+        return this;
+    }
+
+    @Step("Should have [{count}] spends with params")
+    public MainPage shouldHaveSpends(@NonNull SpendJson spend, int count) {
+
+        filterSpendings(spend);
+
+        var spendConditions = spendConditions(spend);
+        var logText = "Should visible [%d] spends by: category = [%s], amount = [%s %s], description = [%s], date = [%s]"
+                .formatted(
+                        count,
+                        spend.getCategory().getName(),
+                        spend.getAmount(),
+                        spend.getAmount(),
+                        spend.getDescription(),
+                        new SimpleDateFormat("MMM dd, yyy").format(spend.getSpendDate()));
+
+        log.info(logText);
+        Allure.step(logText,
+                () -> spendingRows
+                        .filterBy(new And("have", spendConditions))
+                        .shouldHave(size(count)));
+
+        return this;
+
+    }
+
+    @Step("Should visible spend legend = [{description} {amount} {currency.symbol}]")
+    public MainPage shouldHaveSpendLegend(@NonNull String description, Double amount, @NonNull CurrencyValues currency) {
+        log.info("Should visible spend legend = [{} {} {}]", description, amount, currency);
+        spendingsLegendList
+                .filterBy(text("%s %s %s".formatted(description, amount, currency.getSymbol())))
+                .shouldHave(sizeGreaterThan(0));
+        return this;
+    }
+
+    @Step("Should have message alert = [{}]")
+    public MainPage shouldHaveMessageAlert(@NonNull String alertMessage) {
+        log.info("Assert alert has text: {}", alertMessage);
+        alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
+        return this;
+    }
+
+    @Override
+    public MainPage shouldVisiblePageElement() {
+        log.info("Assert 'Main' page element visible on start up");
+        historyOfSpendingsTitle.shouldBe(visible);
+        return this;
+    }
+
+
+    @Override
+    @Step("Should visible main page")
+    public MainPage shouldVisiblePageElements() {
+
+        log.info("Assert account menu elements are visible");
+
+        statisticsTitle.shouldBe(visible);
+        statisticsBar.shouldBe(visible);
+
+        spendingsSearchInputContainer.shouldBe(visible);
+        spendingsPeriodSelector.shouldBe(visible);
+        currencySelector.shouldBe(visible);
+
+        return this;
+
     }
 
     private SelenideElement getSpendingContainer(@NonNull String spendingDescription, int index) {
@@ -162,120 +363,6 @@ public class MainPage extends BasePage<MainPage> {
                 (spend.getAmount() % 1 != 0)
                         ? spend.getAmount()
                         : spend.getAmount().intValue(), spend.getCurrency().getSymbol());
-    }
-
-    public MainPage filterSpendingsAndSelect(String spendDescription) {
-        filterSpendingsByDescription(spendDescription);
-        selectSpending(spendDescription);
-        return this;
-    }
-
-    public MainPage filterSpendingsAndSelect(SpendJson spend) {
-        filterSpendings(spend);
-        selectSpending(spend);
-        return this;
-    }
-
-    public MainPage selectSpending(String spendingDescription) {
-        log.info("Select spending: [{}]", spendingDescription);
-        getSpendingContainer(spendingDescription, 0).$x(".//td[1]//input").shouldBe(visible).click();
-        return this;
-    }
-
-    public MainPage selectSpending(SpendJson spend) {
-        log.info("Select spending: [{}]", spend);
-        getSpendingContainer(spend, 0).$x(".//td[1]//input").shouldBe(visible).click();
-        return this;
-    }
-
-    public MainPage selectSpendings(List<SpendJson> spends) {
-        log.info("Select spendings");
-        spends.forEach(this::selectSpending);
-        return this;
-    }
-
-    public MainPage selectAllSpendings() {
-        log.info("Select all spendings");
-        allSpendingsSelector.shouldBe(visible).click();
-        return this;
-    }
-
-    public MainPage deleteSpendings() {
-        log.info("Delete all spendings");
-        deleteSpendingButton.shouldBe(visible).click();
-        return this;
-    }
-
-    private MainPage goToPreviousPageOfSpendingsTable() {
-        log.info("Go to previous page of spendings table");
-        previousPageButton.shouldBe(visible).click();
-        return this;
-    }
-
-    private MainPage goToNextPageOfSpendingTable() {
-        log.info("Go to next page of spendings table");
-        nextPageButton.shouldBe(visible).click();
-        return this;
-    }
-
-    public MainPage shouldHaveSpend(@NonNull String spendDescription) {
-        getSpendingContainer(spendDescription, 0).shouldBe(visible);
-        return this;
-    }
-
-    public MainPage shouldHaveSpend(@NonNull SpendJson spend) {
-        getSpendingContainer(spend, 0)
-                .shouldBe(visible);
-        return this;
-    }
-
-    public MainPage shouldHaveSpends(@NonNull String spendingDescription, int count) {
-        filterSpendingsByDescription(spendingDescription);
-        spendingRows.filterBy(child(byXpath(".//td[4]//span"), exactText(spendingDescription))).shouldHave(size(count));
-        return this;
-    }
-
-    public MainPage shouldHaveSpends(@NonNull SpendJson spend, int count) {
-        filterSpendings(spend);
-        List<WebElementCondition> spendCondition = spendConditions(spend);
-        spendingRows.filterBy(new And("have", spendCondition)).shouldHave(size(count));
-        return this;
-    }
-
-    public MainPage shouldHaveSpendLegend(@NonNull SpendJson spend) {
-        spendingsLegendList.filterBy(text("%s %s".formatted(spend.getCategory(), getAmountWithCurrencySymbol(spend))))
-                .get(0).shouldBe(visible);
-        return this;
-    }
-
-    public MainPage shouldHaveMessageAlert(@NonNull String alertMessage) {
-        log.info("Assert alert has text: {}", alertMessage);
-        alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
-        return this;
-    }
-
-    @Override
-    public MainPage shouldVisiblePageElement() {
-        log.info("Assert 'Main' page element visible on start up");
-        historyOfSpendingsTitle.shouldBe(visible);
-        return this;
-    }
-
-
-    @Override
-    public MainPage shouldVisiblePageElements() {
-
-        log.info("Assert account menu elements are visible");
-
-        statisticsTitle.shouldBe(visible);
-        statisticsBar.shouldBe(visible);
-
-        spendingsSearchInputContainer.shouldBe(visible);
-        spendingsPeriodSelector.shouldBe(visible);
-        currencySelector.shouldBe(visible);
-
-        return this;
-
     }
 
 }

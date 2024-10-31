@@ -2,6 +2,7 @@ package guru.qa.niffler.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.BasePage;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +25,7 @@ public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
         super(checkPageElementVisible);
     }
 
+    @Step("Click on link 'Sign in'")
     public LoginPage goToLoginPage() {
         log.info("Go to login page");
         signInButton.click();
@@ -38,6 +40,7 @@ public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
     }
 
     @Override
+    @Step("Should visible 'Confirm Registration' page")
     public ConfirmRegistrationPage shouldVisiblePageElements() {
         log.info("Assert confirm registration page elements are visible");
         successfulRegistrationLabel.shouldBe(visible, Duration.ofSeconds(2));

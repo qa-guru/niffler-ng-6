@@ -26,7 +26,7 @@ class RegisterWebTests {
     void canRegisterUserWithCorrectCredentialsTest() {
         UserJson user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user);
+                .signUpSuccess(user);
 
         confirmRegistrationPage.shouldVisiblePageElements();
     }
@@ -35,10 +35,10 @@ class RegisterWebTests {
     void canNotRegisterIfUsernameIsExistTest() {
         var user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user)
+                .signUpSuccess(user)
                 .goToLoginPage()
                 .goToRegisterPage()
-                .signUp(user);
+                .signUpSuccess(user);
 
         registerPage.assertUsernameHasError("Username `%s` already exists".formatted(user.getUsername()));
     }
@@ -47,7 +47,7 @@ class RegisterWebTests {
     void canNotRegisterIfPasswordAndPasswordConfirmationNotEqualTest() {
         var user = UserUtils.generateUser();
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user.setPassword(FAKE.internet().password()));
+                .signInFailed(user.setPassword(FAKE.internet().password()));
         registerPage.assertPasswordHasError("Passwords should be equal");
     }
 
@@ -56,7 +56,7 @@ class RegisterWebTests {
         var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(2));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user);
+                .signUpSuccess(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
     }
 
@@ -65,7 +65,7 @@ class RegisterWebTests {
         var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(51));
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user);
+                .signUpSuccess(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
     }
 
@@ -77,7 +77,7 @@ class RegisterWebTests {
         user.setPassword(password).setPasswordConfirmation(password);
 
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user);
+                .signUpSuccess(user);
 
         registerPage
                 .assertPasswordHasError("Allowed password length should be from 3 to 12 characters")
@@ -92,7 +92,7 @@ class RegisterWebTests {
         user.setPassword(password).setPasswordConfirmation(password);
 
         open(REGISTRATION_PAGE_URL, RegisterPage.class)
-                .signUp(user);
+                .signUpSuccess(user);
 
         registerPage
                 .assertPasswordHasError("Allowed password length should be from 3 to 12 characters")

@@ -3,6 +3,8 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.ex.InvalidDateException;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,24 +50,27 @@ public class CalendarWebService {
         Calendar calendar = getCalendar(date);
 
         log.info("Pick date in calendar: {}/{}/{}", calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH));
-        openCalendar();
-        selectYear(calendar.get(Calendar.YEAR));
-        selectMonth(calendar.get(Calendar.MONTH));
-        selectDay(calendar.get(Calendar.DAY_OF_MONTH));
-        closeCalendar();
+        Allure.step("Pick date in calendar: [%s/%s/%s]".formatted(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH)), () -> {
+            openCalendar();
+            selectYear(calendar.get(Calendar.YEAR));
+            selectMonth(calendar.get(Calendar.MONTH));
+            selectDay(calendar.get(Calendar.DAY_OF_MONTH));
+            closeCalendar();
+        });
 
     }
 
-    public void calendarInputShouldHaveDate(Date date) {
-
+    @Step("Should have date in calendar input = ")
+    public void calendarInputShouldHaveDate(@NonNull Date date) {
         var dateValue = new SimpleDateFormat("MM/dd/yyyy").format(date);
-
         log.info("Calendar input should have value: [{}]", dateValue);
-        dateInput.shouldHave(value(dateValue));
+        Allure.step("Should have date = [" + dateValue + "] in calendar input", () -> {
+            dateInput.shouldHave(value(dateValue));
+        });
 
     }
 
-    private void validateDate(Date date) {
+    private void validateDate(@NonNull Date date) {
         if (date.before(MIN_DATE) && date.after(MAX_DATE))
             throw new InvalidDateException("Available dates from [1970/01/01] to [2099/12/31]");
     }
@@ -79,21 +84,25 @@ public class CalendarWebService {
     private void switchCalendarType(CalendarType calendarType) {
         if (calendarType != getCalendarType()) {
             log.info("Switching calendar to: {}", calendarType);
-            calendarTypeSwitchButton.click();
-
-            // INFO: wait for switch calendar animation ends
-            SelenideElement containerIdentifierElement = (calendarType == CalendarType.CALENDAR)
-                    ? moveForwardButton
-                    : yearsListContainer;
-            containerIdentifierElement.shouldBe(visible);
+            Allure.step("Change calendar type to [" + calendarType + "]", () -> {
+                calendarTypeSwitchButton.click();
+                // INFO: wait for switch calendar animation ends
+                SelenideElement containerIdentifierElement = (calendarType == CalendarType.CALENDAR)
+                        ? moveForwardButton
+                        : yearsListContainer;
+                containerIdentifierElement.shouldBe(visible);
+            });
         }
     }
 
+    @Step("Open calendar")
     private void openCalendar() {
-        if (!calendarForm.is(visible, Duration.ofSeconds(2)))
+        if (!calendarForm.is(visible, Duration.ofSeconds(2))) {
             calendarButton.shouldBe(visible).click();
+        }
     }
 
+    @Step("Close calendar")
     private void closeCalendar() {
         if (calendarForm.is(exist, Duration.ofSeconds(2)))
             calendarForm.pressEscape();
@@ -103,6 +112,7 @@ public class CalendarWebService {
         return Integer.parseInt(calendarHeader.getText().split(" ")[1]);
     }
 
+    @Step("Select year = [{}]")
     private void selectYear(int year) {
         switchCalendarType(CalendarType.YEAR);
         yearsList.find(text(String.valueOf(year))).scrollIntoView(false).click();
@@ -112,6 +122,7 @@ public class CalendarWebService {
         return Month.valueOf(calendarHeader.getText().split(" ")[0]).getValue();
     }
 
+    @Step("Select month = [{}]")
     private void selectMonth(int month) {
 
         switchCalendarType(CalendarType.CALENDAR);
@@ -132,6 +143,7 @@ public class CalendarWebService {
 
     }
 
+    @Step("Select day = [{}]")
     private void selectDay(int day) {
         daysList.find(attribute("aria-colindex", String.valueOf(day))).click();
     }

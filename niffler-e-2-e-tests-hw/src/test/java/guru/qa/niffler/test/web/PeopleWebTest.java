@@ -78,7 +78,6 @@ class PeopleWebTest {
                 .getHeader()
                 .openUserMenu()
                 .goToFriendsPage()
-                .filterByQuery(usernameWhoSentRequest)
                 .shouldHaveIncomeFriendRequest(usernameWhoSentRequest);
 
 
@@ -97,7 +96,6 @@ class PeopleWebTest {
                 .getHeader()
                 .openUserMenu()
                 .goToAllPeoplePage()
-                .filterByQuery(usernameWhoGotFriendRequest)
                 .shouldHaveOutcomeFriendRequest(usernameWhoGotFriendRequest);
 
     }

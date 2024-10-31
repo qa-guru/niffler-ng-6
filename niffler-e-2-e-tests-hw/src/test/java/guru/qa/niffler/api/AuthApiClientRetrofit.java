@@ -3,10 +3,7 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.enums.Token;
-import guru.qa.niffler.mapper.LoginModelToMap;
 import guru.qa.niffler.mapper.RegisterModelMapper;
-import guru.qa.niffler.model.LoginModel;
-import guru.qa.niffler.model.RegisterModel;
 import guru.qa.niffler.model.UserJson;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
@@ -18,7 +15,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.stream.Collectors.toMap;
 

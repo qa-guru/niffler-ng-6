@@ -1,17 +1,15 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.impl.springJdbc.CategoryDaoSpringJdbc;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,11 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
+public class SpendingExtension implements BeforeEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-    private static final SpendMapper spendMapper = new SpendMapper();
-    private final CategoryDao categoryDbClient = new CategoryDaoSpringJdbc();
     private final SpendClient spendClient = new SpendDbClientSpringJdbc();
 
     @Override
@@ -49,37 +45,41 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 List<SpendJson> spendings = new ArrayList<>();
                                 Arrays.stream(userAnno.spendings())
                                         .forEach(spendAnno -> {
-                                            spendings.add(
-                                                    spendClient.create(
-                                                            spendMapper.updateFromAnno(
-                                                                    SpendUtils.generateForUser(user.getUsername()),
-                                                                    spendAnno
-                                                            )
-                                                    ));
+
+                                            SpendJson spend = new SpendMapper().updateFromAnno(
+                                                    SpendUtils.generateForUser(user.getUsername()),
+                                                    spendAnno
+                                            );
+
+                                            spend.setCategory(
+                                                    spendClient.findCategoryByUsernameAndName(
+                                                            user.getUsername(),
+                                                            spend.getCategory().getName()
+                                                    ).orElse(
+                                                            spendClient.createCategory(spend.getCategory()))
+                                            );
+
+                                            spend = spendClient.create(spend);
+                                            spendings.add(spend);
+
                                         });
 
-                                context.getStore(NAMESPACE).put(
-                                        context.getUniqueId(),
-                                        usersMap.put(parameterName, user.setTestData(new TestData().setSpendings(spendings)))
-                                );
+                                usersMap.put(
+                                        parameterName,
+                                        user.setTestData(
+                                                user.getTestData().setSpendings(spendings)));
 
-                                log.info("Created new spendings for user = [{}]: {}", user.getUsername(), user.getTestData().getSpendings());
+                                context.getStore(NAMESPACE).put(context.getUniqueId(), usersMap);
+
+                                log.info("Created new spendings for user = [{}]: {}",
+                                        user.getUsername(),
+                                        user.getTestData().getSpendings());
                             }
 
                         }
 
                 );
 
-    }
-
-    @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(SpendJson.class);
-    }
-
-    @Override
-    public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), SpendJson.class);
     }
 
 }

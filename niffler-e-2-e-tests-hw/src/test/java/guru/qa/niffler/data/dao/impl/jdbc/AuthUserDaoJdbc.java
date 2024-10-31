@@ -33,6 +33,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                         "VALUES ( ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {
+
             ps.setString(1, user.getUsername());
             ps.setString(2, PASSWORD_ENCODER.encode(user.getPassword()));
             ps.setBoolean(3, user.getEnabled());

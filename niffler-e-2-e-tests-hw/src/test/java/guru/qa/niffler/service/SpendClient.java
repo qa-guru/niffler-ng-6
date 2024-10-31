@@ -2,7 +2,6 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;

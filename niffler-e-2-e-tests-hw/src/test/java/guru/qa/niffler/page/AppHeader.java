@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.spending.AddNewSpendingPage;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,18 +23,21 @@ public class AppHeader extends BasePage<AppHeader> {
         super(checkPageElementVisible);
     }
 
+    @Step("Go to 'Main' page")
     public MainPage mainPage() {
         log.info("Go to main page");
         logoTitle.click();
         return new MainPage();
     }
 
+    @Step("Open 'Create new spending' page")
     public AddNewSpendingPage goToCreateSpendingPage() {
-        log.info("Open 'Create new spending' page");
+        log.info("Open 'New spending' page");
         newSpendingButton.click();
         return new AddNewSpendingPage(true);
     }
 
+    @Step("Open menu")
     public AccountMenuPage openUserMenu() {
         log.info("Open user menu");
         avatarButton.click();
@@ -48,6 +52,7 @@ public class AppHeader extends BasePage<AppHeader> {
     }
 
     @Override
+    @Step("Should visible header")
     public AppHeader shouldVisiblePageElements() {
 
         log.info("Assert app header elements are visible");

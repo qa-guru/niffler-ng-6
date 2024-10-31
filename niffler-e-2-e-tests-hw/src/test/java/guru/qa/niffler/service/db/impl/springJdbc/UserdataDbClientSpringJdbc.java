@@ -1,9 +1,7 @@
 package guru.qa.niffler.service.db.impl.springJdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.springJdbc.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;

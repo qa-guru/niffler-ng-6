@@ -2,6 +2,7 @@ package guru.qa.niffler.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,45 +31,57 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     private final ElementsCollection friendRequestsList = friendRequestsTableContainer.$$("tr").as("'Friend requests' list"),
             friendsList = friendsTableContainer.$$("tr").as("'Friends' list");
 
+    @Step("Switch to 'All people' page")
     public AllPeoplePage switchToAllPeopleTab() {
         log.info("Switching to 'All people' tab");
         allPeopleTab.click();
         return new AllPeoplePage(true);
     }
 
+    @Step("Unfriend user = [{}]")
     public FriendsPage unfriend(String username) {
         log.info("Unfriend user = [{}]", username);
+        filterByQuery(username);
         friendsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
                 .$x(".//button[text()='Unfriend']").as("['Unfriend' " + username + " button]").click();
         return this;
     }
 
+    @Step("Accept income friend request from user = [{}]")
     public FriendsPage acceptFriendRequest(String username) {
         log.info("Accept friend request from user = [{}]", username);
+        filterByQuery(username);
         friendRequestsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
                 .$x(".//button[text()='Accept']").as("['Accept' " + username + " request button]").click();
         return this;
     }
 
+    @Step("Decline income friend request from user = [{}]")
     public FriendsPage declineFriendRequest(String username) {
         log.info("Decline friend request from user = [{}]", username);
+        filterByQuery(username);
         friendRequestsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
                 .$x(".//button[text()='Decline']").as("['Decline' " + username + " request button]").click();
         return this;
     }
 
+    @Step("Should have income friend request from = [{}]")
     public FriendsPage shouldHaveIncomeFriendRequest(String username) {
         log.info("Assert friend request exists with username = [{}]", username);
+        filterByQuery(username);
         friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0).shouldBe(visible);
         return this;
     }
 
+    @Step("Should have friend = [{}]")
     public FriendsPage shouldHaveFriend(String username) {
         log.info("Assert friend exists with username = [{}]", username);
+        filterByQuery(username);
         friendsList.filterBy(child(usernameSelector, exactText(username))).get(0).shouldBe(visible);
         return this;
     }
 
+    @Step("Should empty friends page")
     public FriendsPage shouldBeEmptyFriendsPage() {
 
         log.info("Assert friend requests and friends list are empty");
@@ -93,6 +106,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     }
 
     @Override
+    @Step("Should visible 'Friends' page")
     public FriendsPage shouldVisiblePageElements() {
         log.info("Assert 'Friends' page elements visible on start up");
         friendsTab.shouldHave(attribute("aria-selected", "true"));

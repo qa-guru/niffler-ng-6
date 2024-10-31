@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class AuthUserDbClientHibernate implements AuthUserDbClient {
 
     private static final AuthUserMapper authUserMapper = new AuthUserMapper();

@@ -6,6 +6,7 @@ import guru.qa.niffler.model.UserJson;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class LoginModelToMap {
 
     public Map<String, String> toLoginMap(@Nonnull LoginModel source) {

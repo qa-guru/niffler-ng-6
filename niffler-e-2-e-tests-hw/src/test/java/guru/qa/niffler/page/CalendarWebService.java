@@ -108,6 +108,7 @@ public class CalendarWebService {
             calendarForm.pressEscape();
     }
 
+    @SuppressWarnings("unused")
     private int getCalendarYear() {
         return Integer.parseInt(calendarHeader.getText().split(" ")[1]);
     }

@@ -214,8 +214,6 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
                 "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
         )) {
 
-            var sqlDate = new java.sql.Date(new Date().getTime());
-
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());

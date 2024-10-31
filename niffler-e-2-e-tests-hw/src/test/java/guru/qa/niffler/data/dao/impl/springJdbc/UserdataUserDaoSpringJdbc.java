@@ -30,7 +30,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
                             "INSERT INTO \"user\" (username, currency, firstname, surname, photo, photo_small, full_name) " +
-                                    "VALUES (?,?,?,?,?,?,?)",
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
                             Statement.RETURN_GENERATED_KEYS
                     );
                     ps.setString(1, user.getUsername());
@@ -113,7 +113,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?,?,?,?)"
+                    "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?, ?)"
             );
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
@@ -142,7 +142,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?,?,?,?)"
+                    "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?, ?)"
             );
 
             var sqlDate = new java.sql.Date(new Date().getTime());

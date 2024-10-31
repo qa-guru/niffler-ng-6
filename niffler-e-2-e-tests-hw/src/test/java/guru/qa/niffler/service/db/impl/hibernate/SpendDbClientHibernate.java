@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class SpendDbClientHibernate implements SpendDbClient {
 
     private static final SpendMapper spendMapper = new SpendMapper();

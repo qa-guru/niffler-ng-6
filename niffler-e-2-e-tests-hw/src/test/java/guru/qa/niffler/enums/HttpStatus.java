@@ -2,6 +2,7 @@ package guru.qa.niffler.enums;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@SuppressWarnings("unused")
 @ParametersAreNonnullByDefault
 public class HttpStatus {
 

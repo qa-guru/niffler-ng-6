@@ -16,6 +16,7 @@ import java.util.UUID;
 
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class UserdataDbClientHibernate implements UserdataDbClient {
 
     private static final UserMapper userMapper = new UserMapper();

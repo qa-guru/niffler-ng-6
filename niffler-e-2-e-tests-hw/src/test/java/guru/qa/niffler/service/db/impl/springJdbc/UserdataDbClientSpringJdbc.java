@@ -22,7 +22,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
     private static final UserMapper userMapper = new UserMapper();
-    private UserdataUserRepository userdataRepository = new UserdataUserRepositorySpringJdbc();
+    private final UserdataUserRepository userdataRepository = new UserdataUserRepositorySpringJdbc();
     private final TransactionTemplate txTemplate = new TransactionTemplate(
             new JdbcTransactionManager(DataSources.dataSource(USERDATA_JDBC_URL))
     );
@@ -67,7 +67,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
     @Override
     public void sendInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
-        log.info("Send invitation from = [{}] to = [{}]", requester.getUsername());
+        log.info("Send invitation from = [{}] to = [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataRepository.sendInvitation(
                     userMapper.toEntity(requester),

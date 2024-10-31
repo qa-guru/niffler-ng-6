@@ -48,6 +48,7 @@ public class CategoryApiClientRetrofit {
         return response.body();
     }
 
+    @SuppressWarnings("unused")
     public Optional<CategoryJson> findById(@Nonnull UUID id) {
         throw new UnsupportedOperationException("Find category by id not supported for Api client");
     }

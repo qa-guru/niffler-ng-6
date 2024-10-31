@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class UsersDbClientJdbc implements UsersDbClient {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();

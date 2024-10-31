@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class UsersDbClientSpringJdbc implements UsersDbClient {
 
     private static final AuthUserMapper authUserMapper = new AuthUserMapper();

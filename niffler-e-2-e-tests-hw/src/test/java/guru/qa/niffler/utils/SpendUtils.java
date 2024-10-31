@@ -5,8 +5,8 @@ import guru.qa.niffler.enums.Period;
 import guru.qa.niffler.helper.EnumHelper;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -39,7 +39,7 @@ public class SpendUtils {
                 .build();
     }
 
-    public static SpendJson generateForUser(@NonNull String username) {
+    public static SpendJson generateForUser(@Nonnull String username) {
          var spend = generate().setUsername(username);
          spend.setCategory(spend.getCategory().setUsername(username));
          return spend;

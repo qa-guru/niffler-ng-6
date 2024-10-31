@@ -6,8 +6,9 @@ import guru.qa.niffler.page.BasePage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -31,7 +32,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public ConfirmRegistrationPage signUpSuccess(@NonNull UserJson user) {
+    public ConfirmRegistrationPage signUpSuccess(@Nonnull UserJson user) {
         log.info("Sign up user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -42,7 +43,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public void signInFailed(@NonNull UserJson user) {
+    public void signInFailed(@Nonnull UserJson user) {
         log.info("Sign up [FAILED] user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -52,12 +53,12 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Fill username = [{}]")
-    public void fillUsername(@NonNull String username) {
+    public void fillUsername(@Nonnull String username) {
         usernameInput.setValue(username);
     }
 
     @Step("Fill password = [{}]")
-    public void fillPassword(@NonNull String password) {
+    public void fillPassword(@Nonnull String password) {
         passwordInput.setValue(password);
     }
 
@@ -93,19 +94,19 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Should visible username error with text = [{}]")
-    public RegisterPage assertUsernameHasError(@NonNull String error) {
+    public RegisterPage assertUsernameHasError(@Nonnull String error) {
         usernameInput.parent().$(".form__error").as("Username error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password error with text = [{}]")
-    public RegisterPage assertPasswordHasError(@NonNull String error) {
+    public RegisterPage assertPasswordHasError(@Nonnull String error) {
         passwordInput.parent().$(".form__error").as("Password error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password confirmation error with text = [{}]")
-    public RegisterPage assertPasswordConfirmationHasError(@NonNull String error) {
+    public RegisterPage assertPasswordConfirmationHasError(@Nonnull String error) {
         passwordConfirmationInput.parent().$(".form__error").as("Password confirmation error text").shouldHave(text(error));
         return this;
     }

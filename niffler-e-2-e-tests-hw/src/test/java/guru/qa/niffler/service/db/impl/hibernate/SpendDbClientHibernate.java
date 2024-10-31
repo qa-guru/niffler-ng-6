@@ -9,9 +9,9 @@ import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.db.SpendDbClient;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +27,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     private final SpendRepository spendRepository = new SpendRepositoryHibernate();
 
     @Override
-    public SpendJson create(@NonNull SpendJson spendJson) {
+    public SpendJson create(@Nonnull SpendJson spendJson) {
         log.info("Creating new spend by DTO: {}", spendJson);
         return xaTxTemplate.execute(() ->
                 spendMapper.toDto(
@@ -36,7 +36,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findById(@NonNull UUID id) {
+    public Optional<SpendJson> findById(@Nonnull UUID id) {
         log.info("Find spend by id = [{}]", id);
         return xaTxTemplate.execute(() ->
                 spendRepository.findById(id)
@@ -44,7 +44,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(@NonNull String username, @NonNull String description) {
+    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
         log.info("Find first spend by username = [{}] and description = [{}]", username, description);
         return xaTxTemplate.execute(() ->
                 spendRepository.findFirstSpendByUsernameAndDescription(username, description)
@@ -52,7 +52,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAllByUsernameAndDescription(@NonNull String username, @NonNull String description) {
+    public List<SpendJson> findAllByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
         log.info("Find all spends by username = [{}] and description = [{}]", username, description);
         return xaTxTemplate.execute(() ->
                 spendRepository.findByUsernameAndDescription(username, description).stream()
@@ -61,7 +61,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAllByUsername(@NonNull String username) {
+    public List<SpendJson> findAllByUsername(@Nonnull String username) {
         log.info("Find all spends by username = [{}]", username);
         return xaTxTemplate.execute(() ->
                 spendRepository.findAllByUsername(username).stream()
@@ -88,7 +88,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public void remove(@NonNull SpendJson spendJson) {
+    public void remove(@Nonnull SpendJson spendJson) {
         log.info("Remove spend: {}", spendJson);
         xaTxTemplate.execute(() -> {
             spendRepository.remove(spendMapper.toEntity(spendJson));
@@ -97,7 +97,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson createCategory(@NonNull CategoryJson categoryJson) {
+    public CategoryJson createCategory(@Nonnull CategoryJson categoryJson) {
         log.info("Creating new category by DTO: {}", categoryJson);
         return xaTxTemplate.execute(() ->
                 categoryMapper.toDto(
@@ -106,7 +106,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryById(@NonNull UUID id) {
+    public Optional<CategoryJson> findCategoryById(@Nonnull UUID id) {
         log.info("Find category by id = [{}]", id);
         return xaTxTemplate.execute(() ->
                 spendRepository.findCategoryById(id)
@@ -114,7 +114,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryByUsernameAndName(@NonNull String username, @NonNull String name) {
+    public Optional<CategoryJson> findCategoryByUsernameAndName(@Nonnull String username, @Nonnull String name) {
         log.info("Find category by username = [{}] and name = [{}]", username, name);
         return xaTxTemplate.execute(() ->
                 spendRepository.findCategoryByUsernameAndName(username, name)
@@ -122,7 +122,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public List<CategoryJson> findAllCategoriesByUsername(@NonNull String username) {
+    public List<CategoryJson> findAllCategoriesByUsername(@Nonnull String username) {
         log.info("Find all categories by username = [{}]", username);
         return xaTxTemplate.execute(() ->
                 spendRepository.findAllCategoriesByUsername(username).stream()
@@ -140,7 +140,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson updateCategory(@NonNull CategoryJson categoryJson) {
+    public CategoryJson updateCategory(@Nonnull CategoryJson categoryJson) {
         log.info("Find all spends");
         return xaTxTemplate.execute(() ->
                 categoryMapper.toDto(
@@ -149,7 +149,7 @@ public class SpendDbClientHibernate implements SpendDbClient {
     }
 
     @Override
-    public void removeCategory(@NonNull CategoryJson categoryJson) {
+    public void removeCategory(@Nonnull CategoryJson categoryJson) {
         log.info("Remove category: {}", categoryJson);
         xaTxTemplate.execute(() -> {
             spendRepository.removeCategory(categoryMapper.toEntity(categoryJson));

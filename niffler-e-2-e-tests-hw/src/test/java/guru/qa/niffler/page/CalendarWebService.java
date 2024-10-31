@@ -5,9 +5,9 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.ex.InvalidDateException;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Month;
@@ -44,7 +44,7 @@ public class CalendarWebService {
         return calendar;
     }
 
-    public void pickDate(@NonNull Date date) {
+    public void pickDate(@Nonnull Date date) {
 
         validateDate(date);
         Calendar calendar = getCalendar(date);
@@ -61,7 +61,7 @@ public class CalendarWebService {
     }
 
     @Step("Should have date in calendar input = ")
-    public void calendarInputShouldHaveDate(@NonNull Date date) {
+    public void calendarInputShouldHaveDate(@Nonnull Date date) {
         var dateValue = new SimpleDateFormat("MM/dd/yyyy").format(date);
         log.info("Calendar input should have value: [{}]", dateValue);
         Allure.step("Should have date = [" + dateValue + "] in calendar input", () -> {
@@ -70,7 +70,7 @@ public class CalendarWebService {
 
     }
 
-    private void validateDate(@NonNull Date date) {
+    private void validateDate(@Nonnull Date date) {
         if (date.before(MIN_DATE) && date.after(MAX_DATE))
             throw new InvalidDateException("Available dates from [1970/01/01] to [2099/12/31]");
     }

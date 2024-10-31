@@ -7,9 +7,9 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     private final UserdataUserRepository userdataRepository = new UserdataUserRepositoryJdbc();
 
     @Override
-    public UserJson create(@NonNull UserJson userJson) {
+    public UserJson create(@Nonnull UserJson userJson) {
         log.info("Creating new user by DTO: {}", userJson);
         return jdbcTxTemplate.execute(() ->
                 userMapper.toDto(
@@ -35,7 +35,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findById(@NonNull UUID id) {
+    public Optional<UserJson> findById(@Nonnull UUID id) {
         log.info("Get user by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
                 userdataRepository
@@ -44,7 +44,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findByUsername(@NonNull String username) {
+    public Optional<UserJson> findByUsername(@Nonnull String username) {
         log.info("Get user by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
                 userdataRepository
@@ -65,7 +65,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void sendInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         jdbcTxTemplate.execute(() -> {
             userdataRepository.sendInvitation(
                     userMapper.toEntity(requester),
@@ -75,7 +75,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void declineInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void declineInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.removeInvitation(
@@ -87,7 +87,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void addFriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void addFriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.addFriend(
@@ -99,7 +99,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void unfriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void unfriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.removeFriend(
@@ -111,7 +111,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
     
     @Override
-    public void remove(@NonNull UserJson user) {
+    public void remove(@Nonnull UserJson user) {
         log.info("Remove user by id: {}", user);
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.remove(

@@ -9,10 +9,10 @@ import guru.qa.niffler.page.BasePage;
 import guru.qa.niffler.page.CalendarWebService;
 import guru.qa.niffler.page.MainPage;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
 
+import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -53,12 +53,12 @@ public abstract class SpendingPage<T> extends BasePage<T> {
         return new AppHeader();
     }
 
-    private SelenideElement getCategorySelector(@NonNull String categoryName) {
+    private SelenideElement getCategorySelector(@Nonnull String categoryName) {
         return categoryTagsList.find(exactText(categoryName));
     }
 
     @SuppressWarnings("unchecked")
-    public T fillSpendingData(@NonNull SpendJson spend) {
+    public T fillSpendingData(@Nonnull SpendJson spend) {
 
         log.info("Fill spending data: {}", spend);
 
@@ -73,21 +73,21 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T setAmount(@NonNull Double amount) {
+    public T setAmount(@Nonnull Double amount) {
         log.info("Set amount: [{}]", amount);
         amountInput.setValue(amount.toString());
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setCategory(@NonNull String categoryName) {
+    public T setCategory(@Nonnull String categoryName) {
         log.info("Set category: [{}]", categoryName);
         categoryInput.setValue(categoryName).pressEnter();
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T selectCurrency(@NonNull CurrencyValues currency) {
+    public T selectCurrency(@Nonnull CurrencyValues currency) {
         log.info("Select currency: [{}]", currency);
         currencySelector.click();
         currenciesList.find(text(currency.toString())).click();
@@ -95,14 +95,14 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T selectCategoryFromTags(@NonNull String categoryName) {
+    public T selectCategoryFromTags(@Nonnull String categoryName) {
         log.info("Select category from tags: [{}]", categoryName);
         categoryTagsList.find(exactText(categoryName)).click();
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setDate(@NonNull Date date) {
+    public T setDate(@Nonnull Date date) {
 
         var dateVal = new SimpleDateFormat("MM/dd/yyyy").format(date);
         log.info("Set date: [{}]", dateVal);
@@ -117,14 +117,14 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T selectDateFromCalendar(@NonNull Date date) {
+    public T selectDateFromCalendar(@Nonnull Date date) {
         log.info("Pick date from calendar: [{}]", date);
         calendarService.pickDate(date);
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setDescription(@NonNull String description) {
+    public T setDescription(@Nonnull String description) {
         log.info("Set description: [{}]", description);
         descriptionInput.setValue(description);
         return (T) this;
@@ -142,7 +142,7 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldHaveAmount(@NonNull Double amount) {
+    public T shouldHaveAmount(@Nonnull Double amount) {
         var amountVal = String.valueOf((amount % 1.0 == 0) ? amount.intValue() : amount);
         log.info("Spending should have amount: [{}] ", amountVal);
         amountInput.shouldHave(value(amountVal));
@@ -150,42 +150,42 @@ public abstract class SpendingPage<T> extends BasePage<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldHaveCurrency(@NonNull CurrencyValues currency) {
+    public T shouldHaveCurrency(@Nonnull CurrencyValues currency) {
         log.info("Spending should have selected currency: [{}]", currency);
         currencySelectorText.shouldHave(text(currency.name()));
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldBeSelectedCategory(@NonNull String categoryName) {
+    public T shouldBeSelectedCategory(@Nonnull String categoryName) {
         log.info("Category tag should be selected: [{}]", categoryName);
         getCategorySelector(categoryName).shouldHave(cssClass("MuiChip-colorPrimary"));
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldNotBeSelectedCategory(@NonNull String categoryName) {
+    public T shouldNotBeSelectedCategory(@Nonnull String categoryName) {
         log.info("Category should not be selected: [{}]", categoryName);
         getCategorySelector(categoryName).shouldNotHave(cssClass("MuiChip-colorPrimary"));
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldHaveCategory(@NonNull String category) {
+    public T shouldHaveCategory(@Nonnull String category) {
         log.info("Spending should have category: [{}]", category);
         categoryInput.shouldHave(value(category));
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T shouldHaveDate(@NonNull Date date) {
+    public T shouldHaveDate(@Nonnull Date date) {
         calendarService.calendarInputShouldHaveDate(date);
         return (T) this;
     }
 
     // INFO: description
     @SuppressWarnings("unchecked")
-    public T shouldHaveDescription(@NonNull String description) {
+    public T shouldHaveDescription(@Nonnull String description) {
         descriptionInput.shouldHave(value(description));
         return (T) this;
     }

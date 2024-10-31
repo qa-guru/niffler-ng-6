@@ -1,7 +1,8 @@
 package guru.qa.niffler.enums;
 
-import lombok.NonNull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class HttpStatus {
 
     public static final int CONTINUE = 100;
@@ -65,11 +66,11 @@ public class HttpStatus {
     public static final int NOT_EXTENDED = 510;
     public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
 
-    public static boolean is4xxClientError(@NonNull Integer statusCode) {
+    public static boolean is4xxClientError(Integer statusCode) {
         return (statusCode >= BAD_REQUEST && statusCode <= UNAVAILABLE_FOR_LEGAL_REASONS);
     }
 
-    public static boolean is5xxServerError(@NonNull Integer statusCode) {
+    public static boolean is5xxServerError(Integer statusCode) {
         return (statusCode >= INTERNAL_SERVER_ERROR && statusCode <= NETWORK_AUTHENTICATION_REQUIRED);
     }
 

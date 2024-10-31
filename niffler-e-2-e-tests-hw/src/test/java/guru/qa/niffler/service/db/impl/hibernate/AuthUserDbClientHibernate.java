@@ -9,9 +9,9 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.service.db.AuthUserDbClient;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
     private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
 
     @Override
-    public AuthUserJson create(@NonNull AuthUserJson authUserJson) {
+    public AuthUserJson create(@Nonnull AuthUserJson authUserJson) {
         log.info("Creating new auth user by DTO: {}", authUserJson);
         return xaTxTemplate.execute(() ->
                 authUserMapper.toDto(
@@ -33,7 +33,7 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
                                 authUserMapper.toEntity(authUserJson))));
     }
 
-    public AuthUserJson createWithAuthorities(@NonNull AuthUserJson authUserJson) {
+    public AuthUserJson createWithAuthorities(@Nonnull AuthUserJson authUserJson) {
         log.info("Creating new auth user with authorities by DTO: {}", authUserJson);
         var authUserEntity = authUserMapper.toEntity(authUserJson);
         authUserEntity.setAuthorities(
@@ -46,7 +46,7 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findById(@NonNull UUID id) {
+    public Optional<AuthUserJson> findById(@Nonnull UUID id) {
         log.info("Get user by id = [{}]", id);
         return xaTxTemplate.execute(() ->
                 authUserRepository
@@ -55,7 +55,7 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findByUsername(@NonNull String username) {
+    public Optional<AuthUserJson> findByUsername(@Nonnull String username) {
         log.info("Get user by username = [{}]", username);
         return xaTxTemplate.execute(() ->
                 authUserRepository
@@ -74,7 +74,7 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
     }
 
     @Override
-    public void remove(@NonNull AuthUserJson authUser) {
+    public void remove(@Nonnull AuthUserJson authUser) {
         log.info("Remove user: {}", authUser);
         xaTxTemplate.execute(() -> {
             authUserRepository

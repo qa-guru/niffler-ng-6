@@ -3,8 +3,8 @@ package guru.qa.niffler.data.dao.impl.jdbc;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +19,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
 
-    public CategoryEntity create(@NonNull CategoryEntity category) {
+    public CategoryEntity create(@Nonnull CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"category\" (username, name, archived) VALUES (?, ?, ?)",
@@ -46,7 +46,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    public Optional<CategoryEntity> findById(@NonNull UUID id) {
+    public Optional<CategoryEntity> findById(@Nonnull UUID id) {
 
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
@@ -69,7 +69,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> findByUsernameAndName(@NonNull String username, @NonNull String categoryName) {
+    public Optional<CategoryEntity> findByUsernameAndName(@Nonnull String username, @Nonnull String categoryName) {
 
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
@@ -93,7 +93,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(@NonNull String username) {
+    public List<CategoryEntity> findAllByUsername(@Nonnull String username) {
 
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
@@ -141,7 +141,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    public CategoryEntity update(@NonNull CategoryEntity category) {
+    public CategoryEntity update(@Nonnull CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"category\" SET username = ?, name = ?, archived = ? WHERE id = ?"
@@ -169,7 +169,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public void remove(@NonNull CategoryEntity category) {
+    public void remove(@Nonnull CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"category\" WHERE id = ?"

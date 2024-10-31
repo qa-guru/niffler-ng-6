@@ -3,7 +3,6 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -11,6 +10,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +49,7 @@ public class SpendApiClientRetrofit {
 
     }
 
-    public SpendJson findById(@NonNull UUID id) {
+    public SpendJson findById(@Nonnull UUID id) {
 
         log.info("Get spend by id: {}", id);
 
@@ -65,15 +65,15 @@ public class SpendApiClientRetrofit {
 
     }
 
-    public @NonNull Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
+    public @Nonnull Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
         return findAllByUsernameAndDescription(username, description).stream().findFirst();
     }
 
-    public @NonNull List<SpendJson> findAllByUsernameAndDescription(@NonNull String username, @NonNull String description) {
+    public @Nonnull List<SpendJson> findAllByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
         return findAllByUsername(username).stream().filter(spend -> spend.getDescription().equals(description)).toList();
     }
 
-    public @NonNull List<SpendJson> findAllByUsername(@NonNull String username) {
+    public @Nonnull List<SpendJson> findAllByUsername(@Nonnull String username) {
         log.info("Get all spends by: username = [{}]", "a");
         final Response<List<SpendJson>> response;
         try {

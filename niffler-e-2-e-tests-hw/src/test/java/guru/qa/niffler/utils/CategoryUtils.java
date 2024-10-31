@@ -2,7 +2,8 @@ package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.model.CategoryJson;
-import lombok.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class CategoryUtils {
 
@@ -14,7 +15,7 @@ public class CategoryUtils {
                 .archived(false).build();
     }
 
-    public static CategoryJson generateForUser(@NonNull String username) {
+    public static CategoryJson generateForUser(@Nonnull String username) {
         return generate().setUsername(username);
     }
 

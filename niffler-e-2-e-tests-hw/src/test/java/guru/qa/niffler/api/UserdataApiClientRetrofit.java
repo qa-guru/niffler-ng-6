@@ -3,7 +3,6 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.UserJson;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -11,6 +10,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class UserdataApiClientRetrofit {
 
     private final UserdataApi userdataApi = retrofit.create(UserdataApi.class);
 
-    public UserJson currentUser(@NonNull String username) {
+    public UserJson currentUser(@Nonnull String username) {
 
         log.info("Get user by username = [{}]", username);
 
@@ -47,7 +47,7 @@ public class UserdataApiClientRetrofit {
     }
 
 
-    public @NonNull List<UserJson> findAll() {
+    public @Nonnull List<UserJson> findAll() {
         log.info("Get all users");
         final Response<List<UserJson>> response;
         try {
@@ -60,7 +60,7 @@ public class UserdataApiClientRetrofit {
         return response.body();
     }
 
-    public @NonNull List<UserJson> findAll(@NonNull String username, @NonNull String searchQuery) {
+    public @Nonnull List<UserJson> findAll(@Nonnull String username, @Nonnull String searchQuery) {
         log.info("Get all users by: username = [{}] and search query = [{}]", username, searchQuery);
         final Response<List<UserJson>> response;
         try {
@@ -73,7 +73,7 @@ public class UserdataApiClientRetrofit {
         return response.body();
     }
 
-    public UserJson update(@NonNull UserJson user) {
+    public UserJson update(@Nonnull UserJson user) {
 
         log.info("Update user info to: {}", user);
 
@@ -89,7 +89,7 @@ public class UserdataApiClientRetrofit {
 
     }
 
-    public List<UserJson> friends(@NonNull String username, String searchQuery) {
+    public List<UserJson> friends(@Nonnull String username, String searchQuery) {
 
         log.info("Get friends of user = [{}] and friend username or full name contains = [{}]", username, searchQuery);
 
@@ -105,7 +105,7 @@ public class UserdataApiClientRetrofit {
 
     }
 
-    public void removeFriend(@NonNull String username, @NonNull String targetUsername) {
+    public void removeFriend(@Nonnull String username, @Nonnull String targetUsername) {
 
         log.info("Unfriend users [{}] and [{}]", username, targetUsername);
 
@@ -121,7 +121,7 @@ public class UserdataApiClientRetrofit {
     }
 
 
-    public UserJson sendInvitation(@NonNull String username, @NonNull String targetUsername) {
+    public UserJson sendInvitation(@Nonnull String username, @Nonnull String targetUsername) {
 
         log.info("Send invitation from user [{}] to [{}]", username, targetUsername);
 
@@ -137,7 +137,7 @@ public class UserdataApiClientRetrofit {
 
     }
 
-    public UserJson acceptInvitation(@NonNull String username, @NonNull String targetUsername) {
+    public UserJson acceptInvitation(@Nonnull String username, @Nonnull String targetUsername) {
 
         log.info("Accept invitation from user [{}] to [{}]", username, targetUsername);
 
@@ -152,7 +152,7 @@ public class UserdataApiClientRetrofit {
         return response.body();
     }
 
-    public UserJson declineInvitation(@NonNull String username, @NonNull String targetUsername) {
+    public UserJson declineInvitation(@Nonnull String username, @Nonnull String targetUsername) {
 
         log.info("Decline invitation from user [{}] to [{}]", username, targetUsername);
 

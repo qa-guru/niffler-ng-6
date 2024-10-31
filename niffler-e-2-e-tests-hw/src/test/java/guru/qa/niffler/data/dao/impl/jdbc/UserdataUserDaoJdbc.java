@@ -5,8 +5,8 @@ import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
-import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
 
-    public UserEntity create(@NonNull UserEntity user) {
+    public UserEntity create(@Nonnull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, currency, firstname, surname, photo, photo_small, full_name) " +
@@ -51,7 +51,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(@NonNull UUID id) {
+    public Optional<UserEntity> findById(@Nonnull UUID id) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE id = ?"
@@ -73,7 +73,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(@NonNull String username) {
+    public Optional<UserEntity> findByUsername(@Nonnull String username) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE username = ?"
@@ -118,7 +118,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public UserEntity update(@NonNull UserEntity user) {
+    public UserEntity update(@Nonnull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ?, full_name = ? WHERE id = ?"
@@ -150,7 +150,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void sendInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+    public void sendInvitation(@Nonnull UserEntity requester, @Nonnull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
         )) {
@@ -166,7 +166,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void removeInvitation(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+    public void removeInvitation(@Nonnull UserEntity requester, @Nonnull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
         )) {
@@ -181,7 +181,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void addFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+    public void addFriend(@Nonnull UserEntity requester, @Nonnull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
         )) {
@@ -209,12 +209,10 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void removeFriend(@NonNull UserEntity requester, @NonNull UserEntity addressee) {
+    public void removeFriend(@Nonnull UserEntity requester, @Nonnull UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM friendship WHERE requester_id = ? AND addressee_id = ? AND status = ?"
         )) {
-
-            var sqlDate = new java.sql.Date(new Date().getTime());
 
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
@@ -235,7 +233,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public void remove(@NonNull UserEntity user) {
+    public void remove(@Nonnull UserEntity user) {
 
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"

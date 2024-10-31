@@ -3,8 +3,9 @@ package guru.qa.niffler.page.spending;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.MainPage;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.exactText;
 
@@ -16,7 +17,7 @@ public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
         super(checkPageElementVisible);
     }
 
-    public MainPage createNewSpending(@NonNull SpendJson spend) {
+    public MainPage createNewSpending(@Nonnull SpendJson spend) {
         fillSpendingData(spend);
         return submit();
     }

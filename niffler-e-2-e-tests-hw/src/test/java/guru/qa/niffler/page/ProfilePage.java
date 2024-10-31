@@ -3,9 +3,9 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 import static com.codeborne.selenide.Condition.*;
@@ -38,13 +38,13 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return new AppHeader();
     }
 
-    public ProfilePage setName(@NonNull String name) {
+    public ProfilePage setName(@Nonnull String name) {
         log.info("Set profile name: {}", name);
         nameInput.shouldBe(visible).setValue(name).pressEnter();
         return this;
     }
 
-    public ProfilePage uploadAvatar(@NonNull File file) {
+    public ProfilePage uploadAvatar(@Nonnull File file) {
         avatarInput.uploadFile(file);
         saveChangesButton.click();
         return this;
@@ -70,24 +70,24 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    public ProfilePage addNewCategory(@NonNull String name) {
+    public ProfilePage addNewCategory(@Nonnull String name) {
         log.info("Add new category with name: {}", name);
         categoryInput.shouldBe(visible).setValue(name).pressEnter();
         return this;
     }
 
-    private SelenideElement getCategoryContainer(@NonNull String categoryName) {
+    private SelenideElement getCategoryContainer(@Nonnull String categoryName) {
         return allCategories.findBy(text(categoryName));
     }
 
-    public ProfilePage editCategoryName(@NonNull String oldCategoryName, @NonNull String newCategoryName) {
+    public ProfilePage editCategoryName(@Nonnull String oldCategoryName, @Nonnull String newCategoryName) {
         log.info("Change category name = from [{}], to = [{}]", oldCategoryName, newCategoryName);
         getCategoryContainer(oldCategoryName).$("[aria-label='Edit category']").as("[Category '" + oldCategoryName + " edit button']").click();
         editCategoryNameInput.setValue(newCategoryName).pressEnter();
         return this;
     }
 
-    public ProfilePage setCategoryActive(@NonNull String categoryName) {
+    public ProfilePage setCategoryActive(@Nonnull String categoryName) {
         log.info("Set category active: [{}]", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Unarchive category']")
                 .as("[Category '" + categoryName + " unarchive button']").click();
@@ -95,7 +95,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    public ProfilePage setCategoryArchive(@NonNull String categoryName) {
+    public ProfilePage setCategoryArchive(@Nonnull String categoryName) {
         log.info("Set category archive: [{}]", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Archive category']")
                 .as("[Category '" + categoryName + " archive button']").click();
@@ -103,39 +103,39 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    public ProfilePage shouldHaveUsername(@NonNull String text) {
+    public ProfilePage shouldHaveUsername(@Nonnull String text) {
         log.info("Assert username equals: {}", text);
         usernameInput.shouldHave(value(text));
         return this;
     }
 
-    public ProfilePage shouldHaveName(@NonNull String name) {
+    public ProfilePage shouldHaveName(@Nonnull String name) {
         log.info("Assert name equals: {}", name);
         nameInput.shouldHave(value(name));
         return this;
     }
 
-    public ProfilePage shouldHaveMessageAlert(@NonNull String alertMessage) {
+    public ProfilePage shouldHaveMessageAlert(@Nonnull String alertMessage) {
         log.info("Assert alert has text: {}", alertMessage);
         alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
         return this;
     }
 
-    public ProfilePage shouldBeArchiveCategory(@NonNull String categoryName) {
+    public ProfilePage shouldBeArchiveCategory(@Nonnull String categoryName) {
         log.info("Assert name equals: {}", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Unarchive category']")
                 .as("[Category '" + categoryName + " unarchive button']").shouldBe(visible);
         return this;
     }
 
-    public ProfilePage shouldBeActiveCategory(@NonNull String categoryName) {
+    public ProfilePage shouldBeActiveCategory(@Nonnull String categoryName) {
         log.info("Assert name equals: {}", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Archive category']")
                 .as("[Category '" + categoryName + " archive button']").shouldBe(visible);
         return this;
     }
 
-    public ProfilePage shouldCategoryExists(@NonNull String categoryName) {
+    public ProfilePage shouldCategoryExists(@Nonnull String categoryName) {
         log.info("Assert category with name = [{}] exists", categoryName);
         allCategories.findBy(text(categoryName)).shouldBe(visible);
         return this;

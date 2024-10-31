@@ -3,7 +3,6 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.CategoryJson;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -11,6 +10,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,7 +34,7 @@ public class CategoryApiClientRetrofit {
 
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
-    public CategoryJson create(@NonNull CategoryJson category) {
+    public CategoryJson create(@Nonnull CategoryJson category) {
 
         log.info("Create new category: {}", category);
         final Response<CategoryJson> response;
@@ -48,11 +48,12 @@ public class CategoryApiClientRetrofit {
         return response.body();
     }
 
-    public Optional<CategoryJson> findById(@NonNull UUID id) {
+    @SuppressWarnings("unused")
+    public Optional<CategoryJson> findById(@Nonnull UUID id) {
         throw new UnsupportedOperationException("Find category by id not supported for Api client");
     }
 
-    public Optional<CategoryJson> findByUsernameAndName(@NonNull String username, @NonNull String name) {
+    public Optional<CategoryJson> findByUsernameAndName(@Nonnull String username, @Nonnull String name) {
         try {
             return Optional.of(
                     findAllByUsername(username, false).stream()
@@ -63,7 +64,7 @@ public class CategoryApiClientRetrofit {
         }
     }
 
-    public List<CategoryJson> findAllByUsername(@NonNull String username, boolean excludeArchived) {
+    public List<CategoryJson> findAllByUsername(@Nonnull String username, boolean excludeArchived) {
         log.info("Get all categories of user: [{}]", username);
         final Response<List<CategoryJson>> response;
         try {
@@ -76,7 +77,7 @@ public class CategoryApiClientRetrofit {
         return response.body();
     }
 
-    public CategoryJson update(@NonNull CategoryJson category) {
+    public CategoryJson update(@Nonnull CategoryJson category) {
         log.info("Update category to: {}", category);
         final Response<CategoryJson> response;
         try {

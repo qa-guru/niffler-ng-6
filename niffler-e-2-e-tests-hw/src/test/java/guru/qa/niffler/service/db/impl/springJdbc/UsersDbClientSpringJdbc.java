@@ -15,13 +15,14 @@ import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UsersDbClient;
 import guru.qa.niffler.utils.UserUtils;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class UsersDbClientSpringJdbc implements UsersDbClient {
 
     private static final AuthUserMapper authUserMapper = new AuthUserMapper();
@@ -36,7 +37,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(AUTH_JDBC_URL, USERDATA_JDBC_URL, SPEND_JDBC_URL);
 
     @Override
-    public UserJson createUser(@NonNull UserJson userJson) {
+    public UserJson createUser(@Nonnull UserJson userJson) {
 
         log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", userJson);
 
@@ -59,7 +60,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public List<UserJson> getIncomeInvitationFromNewUsers(@NonNull UserJson to, int count) {
+    public List<UserJson> getIncomeInvitationFromNewUsers(@Nonnull UserJson to, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -83,7 +84,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public List<UserJson> sendOutcomeInvitationToNewUsers(@NonNull UserJson from, int count) {
+    public List<UserJson> sendOutcomeInvitationToNewUsers(@Nonnull UserJson from, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -107,7 +108,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public List<UserJson> addNewFriends(@NonNull UserJson userJson, int count) {
+    public List<UserJson> addNewFriends(@Nonnull UserJson userJson, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -131,7 +132,7 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
     }
 
     @Override
-    public void removeUser(@NonNull UserJson userJson) {
+    public void removeUser(@Nonnull UserJson userJson) {
         log.info("Remove user from niffler-auth and niffler-userdata with username = [{}]", userJson.getUsername());
         xaTxTemplate.execute(() -> {
             authUserRepository.findByUsername(userJson.getUsername())

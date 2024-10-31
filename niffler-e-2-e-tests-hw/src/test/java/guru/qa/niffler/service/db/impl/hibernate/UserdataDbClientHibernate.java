@@ -7,15 +7,16 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class UserdataDbClientHibernate implements UserdataDbClient {
 
     private static final UserMapper userMapper = new UserMapper();
@@ -25,7 +26,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     private final UserdataUserRepository userRepository = new UserdataUserRepositoryHibernate();
 
     @Override
-    public UserJson create(@NonNull UserJson userJson) {
+    public UserJson create(@Nonnull UserJson userJson) {
         log.info("Creating new user by DTO: {}", userJson);
         return xaTxTemplate.execute(() ->
                 userMapper.toDto(
@@ -33,7 +34,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findById(@NonNull UUID id) {
+    public Optional<UserJson> findById(@Nonnull UUID id) {
         log.info("Get user by id = [{}]", id);
         return xaTxTemplate.execute(() ->
                 userRepository
@@ -42,7 +43,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findByUsername(@NonNull String username) {
+    public Optional<UserJson> findByUsername(@Nonnull String username) {
         log.info("Get user by username = [{}]", username);
         return xaTxTemplate.execute(() ->
                 userRepository
@@ -63,7 +64,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void sendInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Create invitation from [{}] to [{}] with status PENDING", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.sendInvitation(
@@ -75,7 +76,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void declineInvitation(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void declineInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.removeInvitation(
@@ -87,7 +88,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void addFriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void addFriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.addFriend(
@@ -99,7 +100,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void unfriend(@NonNull UserJson requester, @NonNull UserJson addressee) {
+    public void unfriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
         log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         xaTxTemplate.execute(() -> {
                     userRepository.removeFriend(
@@ -111,7 +112,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public void remove(@NonNull UserJson user) {
+    public void remove(@Nonnull UserJson user) {
         log.info("Remove user by id: {}", user);
         xaTxTemplate.execute(() -> {
                     userRepository.remove(userMapper.toEntity(user));

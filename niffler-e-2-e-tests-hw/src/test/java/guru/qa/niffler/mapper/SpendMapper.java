@@ -7,15 +7,15 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 
 public class SpendMapper {
 
     private final CategoryMapper categoryMapper = new CategoryMapper();
 
-    public SpendEntity toEntity(@NonNull SpendJson dto){
+    public SpendEntity toEntity(@Nonnull SpendJson dto){
         return SpendEntity.builder()
                 .id(dto.getId())
                 .username(dto.getUsername())
@@ -27,7 +27,7 @@ public class SpendMapper {
                 .build();
     }
 
-    public SpendJson toDto(@NonNull SpendEntity entity){
+    public SpendJson toDto(@Nonnull SpendEntity entity){
         return SpendJson.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
@@ -39,7 +39,7 @@ public class SpendMapper {
                 .build();
     }
 
-    public SpendJson updateFromAnno(@NonNull SpendJson spend, Spending anno) {
+    public SpendJson updateFromAnno(@Nonnull SpendJson spend, Spending anno) {
         var datePattern = "MM/dd/yyyy";
 
         // @formatter:off

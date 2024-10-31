@@ -5,11 +5,12 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
-import lombok.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class AuthUserMapper {
 
-    public AuthUserEntity toEntity(@NonNull AuthUserJson authUserJson) {
+    public AuthUserEntity toEntity(@Nonnull AuthUserJson authUserJson) {
         var authUser = AuthUserEntity.builder()
                 .id(authUserJson.getId())
                 .username(authUserJson.getUsername())

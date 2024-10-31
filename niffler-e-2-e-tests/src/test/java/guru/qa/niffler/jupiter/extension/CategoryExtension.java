@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.CategoriesApiClient;
-import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
@@ -15,35 +15,36 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
-                    CategoryJson category = new CategoryJson(
-                            null,
-                            anno.name().isEmpty() ? generateCategoryName() : anno.name(),
-                            anno.username(),
-                            false
-                    );
-                    CategoryJson createdCategory = categoriesApiClient.createCategory(category);
-                    if (anno.archived()) {
-                        createdCategory = categoriesApiClient.updateCategory(new CategoryJson(
-                                createdCategory.id(),
-                                createdCategory.name(),
-                                createdCategory.username(),
-                                true
-                        ));
+                    if (anno.categories().length > 0) {
+                        CategoryJson category = new CategoryJson(
+                                null,
+                                anno.categories()[0].name().isEmpty() ? RandomDataUtils.randomCategoryName() : anno.categories()[0].name(),
+                                anno.username(),
+                                false
+                        );
+                        CategoryJson createdCategory = categoriesApiClient.createCategory(category);
+                        if (anno.categories()[0].archived()) {
+                            createdCategory = categoriesApiClient.updateCategory(new CategoryJson(
+                                    createdCategory.id(),
+                                    createdCategory.name(),
+                                    createdCategory.username(),
+                                    true
+                            ));
+                        }
+                        context.getStore(NAMESPACE).put(
+                                context.getUniqueId(),
+                                createdCategory
+                        );
                     }
-                    context.getStore(NAMESPACE).put(
-                            context.getUniqueId(),
-                            createdCategory
-                    );
-
                 });
     }
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (!category.archived()) {
+        if (category != null && !category.archived()) {
             categoriesApiClient.updateCategory(new CategoryJson(
                     category.id(),
                     category.name(),
@@ -53,17 +54,13 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         }
     }
 
-    private String generateCategoryName() {
-        return RandomDataUtils.randomCategoryName();
-    }
-
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson.class);
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext.getStore(CategoryExtension.NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
     }
 }

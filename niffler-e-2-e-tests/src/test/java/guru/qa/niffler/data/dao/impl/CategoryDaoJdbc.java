@@ -46,6 +46,36 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
+    public CategoryEntity update(CategoryEntity category) {
+        try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE category SET username = ?, name = ?, archived = ? WHERE id = ?",
+                    PreparedStatement.RETURN_GENERATED_KEYS
+            )) {
+                ps.setString(1, category.getUsername());
+                ps.setString(2, category.getName());
+                ps.setBoolean(3, category.isArchived());
+                ps.setObject(4, category.getId());
+
+                ps.executeUpdate();
+
+                final UUID generatedKey;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        generatedKey = rs.getObject("id", UUID.class);
+                    } else {
+                        throw new SQLException("Can't find id in the ResultsSet");
+                    }
+                }
+                category.setId(generatedKey);
+                return category;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(

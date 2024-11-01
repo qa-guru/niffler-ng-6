@@ -1,8 +1,8 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.CategoriesApiClient;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -11,7 +11,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-    private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -24,9 +24,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 anno.username(),
                                 false
                         );
-                        CategoryJson createdCategory = categoriesApiClient.createCategory(category);
+                        CategoryJson createdCategory = spendDbClient.createCategory(category);
                         if (anno.categories()[0].archived()) {
-                            createdCategory = categoriesApiClient.updateCategory(new CategoryJson(
+                            createdCategory = spendDbClient.updateCategory(new CategoryJson(
                                     createdCategory.id(),
                                     createdCategory.name(),
                                     createdCategory.username(),
@@ -45,7 +45,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     public void afterTestExecution(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         if (category != null && !category.archived()) {
-            categoriesApiClient.updateCategory(new CategoryJson(
+            spendDbClient.updateCategory(new CategoryJson(
                     category.id(),
                     category.name(),
                     category.username(),

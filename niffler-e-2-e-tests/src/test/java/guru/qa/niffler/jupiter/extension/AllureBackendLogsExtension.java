@@ -27,6 +27,38 @@ public class AllureBackendLogsExtension implements SuiteExtension {
                         Path.of("./logs/niffler-auth/app.log")
                 )
         );
+        allureLifecycle.addAttachment(
+                "Niffler-currency log",
+                "text/html",
+                ".log",
+                Files.newInputStream(
+                        Path.of("./logs/niffler-currency/app.log")
+                )
+        );
+        allureLifecycle.addAttachment(
+                "Niffler-gateway log",
+                "text/html",
+                ".log",
+                Files.newInputStream(
+                        Path.of("./logs/niffler-gateway/app.log")
+                )
+        );
+        allureLifecycle.addAttachment(
+                "Niffler-spend log",
+                "text/html",
+                ".log",
+                Files.newInputStream(
+                        Path.of("./logs/niffler-spend/app.log")
+                )
+        );
+        allureLifecycle.addAttachment(
+                "Niffler-userdata log",
+                "text/html",
+                ".log",
+                Files.newInputStream(
+                        Path.of("./logs/niffler-userdata/app.log")
+                )
+        );
         allureLifecycle.stopTestCase(caseId);
         allureLifecycle.writeTestCase(caseId);
     }

@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -11,11 +12,11 @@ import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Test;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -115,6 +116,7 @@ public class SpendingWebTest {
                 .checkTableSize(0);
     }
 
+
     @User(
             spendings = @Spending(
                     category = "Обучение",
@@ -122,16 +124,100 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
-    @ScreenShotTest("img/expected-stat.png")
-    void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
+    @ScreenShotTest(value = "img/expected-stat.png")
+    void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
         Selenide.open(LoginPage.URL, LoginPage.class)
                 .fillLoginPage(user.username(), user.testData().password())
                 .submit(new MainPage());
+        Thread.sleep(3000);
         BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
         assertFalse(new ScreenDiffResult(
-                expected,
-                actual
+                actual,
+                expected
+        ));
+    }
+
+    @User(
+            spendings = @Spending(
+                    category = "Обучение",
+                    description = "Обучение Advanced 2.0",
+                    amount = 79990
+            )
+    )
+    @ScreenShotTest(value = "img/clear-stat.png")
+    void checkStatComponentAfterDeleteSpendTest(UserJson user, BufferedImage expected) throws IOException {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage())
+                .getSpendingTable()
+                .deleteSpending("Обучение Advanced 2.0");
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+        assertFalse(new ScreenDiffResult(
+                actual,
+                expected
+        ));
+    }
+
+    @User(
+            spendings = @Spending(
+                    category = "Обучение",
+                    description = "Обучение Advanced 2.0",
+                    amount = 79990
+            )
+    )
+    @ScreenShotTest(value = "img/edit-stat.png")
+    void checkStatComponentAfterEditSpendTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage())
+                .getSpendingTable()
+                .editSpending("Обучение Advanced 2.0")
+                .setNewSpendingAmount(80000)
+                .saveSpending();
+        new MainPage().checkStatisticCells(List.of("Обучение 80000 ₽"));
+        Thread.sleep(1000);
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+        assertFalse(new ScreenDiffResult(
+                actual,
+                expected
+        ));
+    }
+
+    @User(
+            categories = {
+                    @Category(name = "Обучение"),
+                    @Category(name = "Развлечения", archived = true),
+                    @Category(name = "Продукты", archived = true)
+            },
+            spendings = {
+                    @Spending(
+                            category = "Обучение",
+                            description = "Обучение Advanced 2.0",
+                            amount = 1000
+                    ),
+                    @Spending(
+                            category = "Развлечения",
+                            description = "Поход в кино",
+                            amount = 100
+                    ),
+                    @Spending(
+                            category = "Продукты",
+                            description = "Покупка продуктов",
+                            amount = 3000
+                    )
+            }
+    )
+    @ScreenShotTest(value = "img/archived-stat.png")
+    void checkStatComponentAfterArchivedCategoryTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage());
+        new MainPage().checkStatisticCells(List.of("Обучение 1000 ₽", "Archived 3100 ₽"));
+        Thread.sleep(1000);
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+        assertFalse(new ScreenDiffResult(
+                actual,
+                expected
         ));
     }
 }
-

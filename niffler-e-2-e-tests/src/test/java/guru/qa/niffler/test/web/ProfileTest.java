@@ -2,16 +2,24 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
+import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Test;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 import static guru.qa.niffler.utils.RandomDataUtils.randomName;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class ProfileTest {
@@ -63,7 +71,7 @@ public class ProfileTest {
                 .checkThatPageLoaded()
                 .getHeader()
                 .toProfilePage()
-                .uploadPhotoFromClasspath("img/cat.jpeg")
+                .uploadPhotoFromClasspath("img/cat.png")
                 .setName(newName)
                 .submitProfile()
                 .checkAlertMessage("Profile successfully updated");
@@ -131,5 +139,23 @@ public class ProfileTest {
                 .getHeader()
                 .toProfilePage()
                 .checkThatCategoryInputDisabled();
+    }
+
+    @User
+    @ScreenShotTest(value = "img/profile-expected.png")
+    void checkProfileImageTest(UserJson user, BufferedImage expected) throws IOException {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage())
+                .checkThatPageLoaded()
+                .getHeader()
+                .toProfilePage()
+                .uploadPhotoFromClasspath("img/cat.png")
+                .submitProfile();
+        BufferedImage actual = ImageIO.read($(".MuiAvatar-img").screenshot());
+        assertFalse(new ScreenDiffResult(
+                actual,
+                expected
+        ));
     }
 }

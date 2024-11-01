@@ -18,9 +18,10 @@ buildscript {
         springDataCommonsVersion = '3.3.3'
         wiremockVersion = '3.0.1'
         fakerVersion = '1.0.2'
+        atomikosVersion = '6.0.0'
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
                 ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
-                : "http://127.0.0.1:8089/ws/userdata.wsdl"
+                : "http://niffler.lan:8089/ws/userdata.wsdl"
     }
 }
 
@@ -76,6 +77,9 @@ dependencies {
     // DB
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
+    testImplementation "com.atomikos:transactions-jta:${project.ext.atomikosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-hibernate4:${project.ext.atomikosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-jdbc:${project.ext.atomikosVersion}"
     testImplementation "p6spy:p6spy:${p6spyVersion}"
     testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
     testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"

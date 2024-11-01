@@ -10,19 +10,19 @@ import java.util.UUID;
 
 public class CategoryEntityRowMapper implements RowMapper<CategoryEntity> {
 
-  public static final CategoryEntityRowMapper instance = new CategoryEntityRowMapper();
+    public static final CategoryEntityRowMapper instance = new CategoryEntityRowMapper();
 
-  private CategoryEntityRowMapper() {
-  }
+    private CategoryEntityRowMapper() {
+    }
 
-  @Override
-  @Nonnull
-  public CategoryEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-    CategoryEntity ce = new CategoryEntity();
-    ce.setId(rs.getObject("id", UUID.class));
-    ce.setUsername(rs.getString("username"));
-    ce.setName(rs.getString("name"));
-    ce.setArchived(rs.getBoolean("archived"));
-    return ce;
-  }
+    @Override
+    @Nonnull
+    public CategoryEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+        CategoryEntity ce = new CategoryEntity();
+        ce.setId(rs.getObject("id", UUID.class));
+        ce.setUsername(rs.getString("username"));
+        ce.setName(rs.getString("name"));
+        ce.setArchived(rs.getBoolean("archived"));
+        return ce;
+    }
 }

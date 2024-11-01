@@ -25,124 +25,125 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ParametersAreNonnullByDefault
 public class UsersApiClient implements UsersClient {
 
-  private static final Config CFG = Config.getInstance();
-  private static final String defaultPassword = "12345";
+    private static final Config CFG = Config.getInstance();
+    private static final String defaultPassword = "12345";
 
-  private final AuthApi authApi = new EmptyClient(CFG.authUrl()).create(AuthApi.class);
-  private final UserdataApi userdataApi = new EmptyClient(CFG.userdataUrl()).create(UserdataApi.class);
+    private final AuthApi authApi = new EmptyClient(CFG.authUrl()).create(AuthApi.class);
+    private final UserdataApi userdataApi = new EmptyClient(CFG.userdataUrl()).create(UserdataApi.class);
 
-  @NotNull
-  @Override
-  public UserJson createUser(String username, String password) {
-    try {
-      authApi.requestRegisterForm().execute();
-      authApi.register(
-          username,
-          password,
-          password,
-          ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
-      ).execute();
-      UserJson createdUser = requireNonNull(userdataApi.currentUser(username).execute().body());
-      return createdUser.addTestData(
-          new TestData(
-              password
-          )
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public void addIncomeInvitation(UserJson targetUser, int count) {
-    if (count > 0) {
-      for (int i = 0; i < count; i++) {
-        final String username = randomUsername();
-        final Response<UserJson> response;
-        final UserJson newUser;
+    @NotNull
+    @Override
+    public UserJson createUser(String username, String password) {
         try {
-          newUser = createUser(username, defaultPassword);
-
-          response = userdataApi.sendInvitation(
-              newUser.username(),
-              targetUser.username()
-          ).execute();
+            authApi.requestRegisterForm().execute();
+            authApi.register(
+                    username,
+                    password,
+                    password,
+                    ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+            ).execute();
+            UserJson createdUser = requireNonNull(userdataApi.currentUser(username).execute().body());
+            return createdUser.addTestData(
+                    new TestData(
+                            password
+                    )
+            );
         } catch (IOException e) {
-          throw new AssertionError(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addIncomeInvitation(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                final String username = randomUsername();
+                final Response<UserJson> response;
+                final UserJson newUser;
+                try {
+                    newUser = createUser(username, defaultPassword);
+
+                    response = userdataApi.sendInvitation(
+                            newUser.username(),
+                            targetUser.username()
+                    ).execute();
+                } catch (IOException e) {
+                    throw new AssertionError(e);
+                }
+                assertEquals(200, response.code());
+
+                targetUser.testData()
+                        .incomeInvitations()
+                        .add(newUser);
+            }
+        }
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                final String username = randomUsername();
+                final Response<UserJson> response;
+                final UserJson newUser;
+                try {
+                    newUser = createUser(username, defaultPassword);
+
+                    response = userdataApi.sendInvitation(
+                            targetUser.username(),
+                            newUser.username()
+                    ).execute();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                assertEquals(200, response.code());
+
+                targetUser.testData()
+                        .outcomeInvitations()
+                        .add(newUser);
+            }
+        }
+    }
+
+    @Override
+    public void addFriend(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                final String username = randomUsername();
+                final Response<UserJson> response;
+                try {
+                    userdataApi.sendInvitation(
+                            createUser(
+                                    username,
+                                    defaultPassword
+                            ).username(),
+                            targetUser.username()
+                    ).execute();
+                    response = userdataApi.acceptInvitation(targetUser.username(), username).execute();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                assertEquals(200, response.code());
+
+                targetUser.testData()
+                        .friends()
+                        .add(response.body());
+            }
+        }
+    }
+
+    @Nonnull
+    public List<UserJson> allUsers(@Nonnull String username, @Nullable String searchQuery) {
+        final Response<List<UserJson>> response;
+        try {
+            response = userdataApi.allUsers(username, searchQuery)
+                    .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
         }
         assertEquals(200, response.code());
-
-        targetUser.testData()
-            .incomeInvitations()
-            .add(newUser);
-      }
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
-  }
-
-  @Override
-  public void addOutcomeInvitation(UserJson targetUser, int count) {
-    if (count > 0) {
-      for (int i = 0; i < count; i++) {
-        final String username = randomUsername();
-        final Response<UserJson> response;
-        final UserJson newUser;
-        try {
-          newUser = createUser(username, defaultPassword);
-
-          response = userdataApi.sendInvitation(
-              targetUser.username(),
-              newUser.username()
-          ).execute();
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-        assertEquals(200, response.code());
-
-        targetUser.testData()
-            .outcomeInvitations()
-            .add(newUser);
-      }
-    }
-  }
-
-  @Override
-  public void addFriend(UserJson targetUser, int count) {
-    if (count > 0) {
-      for (int i = 0; i < count; i++) {
-        final String username = randomUsername();
-        final Response<UserJson> response;
-        try {
-          userdataApi.sendInvitation(
-              createUser(
-                  username,
-                  defaultPassword
-              ).username(),
-              targetUser.username()
-          ).execute();
-          response = userdataApi.acceptInvitation(targetUser.username(), username).execute();
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-        assertEquals(200, response.code());
-
-        targetUser.testData()
-            .friends()
-            .add(response.body());
-      }
-    }
-  }
-  @Nonnull
-  public List<UserJson> allUsers(@Nonnull String username, @Nullable String searchQuery) {
-    final Response<List<UserJson>> response;
-    try {
-      response = userdataApi.allUsers(username, searchQuery)
-              .execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-    assertEquals(200, response.code());
-    return response.body() != null
-            ? response.body()
-            : Collections.emptyList();
-  }
 }

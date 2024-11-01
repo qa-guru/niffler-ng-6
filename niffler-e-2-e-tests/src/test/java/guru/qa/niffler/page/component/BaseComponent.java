@@ -8,14 +8,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class BaseComponent<T extends BaseComponent<?>> {
 
-  protected final SelenideElement self;
+    protected final SelenideElement self;
 
-  public BaseComponent(SelenideElement self) {
-    this.self = self;
-  }
+    public BaseComponent(SelenideElement self) {
+        this.self = self;
+    }
 
-  @Nonnull
-  public SelenideElement getSelf() {
-    return self;
-  }
+    @Nonnull
+    public SelenideElement getSelf() {
+        return self;
+    }
 }

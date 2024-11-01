@@ -16,26 +16,26 @@ import static com.codeborne.selenide.Selenide.$$;
 @ParametersAreNonnullByDefault
 public abstract class BasePage<T extends BasePage<?>> {
 
-  protected static final Config CFG = Config.getInstance();
+    protected static final Config CFG = Config.getInstance();
 
-  private final SelenideElement alert = $(".MuiSnackbar-root");
-  private final ElementsCollection formErrors = $$("p.Mui-error, .input__helper-text");
+    private final SelenideElement alert = $(".MuiSnackbar-root");
+    private final ElementsCollection formErrors = $$("p.Mui-error, .input__helper-text");
 
-  public abstract T checkThatPageLoaded();
+    public abstract T checkThatPageLoaded();
 
-  @Step("Check that alert message appears: {expectedText}")
-  @SuppressWarnings("unchecked")
-  @Nonnull
-  public T checkAlertMessage(String expectedText) {
-    alert.should(Condition.visible).should(Condition.text(expectedText));
-    return (T) this;
-  }
+    @Step("Check that alert message appears: {expectedText}")
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public T checkAlertMessage(String expectedText) {
+        alert.should(Condition.visible).should(Condition.text(expectedText));
+        return (T) this;
+    }
 
-  @Step("Check that form error message appears: {expectedText}")
-  @SuppressWarnings("unchecked")
-  @Nonnull
-  public T checkFormErrorMessage(String... expectedText) {
-    formErrors.should(CollectionCondition.textsInAnyOrder(expectedText));
-    return (T) this;
-  }
+    @Step("Check that form error message appears: {expectedText}")
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public T checkFormErrorMessage(String... expectedText) {
+        formErrors.should(CollectionCondition.textsInAnyOrder(expectedText));
+        return (T) this;
+    }
 }

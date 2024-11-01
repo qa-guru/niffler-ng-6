@@ -16,28 +16,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ParametersAreNonnullByDefault
 public class GithubApiClient extends RestClient implements GhClient {
 
-  private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
+    private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
 
-  private final GhApi ghApi;
+    private final GhApi ghApi;
 
-  public GithubApiClient() {
-    super(CFG.ghUrl());
-    this.ghApi = create(GhApi.class);
-  }
-
-  @Nonnull
-  @Override
-  public String issueState(String issueNumber) {
-    final Response<JsonNode> response;
-    try {
-      response = ghApi.issue(
-          "Bearer " + System.getenv(GH_TOKEN_ENV),
-          issueNumber
-      ).execute();
-    } catch (IOException e) {
-      throw new AssertionError(e);
+    public GithubApiClient() {
+        super(CFG.ghUrl());
+        this.ghApi = create(GhApi.class);
     }
-    assertEquals(200, response.code());
-    return Objects.requireNonNull(response.body()).get("state").asText();
-  }
+
+    @Nonnull
+    @Override
+    public String issueState(String issueNumber) {
+        final Response<JsonNode> response;
+        try {
+            response = ghApi.issue(
+                    "Bearer " + System.getenv(GH_TOKEN_ENV),
+                    issueNumber
+            ).execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertEquals(200, response.code());
+        return Objects.requireNonNull(response.body()).get("state").asText();
+    }
 }

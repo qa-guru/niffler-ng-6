@@ -7,12 +7,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public interface UsersClient {
-  @Nonnull
-  UserJson createUser(String username, String password);
+    @Nonnull
+    UserJson createUser(String username, String password);
 
-  void addIncomeInvitation(UserJson targetUser, int count);
+    void addIncomeInvitation(UserJson targetUser, int count);
 
-  void addOutcomeInvitation(UserJson targetUser, int count);
+    void addOutcomeInvitation(UserJson targetUser, int count);
 
-  void addFriend(UserJson targetUser, int count);
+    void addFriend(UserJson targetUser, int count);
 }

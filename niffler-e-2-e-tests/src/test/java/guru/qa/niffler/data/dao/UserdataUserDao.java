@@ -11,18 +11,18 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public interface UserdataUserDao {
 
-  @Nonnull
-  UserEntity create(UserEntity user);
+    @Nonnull
+    UserEntity create(UserEntity user);
 
-  @Nonnull
-  UserEntity update(UserEntity user);
+    @Nonnull
+    UserEntity update(UserEntity user);
 
-  @Nonnull
-  Optional<UserEntity> findById(UUID id);
+    @Nonnull
+    Optional<UserEntity> findById(UUID id);
 
-  @Nonnull
-  Optional<UserEntity> findByUsername(String username);
+    @Nonnull
+    Optional<UserEntity> findByUsername(String username);
 
-  @Nonnull
-  List<UserEntity> findAll();
+    @Nonnull
+    List<UserEntity> findAll();
 }

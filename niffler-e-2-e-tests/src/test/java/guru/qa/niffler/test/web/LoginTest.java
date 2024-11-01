@@ -13,20 +13,20 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 @WebTest
 public class LoginTest {
 
-  @User
-  @Test
-  void mainPageShouldBeDisplayedAfterSuccessLogin(UserJson user) {
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .checkThatPageLoaded();
-  }
+    @User
+    @Test
+    void mainPageShouldBeDisplayedAfterSuccessLogin(UserJson user) {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage())
+                .checkThatPageLoaded();
+    }
 
-  @Test
-  void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(randomUsername(), "BAD")
-        .submit(new LoginPage())
-        .checkError("Неверные учетные данные пользователя");
-  }
+    @Test
+    void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(randomUsername(), "BAD")
+                .submit(new LoginPage())
+                .checkError("Неверные учетные данные пользователя");
+    }
 }

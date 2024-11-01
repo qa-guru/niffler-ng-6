@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ExtendWith({
-    BrowserExtension.class
+        BrowserExtension.class
 })
 public @interface WebTest {
 }

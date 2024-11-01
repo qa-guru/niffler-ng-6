@@ -12,18 +12,18 @@ import java.util.UUID;
 
 public class AuthorityEntityRowMapper implements RowMapper<AuthorityEntity> {
 
-  public static final AuthorityEntityRowMapper instance = new AuthorityEntityRowMapper();
+    public static final AuthorityEntityRowMapper instance = new AuthorityEntityRowMapper();
 
-  private AuthorityEntityRowMapper() {
-  }
+    private AuthorityEntityRowMapper() {
+    }
 
-  @Override
-  @Nonnull
-  public AuthorityEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-    AuthorityEntity ae = new AuthorityEntity();
-    ae.setId(rs.getObject("id", UUID.class));
-    ae.setUser(new AuthUserEntity(rs.getObject("user_id", UUID.class)));
-    ae.setAuthority(Authority.valueOf(rs.getString("authority")));
-    return ae;
-  }
+    @Override
+    @Nonnull
+    public AuthorityEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+        AuthorityEntity ae = new AuthorityEntity();
+        ae.setId(rs.getObject("id", UUID.class));
+        ae.setUser(new AuthUserEntity(rs.getObject("user_id", UUID.class)));
+        ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+        return ae;
+    }
 }

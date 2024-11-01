@@ -5,7 +5,6 @@ import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.impl.UsersApiClient;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 
 import java.util.List;
 

@@ -10,11 +10,11 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public interface AuthAuthorityDao {
 
-  void create(AuthorityEntity... authority);
+    void create(AuthorityEntity... authority);
 
-  @Nonnull
-  List<AuthorityEntity> findAll();
+    @Nonnull
+    List<AuthorityEntity> findAll();
 
-  @Nonnull
-  List<AuthorityEntity> findAllByUserId(UUID userId);
+    @Nonnull
+    List<AuthorityEntity> findAllByUserId(UUID userId);
 }

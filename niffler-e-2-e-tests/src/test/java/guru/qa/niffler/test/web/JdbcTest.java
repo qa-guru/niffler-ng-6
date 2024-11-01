@@ -19,41 +19,41 @@ import java.util.Date;
 @Disabled
 public class JdbcTest {
 
-  private UsersClient usersClient;
+    private UsersClient usersClient;
 
-  @Test
-  void txTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
+    @Test
+    void txTest() {
+        SpendDbClient spendDbClient = new SpendDbClient();
 
-    SpendJson spend = spendDbClient.createSpend(
-        new SpendJson(
-            null,
-            new Date(),
-            1000.0,
-            CurrencyValues.RUB,
-            new CategoryJson(
-                null,
-                "cat-name-tx-3",
-                "duck",
-                false
-            ),
-            "spend-name-tx-3",
-            "duck"
-        )
-    );
-  }
+        SpendJson spend = spendDbClient.createSpend(
+                new SpendJson(
+                        null,
+                        new Date(),
+                        1000.0,
+                        CurrencyValues.RUB,
+                        new CategoryJson(
+                                null,
+                                "cat-name-tx-3",
+                                "duck",
+                                false
+                        ),
+                        "spend-name-tx-3",
+                        "duck"
+                )
+        );
+    }
 
-  @ValueSource(strings = {
-      "valentin-11"
-  })
-  @ParameterizedTest
-  void springJdbcTest(String uname) {
-    UserJson user = usersClient.createUser(
-        uname,
-        "12345"
-    );
+    @ValueSource(strings = {
+            "valentin-11"
+    })
+    @ParameterizedTest
+    void springJdbcTest(String uname) {
+        UserJson user = usersClient.createUser(
+                uname,
+                "12345"
+        );
 
-    usersClient.addIncomeInvitation(user, 1);
-    usersClient.addOutcomeInvitation(user, 1);
-  }
+        usersClient.addIncomeInvitation(user, 1);
+        usersClient.addOutcomeInvitation(user, 1);
+    }
 }

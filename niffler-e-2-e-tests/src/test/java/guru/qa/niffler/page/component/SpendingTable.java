@@ -18,70 +18,70 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SearchField searchField = new SearchField();
-  private final SelenideElement periodMenu = self.$("#period");
-  private final SelenideElement currencyMenu = self.$("#currency");
-  private final ElementsCollection menuItems = $$(".MuiList-padding li");
-  private final SelenideElement deleteBtn = self.$("#delete");
-  private final SelenideElement popup = $("div[role='dialog']");
+    private final SearchField searchField = new SearchField();
+    private final SelenideElement periodMenu = self.$("#period");
+    private final SelenideElement currencyMenu = self.$("#currency");
+    private final ElementsCollection menuItems = $$(".MuiList-padding li");
+    private final SelenideElement deleteBtn = self.$("#delete");
+    private final SelenideElement popup = $("div[role='dialog']");
 
-  private final SelenideElement tableHeader = self.$(".MuiTableHead-root");
-  private final ElementsCollection headerCells = tableHeader.$$(".MuiTableCell-root");
+    private final SelenideElement tableHeader = self.$(".MuiTableHead-root");
+    private final ElementsCollection headerCells = tableHeader.$$(".MuiTableCell-root");
 
-  private final ElementsCollection tableRows = self.$("tbody").$$("tr");
+    private final ElementsCollection tableRows = self.$("tbody").$$("tr");
 
 
-  public SpendingTable() {
-    super($("#spendings"));
-  }
+    public SpendingTable() {
+        super($("#spendings"));
+    }
 
-  @Step("Select table period {0}")
-  @Nonnull
-  public SpendingTable selectPeriod(DataFilterValues period) {
-    periodMenu.click();
-    menuItems.find(text(period.text)).click();
-    return this;
-  }
+    @Step("Select table period {0}")
+    @Nonnull
+    public SpendingTable selectPeriod(DataFilterValues period) {
+        periodMenu.click();
+        menuItems.find(text(period.text)).click();
+        return this;
+    }
 
-  @Step("Edit spending with description {0}")
-  @Nonnull
-  public EditSpendingPage editSpending(String description) {
-    searchSpendingByDescription(description);
-    SelenideElement row = tableRows.find(text(description));
-    row.$$("td").get(5).click();
-    return new EditSpendingPage();
-  }
+    @Step("Edit spending with description {0}")
+    @Nonnull
+    public EditSpendingPage editSpending(String description) {
+        searchSpendingByDescription(description);
+        SelenideElement row = tableRows.find(text(description));
+        row.$$("td").get(5).click();
+        return new EditSpendingPage();
+    }
 
-  @Step("Delete spending with description {0}")
-  @Nonnull
-  public SpendingTable deleteSpending(String description) {
-    searchSpendingByDescription(description);
-    SelenideElement row = tableRows.find(text(description));
-    row.$$("td").get(0).click();
-    deleteBtn.click();
-    popup.$(byText("Delete")).click(usingJavaScript());
-    return this;
-  }
+    @Step("Delete spending with description {0}")
+    @Nonnull
+    public SpendingTable deleteSpending(String description) {
+        searchSpendingByDescription(description);
+        SelenideElement row = tableRows.find(text(description));
+        row.$$("td").get(0).click();
+        deleteBtn.click();
+        popup.$(byText("Delete")).click(usingJavaScript());
+        return this;
+    }
 
-  @Step("Search spending with description {0}")
-  @Nonnull
-  public SpendingTable searchSpendingByDescription(String description) {
-    searchField.search(description);
-    return this;
-  }
+    @Step("Search spending with description {0}")
+    @Nonnull
+    public SpendingTable searchSpendingByDescription(String description) {
+        searchField.search(description);
+        return this;
+    }
 
-  @Step("Check that table contains data {0}")
-  @Nonnull
-  public SpendingTable checkTableContains(String expectedSpend) {
-    searchSpendingByDescription(expectedSpend);
-    tableRows.find(text(expectedSpend)).should(visible);
-    return this;
-  }
+    @Step("Check that table contains data {0}")
+    @Nonnull
+    public SpendingTable checkTableContains(String expectedSpend) {
+        searchSpendingByDescription(expectedSpend);
+        tableRows.find(text(expectedSpend)).should(visible);
+        return this;
+    }
 
-  @Step("Check that table have size {0}")
-  @Nonnull
-  public SpendingTable checkTableSize(int expectedSize) {
-    tableRows.should(size(expectedSize));
-    return this;
-  }
+    @Step("Check that table have size {0}")
+    @Nonnull
+    public SpendingTable checkTableSize(int expectedSize) {
+        tableRows.should(size(expectedSize));
+        return this;
+    }
 }

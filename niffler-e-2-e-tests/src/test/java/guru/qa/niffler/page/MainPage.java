@@ -12,30 +12,30 @@ import static com.codeborne.selenide.Condition.visible;
 
 public class MainPage extends BasePage<MainPage> {
 
-  public static final String URL = CFG.frontUrl() + "main";
+    public static final String URL = CFG.frontUrl() + "main";
 
-  protected final Header header = new Header();
-  protected final SpendingTable spendingTable = new SpendingTable();
-  protected final StatComponent statComponent = new StatComponent();
+    protected final Header header = new Header();
+    protected final SpendingTable spendingTable = new SpendingTable();
+    protected final StatComponent statComponent = new StatComponent();
 
-  @Nonnull
-  public Header getHeader() {
-    return header;
-  }
+    @Nonnull
+    public Header getHeader() {
+        return header;
+    }
 
-  @Nonnull
-  public SpendingTable getSpendingTable() {
-    spendingTable.getSelf().scrollIntoView(true);
-    return spendingTable;
-  }
+    @Nonnull
+    public SpendingTable getSpendingTable() {
+        spendingTable.getSelf().scrollIntoView(true);
+        return spendingTable;
+    }
 
-  @Step("Check that page is loaded")
-  @Override
-  @Nonnull
-  public MainPage checkThatPageLoaded() {
-    header.getSelf().should(visible).shouldHave(text("Niffler"));
-    statComponent.getSelf().should(visible).shouldHave(text("Statistics"));
-    spendingTable.getSelf().should(visible).shouldHave(text("History of Spendings"));
-    return this;
-  }
+    @Step("Check that page is loaded")
+    @Override
+    @Nonnull
+    public MainPage checkThatPageLoaded() {
+        header.getSelf().should(visible).shouldHave(text("Niffler"));
+        statComponent.getSelf().should(visible).shouldHave(text("Statistics"));
+        spendingTable.getSelf().should(visible).shouldHave(text("History of Spendings"));
+        return this;
+    }
 }

@@ -7,18 +7,18 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class SelectField extends BaseComponent<SelectField> {
 
-  public SelectField(SelenideElement self) {
-    super(self);
-  }
+    public SelectField(SelenideElement self) {
+        super(self);
+    }
 
-  private final SelenideElement input = self.$("input");
+    private final SelenideElement input = self.$("input");
 
-  public void setValue(String value) {
-    self.click();
-    $$("li[role='option']").find(text(value)).click();
-  }
+    public void setValue(String value) {
+        self.click();
+        $$("li[role='option']").find(text(value)).click();
+    }
 
-  public void checkSelectValueIsEqualTo(String value) {
-    self.shouldHave(text(value));
-  }
+    public void checkSelectValueIsEqualTo(String value) {
+        self.shouldHave(text(value));
+    }
 }

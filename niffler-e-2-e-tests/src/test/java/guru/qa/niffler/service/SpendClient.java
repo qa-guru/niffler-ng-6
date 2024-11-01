@@ -8,14 +8,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public interface SpendClient {
-  @Nonnull
-  SpendJson createSpend(SpendJson spend);
+    @Nonnull
+    SpendJson createSpend(SpendJson spend);
 
-  @Nonnull
-  CategoryJson createCategory(CategoryJson category);
+    @Nonnull
+    CategoryJson createCategory(CategoryJson category);
 
-  @Nonnull
-  CategoryJson updateCategory(CategoryJson category);
+    @Nonnull
+    CategoryJson updateCategory(CategoryJson category);
 
-  void removeCategory(CategoryJson category);
+    void removeCategory(CategoryJson category);
 }

@@ -4,39 +4,39 @@ import javax.annotation.Nonnull;
 
 public interface Config {
 
-  static @Nonnull Config getInstance() {
-    return "docker".equals(System.getProperty("test.env"))
-        ? DockerConfig.INSTANCE
-        : LocalConfig.INSTANCE;
-  }
+    static @Nonnull Config getInstance() {
+        return "docker".equals(System.getProperty("test.env"))
+                ? DockerConfig.INSTANCE
+                : LocalConfig.INSTANCE;
+    }
 
-  @Nonnull
-  String frontUrl();
+    @Nonnull
+    String frontUrl();
 
-  @Nonnull
-  String authUrl();
+    @Nonnull
+    String authUrl();
 
-  @Nonnull
-  String authJdbcUrl();
+    @Nonnull
+    String authJdbcUrl();
 
-  @Nonnull
-  String gatewayUrl();
+    @Nonnull
+    String gatewayUrl();
 
-  @Nonnull
-  String userdataUrl();
+    @Nonnull
+    String userdataUrl();
 
-  @Nonnull
-  String userdataJdbcUrl();
+    @Nonnull
+    String userdataJdbcUrl();
 
-  @Nonnull
-  String spendUrl();
+    @Nonnull
+    String spendUrl();
 
-  @Nonnull
-  String spendJdbcUrl();
+    @Nonnull
+    String spendJdbcUrl();
 
-  @Nonnull
-  String currencyJdbcUrl();
+    @Nonnull
+    String currencyJdbcUrl();
 
-  @Nonnull
-  String ghUrl();
+    @Nonnull
+    String ghUrl();
 }

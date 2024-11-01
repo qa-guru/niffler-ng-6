@@ -21,104 +21,104 @@ import static guru.qa.niffler.data.jdbc.Connections.holder;
 @ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
 
-  private static final Config CFG = Config.getInstance();
-  private final String url = CFG.spendJdbcUrl();
+    private static final Config CFG = Config.getInstance();
+    private final String url = CFG.spendJdbcUrl();
 
-  @SuppressWarnings("resource")
-  @Nonnull
-  @Override
-  public CategoryEntity create(CategoryEntity category) {
-    try (PreparedStatement ps = holder(url).connection().prepareStatement(
-        """
-                INSERT INTO category (username, name, archived) 
-                VALUES (?, ?, ?)
-            """,
-        Statement.RETURN_GENERATED_KEYS
-    )) {
-      ps.setString(1, category.getUsername());
-      ps.setString(2, category.getName());
-      ps.setBoolean(3, category.isArchived());
+    @SuppressWarnings("resource")
+    @Nonnull
+    @Override
+    public CategoryEntity create(CategoryEntity category) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                """
+                            INSERT INTO category (username, name, archived) 
+                            VALUES (?, ?, ?)
+                        """,
+                Statement.RETURN_GENERATED_KEYS
+        )) {
+            ps.setString(1, category.getUsername());
+            ps.setString(2, category.getName());
+            ps.setBoolean(3, category.isArchived());
 
-      ps.executeUpdate();
+            ps.executeUpdate();
 
-      final UUID generatedKey;
-      try (ResultSet rs = ps.getGeneratedKeys()) {
-        if (rs.next()) {
-          generatedKey = rs.getObject("id", UUID.class);
-        } else {
-          throw new SQLException("Can`t find id in ResultSet");
+            final UUID generatedKey;
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedKey = rs.getObject("id", UUID.class);
+                } else {
+                    throw new SQLException("Can`t find id in ResultSet");
+                }
+            }
+            category.setId(generatedKey);
+            return category;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-      }
-      category.setId(generatedKey);
-      return category;
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
     }
-  }
 
-  @SuppressWarnings("resource")
-  @Nonnull
-  @Override
-  public Optional<CategoryEntity> findById(UUID id) {
-    try (PreparedStatement ps = holder(url).connection().prepareStatement(
-        "SELECT * FROM category WHERE id = ?"
-    )) {
-      ps.setObject(1, id);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
-          return Optional.ofNullable(
-              CategoryEntityRowMapper.instance.mapRow(rs, rs.getRow())
-          );
-        } else {
-          return Optional.empty();
+    @SuppressWarnings("resource")
+    @Nonnull
+    @Override
+    public Optional<CategoryEntity> findById(UUID id) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "SELECT * FROM category WHERE id = ?"
+        )) {
+            ps.setObject(1, id);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                if (rs.next()) {
+                    return Optional.ofNullable(
+                            CategoryEntityRowMapper.instance.mapRow(rs, rs.getRow())
+                    );
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
     }
-  }
 
-  @SuppressWarnings("resource")
-  @Nonnull
-  @Override
-  public List<CategoryEntity> findAll() {
-    try (PreparedStatement ps = holder(url).connection().prepareStatement(
-        "SELECT * FROM category")) {
-      ps.execute();
-      List<CategoryEntity> result = new ArrayList<>();
-      try (ResultSet rs = ps.getResultSet()) {
-        while (rs.next()) {
-          result.add(
-              CategoryEntityRowMapper.instance.mapRow(rs, rs.getRow())
-          );
+    @SuppressWarnings("resource")
+    @Nonnull
+    @Override
+    public List<CategoryEntity> findAll() {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "SELECT * FROM category")) {
+            ps.execute();
+            List<CategoryEntity> result = new ArrayList<>();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    result.add(
+                            CategoryEntityRowMapper.instance.mapRow(rs, rs.getRow())
+                    );
+                }
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-      }
-      return result;
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
     }
-  }
 
-  @SuppressWarnings("resource")
-  @Nonnull
-  @Override
-  public CategoryEntity update(CategoryEntity category) {
-    try (PreparedStatement ps = holder(url).connection().prepareStatement(
-        """
-              UPDATE "category"
-                SET name     = ?,
-                    archived = ?
-                WHERE id = ?
-            """);
-    ) {
-      ps.setString(1, category.getName());
-      ps.setBoolean(2, category.isArchived());
-      ps.setObject(3, category.getId());
-      ps.executeUpdate();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+    @SuppressWarnings("resource")
+    @Nonnull
+    @Override
+    public CategoryEntity update(CategoryEntity category) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                """
+                          UPDATE "category"
+                            SET name     = ?,
+                                archived = ?
+                            WHERE id = ?
+                        """);
+        ) {
+            ps.setString(1, category.getName());
+            ps.setBoolean(2, category.isArchived());
+            ps.setObject(3, category.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return category;
     }
-    return category;
-  }
 }

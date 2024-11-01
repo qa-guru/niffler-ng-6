@@ -6,15 +6,15 @@ import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
 public enum CurrencyValues {
-  RUB("₽"), USD("$"), EUR("€"), KZT("₸");
-  public final String symbol;
+    RUB("₽"), USD("$"), EUR("€"), KZT("₸");
+    public final String symbol;
 
-  public static @Nonnull CurrencyValues fromSymbol(@Nonnull String symbol) {
-    for (CurrencyValues value : CurrencyValues.values()) {
-      if (value.symbol.equals(symbol)) {
-        return value;
-      }
+    public static @Nonnull CurrencyValues fromSymbol(@Nonnull String symbol) {
+        for (CurrencyValues value : CurrencyValues.values()) {
+            if (value.symbol.equals(symbol)) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException("Can`t find CurrencyValues by given symbol: " + symbol);
     }
-    throw new IllegalArgumentException("Can`t find CurrencyValues by given symbol: " + symbol);
-  }
 }

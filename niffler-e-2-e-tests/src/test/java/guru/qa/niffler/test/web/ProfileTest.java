@@ -143,7 +143,7 @@ public class ProfileTest {
 
     @User
     @ScreenShotTest(value = "img/profile-expected.png")
-    void checkProfileImageTest(UserJson user, BufferedImage expected) throws IOException {
+    void checkProfileImageTest(UserJson user, BufferedImage expectedProfileImage) throws IOException {
         Selenide.open(LoginPage.URL, LoginPage.class)
                 .fillLoginPage(user.username(), user.testData().password())
                 .submit(new MainPage())
@@ -151,11 +151,7 @@ public class ProfileTest {
                 .getHeader()
                 .toProfilePage()
                 .uploadPhotoFromClasspath("img/cat.png")
-                .submitProfile();
-        BufferedImage actual = ImageIO.read($(".MuiAvatar-img").screenshot());
-        assertFalse(new ScreenDiffResult(
-                actual,
-                expected
-        ));
+                .submitProfile()
+                .checkProfileImage(expectedProfileImage);
     }
 }

@@ -11,11 +11,11 @@ import java.util.Date;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class EditSpendingPage {
+public class EditSpendingPage extends BasePage<EditSpendingPage> {
     private final SelenideElement descriptionInput = $("#description");
     private final SelenideElement saveBtn = $("#save");
     private final SelenideElement amountInput = $("#amount");
-    private  final SelenideElement categoryNameBtn = $(By.xpath("//span[text()='Gregg']"));
+    private final SelenideElement categoryNameBtn = $(By.xpath("//span[text()='Gregg']"));
     private final Calendar calendar = new Calendar($("input[name='date']"));
 
     @Step("Редактируем описание траты")
@@ -26,12 +26,13 @@ public class EditSpendingPage {
     }
 
     @Step("Создаем новую трату")
-    public void createNewSpending(SpendJson spend) {
+    public MainPage createNewSpending(SpendJson spend) {
         amountInput.setValue(spend.amount().toString());
         categoryNameBtn.click();
         calendar.selectDateInCalendar(spend.spendDate());
         descriptionInput.setValue(spend.description());
         saveBtn.click();
+        return new MainPage();
     }
 
 

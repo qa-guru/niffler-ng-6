@@ -76,4 +76,6 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     public SpendJson[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return (SpendJson[]) extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class).toArray();
     }
+
+
 }

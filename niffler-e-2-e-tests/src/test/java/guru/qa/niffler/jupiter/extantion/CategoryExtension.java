@@ -15,7 +15,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
+public class CategoryExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
@@ -56,7 +56,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) throws Exception {
         UserJson user = context.getStore(UserExtension.NAMESPACE)
                 .get(context.getUniqueId(), UserJson.class);
         List<CategoryJson> categories = user != null
@@ -78,4 +78,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         return (CategoryJson[]) extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class)
                 .toArray();
     }
+
+
 }

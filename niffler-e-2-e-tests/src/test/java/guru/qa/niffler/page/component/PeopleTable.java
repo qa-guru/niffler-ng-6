@@ -4,7 +4,9 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class PeopleTable {
+public class PeopleTable extends BaseComponent<PeopleTable> {
 
-    private final SelenideElement self = $("table[aria-labelledby='tableTitle']");
+    public PeopleTable(SelenideElement self) {
+        super($("table[aria-labelledby='tableTitle']"));
+    }
 }

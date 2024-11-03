@@ -9,8 +9,8 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.UserClient;
-import guru.qa.niffler.service.db.UserDbClient;
 
+import guru.qa.niffler.service.rest.UserRestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
@@ -19,18 +19,16 @@ import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 
 import java.util.List;
 
-import static guru.qa.niffler.jupiter.extantion.UserQueueExtension.UserType.Type.*;
-
 @ExtendWith(BrowserExtension.class)
 public class FriendsWebTest {
-    static UserClient authUserDbClient = new UserDbClient();
+    static UserClient authUserClient = new UserRestClient();
 
     private static final Config CFG = Config.getInstance();
 
     @User
     @Test
     void friendShouldBePresentInFriendsTable(UserJson user) {
-        authUserDbClient.createFriends(user, 1);
+        authUserClient.createFriends(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
@@ -40,7 +38,7 @@ public class FriendsWebTest {
     @User
     @Test
     void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-        authUserDbClient.createFriends(user, 0);
+        authUserClient.createFriends(user, 0);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
@@ -51,43 +49,47 @@ public class FriendsWebTest {
     @User
     @Test
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
-        List<String> users = authUserDbClient.createIncomeInvitations(user, 1);
+        List<String> users = authUserClient.createIncomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .checkIncomeInvitationFriend(users.get(1));
+                .findFriend(users.get(0))
+                .checkIncomeInvitationFriend();
     }
 
     @User
     @Test
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-        List<String> users = authUserDbClient.createOutcomeInvitations(user, 1);
+        List<String> users = authUserClient.createOutcomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openAllPeoplePage()
-                .toSearch(users.get(1))
+                .toSearch(users.get(0))
                 .checkHaveOutcomeInvitation();
+
     }
 
     @User
     @Test
     void acceptFriend(UserJson user) {
-        List<String> users = authUserDbClient.createOutcomeInvitations(user, 1);
+        List<String> users = authUserClient.createIncomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .acceptFriendship(users.get(0));
+                .acceptFriendship(users.get(0))
+                .checkAlert("Invitation of "+users.get(0)+" accepted");
         new FriendsPage().checkHaveFriend();
     }
 
     @User
     @Test
     void declineFriend(UserJson user) {
-        List<String> users = authUserDbClient.createOutcomeInvitations(user, 1);
+        List<String> users = authUserClient.createIncomeInvitations(user, 1);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .declineFriendship(users.get(0));
+                .declineFriendship(users.get(0))
+                .checkAlert("Invitation of "+users.get(0)+" is declined");
         new FriendsPage().checkNotHaveFriend();
     }
 

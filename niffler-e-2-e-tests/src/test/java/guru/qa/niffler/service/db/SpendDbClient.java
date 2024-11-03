@@ -56,7 +56,7 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
-    public List<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
+    public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
         return xaTxTemplate.execute(() -> {
                     Optional<CategoryEntity> ce = spendRepository.findCategoryByUsernameAndCategoryName(username, name);
                     return ce.map(CategoryJson::fromEntity);

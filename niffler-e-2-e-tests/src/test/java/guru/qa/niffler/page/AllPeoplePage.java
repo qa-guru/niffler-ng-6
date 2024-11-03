@@ -9,19 +9,19 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
     private final SelenideElement bottonToOpenFriendsPage = $("a[href='/people/friends']");
     private final ElementsCollection listAllPeople = $$("#all tr");
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
 
-
+    @Step("Открываем страницу со списком друзей")
     public FriendsPage openFriendsPeoplePage() {
         bottonToOpenFriendsPage.click();
         return new FriendsPage();
     }
 
     @Step("Ищем в таблице со списком людей записи по заданной строке")
-    public AllPeoplePage toSearch(String searchString){
+    public AllPeoplePage toSearch(String searchString) {
         searchField.search(searchString);
         return this;
     }
@@ -31,6 +31,7 @@ public class AllPeoplePage {
         listAllPeople.find(text("Waiting...")).should(visible);
     }
 
+    @Step("Проверяем что в списке нет исходящих предложений дружбы")
     public void checkNotHaveOutcomeInvitation() {
         listAllPeople.find(text("Waiting...")).should(disappear);
     }

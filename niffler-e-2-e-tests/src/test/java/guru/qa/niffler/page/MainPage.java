@@ -11,11 +11,10 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class MainPage {
+public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement statBlock = $("#stat");
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
-    private final Header header = new Header();
     private final SpendingTable spendingTable = new SpendingTable();
 
     @Step("Открываем страницу для редактирования траты ")
@@ -43,6 +42,7 @@ public class MainPage {
     public AllPeoplePage openAllPeoplePage() {
         return header.toAllPeoplesPage();
     }
+
     @Step("Проверяем, что блок статистики отображается")
     public void checkStatisticBlock() {
         statBlock.should(visible);

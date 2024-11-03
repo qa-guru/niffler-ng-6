@@ -1,18 +1,18 @@
 package guru.qa.niffler.page.component;
 
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
-import org.junit.jupiter.api.Assertions;
 
-import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 
-public class SpendingTable {
+public class SpendingTable extends BaseComponent<SpendingTable> {
 
-    private final SelenideElement self = $("#spendings");
     private final SearchField searchField = new SearchField($("input[placeholder='Search']"));
+
+    public SpendingTable() {
+        super($("#spendings"));
+    }
 
     public SpendingTable selectPeriod(DataFilterValues period) {
         self.$("#period").click();

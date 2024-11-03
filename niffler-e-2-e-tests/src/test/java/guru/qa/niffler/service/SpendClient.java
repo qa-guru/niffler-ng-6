@@ -5,6 +5,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SpendClient {
 
@@ -14,7 +15,7 @@ public interface SpendClient {
 
     public CategoryJson updateCategoryArchivedStatus(CategoryJson category);
 
-    public List<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name);
+    public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name);
 
     public void deleteCategory(CategoryJson category);
 }

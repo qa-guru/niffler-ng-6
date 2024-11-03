@@ -1,13 +1,14 @@
 package guru.qa.niffler.page.component;
 
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.*;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class Header {
+public class Header extends BaseComponent<Header> {
 
-    private final SelenideElement self = $("header");
+    public Header() {
+        super($("header"));
+    }
 
     public FriendsPage toFriendsPage() {
         self.$("button").click();

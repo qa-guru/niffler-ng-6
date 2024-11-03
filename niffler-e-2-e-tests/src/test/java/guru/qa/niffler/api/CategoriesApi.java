@@ -16,6 +16,6 @@ public interface CategoriesApi {
     Call<CategoryJson> updateCategory(@Body CategoryJson category);
 
     @GET("internal/categories/all")
-    Call<List<CategoryJson>> getCategories(@Query("username") String username,
-                                           @Query("name") String name);
+    Call<Optional<CategoryJson>> getCategories(@Query("username") String username,
+                                               @Query("name") String name);
 }

@@ -2,12 +2,10 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
 
-public class SearchField {
-
-    private final SelenideElement self;
+public class SearchField extends BaseComponent<SearchField> {
 
     public SearchField(SelenideElement self) {
-        this.self = self;
+        super(self);
     }
 
     public SearchField search(String query) {

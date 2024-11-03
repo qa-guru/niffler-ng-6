@@ -50,8 +50,8 @@ public class CategoriesApiClient extends RestClient {
 
     }
 
-    public @Nullable List<CategoryJson> getCategories(String username, String name) {
-        final Response<List<CategoryJson>> response;
+    public @Nullable Optional<CategoryJson> getCategories(String username, String name) {
+        final Response<Optional<CategoryJson>> response;
         try {
             response = categoriesApi.getCategories(username, name)
                     .execute();

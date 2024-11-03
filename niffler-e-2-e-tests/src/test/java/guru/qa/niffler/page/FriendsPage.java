@@ -11,11 +11,12 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage> {
     private final SelenideElement buttonToOpenAllPeoplePage = $("a[href='/people/all']");
     private final ElementsCollection listFriends = $$("#friends tr");
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final FriendsRequestTable friendsRequestTable = new FriendsRequestTable();
+    private final SelenideElement declineFromDialogButton = $("div[role='dialog'] button span svg");
 
     @Step("Открываем страницу со списком друзей")
     public AllPeoplePage openAllPeoplePage() {
@@ -28,10 +29,15 @@ public class FriendsPage {
         listFriends.find(text("Unfriend")).should(visible);
     }
 
-    @Step("Проверяем, что есть входящее предложение дружбы")
-    public void checkIncomeInvitationFriend(String searchString) {
+    @Step("Ищем пользователя в таблице друзей")
+    public FriendsPage findFriend(String searchString) {
         searchField.search(searchString);
-        listFriends.find(text("Accept")).should(visible);
+       return this;
+    }
+
+    @Step("Проверяем, что есть входящее предложение дружбы")
+    public void checkIncomeInvitationFriend() {
+        friendsRequestTable.checkIncomeInvitationFriend();
     }
 
     @Step("Проверяем, что у пользователя нет друзей ")
@@ -40,12 +46,16 @@ public class FriendsPage {
     }
 
     @Step("Принимаем предложение дружбы")
-    public void acceptFriendship(String username) {
+    public FriendsPage acceptFriendship(String username) {
         friendsRequestTable.acceptFriendRequest(username);
+        return this;
     }
 
     @Step("Отклоняем предложение дружбы")
-    public void declineFriendship(String username) {
+    public FriendsPage declineFriendship(String username) {
         friendsRequestTable.declineFriendRequest(username);
+        declineFromDialogButton.click();
+        return this;
     }
+
 }

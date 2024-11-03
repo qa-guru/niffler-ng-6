@@ -8,6 +8,7 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SpendRestClient implements SpendClient {
     private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
@@ -29,7 +30,7 @@ public class SpendRestClient implements SpendClient {
     }
 
     @Override
-    public List<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
+    public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username, String name) {
         return categoriesApiClient.getCategories(username, name);
     }
 

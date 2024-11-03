@@ -13,6 +13,8 @@ import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.Date;
+
 @ExtendWith(BrowserExtension.class)
 public class SpendingWebTest {
 
@@ -40,15 +42,14 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription);
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
-    @Spending(
-            description = "Test spend description",
-            amount = 555
-    )
+
     @Test
-    void createSpending(SpendJson spend) {
+    void createSpending() {
+        SpendJson spend = new SpendJson(null, new Date(), null, null, 555.0, RandomDataUtils.randomName(),null);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .openNewSpending()
-                .createNewSpending(spend);
+                .createNewSpending(spend)
+                .checkAlert("New spending is successfully created");
     }
 }

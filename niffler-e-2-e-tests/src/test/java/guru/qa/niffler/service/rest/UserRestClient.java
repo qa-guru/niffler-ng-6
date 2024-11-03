@@ -2,21 +2,43 @@ package guru.qa.niffler.service.rest;
 
 import guru.qa.niffler.api.AuthUserApiClient;
 import guru.qa.niffler.api.FriendApiClient;
+import guru.qa.niffler.api.UserdataApiClient;
+import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class UserRestClient implements UserClient {
 
     private final FriendApiClient friendApiClient = new FriendApiClient();
     private final AuthUserApiClient authUserApiClient = new AuthUserApiClient();
+    private final UserdataApiClient userdataApiClient = new UserdataApiClient();
 
     @Override
     public UserJson createUser(String username, String password) {
-        return null;
+        authUserApiClient.requestRegisterForm();
+        authUserApiClient.registerUser(username, password);
+        StopWatch sw = new StopWatch();
+        sw.start();
+        UserJson user = null;
+        while (sw.getTime(TimeUnit.MILLISECONDS) < 3000) {
+            user = userdataApiClient.getCurrentUser(username);
+            if (user != null && user.id() != null) {
+                user.addTestData(new TestData(password, null, null));
+            } else {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return user;
     }
 
     @Override
@@ -25,8 +47,8 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                authUserApiClient.registerUser(/*stub  username*/);
-                friendApiClient.sendInvitation(targetUser.username(), username);
+                createUser(username, "12345");
+                friendApiClient.sendInvitation(username, targetUser.username());
                 usernames.add(username);
             }
         }
@@ -39,8 +61,8 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                authUserApiClient.registerUser(/*stub  username*/);
-                friendApiClient.sendInvitation(username, targetUser.username());
+                createUser(username, "12345");
+                friendApiClient.sendInvitation(targetUser.username(), username);
                 usernames.add(username);
             }
         }
@@ -52,8 +74,8 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                authUserApiClient.registerUser(/*stub  username*/);
-                friendApiClient.sendInvitation(targetUser.username(), username);
+                createUser(username, "12345");
+                friendApiClient.sendInvitation(username, targetUser.username());
                 friendApiClient.acceptInvitation(targetUser.username(), username);
             }
         }

@@ -21,9 +21,7 @@ import java.util.Objects;
 public class GhApiClient extends RestClient {
 
     protected static final Config CFG = Config.getInstance();
-
     private static final String GH_TOKEN_ENV = "GITHUB_TOKEN";
-
     private final GhApi ghApi;
 
     public GhApiClient() {

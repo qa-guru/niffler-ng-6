@@ -2,6 +2,7 @@ package guru.qa.niffler.api;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.service.RestClient;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -12,13 +13,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 
 @ParametersAreNonnullByDefault
-public class FriendApiClient {
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().userdataUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build();
+public class FriendApiClient extends RestClient {
 
-    private final FriendApi friendApi = retrofit.create(FriendApi.class);
+    protected static final Config CFG = Config.getInstance();
+    private final FriendApi friendApi;
+
+    public FriendApiClient() {
+        super(CFG.userdataUrl());
+        friendApi = retrofit.create(FriendApi.class);
+    }
 
     public @Nullable UserJson sendInvitation(String username, String targetUsername) {
         final Response<UserJson> response;

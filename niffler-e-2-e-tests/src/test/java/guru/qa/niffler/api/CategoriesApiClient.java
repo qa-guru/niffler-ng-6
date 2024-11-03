@@ -2,6 +2,7 @@ package guru.qa.niffler.api;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.RestClient;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -14,14 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class CategoriesApiClient {
+public class CategoriesApiClient extends RestClient {
 
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().spendUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build();
+    protected static final Config CFG = Config.getInstance();
+    private final CategoriesApi categoriesApi;
 
-    private final CategoriesApi categoriesApi = retrofit.create(CategoriesApi.class);
+    public CategoriesApiClient() {
+        super(CFG.spendUrl());
+        categoriesApi = retrofit.create(CategoriesApi.class);
+    }
 
     public @Nullable CategoryJson addCategory(CategoryJson category) {
         final Response<CategoryJson> response;

@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.CategoriesApiClient;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.utils.RandomDataUtils;
@@ -18,14 +19,15 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(anno -> {
                     if (anno.categories().length > 0) {
-                        CategoryJson category = new CategoryJson(
+                        Category annoCategory = anno.categories()[0];
+                        CategoryJson categoryJson = new CategoryJson(
                                 null,
-                                anno.categories()[0].name().isEmpty() ? RandomDataUtils.randomCategoryName() : anno.categories()[0].name(),
+                                annoCategory.name().isEmpty() ? RandomDataUtils.randomCategoryName() : annoCategory.name(),
                                 anno.username(),
                                 false
                         );
-                        CategoryJson createdCategory = categoriesApiClient.createCategory(category);
-                        if (anno.categories()[0].archived()) {
+                        CategoryJson createdCategory = categoriesApiClient.createCategory(categoryJson);
+                        if (annoCategory.archived()) {
                             createdCategory = categoriesApiClient.updateCategory(new CategoryJson(
                                     createdCategory.id(),
                                     createdCategory.name(),

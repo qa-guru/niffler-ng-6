@@ -35,7 +35,6 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription)
                 .save();
 
-        // ? This can create false positive results with multiple executions
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
 }

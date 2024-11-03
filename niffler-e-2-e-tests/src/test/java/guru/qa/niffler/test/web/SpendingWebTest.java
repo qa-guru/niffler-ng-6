@@ -18,7 +18,7 @@ public class SpendingWebTest {
     @User(
             username = "duck",
             spending = @Spending(
-                    category = "Spending Test Category",
+                    category = "Spending Test Category2",
                     description = "Spending Test Description",
                     amount = 3174.58
             )
@@ -35,6 +35,7 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription)
                 .save();
 
+        // ? This can create false positive results after multiple executions
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
 }

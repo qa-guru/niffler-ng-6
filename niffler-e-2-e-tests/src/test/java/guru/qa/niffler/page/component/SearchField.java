@@ -15,10 +15,8 @@ public class SearchField {
         return this;
     }
 
-    public SearchField clearIfNotEmpty() {
-        if (!"".equals(self.getValue())) {
-            self.$("#input-clear").click();
-        }
+    public SearchField clear() {
+        self.$("#input-clear").click();
         return this;
     }
 }

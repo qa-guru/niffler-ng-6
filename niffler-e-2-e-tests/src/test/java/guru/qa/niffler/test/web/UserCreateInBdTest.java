@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.jupiter.extantion.UserClientExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -8,17 +8,17 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.db.SpendDbClient;
-import guru.qa.niffler.service.db.UserDbClient;
-import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Date;
 
+@ExtendWith(UserClientExtension.class)
 public class UserCreateInBdTest {
 
-    static UserClient authUserDbClient = new UserDbClient();
+    private UserClient userClient;
     static SpendClient spendDbClient = new SpendDbClient();
 
     @ValueSource(strings = {
@@ -27,13 +27,13 @@ public class UserCreateInBdTest {
     @ParameterizedTest
     void createUserFromRepository(String username) {
 
-        UserJson user = authUserDbClient.createUser(
+        UserJson user = userClient.createUser(
                 username,
                 "12345"
                 );
-        authUserDbClient.createIncomeInvitations(user, 1);
-        authUserDbClient.createOutcomeInvitations(user, 1);
-        authUserDbClient.createFriends(user, 1);
+        userClient.createIncomeInvitations(user, 1);
+        userClient.createOutcomeInvitations(user, 1);
+        userClient.createFriends(user, 1);
     }
 
     @Test

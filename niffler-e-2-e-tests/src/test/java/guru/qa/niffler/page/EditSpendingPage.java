@@ -26,11 +26,11 @@ public class EditSpendingPage {
     }
 
     @Step("Создаем новую трату")
-    public void createNewSpending() {
-        amountInput.setValue("555");
+    public void createNewSpending(SpendJson spend) {
+        amountInput.setValue(spend.amount().toString());
         categoryNameBtn.click();
-        calendar.selectDateInCalendar(new Date());
-        descriptionInput.setValue(RandomDataUtils.randomName());
+        calendar.selectDateInCalendar(spend.spendDate());
+        descriptionInput.setValue(spend.description());
         saveBtn.click();
     }
 

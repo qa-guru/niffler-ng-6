@@ -40,12 +40,15 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription);
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
-
+    @Spending(
+            description = "Test spend description",
+            amount = 555
+    )
     @Test
-    void createSpending() {
+    void createSpending(SpendJson spend) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .openNewSpending()
-                .createNewSpending();
+                .createNewSpending(spend);
     }
 }

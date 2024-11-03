@@ -4,8 +4,9 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
 import org.junit.jupiter.api.Assertions;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.CollectionCondition.empty;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class SpendingTable {
@@ -45,7 +46,7 @@ public class SpendingTable {
     }
 
     public SpendingTable checkTableSize(int expectedSize) {
-        Assertions.assertTrue(expectedSize == self.$$("tr").size());
+        self.$$("tr").shouldHave(size(expectedSize));
         return this;
     }
 

@@ -71,7 +71,7 @@ public class UsersQueueExtension implements
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
+                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class) && p.getType().isAssignableFrom(StaticUser.class))
                 .forEach(p -> {
                     UserType ut = p.getAnnotation(UserType.class);
                     Optional<StaticUser> user = Optional.empty();

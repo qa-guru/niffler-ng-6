@@ -7,6 +7,9 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface GitHubApi {
 
     @GET("repos/arrnel/niffler-ng-6/issues/{issue_number}")

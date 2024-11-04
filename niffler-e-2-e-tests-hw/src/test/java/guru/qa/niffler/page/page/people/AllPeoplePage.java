@@ -1,10 +1,13 @@
-package guru.qa.niffler.page.people;
+package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -12,14 +15,17 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 
 @Slf4j
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
 
     public AllPeoplePage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
 
-    private SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
+    private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
     private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
+    private final SelenideElement searchForm = $("#search").as("Search form");
+    private final SearchField searchField = new SearchField(searchForm);
 
     @Step("Switch to 'Friends' tab")
     public FriendsPage switchToFriendsTab() {

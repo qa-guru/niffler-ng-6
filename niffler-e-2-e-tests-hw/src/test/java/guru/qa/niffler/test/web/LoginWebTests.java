@@ -7,8 +7,8 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.page.auth.LoginPage;
+import guru.qa.niffler.page.page.MainPage;
+import guru.qa.niffler.page.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,8 +51,7 @@ class LoginWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
-                .logout();
+                .signOut();
         loginPage.shouldVisiblePageElements();
     }
 

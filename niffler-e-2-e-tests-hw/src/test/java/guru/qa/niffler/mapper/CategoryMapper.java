@@ -5,11 +5,13 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
 public class CategoryMapper {
 
-    public CategoryEntity toEntity(@Nonnull CategoryJson source) {
+    public @Nonnull CategoryEntity toEntity(CategoryJson source) {
         return CategoryEntity.builder()
                 .id(source.getId())
                 .username(source.getUsername())
@@ -18,7 +20,7 @@ public class CategoryMapper {
                 .build();
     }
 
-    public CategoryJson toDto(@Nonnull CategoryEntity category) {
+    public @Nonnull CategoryJson toDto(CategoryEntity category) {
         return CategoryJson.builder()
                 .id(category.getId())
                 .username(category.getUsername())
@@ -27,7 +29,7 @@ public class CategoryMapper {
                 .build();
     }
 
-    public CategoryJson updateDtoFromAnno(@Nonnull CategoryJson category, Category anno) {
+    public @Nonnull CategoryJson updateDtoFromAnno(CategoryJson category, Category anno) {
 
         return CategoryJson.builder()
                 .id(category.getId())

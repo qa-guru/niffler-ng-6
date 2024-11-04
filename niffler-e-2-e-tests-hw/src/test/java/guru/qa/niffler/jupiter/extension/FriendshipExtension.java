@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class FriendshipExtension implements BeforeEachCallback {
 
     private final UsersClient usersClient = new UsersDbClientSpringJdbc();

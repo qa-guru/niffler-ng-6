@@ -4,8 +4,10 @@ import guru.qa.niffler.model.CategoryJson;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public interface CategoryApi {
 
     @POST("internal/categories/add")

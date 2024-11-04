@@ -11,12 +11,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class UserdataApiClientRetrofit {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -30,7 +35,7 @@ public class UserdataApiClientRetrofit {
 
     private final UserdataApi userdataApi = retrofit.create(UserdataApi.class);
 
-    public UserJson currentUser(@Nonnull String username) {
+    public @Nullable UserJson currentUser(String username) {
 
         log.info("Get user by username = [{}]", username);
 
@@ -57,10 +62,12 @@ public class UserdataApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
-    public @Nonnull List<UserJson> findAll(@Nonnull String username, @Nonnull String searchQuery) {
+    public @Nonnull List<UserJson> findAll(String username, String searchQuery) {
         log.info("Get all users by: username = [{}] and search query = [{}]", username, searchQuery);
         final Response<List<UserJson>> response;
         try {
@@ -70,10 +77,12 @@ public class UserdataApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
-    public UserJson update(@Nonnull UserJson user) {
+    public @Nonnull UserJson update(UserJson user) {
 
         log.info("Update user info to: {}", user);
 
@@ -85,11 +94,11 @@ public class UserdataApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return Objects.requireNonNull(response.body());
 
     }
 
-    public List<UserJson> friends(@Nonnull String username, String searchQuery) {
+    public @Nonnull List<UserJson> friends(String username, String searchQuery) {
 
         log.info("Get friends of user = [{}] and friend username or full name contains = [{}]", username, searchQuery);
 
@@ -101,11 +110,13 @@ public class UserdataApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
 
     }
 
-    public void removeFriend(@Nonnull String username, @Nonnull String targetUsername) {
+    public void removeFriend(String username, String targetUsername) {
 
         log.info("Unfriend users [{}] and [{}]", username, targetUsername);
 
@@ -121,7 +132,7 @@ public class UserdataApiClientRetrofit {
     }
 
 
-    public UserJson sendInvitation(@Nonnull String username, @Nonnull String targetUsername) {
+    public @Nullable UserJson sendInvitation(String username, String targetUsername) {
 
         log.info("Send invitation from user [{}] to [{}]", username, targetUsername);
 
@@ -137,7 +148,7 @@ public class UserdataApiClientRetrofit {
 
     }
 
-    public UserJson acceptInvitation(@Nonnull String username, @Nonnull String targetUsername) {
+    public @Nullable UserJson acceptInvitation(String username, String targetUsername) {
 
         log.info("Accept invitation from user [{}] to [{}]", username, targetUsername);
 
@@ -149,10 +160,10 @@ public class UserdataApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return Objects.requireNonNull(response.body());
     }
 
-    public UserJson declineInvitation(@Nonnull String username, @Nonnull String targetUsername) {
+    public @Nullable UserJson declineInvitation(String username, String targetUsername) {
 
         log.info("Decline invitation from user [{}] to [{}]", username, targetUsername);
 

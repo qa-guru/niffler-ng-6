@@ -6,21 +6,24 @@ import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.utils.UserUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class UsersApiClientImpl implements UsersClient {
 
     private final AuthApiClientRetrofit apiClient = new AuthApiClientRetrofit();
     private final UserdataClient userdataClient = new UserdataApiClientImpl();
 
     @Override
-    public UserJson createUser(UserJson userJson) {
+    public @Nonnull UserJson createUser(UserJson userJson) {
         return apiClient.register(userJson);
     }
 
     @Override
-    public List<UserJson> getIncomeInvitationFromNewUsers(UserJson to, int count) {
+    public @Nonnull List<UserJson> getIncomeInvitationFromNewUsers(UserJson to, int count) {
         List<UserJson> incomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             var addressee = apiClient.register(UserUtils.generateUser());
@@ -31,7 +34,7 @@ public class UsersApiClientImpl implements UsersClient {
     }
 
     @Override
-    public List<UserJson> sendOutcomeInvitationToNewUsers(UserJson from, int count) {
+    public @Nonnull List<UserJson> sendOutcomeInvitationToNewUsers(UserJson from, int count) {
         List<UserJson> outcomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             var addressee = apiClient.register(UserUtils.generateUser());
@@ -42,7 +45,7 @@ public class UsersApiClientImpl implements UsersClient {
     }
 
     @Override
-    public List<UserJson> addNewFriends(UserJson userJson, int count) {
+    public @Nonnull List<UserJson> addNewFriends(UserJson userJson, int count) {
         List<UserJson> friends = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             var addressee = apiClient.register(UserUtils.generateUser());

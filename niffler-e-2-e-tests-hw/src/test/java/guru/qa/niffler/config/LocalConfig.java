@@ -1,5 +1,8 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 enum LocalConfig implements Config {
     INSTANCE;
 
@@ -48,8 +51,4 @@ enum LocalConfig implements Config {
         return "jdbc:postgresql://127.0.0.1:5432/niffler-currency";
     }
 
-    @Override
-    public String gitHubUrl() {
-        return "https://api.github.com/";
-    }
 }

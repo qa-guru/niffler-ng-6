@@ -1,19 +1,21 @@
-package guru.qa.niffler.page.auth;
+package guru.qa.niffler.page.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.BasePage;
+import guru.qa.niffler.page.page.BasePage;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
-@NoArgsConstructor
 @Slf4j
+@NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
 
     private final SelenideElement successfulRegistrationLabel = $(byText("Congratulations! You've registered!"))

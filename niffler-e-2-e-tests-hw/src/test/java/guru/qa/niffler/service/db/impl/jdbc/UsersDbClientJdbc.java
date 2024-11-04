@@ -18,11 +18,13 @@ import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @SuppressWarnings("unchecked")
+@ParametersAreNonnullByDefault
 public class UsersDbClientJdbc implements UsersDbClient {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -36,7 +38,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
     private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(AUTH_JDBC_URL, USERDATA_JDBC_URL, SPEND_JDBC_URL);
 
     @Override
-    public UserJson createUser(@Nonnull UserJson userJson) {
+    public @Nonnull UserJson createUser(UserJson userJson) {
 
         log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", userJson);
 
@@ -48,18 +50,18 @@ public class UsersDbClientJdbc implements UsersDbClient {
         );
 
         return xaTxTemplate.execute(() -> {
-            authUserRepository.create(authUserEntity);
-            return userMapper.toDto(
-                    userdataUserRepository.create(
-                            userMapper.toEntity(userJson)));
+                    authUserRepository.create(authUserEntity);
+                    return userMapper.toDto(
+                            userdataUserRepository.create(
+                                    userMapper.toEntity(userJson)));
 
-        })
+                })
                 .setPassword(userPassword);
 
     }
 
     @Override
-    public List<UserJson> getIncomeInvitationFromNewUsers(@Nonnull UserJson to, int count) {
+    public @Nonnull List<UserJson> getIncomeInvitationFromNewUsers(UserJson to, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -83,7 +85,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
     }
 
     @Override
-    public List<UserJson> sendOutcomeInvitationToNewUsers(@Nonnull UserJson from, int count) {
+    public @Nonnull List<UserJson> sendOutcomeInvitationToNewUsers(UserJson from, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -107,7 +109,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
     }
 
     @Override
-    public List<UserJson> addNewFriends(@Nonnull UserJson userJson, int count) {
+    public @Nonnull List<UserJson> addNewFriends(UserJson userJson, int count) {
 
         List<UserJson> users = new ArrayList<>();
         if (count > 0) {
@@ -131,7 +133,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
     }
 
     @Override
-    public void removeUser(@Nonnull UserJson userJson) {
+    public void removeUser(UserJson userJson) {
         log.info("Remove user from niffler-auth and niffler-userdata with username = [{}]", userJson.getUsername());
         xaTxTemplate.execute(() -> {
             authUserRepository.findByUsername(userJson.getUsername())
@@ -142,7 +144,7 @@ public class UsersDbClientJdbc implements UsersDbClient {
         });
     }
 
-    private UserEntity createRandomUserIn2Dbs() {
+    private @Nonnull UserEntity createRandomUserIn2Dbs() {
 
         var generatedUser = UserUtils.generateUser();
         log.info("Creating new user with authorities in niffler-auth and niffler-userdata by DTO: {}", generatedUser);

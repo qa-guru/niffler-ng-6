@@ -1,8 +1,11 @@
-package guru.qa.niffler.page;
+package guru.qa.niffler.page.page;
 
 import lombok.NoArgsConstructor;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public abstract class BasePage<T> {
 
     protected BasePage(boolean assertPageElementsOnStart) {

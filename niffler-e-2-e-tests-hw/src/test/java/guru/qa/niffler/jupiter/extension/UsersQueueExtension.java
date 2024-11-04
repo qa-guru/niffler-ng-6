@@ -9,6 +9,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,7 @@ import static guru.qa.niffler.enums.UserType.WITH_INCOME_REQUEST;
 import static guru.qa.niffler.enums.UserType.WITH_OUTCOME_REQUEST;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class UsersQueueExtension implements
         BeforeTestExecutionCallback,
         AfterTestExecutionCallback,

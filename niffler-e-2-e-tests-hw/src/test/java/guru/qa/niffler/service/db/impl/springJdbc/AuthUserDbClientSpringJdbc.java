@@ -10,12 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@ParametersAreNullableByDefault
 public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -24,7 +25,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     private final AuthUserMapper authUserMapper = new AuthUserMapper();
 
     @Override
-    public AuthUserJson create(@Nonnull AuthUserJson authUserJson) {
+    public AuthUserJson create(AuthUserJson authUserJson) {
         log.info("Creating new user by DTO: {}", authUserJson);
         return txTemplate.execute(status ->
                 authUserMapper.toDto(
@@ -33,7 +34,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findById(@Nonnull UUID id) {
+    public Optional<AuthUserJson> findById(UUID id) {
         log.info("Get user by id = [{}]", id);
         return txTemplate.execute(status ->
                 new AuthUserDaoSpringJdbc()
@@ -42,7 +43,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findByUsername(@Nonnull String username) {
+    public Optional<AuthUserJson> findByUsername(String username) {
         log.info("Get user by username = [{}]", username);
         return txTemplate.execute(status ->
                 new AuthUserDaoSpringJdbc()
@@ -61,7 +62,7 @@ public class AuthUserDbClientSpringJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public void remove(@Nonnull AuthUserJson authUser) {
+    public void remove(AuthUserJson authUser) {
         log.info("Remove user: {}", authUser);
         txTemplate.execute(status -> {
             new AuthUserDaoSpringJdbc()

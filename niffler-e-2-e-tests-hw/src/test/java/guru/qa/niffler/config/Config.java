@@ -1,5 +1,8 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface Config {
 
     static Config getInstance() {

@@ -11,8 +11,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.TakesScreenshot;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.ByteArrayInputStream;
 
+@ParametersAreNonnullByDefault
 public class BrowserExtension implements
         BeforeEachCallback,
         AfterEachCallback,

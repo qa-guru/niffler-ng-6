@@ -1,10 +1,12 @@
-package guru.qa.niffler.page.people;
+package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
@@ -15,13 +17,14 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 
 @Slf4j
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class FriendsPage extends PeoplePage<FriendsPage> {
 
     public FriendsPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
 
-    private final SelenideElement friendRequestsListTitle = $("Friend requests").as("[Friend requests title]"),
+    private final SelenideElement friendRequestsListTitle = $(byText("Friend requests")).as("[Friend requests title]"),
             friendsListTitle = $(byText("My friends")).as("[Friends list title]"),
             friendRequestsTableContainer = $("#requests").as("[Friend requests table container]"),
             friendsTableContainer = $("#friends").as("[Friends list title]"),

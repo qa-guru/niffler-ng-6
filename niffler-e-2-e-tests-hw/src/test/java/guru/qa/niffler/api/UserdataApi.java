@@ -4,8 +4,10 @@ import guru.qa.niffler.model.UserJson;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public interface UserdataApi {
 
     @GET("internal/users/current")

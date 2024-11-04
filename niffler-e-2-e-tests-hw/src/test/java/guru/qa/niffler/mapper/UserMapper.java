@@ -7,11 +7,13 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.charset.StandardCharsets;
 
+@ParametersAreNonnullByDefault
 public class UserMapper {
 
-    public UserEntity toEntity(@Nonnull UserJson userJson) {
+    public @Nonnull UserEntity toEntity(UserJson userJson) {
         return UserEntity.builder()
                 .id(userJson.getId())
                 .username(userJson.getUsername())
@@ -29,7 +31,7 @@ public class UserMapper {
                 .build();
     }
 
-    public AuthUserJson toAuthDto(@Nonnull UserJson userJson) {
+    public @Nonnull AuthUserJson toAuthDto(UserJson userJson) {
         return AuthUserJson.builder()
                 .id(userJson.getId())
                 .username(userJson.getUsername())
@@ -41,7 +43,7 @@ public class UserMapper {
                 .build();
     }
 
-    public UserJson toDto(@Nonnull UserEntity userEntity) {
+    public @Nonnull UserJson toDto(UserEntity userEntity) {
         return UserJson.builder()
                 .id(userEntity.getId())
                 .username(userEntity.getUsername())
@@ -60,7 +62,7 @@ public class UserMapper {
                 .build();
     }
 
-    public UserJson updateFromAnno(@Nonnull UserJson user, CreateNewUser anno) {
+    public UserJson updateFromAnno(UserJson user, CreateNewUser anno) {
         return UserJson.builder()
                 .id(user.getId())
                 .username(

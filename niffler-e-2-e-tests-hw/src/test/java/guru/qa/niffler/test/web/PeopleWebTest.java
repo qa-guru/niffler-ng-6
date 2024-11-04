@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.UserFromQueue;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
 import guru.qa.niffler.model.StaticUser;
-import guru.qa.niffler.page.auth.LoginPage;
+import guru.qa.niffler.page.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,6 @@ class PeopleWebTest {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToFriendsPage()
                 .shouldBeEmptyFriendsPage();
 
@@ -49,17 +48,14 @@ class PeopleWebTest {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user1.getUsername(), user1.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToFriendsPage()
                 .shouldHaveFriend(user2.getUsername())
 
                 .getHeader()
-                .openUserMenu()
-                .logout()
+                .signOut()
 
                 .login(user2.getUsername(), user2.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToFriendsPage()
                 .shouldHaveFriend(user1.getUsername());
 
@@ -76,7 +72,6 @@ class PeopleWebTest {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToFriendsPage()
                 .shouldHaveIncomeFriendRequest(usernameWhoSentRequest);
 
@@ -94,7 +89,6 @@ class PeopleWebTest {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToAllPeoplePage()
                 .shouldHaveOutcomeFriendRequest(usernameWhoGotFriendRequest);
 

@@ -9,8 +9,8 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.ProfilePage;
-import guru.qa.niffler.page.auth.LoginPage;
+import guru.qa.niffler.page.page.ProfilePage;
+import guru.qa.niffler.page.page.auth.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -36,7 +36,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .setName(name);
 
@@ -53,7 +52,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .uploadAvatar(file)
                 .save();
@@ -71,7 +69,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .addNewCategory(categoryName);
 
@@ -88,7 +85,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .addNewCategory(categoryName)
                 .shouldHaveMessageAlert("Error while adding category " + categoryName + ": Cannot save duplicates");
@@ -103,7 +99,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .editCategoryName(user.getTestData().getCategories().getFirst().getName(), newCategoryName);
 
@@ -120,7 +115,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .setCategoryArchive(categoryName);
 
@@ -138,7 +132,6 @@ class ProfileWebTests {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
-                .openUserMenu()
                 .goToProfilePage()
                 .showArchivedCategories()
                 .setCategoryActive(categoryName);

@@ -11,17 +11,19 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoSpringJdbc implements SpendDao {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
 
-    public SpendEntity create(@Nonnull SpendEntity spend) {
+    public @Nonnull SpendEntity create(SpendEntity spend) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -50,7 +52,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
 
     }
 
-    public Optional<SpendEntity> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<SpendEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         try {
             // QueryForObject not returns null if not found object. Method throws EmptyResultDataAccessException
@@ -66,7 +68,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull List<SpendEntity> findByUsernameAndDescription(String username, String description) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"spend\" WHERE username = ? AND description = ?",
@@ -77,7 +79,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(@Nonnull String username) {
+    public @Nonnull List<SpendEntity> findAllByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"spend\" WHERE username = ?",
@@ -87,7 +89,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAll() {
+    public @Nonnull List<SpendEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         return jdbcTemplate.query(
                 "SELECT * FROM \"spend\"",
@@ -95,7 +97,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         );
     }
 
-    public SpendEntity update(@Nonnull SpendEntity spend) {
+    public @Nonnull SpendEntity update(SpendEntity spend) {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -123,7 +125,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
     }
 
     @Override
-    public void remove(@Nonnull SpendEntity spend) {
+    public void remove(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(SPEND_JDBC_URL));
         jdbcTemplate.update(
                 "DELETE FROM \"spend\" WHERE id = ?",

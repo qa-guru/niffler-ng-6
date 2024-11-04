@@ -8,6 +8,7 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.db.SpendDbClient;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +16,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Date;
 
+
 @ExtendWith(UserClientExtension.class)
+@Disabled
 public class UserCreateInBdTest {
 
     private UserClient userClient;

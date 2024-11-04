@@ -10,12 +10,14 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 
 @ExtendWith(BrowserExtension.class)
+@Order(2)
 public class SpendingWebTest {
 
     private static final Config CFG = Config.getInstance();
@@ -42,7 +44,7 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription);
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
-
+    @User
     @Test
     void createSpending() {
         SpendJson spend = new SpendJson(null, new Date(), null, null, 555.0, RandomDataUtils.randomName(),null);

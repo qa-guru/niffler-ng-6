@@ -18,6 +18,7 @@ public class UserRestClient implements UserClient {
     private final FriendApiClient friendApiClient = new FriendApiClient();
     private final AuthUserApiClient authUserApiClient = new AuthUserApiClient();
     private final UserdataApiClient userdataApiClient = new UserdataApiClient();
+    private static final String password = "12345";
 
     @Override
     public UserJson createUser(String username, String password) {
@@ -25,11 +26,12 @@ public class UserRestClient implements UserClient {
         authUserApiClient.registerUser(username, password);
         StopWatch sw = new StopWatch();
         sw.start();
+        final long limitTime = 3000L;
         UserJson user = null;
-        while (sw.getTime(TimeUnit.MILLISECONDS) < 3000) {
+        while (sw.getTime(TimeUnit.MILLISECONDS) < limitTime) {
             user = userdataApiClient.getCurrentUser(username);
             if (user != null && user.id() != null) {
-                user.addTestData(new TestData(password, null, null));
+               return user.addTestData(new TestData(password, null, null));
             } else {
                 try {
                     Thread.sleep(100);
@@ -38,7 +40,7 @@ public class UserRestClient implements UserClient {
                 }
             }
         }
-        return user;
+        throw new RuntimeException("User creation timed out after 3000 milliseconds");
     }
 
     @Override
@@ -47,7 +49,7 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, "12345");
+                createUser(username, password);
                 friendApiClient.sendInvitation(username, targetUser.username());
                 usernames.add(username);
             }
@@ -61,7 +63,7 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, "12345");
+                createUser(username, password);
                 friendApiClient.sendInvitation(targetUser.username(), username);
                 usernames.add(username);
             }
@@ -74,7 +76,7 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, "12345");
+                createUser(username, password);
                 friendApiClient.sendInvitation(username, targetUser.username());
                 friendApiClient.acceptInvitation(targetUser.username(), username);
             }

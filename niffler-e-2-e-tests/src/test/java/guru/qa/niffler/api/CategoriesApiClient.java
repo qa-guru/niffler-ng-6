@@ -50,10 +50,10 @@ public class CategoriesApiClient extends RestClient {
 
     }
 
-    public @Nullable Optional<CategoryJson> getCategories(String username, String name) {
-        final Response<Optional<CategoryJson>> response;
+    public @Nullable List<CategoryJson> getCategories(String username) {
+        final Response<List<CategoryJson>> response;
         try {
-            response = categoriesApi.getCategories(username, name)
+            response = categoriesApi.getCategories(username)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);

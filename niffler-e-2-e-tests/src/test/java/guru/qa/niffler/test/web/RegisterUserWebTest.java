@@ -5,12 +5,15 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import java.util.UUID;
 
 @ExtendWith(BrowserExtension.class)
+@Order(2)
 public class RegisterUserWebTest {
 
     private static final Config CFG = Config.getInstance();

@@ -11,6 +11,7 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.UserClient;
 
 import guru.qa.niffler.service.rest.UserRestClient;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
@@ -18,7 +19,7 @@ import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 
 
 import java.util.List;
-
+@Order(2)
 @ExtendWith(BrowserExtension.class)
 public class FriendsWebTest {
     static UserClient authUserClient = new UserRestClient();
@@ -92,5 +93,7 @@ public class FriendsWebTest {
                 .checkAlert("Invitation of "+users.get(0)+" is declined");
         new FriendsPage().checkNotHaveFriend();
     }
+
+
 
 }

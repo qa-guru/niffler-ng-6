@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.List;
 
 public class UserdataApiClient extends RestClient {
 
@@ -27,6 +28,17 @@ public class UserdataApiClient extends RestClient {
             throw  new AssertionError(e);
         }
 
+        Assertions.assertEquals(200, response.code());
+        return response.body();
+    }
+
+    public List<UserJson> getAllPeople (String username) {
+        Response<List<UserJson>> response;
+        try {
+            response=userdataApi.all(username).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Assertions.assertEquals(200, response.code());
         return response.body();
     }

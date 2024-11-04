@@ -1,4 +1,5 @@
 package guru.qa.niffler.test.web;
+
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
@@ -39,6 +40,7 @@ public class SpendingWebTest {
         new MainPage().getSpendingTable()
                 .checkTableContains(newDescription);
     }
+
     @User
     @Test
     void shouldAddNewSpending(UserJson user) {
@@ -60,6 +62,7 @@ public class SpendingWebTest {
         new MainPage().getSpendingTable()
                 .checkTableContains(description);
     }
+
     @User
     @Test
     void shouldNotAddSpendingWithEmptyCategory(UserJson user) {
@@ -73,6 +76,7 @@ public class SpendingWebTest {
                 .saveSpending()
                 .checkFormErrorMessage("Please choose category");
     }
+
     @User
     @Test
     void shouldNotAddSpendingWithEmptyAmount(UserJson user) {
@@ -86,6 +90,7 @@ public class SpendingWebTest {
                 .saveSpending()
                 .checkFormErrorMessage("Amount has to be not less then 0.01");
     }
+
     @User(
             spendings = @Spending(
                     category = "Обучение",
@@ -102,6 +107,7 @@ public class SpendingWebTest {
                 .deleteSpending("Обучение Advanced 2.0")
                 .checkTableSize(0);
     }
+
     @User(
             spendings = @Spending(
                     category = "Обучение",

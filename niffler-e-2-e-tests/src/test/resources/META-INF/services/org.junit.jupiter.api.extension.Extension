@@ -1,2 +1,3 @@
 guru.qa.niffler.jupiter.extantion.DatabasesExtension
 guru.qa.niffler.jupiter.extantion.CookieJarExtension
+guru.qa.niffler.jupiter.extantion.AllureBackandLogsExtension

@@ -148,6 +148,6 @@ public class ProfileTest {
             .toProfilePage()
             .uploadPhotoFromClasspath("img/renoire.png")
             .submitProfile()
-            .checkExpectedImage(expectedImage);
+            .checkAvatar(expectedImage);
   }
 }

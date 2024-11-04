@@ -131,9 +131,9 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    @Step("Check expected image")
+    @Step("Check avatar")
     @Nonnull
-    public ProfilePage checkExpectedImage(BufferedImage expectedImage) {
+    public ProfilePage checkAvatar(BufferedImage expectedImage) {
         BufferedImage actual = null;
         try {
             actual = ImageIO.read(Objects.requireNonNull($(avatar).screenshot()));

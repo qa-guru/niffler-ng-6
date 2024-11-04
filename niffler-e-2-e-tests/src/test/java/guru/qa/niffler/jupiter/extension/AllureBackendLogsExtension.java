@@ -22,18 +22,20 @@ public class AllureBackendLogsExtension implements SuiteExtension {
         allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
         allureLifecycle.startTestCase(caseId);
 
-        List<Path> logFiles = List.of(
-                Path.of("./logs/niffler-auth/app.log"),
-                Path.of("./logs/niffler-currency/app.log"),
-                Path.of("./logs/niffler-userdata/app.log"),
-                Path.of("./logs/niffler-gateway/app.log")
+        List<String> logFiles = List.of(
+                "./logs/niffler-auth/app.log",
+                "./logs/niffler-currency/app.log",
+                "./logs/niffler-userdata/app.log",
+                "./logs/niffler-gateway/app.log"
         );
 
-        for (Path logFile : logFiles) {
+        for (String logFile : logFiles) {
                 Allure.addAttachment(
-                        logFile.getFileName().toString(),
+                        logFile,
                         "text/plain",
-                        Files.newInputStream(logFile),
+                        Files.newInputStream(
+                                Path.of(logFile)
+                        ),
                         ".log"
                 );
         }

@@ -28,7 +28,10 @@ public class ProfileTest {
         .checkThatPageLoaded();
 
     Selenide.open(CFG.frontUrl() + "profile", ProfilePage.class)
-        .checkArchivedCategoryExists(category.name());
+        .checkArchivedCategoryExists(category.name())
+        .checkName("")
+        .checkAlert("")
+        .checkName("");
   }
 
   @User(

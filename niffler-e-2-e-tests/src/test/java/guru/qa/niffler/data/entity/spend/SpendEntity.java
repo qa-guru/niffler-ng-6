@@ -54,6 +54,13 @@ public class SpendEntity implements Serializable {
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private CategoryEntity category;
 
+  public SpendEntity(UUID id) {
+    this.id = id;
+  }
+
+  public SpendEntity() {
+  }
+
   public static SpendEntity fromJson(SpendJson json) {
     SpendEntity se = new SpendEntity();
     se.setId(json.id());

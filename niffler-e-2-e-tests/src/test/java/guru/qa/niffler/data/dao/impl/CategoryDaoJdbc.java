@@ -125,7 +125,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public Optional<List<CategoryEntity>> findAllByUsername(String username) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM category WHERE username = ?"
         )) {
@@ -142,7 +142,7 @@ public class CategoryDaoJdbc implements CategoryDao {
                     ce.setArchived(rs.getBoolean("archived"));
                     ceList.add(ce);
                 }
-                return ceList;
+                return Optional.of(ceList);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

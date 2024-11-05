@@ -35,7 +35,7 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
     }
 
     @Step("Send friend request to user = [{}]")
-    private AllPeoplePage sendFriendRequestToUser(String username) {
+    public AllPeoplePage sendFriendRequestToUser(String username) {
         log.info("Send friend request to user = [{}]", username);
         filterByQuery(username);
         allPeopleList.findBy(child(usernameSelector, exactText(username))).$(addFriendButtonSelector)

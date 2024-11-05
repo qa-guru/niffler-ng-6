@@ -4,7 +4,7 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.db.impl.springJdbc.UsersDbClientSpringJdbc;
+import guru.qa.niffler.service.api.impl.UsersApiClientImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -17,7 +17,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 public class FriendshipExtension implements BeforeEachCallback {
 
-    private final UsersClient usersClient = new UsersDbClientSpringJdbc();
+    private final UsersClient usersClient = new UsersApiClientImpl();
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
     @Override
@@ -34,7 +34,7 @@ public class FriendshipExtension implements BeforeEachCallback {
 
                             @SuppressWarnings("unchecked")
                             Map<String, UserJson> usersMap = (Map<String, UserJson>) context
-                                    .getStore(NAMESPACE)
+                                    .getStore(CreateNewUserExtension.NAMESPACE)
                                     .get(context.getUniqueId());
                             UserJson user = usersMap.get(parameterName);
 
@@ -44,8 +44,10 @@ public class FriendshipExtension implements BeforeEachCallback {
                                     .build();
 
                             if (userAnno.incomeInvitations() > 0) {
-                                testData.setIncomeInvitations(usersClient
-                                        .getIncomeInvitationFromNewUsers(user, userAnno.incomeInvitations()));
+                                testData.setIncomeInvitations(
+                                        usersClient.getIncomeInvitationFromNewUsers(
+                                                user,
+                                                userAnno.incomeInvitations()));
                             }
 
                             if (userAnno.outcomeInvitations() > 0) {

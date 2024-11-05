@@ -26,9 +26,9 @@ public class UsersApiClientImpl implements UsersClient {
     public @Nonnull List<UserJson> getIncomeInvitationFromNewUsers(UserJson to, int count) {
         List<UserJson> incomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var addressee = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(addressee.getUsername()).ifPresent(incomeInvitations::add);
-            userdataClient.sendInvitation(apiClient.register(UserUtils.generateUser()), to);
+            var from = apiClient.register(UserUtils.generateUser());
+            userdataClient.findByUsername(from.getUsername()).ifPresent(incomeInvitations::add);
+            userdataClient.sendInvitation(from, to);
         }
         return incomeInvitations;
     }
@@ -37,20 +37,20 @@ public class UsersApiClientImpl implements UsersClient {
     public @Nonnull List<UserJson> sendOutcomeInvitationToNewUsers(UserJson from, int count) {
         List<UserJson> outcomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var addressee = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(addressee.getUsername()).ifPresent(outcomeInvitations::add);
-            userdataClient.sendInvitation(from, apiClient.register(UserUtils.generateUser()));
+            var to = apiClient.register(UserUtils.generateUser());
+            userdataClient.findByUsername(to.getUsername()).ifPresent(outcomeInvitations::add);
+            userdataClient.sendInvitation(from, to);
         }
         return outcomeInvitations;
     }
 
     @Override
-    public @Nonnull List<UserJson> addNewFriends(UserJson userJson, int count) {
+    public @Nonnull List<UserJson> addNewFriends(UserJson from, int count) {
         List<UserJson> friends = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var addressee = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(addressee.getUsername()).ifPresent(friends::add);
-            userdataClient.addFriend(userJson, apiClient.register(UserUtils.generateUser()));
+            var to = apiClient.register(UserUtils.generateUser());
+            userdataClient.findByUsername(to.getUsername()).ifPresent(friends::add);
+            userdataClient.addFriend(from, to);
         }
         return friends;
     }

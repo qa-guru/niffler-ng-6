@@ -1,8 +1,8 @@
 package guru.qa.niffler.page.page.people;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.FloatForm;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,8 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     private final ElementsCollection friendRequestsList = friendRequestsTableContainer.$$("tr").as("'Friend requests' list"),
             friendsList = friendsTableContainer.$$("tr").as("'Friends' list");
 
+    private final FloatForm declineForm = new FloatForm(); // If not found $x(//div[./h2[text()='Decline friendship']])
+
     @Step("Switch to 'All people' page")
     public AllPeoplePage switchToAllPeopleTab() {
         log.info("Switching to 'All people' tab");
@@ -47,7 +49,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     public FriendsPage unfriend(String username) {
         log.info("Unfriend user = [{}]", username);
         filterByQuery(username);
-        friendsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
+        friendsList.filterBy(child(usernameSelector, exactText(username))).get(0)
                 .$x(".//button[text()='Unfriend']").as("['Unfriend' " + username + " button]").click();
         return this;
     }
@@ -56,7 +58,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     public FriendsPage acceptFriendRequest(String username) {
         log.info("Accept friend request from user = [{}]", username);
         filterByQuery(username);
-        friendRequestsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
+        friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0)
                 .$x(".//button[text()='Accept']").as("['Accept' " + username + " request button]").click();
         return this;
     }
@@ -65,9 +67,9 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     public FriendsPage declineFriendRequest(String username) {
         log.info("Decline friend request from user = [{}]", username);
         filterByQuery(username);
-        friendRequestsList.filterBy(child(byXpath(".//p[1]"), exactText(username))).get(0)
+        friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0)
                 .$x(".//button[text()='Decline']").as("['Decline' " + username + " request button]").click();
-        return this;
+        return declineForm.submit(FriendsPage.class);
     }
 
     @Step("Should have income friend request from = [{username}]")
@@ -75,6 +77,14 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
         log.info("Assert friend request exists with username = [{}]", username);
         filterByQuery(username);
         friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0).shouldBe(visible);
+        return this;
+    }
+
+    @Step("Should have income friend request from = [{username}]")
+    public FriendsPage shouldNotHaveIncomeFriendRequest(String username) {
+        log.info("Assert friend request exists with username = [{}]", username);
+        filterByQuery(username);
+        friendRequestsList.filterBy(child(usernameSelector, exactText(username))).shouldHave(size(0));
         return this;
     }
 

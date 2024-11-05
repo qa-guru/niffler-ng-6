@@ -24,8 +24,6 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
 
     private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
     private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
-    private final SelenideElement searchForm = $("#search").as("Search form");
-    private final SearchField searchField = new SearchField(searchForm);
 
     @Step("Switch to 'Friends' tab")
     public FriendsPage switchToFriendsTab() {

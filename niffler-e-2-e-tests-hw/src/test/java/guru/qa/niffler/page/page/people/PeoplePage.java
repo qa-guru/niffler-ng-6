@@ -3,6 +3,7 @@ package guru.qa.niffler.page.page.people;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.page.BasePage;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
@@ -27,17 +28,14 @@ public abstract class PeoplePage<T> extends BasePage<T> {
 
     protected final SelenideElement friendsTab = $x("//a[./h2[text()='Friends']]").as("Friends tab"),
             allPeopleTab = $x("//a[./h2[text()='All people']]").as("All people tab"),
-            searchInput = $("input[placeholder='Search']").as("Search input"),
-            clearSearchQueryButton = $("#input-clear").as("Clear search query button"),
             nextPageButton = $("#page-next").as("'Next' button"),
-            previousPageButton = $("#page-previous").as("'Previous' button"),
-            allPeopleTableContainer = $(byText("#friends")).as("Friends list title");
+            previousPageButton = $("#page-previous").as("'Previous' button");
 
     protected final By usernameSelector = byXpath(".//p[1]"),
             waitingButtonSelector = byCssSelector("span[class*='label']"),
-            addFriendButtonSelector = byCssSelector("button[class*='label']");
+            addFriendButtonSelector = byCssSelector("button");
 
-    protected final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
+    private final SearchField search = new SearchField($("form[class^=MuiBox-root]"));
 
     public Header getHeader() {
         return new Header();
@@ -47,8 +45,8 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     @Step("Filter users by query = [{}]")
     public T filterByQuery(String query) {
         log.info("Filter users by query = [{}]", query);
-        searchInput.click();
-        searchInput.setValue(query).pressEnter();
+        search.clearByButton();
+        search.setValue(query);
         return (T) this;
     }
 

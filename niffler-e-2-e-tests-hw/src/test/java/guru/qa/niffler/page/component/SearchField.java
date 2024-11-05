@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Condition.clickable;
 
 @Slf4j
 @ParametersAreNonnullByDefault
 public class SearchField extends BaseComponent<SearchField> {
 
-    SelenideElement input = $("input[aria-label='search']").as("[Text input]"),
+    SelenideElement input = self.$("input[aria-label='search']").as("[Text input]"),
             inputClearButton = self.$("#input-clear").as("[Text input clear button]");
 
     public SearchField(SelenideElement self) {
@@ -24,11 +24,12 @@ public class SearchField extends BaseComponent<SearchField> {
 
     public void clearByButton() {
         self.click();
-        inputClearButton.click();
+        if (!input.getValue().isEmpty())
+            inputClearButton.shouldBe(clickable).click();
     }
 
     public void clear() {
-        self.clear();
+        input.clear();
     }
 
 }

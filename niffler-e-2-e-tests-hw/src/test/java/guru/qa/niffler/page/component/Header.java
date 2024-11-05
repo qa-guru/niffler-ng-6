@@ -4,7 +4,6 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.page.MainPage;
 import guru.qa.niffler.page.page.ProfilePage;
 import guru.qa.niffler.page.page.auth.LoginPage;
-import guru.qa.niffler.page.page.auth.LogoutForm;
 import guru.qa.niffler.page.page.people.AllPeoplePage;
 import guru.qa.niffler.page.page.people.FriendsPage;
 import guru.qa.niffler.page.page.spending.AddNewSpendingPage;
@@ -21,14 +20,16 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class Header extends BaseComponent<Header> {
 
-    private final SelenideElement logoImg = self.$("a[href='main'] img").as("['Logo' image]");
-    private final SelenideElement newSpendingButton = self.$("a[href='/spending']").as("['New spending' button]");
-    private final SelenideElement menuIcon = self.$("button[aria-label='Menu']").as("['Menu' button]");
-    private final SelenideElement accountMenuForm = $("#account-menu").as("['Account menu' form]");
-    private final SelenideElement profileButton = accountMenuForm.$("a[href='/profile']").as("['Profile' button]");
-    private final SelenideElement friendsButton = accountMenuForm.$("a[href$='/friends']").as("['Friends' button]");
-    private final SelenideElement allPeopleButton = accountMenuForm.$("a[href$='/all']").as("['All people' button]");
-    private final SelenideElement signOutButton = accountMenuForm.$(byText("Sign out")).as("['Sign out' button]");
+    private final SelenideElement logoImg = self.$("a[href='main'] img").as("['Logo' image]"),
+            newSpendingButton = self.$("a[href='/spending']").as("['New spending' button]"),
+            menuIcon = self.$("button[aria-label='Menu']").as("['Menu' button]"),
+            accountMenuForm = $("#account-menu").as("['Account menu' form]"),
+            profileButton = accountMenuForm.$("a[href='/profile']").as("['Profile' button]"),
+            friendsButton = accountMenuForm.$("a[href$='/friends']").as("['Friends' button]"),
+            allPeopleButton = accountMenuForm.$("a[href$='/all']").as("['All people' button]"),
+            signOutButton = accountMenuForm.$(byText("Sign out")).as("['Sign out' button]");
+
+    private final FloatForm signOutForm = new FloatForm(); // If not found add as param $x(//div[./h2[text()='Want to logout?']])
 
     public Header() {
         super($("header").as("[Header]"));
@@ -80,14 +81,14 @@ public class Header extends BaseComponent<Header> {
         menuIcon.click();
         log.info("Open \"Sign out\" form");
         signOutButton.shouldBe(clickable).click();
-        return new LogoutForm().logout();
+        return signOutForm.submit(LoginPage.class);
     }
 
-    public LogoutForm openSignOutForm() {
+    public FloatForm openSignOutForm() {
         menuIcon.click();
         log.info("Open \"Sign out\" form");
         signOutButton.click();
-        return new LogoutForm();
+        return signOutForm;
     }
 
 }

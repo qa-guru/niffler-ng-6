@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +45,17 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         final UUID generatedKey = (UUID) kh.getKeys().get("id");
         user.setId(generatedKey);
         return user;
+    }
+
+    @Override
+    public Optional<List<UserEntity>> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return Optional.of(
+                jdbcTemplate.query(
+                        "SELECT * FROM \"user\"",
+                        UserdataUserEntityRowMapper.instance
+                )
+        );
     }
 
     @Override

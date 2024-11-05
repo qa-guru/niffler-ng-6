@@ -31,13 +31,15 @@ public class UserDbClient {
                             new UserdataUserDaoJdbc(connection).createUser(userEntity)
                     );
                 },
-                CFG.userdataJdbcUrl()
+                CFG.userdataJdbcUrl(),
+                2
         );
     }
 
     public UserJson xaCreateUser(UserJson user) {
         return UserJson.fromEntity(
                 xaTransaction(
+                        4,
                         new XaFunction<>(
                                 connection -> {
                                     AuthUserEntity authUserEntity = new AuthUserEntity();
@@ -91,7 +93,8 @@ public class UserDbClient {
                 connection -> {
                     return new UserdataUserDaoJdbc(connection).findByUsername(username).map(UserJson::fromEntity);
                 },
-                CFG.userdataJdbcUrl()
+                CFG.userdataJdbcUrl(),
+                2
         );
     }
 

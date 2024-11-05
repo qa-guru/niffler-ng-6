@@ -30,7 +30,8 @@ public class SpendDbClient {
                             new SpendDaoJdbc(connection).create(spendEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                2
         );
     }
 
@@ -42,7 +43,8 @@ public class SpendDbClient {
                             new CategoryDaoJdbc(connection).create(categoryEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                2
         );
     }
 
@@ -54,7 +56,8 @@ public class SpendDbClient {
                             new CategoryDaoJdbc(connection).update(categoryEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                2
         );
     }
 
@@ -65,7 +68,8 @@ public class SpendDbClient {
                             .map(SpendJson::fromEntity)
                             .collect(Collectors.toList());
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                2
         );
     }
 }

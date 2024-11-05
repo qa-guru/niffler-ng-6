@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.dao.impl;
 
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
@@ -11,8 +10,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class CategoryDaoJdbc implements CategoryDao {
-
-    private static final Config CFG = Config.getInstance();
 
     private final Connection connection;
 

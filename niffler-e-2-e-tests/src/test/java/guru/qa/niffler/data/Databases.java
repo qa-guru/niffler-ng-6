@@ -25,11 +25,9 @@ public class Databases {
     public static final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
     public static final Map<Long, Map<String, Connection>> threadConnections = new ConcurrentHashMap<>();
 
-    public record XaFunction<T>(Function<Connection, T> function, String jdbcUrl) {
-    }
+    public record XaFunction<T>(Function<Connection, T> function, String jdbcUrl) {}
 
-    public record XaConsumer<T>(Consumer<Connection> function, String jdbcUrl) {
-    }
+    public record XaConsumer(Consumer<Connection> function, String jdbcUrl) {}
 
     public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
         Connection connection = null;

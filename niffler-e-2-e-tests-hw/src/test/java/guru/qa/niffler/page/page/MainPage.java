@@ -49,7 +49,6 @@ public class MainPage extends BasePage<MainPage> {
             noSpendingsImage = $("[alt='Lonely niffler']").as("Lonely niffler/No spendings image"),
             previousPageButton = $x("//button[text()='Previous']").as("[Spending table 'previous page' button]"),
             nextPageButton = $x("//button[text()='Next']").as("[Spending table 'next page' button]"),
-            alertNotificationMessage = $("div[class*='MuiAlert-message']").as("['Error message' text]"),
             allSpendingsSelector = $x("//thead/input").as("[All spendings selector]");
 
     private final ElementsCollection spendingRows = $$("#spendings tbody tr"),
@@ -292,13 +291,6 @@ public class MainPage extends BasePage<MainPage> {
         spendingsLegendList
                 .filterBy(text("%s %s %s".formatted(description, amount, currency.getSymbol())))
                 .shouldHave(sizeGreaterThan(0));
-        return this;
-    }
-
-    @Step("Should have message alert = [{}]")
-    public MainPage shouldHaveMessageAlert(String alertMessage) {
-        log.info("Assert alert has text: {}", alertMessage);
-        alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
         return this;
     }
 

@@ -25,7 +25,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
             categoryInput = $("[placeholder='Add new category']").as("['Categories search' input]"),
             saveChangesButton = $x("//*[text()='Save changes']").as("['Save changes' button]"),
             categoriesContainer = $x("//div[contains(@class,'container') and .//*[.='Categories']]").as("['Categories' items container]"),
-            alertNotificationMessage = $("div[class*='MuiAlert-message']").as("[Error message] text"),
             editCategoryNameInput = $("[placeholder='Edit category']").as("['Edit category' input]"),
             submitArchiveCategory = $x("//button[text()='Archive']").as("[Submit 'Archive' button]"),
             submitUnarchiveCategory = $x("//button[text()='Unarchive']").as("[Submit 'Unarchive' button]"),
@@ -114,12 +113,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
     public ProfilePage shouldHaveName(String name) {
         log.info("Assert name equals: {}", name);
         nameInput.shouldHave(value(name));
-        return this;
-    }
-
-    public ProfilePage shouldHaveMessageAlert(String alertMessage) {
-        log.info("Assert alert has text: {}", alertMessage);
-        alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
         return this;
     }
 

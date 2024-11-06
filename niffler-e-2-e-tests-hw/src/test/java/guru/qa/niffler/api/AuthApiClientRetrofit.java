@@ -1,88 +1,88 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.core.RestClient;
+import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.enums.Token;
-import guru.qa.niffler.mapper.RegisterModelMapper;
 import guru.qa.niffler.model.UserJson;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class AuthApiClientRetrofit {
+public class AuthApiClientRetrofit extends RestClient {
 
-    private static final RegisterModelMapper registerModelMapper = new RegisterModelMapper();
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().authUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .client(new OkHttpClient.Builder()
-                    .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .followRedirects(false)
-                    .build())
-            .build();
+    private final AuthApi authApi;
+    private final UserdataApiClientRetrofit userdataApiClient = new UserdataApiClientRetrofit();
 
-    private final AuthApi authApi = retrofit.create(AuthApi.class);
+    public AuthApiClientRetrofit() {
+        super(CFG.authUrl());
+        this.authApi = retrofit.create(AuthApi.class);
+    }
 
-    public @Nonnull UserJson register(UserJson user) {
-
-        Map<Token, String> cookies = getNewCookies();
-
-        log.info("Register user: username = [{}], password = [{}]", user.getUsername(), user.getPassword());
+    public @Nonnull UserJson register(String username, String password) {
+        log.info("Register user: username = [{}], password = [{}]", username, password);
         final Response<Void> response;
         try {
+            authApi.getCookies().execute();
             response = authApi.register(
-                            registerModelMapper.toRegisterMap(registerModelMapper
-                                    .fromUserModel(user)
-                                    .setCsrf(cookies.get(Token.CSRF))),
-                            "XSRF-TOKEN=" + cookies.get(Token.CSRF),
-                            "JSESSIONID=" + cookies.get(Token.JSESSIONID)
-                    )
+                            username,
+                            password,
+                            password,
+                            ThreadSafeCookieStore.INSTANCE.cookieValue(Token.CSRF.getCookieName()))
+                    .execute();
+        } catch (IOException ex) {
+            throw new AssertionError(ex);
+        }
+        Assertions.assertEquals(HttpStatus.CREATED, response.code());
+
+        StopWatch sw = StopWatch.createStarted();
+        UserJson user = null;
+
+        while (user == null && sw.getTime(TimeUnit.SECONDS) < 30) {
+            try {
+                user = userdataApiClient.currentUser(username);
+                if (user != null && user.getId() != null) {
+                    break;
+                } else {
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Optional.ofNullable(user.setPassword(password)).orElseThrow(
+                () -> new RuntimeException("Could not find user = [" + username + "]"));
+    }
+
+    public @Nonnull UserJson login(UserJson user) {
+
+        log.info("Login by: username = [{}], password = [{}]", user.getUsername(), user.getPassword());
+        final Response<Void> response;
+        try {
+            authApi.getCookies().execute();
+            response = authApi.login(
+                            user.getUsername(),
+                            user.getPassword(),
+                            ThreadSafeCookieStore.INSTANCE.cookieValue(Token.CSRF.getCookieName()))
                     .execute();
         } catch (IOException ex) {
             throw new AssertionError(ex);
         }
 
-        Assertions.assertEquals(HttpStatus.CREATED, response.code());
+        Assertions.assertEquals(HttpStatus.OK, response.code());
 
         return user;
 
     }
 
-    private @Nonnull Map<Token, String> getNewCookies() {
-        log.info("Get new cookies");
-        Map<Token, String> cookies;
-        final Response<Void> response;
-        try {
-            response = authApi.getCookies().execute();
-            cookies = parseLoginPageCookies(response);
-        } catch (IOException ex) {
-            throw new AssertionError(ex);
-        }
-        Assertions.assertEquals(HttpStatus.FOUND, response.code());
-        return cookies;
-    }
-
-    private @Nonnull Map<Token, String> parseLoginPageCookies(Response<?> response) {
-        return response.headers()
-                .values("Set-Cookie").stream()
-                .map(cookieText -> cookieText.split("="))
-                .collect(toMap(
-                        cookieArray -> Token.getEnumByCookieName(cookieArray[0]).orElse(null),
-                        cookieArray -> cookieArray[1].replaceAll("; Path", "")
-                ));
-    }
 
 }

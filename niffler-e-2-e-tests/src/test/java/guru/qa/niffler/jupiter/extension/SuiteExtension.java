@@ -3,6 +3,8 @@ package guru.qa.niffler.jupiter.extension;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import java.io.IOException;
+
 public interface SuiteExtension extends BeforeAllCallback {
 
   /*
@@ -32,6 +34,6 @@ public interface SuiteExtension extends BeforeAllCallback {
   default void beforeSuite(ExtensionContext context) {
   }
 
-  default void afterSuite() {
+  default void afterSuite() throws IOException {
   }
 }

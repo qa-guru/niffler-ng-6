@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,11 +16,12 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
 
-    public CategoryEntity create(@Nonnull CategoryEntity category) {
+    public @Nonnull CategoryEntity create(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"category\" (username, name, archived) VALUES (?, ?, ?)",
@@ -46,7 +48,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    public Optional<CategoryEntity> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<CategoryEntity> findById(UUID id) {
 
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
@@ -69,7 +71,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> findByUsernameAndName(@Nonnull String username, @Nonnull String categoryName) {
+    public @Nonnull Optional<CategoryEntity> findByUsernameAndName(String username, String categoryName) {
 
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
@@ -93,8 +95,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(@Nonnull String username) {
-
+    public @Nonnull List<CategoryEntity> findAllByUsername(String username) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"category\" WHERE username = ?"
@@ -118,8 +119,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAll() {
-
+    public @Nonnull List<CategoryEntity> findAll() {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"category\""
@@ -141,7 +141,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     }
 
-    public CategoryEntity update(@Nonnull CategoryEntity category) {
+    public @Nonnull CategoryEntity update(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"category\" SET username = ?, name = ?, archived = ? WHERE id = ?"
@@ -169,7 +169,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public void remove(@Nonnull CategoryEntity category) {
+    public void remove(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"category\" WHERE id = ?"

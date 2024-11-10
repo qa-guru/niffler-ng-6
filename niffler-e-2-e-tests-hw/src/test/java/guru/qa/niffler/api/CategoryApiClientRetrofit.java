@@ -11,15 +11,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class CategoryApiClientRetrofit {
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -34,7 +36,7 @@ public class CategoryApiClientRetrofit {
 
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
-    public CategoryJson create(@Nonnull CategoryJson category) {
+    public @Nonnull CategoryJson create(CategoryJson category) {
 
         log.info("Create new category: {}", category);
         final Response<CategoryJson> response;
@@ -45,15 +47,12 @@ public class CategoryApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.CREATED, response.code());
-        return response.body();
+        return Optional.ofNullable(response.body())
+                .orElseThrow(()->
+                        new IllegalStateException("Failed to create new category: " + response.body()));
     }
 
-    @SuppressWarnings("unused")
-    public Optional<CategoryJson> findById(@Nonnull UUID id) {
-        throw new UnsupportedOperationException("Find category by id not supported for Api client");
-    }
-
-    public Optional<CategoryJson> findByUsernameAndName(@Nonnull String username, @Nonnull String name) {
+    public @Nonnull Optional<CategoryJson> findByUsernameAndName(String username, String name) {
         try {
             return Optional.of(
                     findAllByUsername(username, false).stream()
@@ -64,7 +63,7 @@ public class CategoryApiClientRetrofit {
         }
     }
 
-    public List<CategoryJson> findAllByUsername(@Nonnull String username, boolean excludeArchived) {
+    public @Nonnull List<CategoryJson> findAllByUsername(String username, boolean excludeArchived) {
         log.info("Get all categories of user: [{}]", username);
         final Response<List<CategoryJson>> response;
         try {
@@ -74,10 +73,12 @@ public class CategoryApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
-    public CategoryJson update(@Nonnull CategoryJson category) {
+    public @Nonnull CategoryJson update(CategoryJson category) {
         log.info("Update category to: {}", category);
         final Response<CategoryJson> response;
         try {
@@ -87,7 +88,9 @@ public class CategoryApiClientRetrofit {
             throw new AssertionError(e);
         }
         assertEquals(HttpStatus.OK, response.code());
-        return response.body();
+        return Optional.ofNullable(response.body())
+                .orElseThrow(()->
+                        new IllegalStateException("Failed to update category: " + response.body()));
     }
 
 }

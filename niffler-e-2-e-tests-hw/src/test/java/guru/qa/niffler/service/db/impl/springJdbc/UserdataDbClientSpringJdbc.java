@@ -12,12 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
@@ -29,7 +30,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
 
 
     @Override
-    public UserJson create(@Nonnull UserJson userJson) {
+    public UserJson create(UserJson userJson) {
         log.info("Creating new user by DTO: {}", userJson);
         return txTemplate.execute(status ->
                 userMapper.toDto(
@@ -38,7 +39,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findById(@Nonnull UUID id) {
+    public Optional<UserJson> findById(UUID id) {
         log.info("Get user by id = [{}]", id);
         return txTemplate.execute(status ->
                 userdataRepository
@@ -47,7 +48,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findByUsername(@Nonnull String username) {
+    public Optional<UserJson> findByUsername(String username) {
         log.info("Get user by username = [{}]", username);
         return txTemplate.execute(status ->
                 userdataRepository
@@ -66,7 +67,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void sendInvitation(UserJson requester, UserJson addressee) {
         log.info("Send invitation from = [{}] to = [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataRepository.sendInvitation(
@@ -77,7 +78,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void declineInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void declineInvitation(UserJson requester, UserJson addressee) {
         log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataRepository.removeInvitation(
@@ -88,7 +89,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void addFriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void addFriend(UserJson requester, UserJson addressee) {
         log.info("Make friends [{}] and [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataRepository.addFriend(
@@ -99,7 +100,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void unfriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void unfriend(UserJson requester, UserJson addressee) {
         log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         txTemplate.execute(status -> {
             userdataRepository.removeFriend(
@@ -110,7 +111,7 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void remove(@Nonnull UserJson userJson) {
+    public void remove(UserJson userJson) {
         log.info("Remove user: {}", userJson);
         txTemplate.execute(status -> {
             new UserdataUserDaoSpringJdbc()

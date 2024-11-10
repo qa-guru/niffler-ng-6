@@ -1,20 +1,21 @@
-package guru.qa.niffler.page.auth;
+package guru.qa.niffler.page.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.BasePage;
+import guru.qa.niffler.page.page.BasePage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class RegisterPage extends BasePage<RegisterPage> {
 
     private final SelenideElement
@@ -32,7 +33,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public ConfirmRegistrationPage signUpSuccess(@Nonnull UserJson user) {
+    public ConfirmRegistrationPage signUpSuccess( UserJson user) {
         log.info("Sign up user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -43,7 +44,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public void signInFailed(@Nonnull UserJson user) {
+    public void signInFailed( UserJson user) {
         log.info("Sign up [FAILED] user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -53,12 +54,12 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Fill username = [{}]")
-    public void fillUsername(@Nonnull String username) {
+    public void fillUsername( String username) {
         usernameInput.setValue(username);
     }
 
     @Step("Fill password = [{}]")
-    public void fillPassword(@Nonnull String password) {
+    public void fillPassword( String password) {
         passwordInput.setValue(password);
     }
 
@@ -94,19 +95,19 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Should visible username error with text = [{}]")
-    public RegisterPage assertUsernameHasError(@Nonnull String error) {
+    public RegisterPage assertUsernameHasError( String error) {
         usernameInput.parent().$(".form__error").as("Username error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password error with text = [{}]")
-    public RegisterPage assertPasswordHasError(@Nonnull String error) {
+    public RegisterPage assertPasswordHasError( String error) {
         passwordInput.parent().$(".form__error").as("Password error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password confirmation error with text = [{}]")
-    public RegisterPage assertPasswordConfirmationHasError(@Nonnull String error) {
+    public RegisterPage assertPasswordConfirmationHasError( String error) {
         passwordConfirmationInput.parent().$(".form__error").as("Password confirmation error text").shouldHave(text(error));
         return this;
     }

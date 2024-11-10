@@ -1,4 +1,4 @@
-package guru.qa.niffler.page;
+package guru.qa.niffler.page.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -7,14 +7,17 @@ import com.codeborne.selenide.conditions.And;
 import guru.qa.niffler.enums.Period;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.page.spending.AddNewSpendingPage;
-import guru.qa.niffler.page.spending.EditSpendingPage;
+import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SearchField;
+import guru.qa.niffler.page.page.spending.AddNewSpendingPage;
+import guru.qa.niffler.page.page.spending.EditSpendingPage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,47 +35,46 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 
 @Slf4j
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
 
     private final SelenideElement statisticsTitle = $(byText("Statistics")).as("Statistics title"),
             statisticsBar = $("canvas").as("Statistics bar"),
             historyOfSpendingsTitle = $(byText("History of Spendings")).as("History of Spendings title"),
-            spendingsSearchInputContainer = historyOfSpendingsTitle.parent().$("form").as("Spendings search input container"),
-            spendingsSearchInput = $("[placeholder='Search']").as("Spendings search input"),
-            spendingsSearchInputCleanButton = $("#input-clear").as("Spendings search input clean button"),
+            searchForm = historyOfSpendingsTitle.parent().$("form").as("Spendings search input container"),
             spendingsPeriodSelector = $("#period").as("Spendings period selector"),
             currencySelector = $("#currency").as("Currency selector"),
             deleteSpendingButton = $("#delete").as("Delete spending button"),
             noSpendingsTitle = $(byText("There are no spendings")).as("There are no spendings title"),
             noSpendingsImage = $("[alt='Lonely niffler']").as("Lonely niffler/No spendings image"),
-            canvasUpdateElement = $x("//body/*[@id='menu-period']").as("[Canvas update visible element]"),
             previousPageButton = $x("//button[text()='Previous']").as("[Spending table 'previous page' button]"),
             nextPageButton = $x("//button[text()='Next']").as("[Spending table 'next page' button]"),
             alertNotificationMessage = $("div[class*='MuiAlert-message']").as("['Error message' text]"),
             allSpendingsSelector = $x("//thead/input").as("[All spendings selector]");
+
     private final ElementsCollection spendingRows = $$("#spendings tbody tr"),
             spendingsLegendList = $$("#legend-container li").as("Statistics items list"),
             spendingsPeriodList = $$("#menu-period li").as("Spendings period list"),
             currenciesList = $$("#menu-currency li").as("Currencies list");
 
+    @Getter
+    private final Header header = new Header();
+    private final SearchField searchField = new SearchField(searchForm);
+
     public MainPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
 
-    public AppHeader getHeader() {
-        return new AppHeader();
-    }
-
     @Step("Filter spendings by description = [{}]")
-    public MainPage filterSpendingsByDescription(@Nonnull String query) {
+    public MainPage filterSpendingsByDescription(String query) {
         log.info("Filtering spendings by query {}", query);
-        spendingsSearchInputContainer.click();
-        spendingsSearchInput.shouldBe(visible).setValue(query).pressEnter();
+        searchForm.click();
+        searchField.setValue(query);
         return this;
     }
 
     @Step("Filter spendings by period = [{}]")
-    public MainPage filterSpendingsByPeriod(@Nonnull Period period) {
+    public MainPage filterSpendingsByPeriod(Period period) {
         log.info("Filtering spendings by period: [{}]", period);
         spendingsPeriodSelector.click();
         spendingsPeriodList.findBy(text(period.getValue())).shouldBe(visible).click();
@@ -80,7 +82,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Filter spendings by currency = [{}]")
-    public MainPage filterSpendingsByCurrency(@Nonnull CurrencyValues currency) {
+    public MainPage filterSpendingsByCurrency(CurrencyValues currency) {
         log.info("Filtering spendings by currency: [{}]", currency);
         currencySelector.click();
         currenciesList.findBy(text(currency.name())).shouldBe(visible).click();
@@ -88,7 +90,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Filter spendings by criteria:")
-    public MainPage filterSpendings(@Nonnull SpendJson spend) {
+    public MainPage filterSpendings(SpendJson spend) {
 
         if (spend.getDescription() != null && spend.getDescription().isEmpty()) {
             filterSpendingsByDescription(spend.getDescription());
@@ -106,14 +108,14 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Create new spending with name = [{spend.description}]")
-    public MainPage createNewSpending(@Nonnull SpendJson spend) {
+    public MainPage createNewSpending(SpendJson spend) {
         log.info("Go to 'Create new spending' page");
-        getHeader().goToCreateSpendingPage();
+        getHeader().goToAddNewSpendingPage();
         return new AddNewSpendingPage(true).createNewSpending(spend);
     }
 
     @Step("Open edit spending page")
-    public EditSpendingPage openEditSpendingPage(@Nonnull String spendDescription, int index) {
+    public EditSpendingPage openEditSpendingPage(String spendDescription, int index) {
 
         if (index < 0)
             throw new IllegalArgumentException("Index must be greater than 0");
@@ -129,7 +131,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Open edit spending page with spend criteria and index = [{index}]:")
-    public EditSpendingPage openEditSpendingPage(@Nonnull SpendJson spend, int index) {
+    public EditSpendingPage openEditSpendingPage(SpendJson spend, int index) {
 
         if (index < 0)
             throw new IllegalArgumentException("Index must be greater than 0");
@@ -152,11 +154,11 @@ public class MainPage extends BasePage<MainPage> {
 
     }
 
-    public EditSpendingPage openEditSpendingPage(@Nonnull String spendingName) {
+    public EditSpendingPage openEditSpendingPage(String spendingName) {
         return openEditSpendingPage(spendingName, 0);
     }
 
-    public EditSpendingPage openEditSpendingPage(@Nonnull SpendJson spend) {
+    public EditSpendingPage openEditSpendingPage(SpendJson spend) {
         return openEditSpendingPage(spend, 0);
     }
 
@@ -181,7 +183,7 @@ public class MainPage extends BasePage<MainPage> {
                         new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
         log.info(logText);
         Allure.step(logText, () ->
-        getSpendingContainer(spend, 0).$x(".//td[1]//input").shouldBe(visible).click());
+                getSpendingContainer(spend, 0).$x(".//td[1]//input").shouldBe(visible).click());
         return this;
     }
 
@@ -221,7 +223,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should visible spending with description = [{}]")
-    public MainPage shouldHaveSpend(@Nonnull String description) {
+    public MainPage shouldHaveSpend(String description) {
         filterSpendingsByDescription(description);
         log.info("Should have spend with description = [{}]", description);
         Allure.step("Should have spend with description = [" + description + "]", () ->
@@ -230,7 +232,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should visible spend by criteria")
-    public MainPage shouldHaveSpend(@Nonnull SpendJson spend) {
+    public MainPage shouldHaveSpend(SpendJson spend) {
 
         filterSpendings(spend);
 
@@ -248,7 +250,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should have spends")
-    public MainPage shouldHaveSpends(@Nonnull String description, int count) {
+    public MainPage shouldHaveSpends(String description, int count) {
         filterSpendingsByDescription(description);
         log.info("Should visible [{}] spends with description = [{}]", count, description);
         Allure.step("Should visible [" + count + "] spends with description = [" + description + "]", () ->
@@ -260,7 +262,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should have [{count}] spends with params")
-    public MainPage shouldHaveSpends(@Nonnull SpendJson spend, int count) {
+    public MainPage shouldHaveSpends(SpendJson spend, int count) {
 
         filterSpendings(spend);
 
@@ -285,7 +287,7 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should visible spend legend = [{description} {amount} {currency.symbol}]")
-    public MainPage shouldHaveSpendLegend(@Nonnull String description, Double amount, @Nonnull CurrencyValues currency) {
+    public MainPage shouldHaveSpendLegend(String description, Double amount, CurrencyValues currency) {
         log.info("Should visible spend legend = [{} {} {}]", description, amount, currency);
         spendingsLegendList
                 .filterBy(text("%s %s %s".formatted(description, amount, currency.getSymbol())))
@@ -294,9 +296,17 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Should have message alert = [{}]")
-    public MainPage shouldHaveMessageAlert(@Nonnull String alertMessage) {
+    public MainPage shouldHaveMessageAlert(String alertMessage) {
         log.info("Assert alert has text: {}", alertMessage);
         alertNotificationMessage.shouldBe(visible).shouldHave(text(alertMessage));
+        return this;
+    }
+
+    @Step("Should not have spends")
+    public MainPage shouldNotHaveSpends() {
+        log.info("Assert spending table not have spends");
+        noSpendingsTitle.shouldBe(visible);
+        noSpendingsImage.shouldBe(visible);
         return this;
     }
 
@@ -317,7 +327,7 @@ public class MainPage extends BasePage<MainPage> {
         statisticsTitle.shouldBe(visible);
         statisticsBar.shouldBe(visible);
 
-        spendingsSearchInputContainer.shouldBe(visible);
+        searchForm.shouldBe(visible);
         spendingsPeriodSelector.shouldBe(visible);
         currencySelector.shouldBe(visible);
 
@@ -325,11 +335,11 @@ public class MainPage extends BasePage<MainPage> {
 
     }
 
-    private SelenideElement getSpendingContainer(@Nonnull String spendingDescription, int index) {
+    private SelenideElement getSpendingContainer(String spendingDescription, int index) {
         return spendingRows.filter(child(byXpath(".//td[4]/span"), exactText(spendingDescription))).get(index);
     }
 
-    private SelenideElement getSpendingContainer(@Nonnull SpendJson spend, int index) {
+    private SelenideElement getSpendingContainer(SpendJson spend, int index) {
         return spendingRows.filterBy(new And("have", spendConditions(spend))).get(index);
     }
 

@@ -10,11 +10,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ParametersAreNonnullByDefault
 public class GitHubApiClientRetrofit {
 
     private static final String GITHUB_TOKEN = System.getenv("GITHUB_TOKEN");
@@ -34,7 +37,7 @@ public class GitHubApiClientRetrofit {
 
     private final GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
-    public IssueState getIssueState(String issueId) {
+    public @Nonnull IssueState getIssueState(String issueId) {
         final Response<JsonNode> response;
         try {
             response = gitHubApi.getIssue(

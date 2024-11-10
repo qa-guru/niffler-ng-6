@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.UUID;
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryHibernate implements AuthUserRepository {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -24,21 +27,21 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     private final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
-    public AuthUserEntity create(AuthUserEntity user) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity user) {
         em.joinTransaction();
         em.persist(user.setPassword(pe.encode(user.getPassword())));
         return user;
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         return Optional.ofNullable(
                 em.find(AuthUserEntity.class, id)
         );
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         try {
             return Optional.of(
                     em.createQuery("SELECT u FROM AuthUserEntity u WHERE u.username =: username", AuthUserEntity.class)
@@ -51,12 +54,12 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nonnull List<AuthUserEntity> findAll() {
         return em.createQuery("SELECT u FROM AuthUserEntity u", AuthUserEntity.class).getResultList();
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity user) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity user) {
         em.joinTransaction();
         return em.merge(user.setPassword(pe.encode(user.getPassword())));
     }

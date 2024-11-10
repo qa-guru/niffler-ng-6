@@ -7,10 +7,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class SelenideCondition {
 
-    public static WebElementCondition child(@Nonnull By childSelector, @Nonnull WebElementCondition condition) {
+    public static WebElementCondition child(By childSelector, WebElementCondition condition) {
         return new WebElementCondition("child " + childSelector + " with " + condition.getName()) {
             @Nonnull
             @Override

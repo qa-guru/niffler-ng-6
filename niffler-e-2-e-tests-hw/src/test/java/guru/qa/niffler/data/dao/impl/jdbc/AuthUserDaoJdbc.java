@@ -8,6 +8,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoJdbc implements AuthUserDao {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -26,7 +28,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     private static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
-    public AuthUserEntity create(@Nonnull AuthUserEntity user) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity user) {
 
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
@@ -58,7 +60,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE id = ?"
         )) {
@@ -85,7 +87,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(@Nonnull String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE username = ?"
         )) {
@@ -112,7 +114,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nonnull List<AuthUserEntity> findAll() {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"user\""
         )) {
@@ -141,7 +143,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public AuthUserEntity update(@Nonnull AuthUserEntity user) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity user) {
         try (
                 PreparedStatement userPs = holder(AUTH_JDBC_URL).connection().prepareStatement(
                         "UPDATE \"user\" SET username = ?, password = ?, enabled = ?, account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ?");
@@ -185,7 +187,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public void remove(@Nonnull AuthUserEntity userEntity) {
+    public void remove(AuthUserEntity userEntity) {
         try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"
         )) {

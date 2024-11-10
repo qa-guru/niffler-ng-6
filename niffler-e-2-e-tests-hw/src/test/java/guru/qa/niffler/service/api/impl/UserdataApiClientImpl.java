@@ -4,11 +4,14 @@ import guru.qa.niffler.api.UserdataApiClientRetrofit;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.api.UserdataApiClient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataApiClientImpl implements UserdataApiClient {
 
     private final UserdataApiClientRetrofit userdataApiClient = new UserdataApiClientRetrofit();
@@ -19,7 +22,7 @@ public class UserdataApiClientImpl implements UserdataApiClient {
     }
 
     @Override
-    public Optional<UserJson> findById(UUID id) {
+    public @Nonnull Optional<UserJson> findById(UUID id) {
         try {
             return userdataApiClient.findAll().stream().filter(user -> user.getId() == id).findFirst();
         } catch (AssertionError ex) {
@@ -28,7 +31,7 @@ public class UserdataApiClientImpl implements UserdataApiClient {
     }
 
     @Override
-    public Optional<UserJson> findByUsername(String username) {
+    public @Nonnull Optional<UserJson> findByUsername(String username) {
         try {
             return userdataApiClient.findAll("", username).stream().filter(user -> user.getUsername().equals(username)).findFirst();
         } catch (AssertionError ex) {
@@ -37,7 +40,7 @@ public class UserdataApiClientImpl implements UserdataApiClient {
     }
 
     @Override
-    public List<UserJson> findAll() {
+    public @Nonnull List<UserJson> findAll() {
         try {
             return userdataApiClient.findAll();
         } catch (AssertionError ex) {

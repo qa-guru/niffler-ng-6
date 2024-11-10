@@ -13,12 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class SpendDbClientSpringJdbc implements SpendDbClient {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
@@ -30,7 +31,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
             new JdbcTransactionManager(DataSources.dataSource(SPEND_JDBC_URL)));
 
     @Override
-    public SpendJson create(@Nonnull SpendJson spendJson) {
+    public SpendJson create(SpendJson spendJson) {
         log.info("Creating new spend by DTO: {}", spendJson);
         return txTemplate.execute(status ->
                 spendMapper.toDto(
@@ -39,7 +40,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findById(@Nonnull UUID id) {
+    public Optional<SpendJson> findById(UUID id) {
         log.info("Find spend by id = [{}]", id);
         return txTemplate.execute(status ->
                 spendRepository.findById(id)
@@ -47,15 +48,15 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
         log.info("Find first spend by username = [{}] and description = [{}]", username, description);
         return txTemplate.execute(status ->
-                spendRepository.findFirstSpendByUsernameAndDescription(username, description)
-                        .map(spendMapper::toDto));
+                        spendRepository.findFirstSpendByUsernameAndDescription(username, description)
+                                .map(spendMapper::toDto));
     }
 
     @Override
-    public List<SpendJson> findAllByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public List<SpendJson> findAllByUsernameAndDescription(String username, String description) {
         log.info("Find all spends by username = [{}] and description = [{}]", username, description);
         return txTemplate.execute(status ->
                 spendRepository.findByUsernameAndDescription(username, description).stream()
@@ -64,7 +65,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAllByUsername(@Nonnull String username) {
+    public List<SpendJson> findAllByUsername(String username) {
         log.info("Find all spends by username = [{}]", username);
         return txTemplate.execute(status ->
                 spendRepository.findAllByUsername(username).stream()
@@ -82,7 +83,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public SpendJson update(@Nonnull SpendJson spendJson) {
+    public SpendJson update(SpendJson spendJson) {
         log.info("Update spend: {}", spendJson);
         return txTemplate.execute(status ->
                 spendMapper.toDto(
@@ -91,7 +92,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public void remove(@Nonnull SpendJson spendJson) {
+    public void remove(SpendJson spendJson) {
         log.info("Remove spend: {}", spendJson);
         txTemplate.execute(status -> {
             spendRepository.remove(spendMapper.toEntity(spendJson));
@@ -100,7 +101,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson createCategory(@Nonnull CategoryJson categoryJson) {
+    public CategoryJson createCategory(CategoryJson categoryJson) {
         log.info("Creating new category by DTO: {}", categoryJson);
         return txTemplate.execute(status ->
                 categoryMapper.toDto(
@@ -109,7 +110,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryById(@Nonnull UUID id) {
+    public Optional<CategoryJson> findCategoryById(UUID id) {
         log.info("Find category by id = [{}]", id);
         return txTemplate.execute(status ->
                 spendRepository.findCategoryById(id)
@@ -117,7 +118,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryByUsernameAndName(@Nonnull String username, @Nonnull String name) {
+    public Optional<CategoryJson> findCategoryByUsernameAndName(String username, String name) {
         log.info("Find category by username = [{}] and name = [{}]", username, name);
         return txTemplate.execute(status ->
                 spendRepository.findCategoryByUsernameAndName(username, name)
@@ -125,7 +126,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<CategoryJson> findAllCategoriesByUsername(@Nonnull String username) {
+    public List<CategoryJson> findAllCategoriesByUsername(String username) {
         log.info("Find all categories by username = [{}]", username);
         return txTemplate.execute(status ->
                 spendRepository.findAllCategoriesByUsername(username).stream()
@@ -143,7 +144,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson updateCategory(@Nonnull CategoryJson categoryJson) {
+    public CategoryJson updateCategory(CategoryJson categoryJson) {
         log.info("Update spend: {}", categoryJson);
         return txTemplate.execute(status ->
                 categoryMapper.toDto(
@@ -152,7 +153,7 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     }
 
     @Override
-    public void removeCategory(@Nonnull CategoryJson categoryJson) {
+    public void removeCategory(CategoryJson categoryJson) {
         log.info("Remove category: {}", categoryJson);
         txTemplate.execute(status -> {
             spendRepository.removeCategory(categoryMapper.toEntity(categoryJson));

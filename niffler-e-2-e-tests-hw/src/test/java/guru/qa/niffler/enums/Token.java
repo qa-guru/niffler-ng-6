@@ -3,11 +3,13 @@ package guru.qa.niffler.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Optional;
 
 @Getter
 @RequiredArgsConstructor
+@ParametersAreNonnullByDefault
 public enum Token {
 
     CSRF("XSRF-TOKEN"), JSESSIONID("JSESSIONID");

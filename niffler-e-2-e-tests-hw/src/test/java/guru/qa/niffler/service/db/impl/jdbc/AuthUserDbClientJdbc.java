@@ -9,11 +9,13 @@ import guru.qa.niffler.service.db.AuthUserDbClient;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class AuthUserDbClientJdbc implements AuthUserDbClient {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -22,7 +24,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(AUTH_JDBC_URL);
 
     @Override
-    public AuthUserJson create(@Nonnull AuthUserJson userModel) {
+    public @Nonnull AuthUserJson create(AuthUserJson userModel) {
         log.info("Creating new user by DTO: {}", userModel);
         return jdbcTxTemplate.execute(() ->
                 authUserMapper.toDto(
@@ -32,7 +34,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<AuthUserJson> findById(UUID id) {
         log.info("Get user by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
                 new AuthUserDaoJdbc()
@@ -41,7 +43,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public Optional<AuthUserJson> findByUsername(@Nonnull String username) {
+    public @Nonnull Optional<AuthUserJson> findByUsername(String username) {
         log.info("Get user by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
                 new AuthUserDaoJdbc()
@@ -50,7 +52,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public List<AuthUserJson> findAll() {
+    public @Nonnull List<AuthUserJson> findAll() {
         log.info("Get all users");
         return jdbcTxTemplate.execute(() ->
                 new AuthUserDaoJdbc()
@@ -60,7 +62,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     }
 
     @Override
-    public void remove(@Nonnull AuthUserJson authUserJson) {
+    public void remove(AuthUserJson authUserJson) {
         log.info("Remove user: {}", authUserJson);
         jdbcTxTemplate.execute(() -> {
                     new AuthUserDaoJdbc()

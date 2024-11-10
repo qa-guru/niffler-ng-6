@@ -4,8 +4,10 @@ import guru.qa.niffler.model.UserJson;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public interface UserdataApi {
 
     @GET("internal/users/current")
@@ -32,14 +34,14 @@ public interface UserdataApi {
 
     @POST("internal/invitations/send")
     Call<UserJson> sendInvitation(@Query("username") String username,
-                                  @Query("searchQuery") String searchQuery);
+                                  @Query("targetUsername") String searchQuery);
 
     @POST("internal/invitations/accept")
     Call<UserJson> acceptInvitation(@Query("username") String username,
-                                    @Query("searchQuery") String searchQuery);
+                                    @Query("targetUsername") String searchQuery);
 
     @POST("internal/invitations/decline")
     Call<UserJson> declineInvitation(@Query("username") String username,
-                                     @Query("searchQuery") String searchQuery);
+                                     @Query("targetUsername") String searchQuery);
 
 }

@@ -7,20 +7,21 @@ import guru.qa.niffler.data.dao.impl.jdbc.AuthUserDaoJdbc;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
-    private AuthUserDao authUserDao = new AuthUserDaoJdbc();
-    private AuthAuthorityDao authorityDao = new AuthAuthorityDaoJdbc();
+    private final AuthUserDao authUserDao = new AuthUserDaoJdbc();
+    private final AuthAuthorityDao authorityDao = new AuthAuthorityDaoJdbc();
 
     @Override
-    public AuthUserEntity create(AuthUserEntity user) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity user) {
         var createdUser = authUserDao.create(user);
         authorityDao.create(
                 user.getAuthorities().stream()
@@ -31,7 +32,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         return authUserDao.findById(id)
                 .map(userEntity ->
                         userEntity.setAuthorities(
@@ -39,7 +40,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         return authUserDao.findByUsername(username)
                 .map(userEntity ->
                         userEntity.setAuthorities(
@@ -47,7 +48,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nonnull List<AuthUserEntity> findAll() {
         return authUserDao.findAll()
                 .stream()
                 .map(userEntity ->

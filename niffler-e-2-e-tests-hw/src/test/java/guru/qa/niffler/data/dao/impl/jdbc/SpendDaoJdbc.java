@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +17,12 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 
     private static final String SPEND_JDBC_URL = Config.getInstance().spendJdbcUrl();
 
-    public SpendEntity create(@Nonnull SpendEntity spend) {
+    public @Nonnull SpendEntity create(SpendEntity spend) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO \"spend\" (username, spend_date, currency, amount, description, category_id) " +
@@ -53,7 +55,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public Optional<SpendEntity> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<SpendEntity> findById(UUID id) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"spend\" WHERE id = ?"
@@ -75,7 +77,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull List<SpendEntity> findByUsernameAndDescription(String username, String description) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"spend\" WHERE username = ? AND description = ?"
@@ -100,7 +102,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(@Nonnull String username) {
+    public @Nonnull List<SpendEntity> findAllByUsername(String username) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"spend\" WHERE username = ?"
@@ -123,7 +125,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAll() {
+    public @Nonnull List<SpendEntity> findAll() {
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "SELECT * FROM \"spend\""
         )) {
@@ -143,7 +145,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     }
 
-    public SpendEntity update(@Nonnull SpendEntity spend) {
+    public @Nonnull SpendEntity update(SpendEntity spend) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "UPDATE \"spend\" SET username = ?, spend_date = ?, currency = ?, amount = ?, description = ?, category_id = ? WHERE id = ?"
@@ -175,7 +177,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public void remove(@Nonnull SpendEntity spend) {
+    public void remove(SpendEntity spend) {
 
         try (PreparedStatement ps = holder(SPEND_JDBC_URL).connection().prepareStatement(
                 "DELETE FROM \"spend\" WHERE id = ?"

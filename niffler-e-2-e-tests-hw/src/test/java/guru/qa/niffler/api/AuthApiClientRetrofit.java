@@ -13,12 +13,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class AuthApiClientRetrofit {
 
     private static final RegisterModelMapper registerModelMapper = new RegisterModelMapper();
@@ -33,7 +36,7 @@ public class AuthApiClientRetrofit {
 
     private final AuthApi authApi = retrofit.create(AuthApi.class);
 
-    public UserJson register(UserJson user) {
+    public @Nonnull UserJson register(UserJson user) {
 
         Map<Token, String> cookies = getNewCookies();
 
@@ -58,7 +61,7 @@ public class AuthApiClientRetrofit {
 
     }
 
-    private Map<Token, String> getNewCookies() {
+    private @Nonnull Map<Token, String> getNewCookies() {
         log.info("Get new cookies");
         Map<Token, String> cookies;
         final Response<Void> response;
@@ -72,7 +75,7 @@ public class AuthApiClientRetrofit {
         return cookies;
     }
 
-    private Map<Token, String> parseLoginPageCookies(Response<?> response) {
+    private @Nonnull Map<Token, String> parseLoginPageCookies(Response<?> response) {
         return response.headers()
                 .values("Set-Cookie").stream()
                 .map(cookieText -> cookieText.split("="))

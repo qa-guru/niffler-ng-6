@@ -12,12 +12,14 @@ import guru.qa.niffler.service.db.SpendDbClient;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class SpendDbClientJdbc implements SpendDbClient {
 
     private static final SpendMapper spendMapper = new SpendMapper();
@@ -28,7 +30,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     private final SpendRepository spendRepository = new SpendRepositoryJdbc();
 
     @Override
-    public SpendJson create(@Nonnull SpendJson spendJson) {
+    public SpendJson create(SpendJson spendJson) {
         log.info("Creating new spend by DTO: {}", spendJson);
         return jdbcTxTemplate.execute(() ->
                 spendMapper.toDto(
@@ -37,7 +39,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<SpendJson> findById(UUID id) {
         log.info("Find spend by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findById(id)
@@ -45,7 +47,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
         log.info("Find first spend by username = [{}] and description = [{}]", username, description);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findFirstSpendByUsernameAndDescription(username, description)
@@ -53,7 +55,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAllByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull List<SpendJson> findAllByUsernameAndDescription(String username, String description) {
         log.info("Find all spends by username = [{}] and description = [{}]", username, description);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findByUsernameAndDescription(username, description).stream()
@@ -62,7 +64,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAllByUsername(@Nonnull String username) {
+    public @Nonnull List<SpendJson> findAllByUsername(String username) {
         log.info("Find all spends by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findAllByUsername(username).stream()
@@ -71,7 +73,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<SpendJson> findAll() {
+    public @Nonnull List<SpendJson> findAll() {
         log.info("Find all spends");
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findAll().stream()
@@ -80,7 +82,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public SpendJson update(@Nonnull SpendJson spendJson) {
+    public @Nonnull SpendJson update(SpendJson spendJson) {
         log.info("Update spend: {}", spendJson);
         return jdbcTxTemplate.execute(() ->
                 spendMapper.toDto(
@@ -89,7 +91,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public void remove(@Nonnull SpendJson spendJson) {
+    public void remove(SpendJson spendJson) {
         log.info("Remove spend: {}", spendJson);
         jdbcTxTemplate.execute(() -> {
             spendRepository.remove(spendMapper.toEntity(spendJson));
@@ -98,7 +100,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson createCategory(@Nonnull CategoryJson categoryJson) {
+    public @Nonnull CategoryJson createCategory(CategoryJson categoryJson) {
         log.info("Creating new category by DTO: {}", categoryJson);
         return jdbcTxTemplate.execute(() ->
                 categoryMapper.toDto(
@@ -107,7 +109,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryById(@Nonnull UUID id) {
+    public @Nonnull Optional<CategoryJson> findCategoryById(UUID id) {
         log.info("Find category by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findCategoryById(id)
@@ -115,7 +117,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public Optional<CategoryJson> findCategoryByUsernameAndName(@Nonnull String username, @Nonnull String name) {
+    public @Nonnull Optional<CategoryJson> findCategoryByUsernameAndName(String username, String name) {
         log.info("Find category by username = [{}] and name = [{}]", username, name);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findCategoryByUsernameAndName(username, name)
@@ -123,7 +125,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<CategoryJson> findAllCategoriesByUsername(@Nonnull String username) {
+    public @Nonnull List<CategoryJson> findAllCategoriesByUsername(String username) {
         log.info("Find all categories by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findAllCategoriesByUsername(username).stream()
@@ -132,7 +134,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public List<CategoryJson> findAllCategories() {
+    public @Nonnull List<CategoryJson> findAllCategories() {
         log.info("Find all categories");
         return jdbcTxTemplate.execute(() ->
                 spendRepository.findAllCategories().stream()
@@ -141,7 +143,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public CategoryJson updateCategory(@Nonnull CategoryJson categoryJson) {
+    public @Nonnull CategoryJson updateCategory(CategoryJson categoryJson) {
         log.info("Update category: {}", categoryJson);
         return jdbcTxTemplate.execute(() ->
                 categoryMapper.toDto(
@@ -150,7 +152,7 @@ public class SpendDbClientJdbc implements SpendDbClient {
     }
 
     @Override
-    public void removeCategory(@Nonnull CategoryJson categoryJson) {
+    public void removeCategory(CategoryJson categoryJson) {
         log.info("Remove category: {}", categoryJson);
         jdbcTxTemplate.execute(() -> {
             spendRepository.removeCategory(categoryMapper.toEntity(categoryJson));

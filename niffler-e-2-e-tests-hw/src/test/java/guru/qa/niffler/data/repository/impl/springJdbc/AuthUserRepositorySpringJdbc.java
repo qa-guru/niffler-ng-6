@@ -8,17 +8,20 @@ import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
-    private AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
-    private AuthAuthorityDao authorityDao = new AuthAuthorityDaoSpringJdbc();
+    private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    private final AuthAuthorityDao authorityDao = new AuthAuthorityDaoSpringJdbc();
 
     @Override
-    public AuthUserEntity create(AuthUserEntity user) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity user) {
         var createdUser = authUserDao.create(user);
         authorityDao.create(
                 user.getAuthorities().stream()
@@ -29,7 +32,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         return authUserDao.findById(id)
                 .map(userEntity ->
                         userEntity.setAuthorities(
@@ -37,7 +40,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         return authUserDao.findByUsername(username)
                 .map(userEntity ->
                         userEntity.setAuthorities(
@@ -45,7 +48,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nonnull List<AuthUserEntity> findAll() {
         return authUserDao.findAll()
                 .stream()
                 .map(userEntity ->
@@ -55,7 +58,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity user) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity user) {
         authorityDao.update(
                 user.getAuthorities()
                         .toArray(new AuthAuthorityEntity[0]));

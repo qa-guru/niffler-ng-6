@@ -3,8 +3,10 @@ package guru.qa.niffler.api;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 
+@ParametersAreNonnullByDefault
 public interface AuthApi {
 
 

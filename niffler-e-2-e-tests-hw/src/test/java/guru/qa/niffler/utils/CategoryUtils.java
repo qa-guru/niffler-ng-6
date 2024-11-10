@@ -3,8 +3,9 @@ package guru.qa.niffler.utils;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.model.CategoryJson;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class CategoryUtils {
 
     private static final Faker FAKE = new Faker();
@@ -15,7 +16,7 @@ public class CategoryUtils {
                 .archived(false).build();
     }
 
-    public static CategoryJson generateForUser(@Nonnull String username) {
+    public static CategoryJson generateForUser(String username) {
         return generate().setUsername(username);
     }
 

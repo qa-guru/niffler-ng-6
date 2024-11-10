@@ -10,12 +10,14 @@ import guru.qa.niffler.service.db.UserdataDbClient;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class UserdataDbClientJdbc implements UserdataDbClient {
 
     private static final UserMapper userMapper = new UserMapper();
@@ -25,7 +27,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     private final UserdataUserRepository userdataRepository = new UserdataUserRepositoryJdbc();
 
     @Override
-    public UserJson create(@Nonnull UserJson userJson) {
+    public @Nonnull UserJson create(UserJson userJson) {
         log.info("Creating new user by DTO: {}", userJson);
         return jdbcTxTemplate.execute(() ->
                 userMapper.toDto(
@@ -35,7 +37,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<UserJson> findById(UUID id) {
         log.info("Get user by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
                 userdataRepository
@@ -44,7 +46,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public Optional<UserJson> findByUsername(@Nonnull String username) {
+    public @Nonnull Optional<UserJson> findByUsername(String username) {
         log.info("Get user by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
                 userdataRepository
@@ -54,7 +56,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public List<UserJson> findAll() {
+    public @Nonnull List<UserJson> findAll() {
         log.info("Get all users");
         return jdbcTxTemplate.execute(() ->
                 userdataRepository
@@ -65,7 +67,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void sendInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void sendInvitation(UserJson requester, UserJson addressee) {
         jdbcTxTemplate.execute(() -> {
             userdataRepository.sendInvitation(
                     userMapper.toEntity(requester),
@@ -75,7 +77,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void declineInvitation(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void declineInvitation(UserJson requester, UserJson addressee) {
         log.info("Remove invitation from [{}] to [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.removeInvitation(
@@ -87,7 +89,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void addFriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void addFriend(UserJson requester, UserJson addressee) {
         log.info("Make users are friends: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.addFriend(
@@ -99,7 +101,7 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
     }
 
     @Override
-    public void unfriend(@Nonnull UserJson requester, @Nonnull UserJson addressee) {
+    public void unfriend(UserJson requester, UserJson addressee) {
         log.info("Unfriend: [{}], [{}]", requester.getUsername(), addressee.getUsername());
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.removeFriend(
@@ -109,9 +111,9 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
                 }
         );
     }
-    
+
     @Override
-    public void remove(@Nonnull UserJson user) {
+    public void remove(UserJson user) {
         log.info("Remove user by id: {}", user);
         jdbcTxTemplate.execute(() -> {
                     userdataRepository.remove(

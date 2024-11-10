@@ -8,19 +8,20 @@ import guru.qa.niffler.service.api.SpendApiClient;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class SpendApiClientImpl implements SpendApiClient {
 
     private final SpendApiClientRetrofit spendClient = new SpendApiClientRetrofit();
     private final CategoryApiClientRetrofit categoryClient = new CategoryApiClientRetrofit();
 
-    @Nonnull
     @Override
-    public SpendJson create(@Nonnull SpendJson spendJson) {
+    public @Nonnull SpendJson create(SpendJson spendJson) {
         var category = spendJson.getCategory();
         spendJson.setCategory(
                 categoryClient.findByUsernameAndName(spendJson.getUsername(), category.getName())
@@ -32,9 +33,9 @@ public class SpendApiClientImpl implements SpendApiClient {
         return spendClient.create(spendJson);
     }
 
-    @Nonnull
+
     @Override
-    public Optional<SpendJson> findById(@Nonnull UUID id) {
+    public @Nonnull Optional<SpendJson> findById(UUID id) {
         try {
             return Optional.of(spendClient.findById(id));
         } catch (AssertionError ex) {
@@ -42,81 +43,77 @@ public class SpendApiClientImpl implements SpendApiClient {
         }
     }
 
-    @Nonnull
+
     @Override
-    public Optional<SpendJson> findFirstSpendByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
         return spendClient.findFirstSpendByUsernameAndDescription(username, description);
     }
 
-    @Nonnull
+
     @Override
-    public List<SpendJson> findAllByUsernameAndDescription(@Nonnull String username, @Nonnull String description) {
+    public @Nonnull List<SpendJson> findAllByUsernameAndDescription(String username, String description) {
         return spendClient.findAllByUsernameAndDescription(username, description);
     }
 
-    @Nonnull
+
     @Override
-    public List<SpendJson> findAllByUsername(@Nonnull String username) {
+    public @Nonnull List<SpendJson> findAllByUsername(String username) {
         return spendClient.findAllByUsername(username);
     }
 
-    @Nonnull
+
     @Override
-    public List<SpendJson> findAll() {
+    public @Nonnull List<SpendJson> findAll() {
         throw new UnsupportedOperationException("Find all spends not supported for API client.");
     }
 
     @Override
-    public SpendJson update(@Nonnull SpendJson spendJson) {
+    public @Nonnull SpendJson update(SpendJson spendJson) {
         return spendClient.update(spendJson);
     }
 
     @Override
-    public void remove(@Nonnull SpendJson spendJson) {
+    public void remove(SpendJson spendJson) {
         spendClient.remove(spendJson.getUsername(), List.of(spendJson.getId()));
     }
 
-    @Nonnull
+
     @Override
-    public CategoryJson createCategory(@Nonnull CategoryJson categoryJson) {
+    public @Nonnull CategoryJson createCategory(CategoryJson categoryJson) {
         return categoryClient.create(categoryJson);
     }
 
-    @Nonnull
+
     @Override
-    public Optional<CategoryJson> findCategoryById(@Nonnull UUID id) {
-        try {
-            return categoryClient.findById(id);
-        } catch (AssertionError ex) {
-            return Optional.empty();
-        }
+    public @Nonnull Optional<CategoryJson> findCategoryById(UUID id) {
+        throw new UnsupportedOperationException("Find category by id not supported for API client");
     }
 
-    @Nonnull
+
     @Override
-    public Optional<CategoryJson> findCategoryByUsernameAndName(@Nonnull String username, @Nonnull String name) {
+    public @Nonnull Optional<CategoryJson> findCategoryByUsernameAndName(String username, String name) {
         return categoryClient.findByUsernameAndName(username, name);
     }
 
-    @Nonnull
+
     @Override
-    public List<CategoryJson> findAllCategoriesByUsername(@Nonnull String username) {
+    public @Nonnull List<CategoryJson> findAllCategoriesByUsername(String username) {
         return categoryClient.findAllByUsername(username, false);
     }
 
-    @Nonnull
+
     @Override
-    public List<CategoryJson> findAllCategories() {
+    public @Nonnull List<CategoryJson> findAllCategories() {
         throw new UnsupportedOperationException("Find all categories not supported for API client");
     }
 
     @Override
-    public CategoryJson updateCategory(@Nonnull CategoryJson categoryJson) {
+    public @Nonnull CategoryJson updateCategory(CategoryJson categoryJson) {
         return categoryClient.update(categoryJson);
     }
 
     @Override
-    public void removeCategory(@Nonnull CategoryJson categoryJson) {
+    public void removeCategory(CategoryJson categoryJson) {
         throw new UnsupportedOperationException("Remove category not supported for API client");
     }
 }

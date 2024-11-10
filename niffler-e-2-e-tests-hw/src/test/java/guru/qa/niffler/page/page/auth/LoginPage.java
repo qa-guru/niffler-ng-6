@@ -1,11 +1,13 @@
-package guru.qa.niffler.page.auth;
+package guru.qa.niffler.page.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.BasePage;
-import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.page.page.BasePage;
+import guru.qa.niffler.page.page.MainPage;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byName;
@@ -15,6 +17,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 @Slf4j
 @NoArgsConstructor
+@ParametersAreNonnullByDefault
 public class LoginPage extends BasePage<LoginPage> {
 
     private final SelenideElement title = $("h1").as("['Login Page' title]"),

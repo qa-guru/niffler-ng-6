@@ -5,10 +5,12 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.model.AuthAuthorityJson;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class AuthAuthorityMapper {
 
-    public AuthAuthorityEntity toEntity(@Nonnull AuthAuthorityJson authAuthorityJson) {
+    public @Nonnull AuthAuthorityEntity toEntity(AuthAuthorityJson authAuthorityJson) {
         return AuthAuthorityEntity.builder()
                 .id(authAuthorityJson.getId())
                 .user(AuthUserEntity.builder().id(authAuthorityJson.getUser()).build())
@@ -16,7 +18,7 @@ public class AuthAuthorityMapper {
                 .build();
     }
 
-    public AuthAuthorityJson toDto(@Nonnull AuthAuthorityEntity authAuthorityEntity) {
+    public @Nonnull AuthAuthorityJson toDto(AuthAuthorityEntity authAuthorityEntity) {
         return AuthAuthorityJson.builder()
                 .id(authAuthorityEntity.getId())
                 .user(authAuthorityEntity.getUser().getId())

@@ -6,20 +6,22 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.api.SpendApiClient;
 import guru.qa.niffler.service.api.impl.SpendApiClientImpl;
 import guru.qa.niffler.service.api.impl.UserdataApiClientImpl;
 import guru.qa.niffler.service.api.impl.UsersApiClientImpl;
 import guru.qa.niffler.service.db.SpendDbClient;
+import guru.qa.niffler.service.db.UsersDbClient;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@ParametersAreNonnullByDefault
 public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateNewUserExtension.class);
@@ -54,6 +56,10 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
     @Override
     public void afterEach(ExtensionContext context) {
 
+        boolean isDbClient = usersClient instanceof UsersDbClient &&
+                userdataClient instanceof UsersDbClient &&
+                spendClient instanceof SpendDbClient;
+
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
                         && parameter.getType().isAssignableFrom(UserJson.class))
@@ -69,30 +75,39 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                             user.getTestData().getFriends().forEach(
                                     friend -> {
                                         userdataClient.unfriend(user, friend);
-                                        usersClient.removeUser(friend);
+                                        if (isDbClient) {
+                                            usersClient.removeUser(friend);
+                                        }
                                     }
                             );
 
                             user.getTestData().getIncomeInvitations().forEach(
                                     requester -> {
                                         userdataClient.declineInvitation(requester, user);
-                                        usersClient.removeUser(requester);
+                                        if (isDbClient) {
+                                            usersClient.removeUser(requester);
+                                        }
                                     }
                             );
 
                             user.getTestData().getOutcomeInvitations().forEach(
                                     addressee -> {
                                         userdataClient.declineInvitation(user, addressee);
-                                        usersClient.removeUser(addressee);
+                                        if(isDbClient) {
+                                            usersClient.removeUser(addressee);
+                                        }
                                     }
                             );
 
                             spendClient.findAllByUsername(user.getUsername()).forEach(spendClient::remove);
-                            if (spendClient instanceof SpendDbClient) {
-                                spendClient.findAllCategoriesByUsername(user.getUsername()).forEach(spendClient::removeCategory);
+                            if (isDbClient) {
+                                spendClient.findAllCategoriesByUsername(user.getUsername())
+                                        .forEach(spendClient::removeCategory);
                                 usersClient.removeUser(user);
-                            } else if (spendClient instanceof SpendApiClient) {
-                                spendClient.findAllCategoriesByUsername(user.getUsername()).forEach(category -> spendClient.updateCategory(category.setArchived(true)));
+                            } else {
+                                spendClient.findAllCategoriesByUsername(user.getUsername())
+                                        .forEach(category ->
+                                                spendClient.updateCategory(category.setArchived(true)));
                             }
 
 

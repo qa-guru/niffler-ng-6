@@ -22,7 +22,7 @@ public class SpendConditions {
 
     public static WebElementsCondition spends(SpendJson... expectedSpends) {
         return new WebElementsCondition() {
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
+            final SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
             private final String spends = Arrays.stream(expectedSpends)
                     .map(sp -> "category name: " + sp.category().name() +
                             ", amount: " + sp.amount() +

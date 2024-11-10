@@ -181,7 +181,7 @@ public class SpendingWebTest {
 
         Thread.sleep(3000);
 
-        statComponent.checkBubbles(new Bubble(
+        statComponent.checkBubblesInExactOrder(new Bubble(
                 Color.yellow,
                 "Обучение 79990 ₽"
         ));

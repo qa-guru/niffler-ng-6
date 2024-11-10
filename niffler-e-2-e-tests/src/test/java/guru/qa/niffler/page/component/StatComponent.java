@@ -38,7 +38,7 @@ public class StatComponent extends BaseComponent<StatComponent> {
 
   @Step("Check that stat bubbles are visible {expectedColors}")
   @Nonnull
-  public StatComponent checkBubbles(Bubble... expectedColors) {
+  public StatComponent checkBubblesInExactOrder(Bubble... expectedColors) {
     bubbles.should(statBubbles(expectedColors));
     return this;
   }

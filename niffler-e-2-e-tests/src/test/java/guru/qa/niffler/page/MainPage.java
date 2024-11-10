@@ -1,5 +1,6 @@
 package guru.qa.niffler.page;
 
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SpendingTable;
 import guru.qa.niffler.page.component.StatComponent;
@@ -32,6 +33,12 @@ public class MainPage extends BasePage<MainPage> {
   @Nonnull
   public SpendingTable getSpendingTable() {
     spendingTable.getSelf().scrollIntoView(true);
+    return spendingTable;
+  }
+
+  @Nonnull
+  public SpendingTable checkSpendingTable(SpendJson... spendJsons) {
+
     return spendingTable;
   }
 

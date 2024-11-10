@@ -34,16 +34,16 @@ public class DataSources {
           dsBean.setXaProperties(props);
           dsBean.setPoolSize(3);
           dsBean.setMaxPoolSize(10);
-          P6DataSource ds = new P6DataSource(
-                  dsBean
+          P6DataSource p6DataSource = new P6DataSource(
+              dsBean
           );
           try {
             InitialContext context = new InitialContext();
-            context.bind("java:comp/env/jdbc/" + uniqId, ds);
+            context.bind("java:comp/env/jdbc/" + uniqId, p6DataSource);
           } catch (NamingException e) {
             throw new RuntimeException(e);
           }
-          return ds;
+          return p6DataSource;
         }
     );
   }

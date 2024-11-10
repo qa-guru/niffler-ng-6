@@ -7,40 +7,30 @@ import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
-    public static final String caseName = "Niffler backend logs";
+  public static final String caseName = "Niffler backend logs";
 
-    @SneakyThrows
-    @Override
-    public void afterSuite() {
-        final AllureLifecycle allureLifecycle = Allure.getLifecycle();
-        final String caseId = UUID.randomUUID().toString();
-        allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
-        allureLifecycle.startTestCase(caseId);
+  @SneakyThrows
+  @Override
+  public void afterSuite() {
+    final AllureLifecycle allureLifecycle = Allure.getLifecycle();
+    final String caseId = UUID.randomUUID().toString();
+    allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
+    allureLifecycle.startTestCase(caseId);
 
-        List<String> logFiles = List.of(
-                "./logs/niffler-auth/app.log",
-                "./logs/niffler-currency/app.log",
-                "./logs/niffler-userdata/app.log",
-                "./logs/niffler-gateway/app.log"
-        );
+    allureLifecycle.addAttachment(
+        "Niffler-auth log",
+        "text/html",
+        ".log",
+        Files.newInputStream(
+            Path.of("./logs/niffler-auth/app.log")
+        )
+    );
 
-        for (String logFile : logFiles) {
-                Allure.addAttachment(
-                        logFile,
-                        "text/plain",
-                        Files.newInputStream(
-                                Path.of(logFile)
-                        ),
-                        ".log"
-                );
-        }
-
-        allureLifecycle.stopTestCase(caseId);
-        allureLifecycle.writeTestCase(caseId);
-    }
+    allureLifecycle.stopTestCase(caseId);
+    allureLifecycle.writeTestCase(caseId);
+  }
 }

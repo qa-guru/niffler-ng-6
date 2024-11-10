@@ -48,10 +48,6 @@ public abstract class RestClient {
   }
 
   public RestClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel, @Nullable Interceptor... interceptors) {
-    AllureOkHttp3 allureOkHttp3 = new AllureOkHttp3();
-    allureOkHttp3.setRequestTemplate("http-request-highlight.ftl");
-    allureOkHttp3.setResponseTemplate("http-response-highlight.ftl");
-
     OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
         .followRedirects(followRedirect);
 
@@ -61,7 +57,7 @@ public abstract class RestClient {
       }
     }
     okHttpBuilder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(loggingLevel));
-    okHttpBuilder.addNetworkInterceptor(allureOkHttp3);
+    okHttpBuilder.addNetworkInterceptor(new AllureOkHttp3());
     okHttpBuilder.cookieJar(
         new JavaNetCookieJar(
             new CookieManager(

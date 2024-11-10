@@ -5,6 +5,10 @@ public interface Config {
   static Config getInstance() {
     return LocalConfig.INSTANCE;
   }
+  
+  static Config getInstanceDocker() {
+    return DockerConfig.INSTANCE;
+  }
 
   String frontUrl();
 

@@ -1,11 +1,11 @@
 package guru.qa.niffler.config;
 
-enum LocalConfig implements Config {
+enum DockerConfig implements Config {
   INSTANCE;
 
   @Override
   public String frontUrl() {
-    return "http://127.0.0.1:9000/";
+    return "http://frontend.niffler.dc/";
   }
 
   @Override

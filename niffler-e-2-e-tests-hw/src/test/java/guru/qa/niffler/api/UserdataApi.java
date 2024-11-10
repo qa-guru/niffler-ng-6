@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserdataApi {
 
     @GET("internal/users/current")
-    Call<UserJson> currentUser(@Body String username);
+    Call<UserJson> currentUser(@Query("username") String username);
 
     @GET("internal/users/all")
     Call<List<UserJson>> findAll(@Query("username") String username);

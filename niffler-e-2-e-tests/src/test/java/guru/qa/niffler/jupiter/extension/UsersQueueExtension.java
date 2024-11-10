@@ -111,7 +111,7 @@ public class UsersQueueExtension implements
   @Override
   public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
     return parameterContext.getParameter().getType().isAssignableFrom(StaticUser.class)
-        && AnnotationSupport.isAnnotated(parameterContext.getParameter(), UserType.class);
+           && AnnotationSupport.isAnnotated(parameterContext.getParameter(), UserType.class);
   }
 
   @Override

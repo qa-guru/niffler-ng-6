@@ -1,14 +1,10 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.UserJson;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,18 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class UserdataApiClientRetrofit {
+public class UserdataApiClientRetrofit extends RestClient {
 
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().userdataUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .client(new OkHttpClient.Builder()
-                    .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .followRedirects(false)
-                    .build())
-            .build();
+    private final UserdataApi userdataApi;
 
-    private final UserdataApi userdataApi = retrofit.create(UserdataApi.class);
+    public UserdataApiClientRetrofit() {
+        super(CFG.userdataUrl());
+        this.userdataApi = retrofit.create(UserdataApi.class);
+    }
 
     public @Nullable UserJson currentUser(String username) {
 
@@ -46,7 +38,7 @@ public class UserdataApiClientRetrofit {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(HttpStatus.CREATED, response.code());
+        assertEquals(HttpStatus.OK, response.code());
         return response.body();
 
     }

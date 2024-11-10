@@ -87,6 +87,7 @@ class ProfileWebTests {
                 .getHeader()
                 .goToProfilePage()
                 .addNewCategory(categoryName)
+                .shouldBeErrorAlert()
                 .shouldHaveMessageAlert("Error while adding category " + categoryName + ": Cannot save duplicates");
 
     }

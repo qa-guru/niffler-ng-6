@@ -10,23 +10,24 @@ import java.util.Map;
 public interface AuthApi {
 
 
-    @GET("login")
+    @GET("register")
     Call<Void> getCookies();
 
     @FormUrlEncoded
     @POST("register")
     Call<Void> register(
-            @FieldMap Map<String, String> formData,
-            @Header("Cookie") String csrf,
-            @Header("Cookie") String jSessionId
+            @Field("username") String username,
+            @Field("password") String password,
+            @Field("passwordSubmit") String passwordConfirmation,
+            @Field("_csrf") String csrf
     );
 
     @FormUrlEncoded
     @POST("login")
     Call<Void> login(
-            @Body Map<String, String> formData,
-            @Header("Cookie") String csrf,
-            @Header("Cookie") String jSessionId
+            @Field("username") String username,
+            @Field("password") String password,
+            @Field("_csrf") String csrf
     );
 
 }

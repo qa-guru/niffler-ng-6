@@ -31,7 +31,10 @@ class SpendingWebTests {
         open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(spend)
-                .shouldHaveSpend(spend);
+                .shouldHaveSpend(spend)
+                .shouldBeSuccessAlert()
+                .shouldHaveMessageAlert("New spending is successfully created")
+        ;
 
     }
 
@@ -44,6 +47,7 @@ class SpendingWebTests {
                 .login(user.getUsername(), user.getPassword())
                 .openEditSpendingPage(user.getTestData().getSpendings().getFirst())
                 .editSpending(newSpend)
+                .shouldBeSuccessAlert()
                 .openEditSpendingPage(newSpend)
                 .shouldHaveData(newSpend);
 

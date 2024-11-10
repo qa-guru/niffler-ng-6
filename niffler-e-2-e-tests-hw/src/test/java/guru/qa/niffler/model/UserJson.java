@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -47,7 +48,7 @@ public class UserJson implements Serializable {
     @Builder.Default
     private transient TestData testData = new TestData();
 
-    public UserJson addTestData(TestData testData) {
+    public UserJson addTestData(@Nonnull TestData testData) {
 
         return UserJson.builder()
                 .id(this.id)

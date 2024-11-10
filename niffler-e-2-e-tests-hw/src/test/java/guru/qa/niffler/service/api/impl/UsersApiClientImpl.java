@@ -19,15 +19,16 @@ public class UsersApiClientImpl implements UsersClient {
 
     @Override
     public @Nonnull UserJson createUser(UserJson userJson) {
-        return apiClient.register(userJson);
+        return apiClient.register(userJson.getUsername(), userJson.getPassword());
     }
 
     @Override
     public @Nonnull List<UserJson> getIncomeInvitationFromNewUsers(UserJson to, int count) {
         List<UserJson> incomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var from = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(from.getUsername()).ifPresent(incomeInvitations::add);
+            var from = UserUtils.generateUser();
+            from = apiClient.register(from.getUsername(), from.getPassword());
+            incomeInvitations.add(from);
             userdataClient.sendInvitation(from, to);
         }
         return incomeInvitations;
@@ -37,8 +38,9 @@ public class UsersApiClientImpl implements UsersClient {
     public @Nonnull List<UserJson> sendOutcomeInvitationToNewUsers(UserJson from, int count) {
         List<UserJson> outcomeInvitations = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var to = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(to.getUsername()).ifPresent(outcomeInvitations::add);
+            var to = UserUtils.generateUser();
+            to = apiClient.register(to.getUsername(), to.getPassword());
+            outcomeInvitations.add(to);
             userdataClient.sendInvitation(from, to);
         }
         return outcomeInvitations;
@@ -48,8 +50,9 @@ public class UsersApiClientImpl implements UsersClient {
     public @Nonnull List<UserJson> addNewFriends(UserJson from, int count) {
         List<UserJson> friends = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            var to = apiClient.register(UserUtils.generateUser());
-            userdataClient.findByUsername(to.getUsername()).ifPresent(friends::add);
+            var to = UserUtils.generateUser();
+            to = apiClient.register(to.getUsername(), to.getPassword());
+            friends.add(to);
             userdataClient.addFriend(from, to);
         }
         return friends;

@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
@@ -12,6 +12,7 @@ import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
+import guru.qa.niffler.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -22,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class SpendingWebTest {
+
+  private final SelenideDriver driver = new SelenideDriver(SelenideUtils.chromeConfig);
 
   @User(
       spendings = @Spending(
@@ -34,7 +37,7 @@ public class SpendingWebTest {
   void categoryDescriptionShouldBeChangedFromTable(UserJson user) {
     final String newDescription = "Обучение Niffler Next Generation";
 
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getSpendingTable()
@@ -54,7 +57,7 @@ public class SpendingWebTest {
     Date currentDate = new Date();
     String description = RandomDataUtils.randomSentence(3);
 
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getHeader()
@@ -73,7 +76,7 @@ public class SpendingWebTest {
   @User
   @Test
   void shouldNotAddSpendingWithEmptyCategory(UserJson user) {
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getHeader()
@@ -87,7 +90,7 @@ public class SpendingWebTest {
   @User
   @Test
   void shouldNotAddSpendingWithEmptyAmount(UserJson user) {
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getHeader()
@@ -107,7 +110,7 @@ public class SpendingWebTest {
   )
   @Test
   void deleteSpendingTest(UserJson user) {
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getSpendingTable()
@@ -124,7 +127,7 @@ public class SpendingWebTest {
   )
   @ScreenShotTest("img/expected-stat.png")
   void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
-    StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+    StatComponent statComponent = driver.open(LoginPage.URL, LoginPage.class)
         .fillLoginPage(user.username(), user.testData().password())
         .submit(new MainPage())
         .getStatComponent();

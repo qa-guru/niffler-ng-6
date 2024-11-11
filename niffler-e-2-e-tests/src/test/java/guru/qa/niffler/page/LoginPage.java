@@ -1,5 +1,7 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -7,17 +9,33 @@ import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage extends BasePage<LoginPage> {
 
   public static final String URL = CFG.authUrl() + "login";
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement submitButton = $("button[type='submit']");
-  private final SelenideElement registerButton = $("a[href='/register']");
-  private final SelenideElement errorContainer = $(".form__error");
+  private final SelenideElement usernameInput;
+  private final SelenideElement passwordInput;
+  private final SelenideElement submitButton;
+  private final SelenideElement registerButton;
+  private final SelenideElement errorContainer;
+
+  public LoginPage(SelenideDriver driver) {
+    super(driver);
+    this.usernameInput = driver.$("input[name='username']");
+    this.passwordInput = driver.$("input[name='password']");
+    this.submitButton = driver.$("button[type='submit']");
+    this.registerButton = driver.$("a[href='/register']");
+    this.errorContainer = driver.$(".form__error");
+  }
+
+  public LoginPage() {
+    this.usernameInput = Selenide.$("input[name='username']");
+    this.passwordInput = Selenide.$("input[name='password']");
+    this.submitButton = Selenide.$("button[type='submit']");
+    this.registerButton = Selenide.$("a[href='/register']");
+    this.errorContainer = Selenide.$(".form__error");
+  }
 
   @Nonnull
   public RegisterPage doRegister() {

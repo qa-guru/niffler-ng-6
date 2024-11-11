@@ -28,4 +28,6 @@ public interface UserdataUserRepository {
 
     void remove(UserEntity user);
 
+    void removeAll();
+
 }

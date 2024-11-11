@@ -123,4 +123,12 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
+    @Override
+    public void removeAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
+        jdbcTemplate.update(
+                "TRUNCATE TABLE \"user\" CASCADE"
+        );
+    }
+
 }

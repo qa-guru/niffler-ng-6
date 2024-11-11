@@ -66,4 +66,8 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         userdataUserDao.remove(user);
     }
 
+    public void removeAll() {
+        userdataUserDao.removeAll();
+    }
+
 }

@@ -197,4 +197,15 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void removeAll() {
+        try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
+                "TRUNCATE TABLE \"user\" CASCADE"
+        )) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

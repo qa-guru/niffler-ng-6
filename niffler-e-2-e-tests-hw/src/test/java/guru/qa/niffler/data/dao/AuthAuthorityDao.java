@@ -20,4 +20,6 @@ public interface AuthAuthorityDao {
 
     void remove(AuthAuthorityEntity... authority);
 
+    void removeAll();
+
 }

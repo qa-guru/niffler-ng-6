@@ -28,4 +28,6 @@ public interface UserdataUserDao {
 
     void remove(UserEntity user);
 
+    void removeAll();
+
 }

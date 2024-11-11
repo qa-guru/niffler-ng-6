@@ -66,4 +66,9 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         userdataUserDao.remove(user);
     }
 
+    @Override
+    public void removeAll() {
+        userdataUserDao.removeAll();
+    }
+
 }

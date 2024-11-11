@@ -134,6 +134,17 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
+    @Override
+    public void removeAll() {
+        try (PreparedStatement ps = holder(AUTH_JDBC_URL).connection().prepareStatement(
+                "TRUNCATE TABLE \"authority\" CASCADE"
+        )) {
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private AuthAuthorityEntity fromResultSet(ResultSet rs) throws SQLException {
         return AuthAuthorityEntity.builder()
                 .id(rs.getObject("id", UUID.class))

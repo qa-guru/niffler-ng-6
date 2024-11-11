@@ -63,4 +63,9 @@ public class UsersApiClientImpl implements UsersClient {
         throw new UnsupportedOperationException("Remove user not supported in Api client");
     }
 
+    @Override
+    public void removeAllUsers() {
+        throw new UnsupportedOperationException("Remove all users not supported in Api client");
+    }
+
 }

@@ -249,6 +249,20 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
 
     }
 
+    @Override
+    public void removeAll() {
+
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
+                "TRUNCATE TABLE \"user\" CASCADE"
+        )) {
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private @Nonnull UserEntity fromResultSet(ResultSet rs) throws SQLException {
         return UserEntity.builder()
                 .id(rs.getObject("id", UUID.class))

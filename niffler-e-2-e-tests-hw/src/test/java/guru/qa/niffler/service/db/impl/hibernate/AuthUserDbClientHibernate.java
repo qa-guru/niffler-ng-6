@@ -86,4 +86,13 @@ public class AuthUserDbClientHibernate implements AuthUserDbClient {
         });
     }
 
+    @Override
+    public void removeAll() {
+        log.info("Remove all users from niffler-auth");
+        xaTxTemplate.execute(() -> {
+            authUserRepository.removeAll();
+            return null;
+        });
+    }
+
 }

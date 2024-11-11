@@ -19,4 +19,6 @@ public interface AuthUserClient {
 
     void remove(@Nonnull AuthUserJson authUser);
 
+    void removeAll();
+
 }

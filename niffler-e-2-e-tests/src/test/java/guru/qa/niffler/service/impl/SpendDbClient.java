@@ -6,9 +6,10 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.impl.SpendRepositoryJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -47,6 +48,20 @@ public class SpendDbClient implements SpendClient {
         xaTransactionTemplate.execute(
             () -> CategoryJson.fromEntity(
                 spendRepository.createCategory(
+                    CategoryEntity.fromJson(category)
+                )
+            )
+        )
+    );
+  }
+
+  @NotNull
+  @Override
+  public CategoryJson updateCategory(CategoryJson category) {
+    return requireNonNull(
+        xaTransactionTemplate.execute(
+            () -> CategoryJson.fromEntity(
+                spendRepository.updateCategory(
                     CategoryEntity.fromJson(category)
                 )
             )

@@ -1,9 +1,10 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,32 +13,49 @@ public record SpendJson(
     UUID id,
     @JsonProperty("spendDate")
     Date spendDate,
-    @JsonProperty("category")
-    CategoryJson category,
-    @JsonProperty("currency")
-    CurrencyValues currency,
     @JsonProperty("amount")
     Double amount,
+    @JsonProperty("currency")
+    CurrencyValues currency,
+    @JsonProperty("category")
+    CategoryJson category,
     @JsonProperty("description")
     String description,
     @JsonProperty("username")
     String username) {
 
-  public static SpendJson fromEntity(SpendEntity entity) {
+  public SpendJson addUsername(String username) {
+    return new SpendJson(
+        id,
+        spendDate,
+        amount,
+        currency,
+        new CategoryJson(
+            category.id(),
+            category.name(),
+            username,
+            category.archived()
+        ),
+        description,
+        username
+    );
+  }
+
+  public static @Nonnull SpendJson fromEntity(@Nonnull SpendEntity entity) {
     final CategoryEntity category = entity.getCategory();
     final String username = entity.getUsername();
 
     return new SpendJson(
         entity.getId(),
         entity.getSpendDate(),
+        entity.getAmount(),
+        entity.getCurrency(),
         new CategoryJson(
             category.getId(),
             category.getName(),
             username,
             category.isArchived()
         ),
-        entity.getCurrency(),
-        entity.getAmount(),
         entity.getDescription(),
         username
     );

@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.GhApiClient;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
+import guru.qa.niffler.service.impl.GithubApiClient;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -12,7 +12,7 @@ import org.junit.platform.commons.support.SearchOption;
 
 public class IssueExtension implements ExecutionCondition {
 
-  private static final GhApiClient ghApiClient = new GhApiClient();
+  private static final GithubApiClient ghApiClient = new GithubApiClient();
 
   @SneakyThrows
   @Override

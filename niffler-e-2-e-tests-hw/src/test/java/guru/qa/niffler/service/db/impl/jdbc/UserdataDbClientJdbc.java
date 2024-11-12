@@ -123,4 +123,14 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
         );
     }
 
+    @Override
+    public void removeAll() {
+        log.info("Remove all users");
+        jdbcTxTemplate.execute(() -> {
+                    userdataRepository.removeAll();
+                    return null;
+                }
+        );
+    }
+
 }

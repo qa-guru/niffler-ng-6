@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.db.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.jdbc.AuthUserDaoJdbc;
+import guru.qa.niffler.data.repository.impl.jdbc.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.model.AuthUserJson;
@@ -20,7 +20,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
 
     private static final String AUTH_JDBC_URL = Config.getInstance().authJdbcUrl();
     private final AuthUserMapper authUserMapper = new AuthUserMapper();
-
+    private final AuthUserRepositoryJdbc authUserRepository = new AuthUserRepositoryJdbc();
     private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(AUTH_JDBC_URL);
 
     @Override
@@ -28,7 +28,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
         log.info("Creating new user by DTO: {}", userModel);
         return jdbcTxTemplate.execute(() ->
                 authUserMapper.toDto(
-                        new AuthUserDaoJdbc()
+                        authUserRepository
                                 .create(authUserMapper.toEntity(userModel))));
 
     }
@@ -37,7 +37,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     public @Nonnull Optional<AuthUserJson> findById(UUID id) {
         log.info("Get user by id = [{}]", id);
         return jdbcTxTemplate.execute(() ->
-                new AuthUserDaoJdbc()
+                authUserRepository
                         .findById(id)
                         .map(authUserMapper::toDto));
     }
@@ -46,7 +46,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     public @Nonnull Optional<AuthUserJson> findByUsername(String username) {
         log.info("Get user by username = [{}]", username);
         return jdbcTxTemplate.execute(() ->
-                new AuthUserDaoJdbc()
+                authUserRepository
                         .findByUsername(username)
                         .map(authUserMapper::toDto));
     }
@@ -55,7 +55,7 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     public @Nonnull List<AuthUserJson> findAll() {
         log.info("Get all users");
         return jdbcTxTemplate.execute(() ->
-                new AuthUserDaoJdbc()
+                authUserRepository
                         .findAll().stream()
                         .map(authUserMapper::toDto)
                         .toList());
@@ -65,8 +65,18 @@ public class AuthUserDbClientJdbc implements AuthUserDbClient {
     public void remove(AuthUserJson authUserJson) {
         log.info("Remove user: {}", authUserJson);
         jdbcTxTemplate.execute(() -> {
-                    new AuthUserDaoJdbc()
+                    authUserRepository
                             .remove(authUserMapper.toEntity(authUserJson));
+                    return null;
+                }
+        );
+    }
+
+    @Override
+    public void removeAll() {
+        log.info("Remove all users");
+        jdbcTxTemplate.execute(() -> {
+                    authUserRepository.removeAll();
                     return null;
                 }
         );

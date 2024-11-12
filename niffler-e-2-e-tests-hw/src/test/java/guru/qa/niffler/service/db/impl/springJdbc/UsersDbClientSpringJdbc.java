@@ -144,6 +144,16 @@ public class UsersDbClientSpringJdbc implements UsersDbClient {
         });
     }
 
+    @Override
+    public void removeAllUsers() {
+        log.info("Remove all users from niffler-auth and niffler-userdata");
+        xaTxTemplate.execute(() -> {
+            authUserRepository.removeAll();
+            userdataUserRepository.removeAll();
+            return null;
+        });
+    }
+
     private UserEntity createRandomUserIn2Dbs() {
 
         var generatedUser = UserUtils.generateUser();

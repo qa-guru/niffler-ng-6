@@ -87,4 +87,10 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         em.remove(user);
     }
 
+    @Override
+    public void removeAll() {
+        em.joinTransaction();
+        em.createNativeQuery("TRUNCATE TABLE \"user\" CASCADE").executeUpdate();
+    }
+
 }

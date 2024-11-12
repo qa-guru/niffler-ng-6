@@ -16,4 +16,6 @@ public interface UsersClient {
 
     void removeUser(UserJson userJson);
 
+    void removeAllUsers();
+
 }

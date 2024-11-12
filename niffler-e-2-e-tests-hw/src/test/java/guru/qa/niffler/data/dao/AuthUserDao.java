@@ -20,4 +20,6 @@ public interface AuthUserDao {
 
     void remove(AuthUserEntity user);
 
+    void removeAll();
+
 }

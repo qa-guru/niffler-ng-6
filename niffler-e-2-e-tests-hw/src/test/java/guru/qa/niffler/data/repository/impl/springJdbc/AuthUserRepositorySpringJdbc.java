@@ -75,4 +75,10 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         authUserDao.remove(user);
     }
 
+    @Override
+    public void removeAll() {
+        authorityDao.removeAll();
+        authUserDao.removeAll();
+    }
+
 }

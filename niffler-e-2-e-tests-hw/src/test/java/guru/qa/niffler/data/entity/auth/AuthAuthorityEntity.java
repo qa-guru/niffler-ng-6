@@ -31,7 +31,6 @@ public class AuthAuthorityEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;

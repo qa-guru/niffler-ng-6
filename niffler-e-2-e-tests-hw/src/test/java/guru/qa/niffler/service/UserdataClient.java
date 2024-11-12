@@ -26,4 +26,6 @@ public interface UserdataClient {
 
     void remove(UserJson userJson);
 
+    void removeAll();
+
 }

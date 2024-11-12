@@ -202,4 +202,12 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         );
     }
 
+    @Override
+    public void removeAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        jdbcTemplate.update(
+                "TRUNCATE TABLE \"user\" CASCADE"
+        );
+    }
+
 }

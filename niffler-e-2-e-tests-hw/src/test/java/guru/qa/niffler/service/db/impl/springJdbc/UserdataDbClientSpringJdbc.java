@@ -114,8 +114,17 @@ public class UserdataDbClientSpringJdbc implements UserdataDbClient {
     public void remove(UserJson userJson) {
         log.info("Remove user: {}", userJson);
         txTemplate.execute(status -> {
-            new UserdataUserDaoSpringJdbc()
-                    .remove(userMapper.toEntity(userJson));
+            userdataRepository.remove(
+                    userMapper.toEntity(userJson));
+            return null;
+        });
+    }
+
+    @Override
+    public void removeAll() {
+        log.info("Remove all users");
+        txTemplate.execute(status -> {
+            userdataRepository.removeAll();
             return null;
         });
     }

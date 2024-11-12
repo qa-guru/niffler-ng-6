@@ -123,4 +123,13 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
         );
     }
 
+    @Override
+    public void removeAll() {
+        log.info("Remove all users from niffler-userdata");
+        xaTxTemplate.execute(() -> {
+            userRepository.removeAll();
+            return null;
+        });
+    }
+
 }

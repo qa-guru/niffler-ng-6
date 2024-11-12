@@ -122,4 +122,12 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         );
     }
 
+    @Override
+    public void removeAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(AUTH_JDBC_URL));
+        jdbcTemplate.update(
+                "TRUNCATE TABLE \"authority\" CASCADE"
+        );
+    }
+
 }

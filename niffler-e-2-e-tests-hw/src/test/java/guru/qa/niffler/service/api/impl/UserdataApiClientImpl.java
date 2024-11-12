@@ -89,4 +89,9 @@ public class UserdataApiClientImpl implements UserdataApiClient {
     public void remove(UserJson userJson) {
         throw new UnsupportedOperationException("Remove user in userdata not supported in Api client");
     }
+
+    @Override
+    public void removeAll() {
+        throw new UnsupportedOperationException("Remove all users in userdata not supported in Api client");
+    }
 }

@@ -76,4 +76,10 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
         em.remove(user);
     }
 
+    @Override
+    public void removeAll() {
+        em.joinTransaction();
+        em.createNativeQuery("TRUNCATE TABLE \"user\" CASCADE").executeUpdate();
+    }
+
 }

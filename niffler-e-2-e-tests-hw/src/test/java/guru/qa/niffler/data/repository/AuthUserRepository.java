@@ -20,4 +20,6 @@ public interface AuthUserRepository {
 
     void remove(AuthUserEntity user);
 
+    void removeAll();
+
 }

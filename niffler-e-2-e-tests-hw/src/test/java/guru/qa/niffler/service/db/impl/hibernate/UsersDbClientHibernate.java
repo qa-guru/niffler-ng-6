@@ -146,6 +146,16 @@ public class UsersDbClientHibernate implements UsersDbClient {
         });
     }
 
+    @Override
+    public void removeAllUsers() {
+        log.info("Remove all users from niffler-auth and niffler-userdata");
+        xaTxTemplate.execute(() -> {
+            authUserRepository.removeAll();
+            userdataUserRepository.removeAll();
+            return null;
+        });
+    }
+
     private @Nonnull UserEntity createRandomUserIn2Dbs() {
 
         var generatedUser = UserUtils.generateUser();

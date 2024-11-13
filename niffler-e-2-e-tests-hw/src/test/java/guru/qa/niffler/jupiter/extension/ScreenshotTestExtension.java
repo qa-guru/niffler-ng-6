@@ -13,12 +13,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 
 public class ScreenshotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenshotTestExtension.class);
-
+    private static final String PATH_TO_RESOURCES = "niffler-e-2-e-tests-hw/src/test/resources/";
     private static final ObjectMapper om = new ObjectMapper();
     private static final Base64.Encoder encoder = Base64.getEncoder();
 
@@ -31,11 +33,17 @@ public class ScreenshotTestExtension implements ParameterResolver, TestExecution
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("img/expected-stat-empty.png").getInputStream());
+        var path = extensionContext.getRequiredTestMethod()
+                .getAnnotation(ScreenshotTest.class)
+                .value();
+        return ImageIO.read(new ClassPathResource(path).getInputStream());
     }
 
     @Override
+    @SneakyThrows
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+
+        if (!(throwable instanceof AssertionError)) throw throwable;
 
         ScreenDiff screenDif = ScreenDiff.builder()
                 .expected("data:image/png;base64," + encoder.encodeToString(imageToBytes(getExpected())))
@@ -48,6 +56,21 @@ public class ScreenshotTestExtension implements ParameterResolver, TestExecution
                 "application/vnd.allure.image.diff",
                 om.writeValueAsString(screenDif)
         );
+
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenshotTest.class)
+                .ifPresent(anno -> {
+                    if (anno.rewriteScreenshot()) {
+                        try {
+                            System.out.println("path: " + Path.of(PATH_TO_RESOURCES + anno.value()).toAbsolutePath());
+                            Files.write(
+                                    Path.of(PATH_TO_RESOURCES + anno.value()).toAbsolutePath(),
+                                    imageToBytes(getActual()));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
         throw throwable;
 
     }

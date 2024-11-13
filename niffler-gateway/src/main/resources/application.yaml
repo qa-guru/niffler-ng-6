@@ -6,6 +6,8 @@ spring:
     name: niffler-gateway
 
 logging:
+  file:
+    path: ./logs/niffler-gateway
   level:
     root: INFO
     org.springframework.web: INFO

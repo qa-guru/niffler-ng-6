@@ -1,29 +1,38 @@
 package guru.qa.niffler.page.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.conditions.And;
 import guru.qa.niffler.enums.Period;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.page.component.FloatForm;
 import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.ScreenshotComponent;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.page.spending.EditSpendingPage;
+import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
@@ -32,6 +41,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.*;
 import static guru.qa.niffler.conditions.SelenideCondition.child;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Slf4j
 @NoArgsConstructor
@@ -39,7 +49,7 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 public class MainPage extends BasePage<MainPage> {
 
     private final SelenideElement statisticsTitle = $(byText("Statistics")).as("Statistics title"),
-            statisticsBar = $("canvas").as("Statistics bar"),
+            statisticsCanvas = $("canvas[role='img']").as("Spend stats canvas"),
             historyOfSpendingsTitle = $(byText("History of Spendings")).as("History of Spendings title"),
             searchForm = historyOfSpendingsTitle.parent().$("form").as("Spendings search input container"),
             spendingsPeriodSelector = $("#period").as("Spendings period selector"),
@@ -59,6 +69,7 @@ public class MainPage extends BasePage<MainPage> {
     @Getter
     private final Header header = new Header();
     private final SearchField searchField = new SearchField(searchForm);
+    private final FloatForm floatForm = new FloatForm();
 
     public MainPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
@@ -166,7 +177,7 @@ public class MainPage extends BasePage<MainPage> {
         filterSpendingsByDescription(spendingDescription);
         log.info("Select spending by description = [{}]", spendingDescription);
         Allure.step("Select spending by description = [" + spendingDescription + "]", () ->
-                getSpendingContainer(spendingDescription, 0).$x(".//td[1]//input").shouldBe(visible).click());
+                getSpendingContainer(spendingDescription, 0).$x(".//td[1]/span").shouldBe(visible).click());
         return this;
     }
 
@@ -182,7 +193,7 @@ public class MainPage extends BasePage<MainPage> {
                         new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
         log.info(logText);
         Allure.step(logText, () ->
-                getSpendingContainer(spend, 0).$x(".//td[1]//input").shouldBe(visible).click());
+                getSpendingContainer(spend, 0).$x(".//td[1]/span").shouldBe(visible).click());
         return this;
     }
 
@@ -204,6 +215,7 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage deleteSpendings() {
         log.info("Delete all spendings");
         deleteSpendingButton.shouldBe(visible).click();
+        floatForm.submit();
         return this;
     }
 
@@ -302,6 +314,22 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @SneakyThrows
+    @Step("Should expected spend stats equals actual")
+    public MainPage shouldHaveSpendsStatCanvas(BufferedImage expected) {
+        log.info("Should expected spend stats equals actual");
+        ScreenshotComponent.validateElement(statisticsCanvas, expected);
+        return this;
+    }
+
+    @SneakyThrows
+    @Step("Should expected spend stats equals actual")
+    public MainPage shouldHaveSpendsStatCanvas(BufferedImage expected, double diffPercent) {
+        log.info("Should expected spend stats equals actual");
+        ScreenshotComponent.validateElement(statisticsCanvas, expected);
+        return this;
+    }
+
     @Override
     public MainPage shouldVisiblePageElement() {
         log.info("Assert 'Main' page element visible on start up");
@@ -317,7 +345,7 @@ public class MainPage extends BasePage<MainPage> {
         log.info("Assert account menu elements are visible");
 
         statisticsTitle.shouldBe(visible);
-        statisticsBar.shouldBe(visible);
+        statisticsCanvas.shouldBe(visible);
 
         searchForm.shouldBe(visible);
         spendingsPeriodSelector.shouldBe(visible);

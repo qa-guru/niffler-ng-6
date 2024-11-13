@@ -47,13 +47,11 @@ class ProfileWebTests {
     @Test
     void canUploadAvatarTest(@CreateNewUser UserJson user) {
 
-        var file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("img/cat.jpeg")).getFile());
-
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToProfilePage()
-                .uploadAvatar(file)
+                .uploadAvatar("img/cat.jpeg")
                 .save();
 
         Selenide.refresh();

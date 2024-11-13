@@ -9,25 +9,40 @@ import java.util.function.BooleanSupplier;
 
 public class ScreenDiffResult implements BooleanSupplier {
 
-  private final BufferedImage expected;
-  private final BufferedImage actual;
-  private final ImageDiff diff;
-  private final boolean hasDif;
+    private final BufferedImage expected;
+    private final BufferedImage actual;
+    private final ImageDiff diff;
+    private final boolean hasDiff;
 
-  public ScreenDiffResult(BufferedImage actual, BufferedImage expected) {
-    this.actual = actual;
-    this.expected = expected;
-    this.diff = new ImageDiffer().makeDiff(expected, actual);
-    this.hasDif = diff.hasDiff();
-  }
-
-  @Override
-  public boolean getAsBoolean() {
-    if (hasDif) {
-      ScreenshotTestExtension.setExpected(expected);
-      ScreenshotTestExtension.setActual(actual);
-      ScreenshotTestExtension.setDiff(diff.getMarkedImage());
+    public ScreenDiffResult(BufferedImage expected, BufferedImage actual) {
+        this.expected = expected;
+        this.actual = actual;
+        this.diff = new ImageDiffer().makeDiff(expected, actual);
+        hasDiff = diff.hasDiff();
     }
-    return hasDif;
-  }
+
+    public ScreenDiffResult(BufferedImage expected, BufferedImage actual, double percent) {
+        this.expected = expected;
+        this.actual = actual;
+        this.diff = new ImageDiffer().makeDiff(expected, actual);
+        this.hasDiff = hasDiff(expected,percent);
+    }
+
+    private boolean hasDiff(BufferedImage expected, double percent) {
+        if (percent < 0.0 || percent > 0.2) {
+            throw new IllegalArgumentException("Illegal percent value. Allowed between [0, 0.2]");
+        }
+        int maxDiffPixels = (int) (expected.getWidth() * expected.getHeight() * percent);
+        return diff.getDiffSize() > maxDiffPixels;
+    }
+
+    @Override
+    public boolean getAsBoolean() {
+        if (hasDiff) {
+            ScreenshotTestExtension.setExpected(expected);
+            ScreenshotTestExtension.setActual(actual);
+            ScreenshotTestExtension.setDiff(diff.getMarkedImage());
+        }
+        return hasDiff;
+    }
 }

@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.annotation.meta;
 
-import guru.qa.niffler.jupiter.converter.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;

@@ -1,8 +1,9 @@
-package guru.qa.niffler.jupiter.converter;
+package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.SelenideConfig;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import guru.qa.niffler.jupiter.converter.Browsers;
 import io.qameta.allure.Allure;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.extension.*;

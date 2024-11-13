@@ -123,6 +123,7 @@ public class FriendsWebTest {
     friendsPage.checkExistingInvitationsCount(0)
         .checkExistingFriendsCount(0);
 
+    driver.open(PeoplePage.URL);
     new PeoplePage(driver)
         .checkExistingUser(userToDecline);
   }

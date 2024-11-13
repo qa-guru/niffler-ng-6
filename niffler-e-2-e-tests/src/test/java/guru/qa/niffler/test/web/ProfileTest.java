@@ -137,7 +137,7 @@ public class ProfileTest {
   }
 
   @User
-  @ScreenShotTest(value = "img/expected-profile-image.png", rewriteExpected = true)
+  @ScreenShotTest(value = "img/expected-profile-image.png")
   @Test
   void checkProfileImage(UserJson user, BufferedImage expectedImage) {
     Selenide.open(LoginPage.URL, LoginPage.class)

@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.rest.DataFilterValues;
 import guru.qa.niffler.model.rest.SpendJson;
@@ -14,27 +15,40 @@ import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.condition.SpendConditions.spends;
 
 public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SearchField searchField = new SearchField();
-  private final SelenideElement periodMenu = self.$("#period");
-  private final SelenideElement currencyMenu = self.$("#currency");
-  private final ElementsCollection menuItems = $$(".MuiList-padding li");
-  private final SelenideElement deleteBtn = self.$("#delete");
-  private final SelenideElement popup = $("div[role='dialog']");
+  private final SelenideDriver driver;
 
-  private final SelenideElement tableHeader = self.$(".MuiTableHead-root");
-  private final ElementsCollection headerCells = tableHeader.$$(".MuiTableCell-root");
+  private final SearchField searchField;
+  private final SelenideElement periodMenu;
+  private final SelenideElement currencyMenu;
+  private final ElementsCollection menuItems;
+  private final SelenideElement deleteBtn;
+  private final SelenideElement popup;
 
-  private final ElementsCollection tableRows = self.$("tbody").$$("tr");
+  private final SelenideElement tableHeader;
+  private final ElementsCollection headerCells;
+
+  private final ElementsCollection tableRows;
 
 
-  public SpendingTable() {
-    super($("#spendings"));
+  public SpendingTable(SelenideDriver driver) {
+    super(driver.$("#spendings"));
+    this.driver = driver;
+
+    this.searchField = new SearchField(driver);
+    this.periodMenu = self.$("#period");
+    this.currencyMenu = self.$("#currency");
+    this.menuItems = driver.$$(".MuiList-padding li");
+    this.deleteBtn = self.$("#delete");
+    this.popup = driver.$("div[role='dialog']");
+
+    this.tableHeader = self.$(".MuiTableHead-root");
+    this.headerCells = tableHeader.$$(".MuiTableCell-root");
+
+    this.tableRows = self.$("tbody").$$("tr");
   }
 
   @Step("Select table period {0}")
@@ -56,7 +70,7 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
     searchSpendingByDescription(description);
     SelenideElement row = tableRows.find(text(description));
     row.$$("td").get(5).click();
-    return new EditSpendingPage();
+    return new EditSpendingPage(driver);
   }
 
   @Step("Delete spending with description {0}")

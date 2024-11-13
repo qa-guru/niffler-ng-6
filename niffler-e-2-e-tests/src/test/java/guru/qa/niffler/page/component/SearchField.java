@@ -1,5 +1,6 @@
 package guru.qa.niffler.page.component;
 
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -7,18 +8,20 @@ import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.empty;
 import static com.codeborne.selenide.Condition.not;
-import static com.codeborne.selenide.Selenide.$;
 
 public class SearchField extends BaseComponent<SearchField> {
-  public SearchField(@Nonnull SelenideElement self) {
+  public SearchField(@Nonnull SelenideElement self, SelenideDriver driver) {
     super(self);
+
+    this.clearSearchInputBtn = driver.$("#input-clear");
   }
 
-  public SearchField() {
-    super($("input[aria-label='search']"));
+  public SearchField(SelenideDriver driver) {
+    super(driver.$("input[aria-label='search']"));
+    this.clearSearchInputBtn = driver.$("#input-clear");
   }
 
-  private final SelenideElement clearSearchInputBtn = $("#input-clear");
+  private final SelenideElement clearSearchInputBtn;
 
   @Step("Perform search for query {query}")
   @Nonnull

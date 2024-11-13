@@ -1,47 +1,55 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.jupiter.converter.BrowserConverter;
+import guru.qa.niffler.jupiter.converter.Browsers;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
 @WebTest
 public class RegistrationTest {
 
-  @Test
-  void shouldRegisterNewUser() {
+  @ParameterizedTest
+  @EnumSource(Browsers.class)
+  void shouldRegisterNewUser(@ConvertWith(BrowserConverter.class) SelenideDriver driver) {
     String newUsername = randomUsername();
     String password = "12345";
-    Selenide.open(LoginPage.URL, LoginPage.class)
+    driver.open(LoginPage.URL);
+    new LoginPage(driver)
         .doRegister()
         .fillRegisterPage(newUsername, password, password)
         .successSubmit()
         .fillLoginPage(newUsername, password)
-        .submit(new MainPage())
+        .submit(new MainPage(driver))
         .checkThatPageLoaded();
   }
 
-  @Test
-  void shouldNotRegisterUserWithExistingUsername() {
+  @ParameterizedTest
+  @EnumSource(Browsers.class)
+  void shouldNotRegisterUserWithExistingUsername(@ConvertWith(BrowserConverter.class) SelenideDriver driver) {
     String existingUsername = "duck";
     String password = "12345";
-
-    LoginPage loginPage = Selenide.open(LoginPage.URL, LoginPage.class);
+    driver.open(LoginPage.URL);
+    LoginPage loginPage = new LoginPage(driver);
     loginPage.doRegister()
         .fillRegisterPage(existingUsername, password, password)
         .errorSubmit();
     loginPage.checkError("Username `" + existingUsername + "` already exists");
   }
 
-  @Test
-  void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
+  @ParameterizedTest
+  @EnumSource(Browsers.class)
+  void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual(@ConvertWith(BrowserConverter.class) SelenideDriver driver) {
     String newUsername = randomUsername();
     String password = "12345";
-
-    LoginPage loginPage = Selenide.open(LoginPage.URL, LoginPage.class);
+    driver.open(LoginPage.URL);
+    LoginPage loginPage = new LoginPage(driver);
     loginPage.doRegister()
         .fillRegisterPage(newUsername, password, "bad password submit")
         .errorSubmit();

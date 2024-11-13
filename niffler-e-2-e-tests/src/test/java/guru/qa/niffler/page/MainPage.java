@@ -1,5 +1,6 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SpendingTable;
@@ -15,9 +16,16 @@ public class MainPage extends BasePage<MainPage> {
 
   public static final String URL = CFG.frontUrl() + "main";
 
-  protected final Header header = new Header();
-  protected final SpendingTable spendingTable = new SpendingTable();
-  protected final StatComponent statComponent = new StatComponent();
+  protected final Header header;
+  protected final SpendingTable spendingTable;
+  protected final StatComponent statComponent;
+
+  public MainPage(SelenideDriver driver) {
+    super(driver);
+    this.header = new Header(driver);
+    this.spendingTable = new SpendingTable(driver);
+    this.statComponent = new StatComponent(driver);
+  }
 
   @Nonnull
   public Header getHeader() {

@@ -1,12 +1,13 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.condition.Bubble;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.jupiter.converter.Browsers;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.LoginPage;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class SpendingWebTest {
+    private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driver());
 
     @User(
             spendings = @Spending(
@@ -36,15 +38,16 @@ public class SpendingWebTest {
     void categoryDescriptionShouldBeChangedFromTable(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation";
 
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getSpendingTable()
                 .editSpending("Обучение Advanced 2.0")
                 .setNewSpendingDescription(newDescription)
                 .saveSpending();
 
-        new MainPage().getSpendingTable()
+        new MainPage(driver).getSpendingTable()
                 .checkTableContains(newDescription);
     }
 
@@ -65,9 +68,10 @@ public class SpendingWebTest {
     @Test
     void spendingShouldBeVisible(UserJson user) {
 
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getSpendingTable()
                 .checkSpendingRows(user.testData().spends().toArray(SpendJson[]::new));
     }
@@ -80,9 +84,10 @@ public class SpendingWebTest {
         Date currentDate = new Date();
         String description = RandomDataUtils.randomSentence(3);
 
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getHeader()
                 .addSpendingPage()
                 .setNewSpendingCategory(category)
@@ -92,16 +97,17 @@ public class SpendingWebTest {
                 .saveSpending()
                 .checkAlertMessage("New spending is successfully created");
 
-        new MainPage().getSpendingTable()
+        new MainPage(driver).getSpendingTable()
                 .checkTableContains(description);
     }
 
     @User
     @Test
     void shouldNotAddSpendingWithEmptyCategory(UserJson user) {
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getHeader()
                 .addSpendingPage()
                 .setNewSpendingAmount(100)
@@ -113,9 +119,10 @@ public class SpendingWebTest {
     @User
     @Test
     void shouldNotAddSpendingWithEmptyAmount(UserJson user) {
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getHeader()
                 .addSpendingPage()
                 .setNewSpendingCategory("Friends")
@@ -133,9 +140,10 @@ public class SpendingWebTest {
     )
     @Test
     void deleteSpendingTest(UserJson user) {
-        Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getSpendingTable()
                 .deleteSpending("Обучение Advanced 2.0")
                 .checkTableSize(0);
@@ -150,9 +158,10 @@ public class SpendingWebTest {
     )
     @ScreenShotTest("img/expected-stat.png")
     void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
-        StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        StatComponent statComponent = new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getStatComponent();
 
         Thread.sleep(3000);
@@ -174,9 +183,10 @@ public class SpendingWebTest {
     )
     @Test
     void checkStatComponents(UserJson user) throws IOException, InterruptedException {
-        StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        StatComponent statComponent = new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getStatComponent();
 
         Thread.sleep(3000);
@@ -203,9 +213,10 @@ public class SpendingWebTest {
     )
     @Test
     void checkStatComponentsInAnyOrder(UserJson user) throws InterruptedException {
-        StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        StatComponent statComponent = new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getStatComponent();
 
         Thread.sleep(3000);
@@ -238,9 +249,10 @@ public class SpendingWebTest {
     )
     @Test
     void checkStatComponentsContains(UserJson user) throws InterruptedException {
-        StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+        driver.open(LoginPage.URL);
+        StatComponent statComponent = new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .submit(new MainPage(driver))
                 .getStatComponent();
 
         Thread.sleep(3000);

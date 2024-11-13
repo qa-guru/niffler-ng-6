@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
@@ -12,22 +13,36 @@ import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.textsInAnyOrder;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
 
 public class FriendsPage extends BasePage<FriendsPage> {
 
   public static final String URL = CFG.frontUrl() + "people/friends";
 
-  private final SelenideElement peopleTab = $("a[href='/people/friends']");
-  private final SelenideElement allTab = $("a[href='/people/all']");
+  private final SelenideElement peopleTab;
+  private final SelenideElement allTab;
 
-  private final SearchField searchInput = new SearchField();
-  private final SelenideElement popup = $("div[role='dialog']");
+  private final SearchField searchInput;
+  private final SelenideElement popup;
 
-  private final SelenideElement requestsTable = $("#requests");
-  private final SelenideElement friendsTable = $("#friends");
-  private final SelenideElement pagePrevBtn = $("#page-prev");
-  private final SelenideElement pageNextBtn = $("#page-next");
+  private final SelenideElement requestsTable;
+  private final SelenideElement friendsTable;
+  private final SelenideElement pagePrevBtn;
+  private final SelenideElement pageNextBtn;
+
+  public FriendsPage(SelenideDriver driver) {
+    super(driver);
+    this.peopleTab = driver.$("a[href='/people/friends']");
+    this.allTab = driver.$("a[href='/people/all']");
+
+    this.searchInput = new SearchField(driver);
+
+    this.popup = driver.$("div[role='dialog']");
+
+    this.requestsTable = driver.$("#requests");
+    this.friendsTable = driver.$("#friends");
+    this.pagePrevBtn = driver.$("#page-prev");
+    this.pageNextBtn = driver.$("#page-next");
+  }
 
   @Step("Check that the page is loaded")
   @Override

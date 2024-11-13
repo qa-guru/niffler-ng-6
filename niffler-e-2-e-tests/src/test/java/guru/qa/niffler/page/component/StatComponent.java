@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.Bubble;
 import guru.qa.niffler.condition.Color;
@@ -11,17 +12,25 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.condition.StatConditions.*;
 import static java.util.Objects.requireNonNull;
 
 public class StatComponent extends BaseComponent<StatComponent> {
-  public StatComponent() {
-    super($("#stat"));
+  public StatComponent(SelenideDriver driver) {
+    super(driver.$("#stat"));
+
+    this.bubbles = self.$("#legend-container").$$("li");
+    this.chart = driver.$("canvas[role='img']");
   }
 
-  private final ElementsCollection bubbles = self.$("#legend-container").$$("li");
-  private final SelenideElement chart = $("canvas[role='img']");
+  private final ElementsCollection bubbles;
+  private final SelenideElement chart;
+
+  public StatComponent(SelenideElement self, SelenideDriver driver) {
+    super(self);
+    this.bubbles = self.$("#legend-container").$$("li");
+    this.chart = driver.$("canvas[role='img']");
+  }
 
   @Step("Get screenshot of stat chart")
   @Nonnull

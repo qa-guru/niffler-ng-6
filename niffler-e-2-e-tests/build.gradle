@@ -95,7 +95,7 @@ dependencies {
     testImplementation "io.qameta.allure:allure-okhttp3:${allureVersion}"
     testImplementation "io.qameta.allure:allure-grpc:${allureVersion}"
     // WEB
-    testImplementation "com.codeborne:selenide:${selenideVersion}"
+    testImplementation "com.codeborne:selenide-core:${selenideVersion}"
     // Utils
     testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {

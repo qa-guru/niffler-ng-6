@@ -1,19 +1,17 @@
-package guru.qa.niffler.jupiter.extension;
+package guru.qa.niffler.jupiter.converter;
 
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.SelenideConfig;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Allure;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Method;
 
 public class BrowserExtension implements
     BeforeEachCallback,
@@ -21,15 +19,30 @@ public class BrowserExtension implements
     TestExecutionExceptionHandler,
     LifecycleMethodExecutionExceptionHandler {
 
+  private static final ThreadLocal<SelenideDriver> driver = new ThreadLocal<>();
+
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
-    if (WebDriverRunner.hasWebDriverStarted()) {
-      Selenide.closeWebDriver();
+    if (driver.get().hasWebDriverStarted()) {
+      driver.get().close();
     }
   }
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
+    Method requiredTestMethod = context.getRequiredTestMethod();
+    if(requiredTestMethod.isAnnotationPresent(EnumSource.class)) {
+      String name = context.getDisplayName();
+
+      SelenideConfig selenideConfig = name.contains(Browsers.CHROME.name())
+              ? Browsers.CHROME.driver()
+              : Browsers.FIREFOX.driver();
+
+      driver.set(new SelenideDriver(selenideConfig));
+    }
+
+    driver.set(new SelenideDriver(Browsers.CHROME.driver()));
+
     SelenideLogger.addListener("Allure-selenide", new AllureSelenide()
         .savePageSource(false)
         .screenshots(false)
@@ -55,11 +68,11 @@ public class BrowserExtension implements
   }
 
   private static void doScreenshot() {
-    if (WebDriverRunner.hasWebDriverStarted()) {
+    if (driver.get().hasWebDriverStarted()) {
       Allure.addAttachment(
-          "Screen on fail",
+          "Screen on fail, with  driver: " + driver.get().getSessionId(),
           new ByteArrayInputStream(
-              ((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)
+              ((TakesScreenshot) driver.get()).getScreenshotAs(OutputType.BYTES)
           )
       );
     }

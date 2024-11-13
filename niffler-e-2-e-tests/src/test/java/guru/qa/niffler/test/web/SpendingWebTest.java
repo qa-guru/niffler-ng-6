@@ -210,16 +210,16 @@ public class SpendingWebTest {
 
         Thread.sleep(3000);
 
-        Bubble bubble_1 = new Bubble(
+        Bubble firstBubble = new Bubble(
                 Color.yellow,
                 "Обучение 79990 ₽"
         );
 
-        Bubble bubble_2 = new Bubble(
+        Bubble secondBubble = new Bubble(
                 Color.green,
                 "Utilities 1200 ₽"
         );
-        statComponent.checkBubblesInAnyOrder(bubble_2, bubble_1);
+        statComponent.checkBubblesInAnyOrder(secondBubble, firstBubble);
     }
 
     @User(
@@ -245,11 +245,11 @@ public class SpendingWebTest {
 
         Thread.sleep(3000);
 
-        Bubble bubble_1 = new Bubble(
+        Bubble firstBubble = new Bubble(
                 Color.green,
                 "Utilities 1200 ₽"
         );
-        statComponent.checkBubblesContains(bubble_1);
+        statComponent.checkBubblesContains(firstBubble);
     }
 }
 

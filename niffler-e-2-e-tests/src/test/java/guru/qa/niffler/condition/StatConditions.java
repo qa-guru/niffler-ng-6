@@ -65,12 +65,12 @@ public class StatConditions {
          final String amountText = elementToCheck.getText();
 
          actualValues.add(rgba + PAIR_SEPARATE + amountText);
-         if(passed) {
+         if (passed) {
            passed = colorToCheck.rgb.equals(rgba) && textToCheck.equals(amountText);
          }
        }
 
-       if(passed) {
+       if (passed) {
          return accepted(actualValues);
        }
 
@@ -168,9 +168,9 @@ public class StatConditions {
         if(!actualPair.containsAll(expectedPair)) {
           String formattedText =
                   String.format("List bubbles mismatch (expected: %s, actual: %s)", expectedValues, actualPair);
-          return rejected(formattedText, actualPair);
+          return rejected (formattedText, actualPair);
         }
-        return accepted(actualPair);
+        return accepted (actualPair);
       }
 
       @Override

@@ -2,7 +2,7 @@ package guru.qa.niffler.test.api;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.api.impl.SpendApiClientImpl;
 import guru.qa.niffler.utils.CategoryUtils;

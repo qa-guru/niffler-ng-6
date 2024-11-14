@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.enums.UserType;
 import guru.qa.niffler.jupiter.annotation.UserFromQueue;
-import guru.qa.niffler.model.StaticUser;
+import guru.qa.niffler.model.rest.StaticUser;
 import io.qameta.allure.Allure;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;

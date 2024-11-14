@@ -6,8 +6,8 @@ import guru.qa.niffler.data.repository.impl.hibernate.SpendRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.mapper.SpendMapper;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.db.SpendDbClient;
 import lombok.extern.slf4j.Slf4j;
 

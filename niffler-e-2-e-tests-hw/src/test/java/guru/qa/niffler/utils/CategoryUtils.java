@@ -1,7 +1,7 @@
 package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.rest.CategoryJson;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

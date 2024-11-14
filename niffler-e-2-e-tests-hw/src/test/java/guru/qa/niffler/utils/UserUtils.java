@@ -2,9 +2,9 @@ package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.helper.EnumHelper;
-import guru.qa.niffler.model.AuthUserJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.UserJson;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

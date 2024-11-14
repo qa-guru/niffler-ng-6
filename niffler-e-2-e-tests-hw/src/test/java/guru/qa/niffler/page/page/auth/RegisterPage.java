@@ -1,7 +1,7 @@
 package guru.qa.niffler.page.page.auth;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.BasePage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;

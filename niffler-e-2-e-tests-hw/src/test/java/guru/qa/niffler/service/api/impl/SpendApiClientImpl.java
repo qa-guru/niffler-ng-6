@@ -2,8 +2,8 @@ package guru.qa.niffler.service.api.impl;
 
 import guru.qa.niffler.api.CategoryApiClientRetrofit;
 import guru.qa.niffler.api.SpendApiClientRetrofit;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.api.SpendApiClient;
 import lombok.extern.slf4j.Slf4j;
 

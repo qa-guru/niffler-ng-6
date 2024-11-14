@@ -12,7 +12,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.ex.UserNotFoundException;
 import guru.qa.niffler.mapper.AuthUserMapper;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.db.UsersDbClient;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;

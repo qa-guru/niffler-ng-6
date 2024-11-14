@@ -1,6 +1,6 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.model.AuthUserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
 
 import javax.annotation.Nonnull;
 import java.util.List;

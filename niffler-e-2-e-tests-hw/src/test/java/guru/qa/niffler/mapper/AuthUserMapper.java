@@ -2,9 +2,9 @@ package guru.qa.niffler.mapper;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.model.AuthUserJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.UserJson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

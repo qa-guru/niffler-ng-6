@@ -1,7 +1,7 @@
 package guru.qa.niffler.page.page.spending;
 
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.CalendarComponent;
 import guru.qa.niffler.page.page.MainPage;
 import io.qameta.allure.Allure;

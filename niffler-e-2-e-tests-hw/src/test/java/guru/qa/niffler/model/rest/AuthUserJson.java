@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

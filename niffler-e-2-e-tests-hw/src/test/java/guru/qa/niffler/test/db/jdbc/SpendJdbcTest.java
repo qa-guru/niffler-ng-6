@@ -3,7 +3,7 @@ package guru.qa.niffler.test.db.jdbc;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.jdbc.SpendDbClientJdbc;
 import guru.qa.niffler.utils.CategoryUtils;

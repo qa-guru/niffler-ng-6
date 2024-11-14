@@ -2,7 +2,7 @@ package guru.qa.niffler.test.db.springJdbc;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.AuthAuthorityDaoSpringJdbc;
-import guru.qa.niffler.model.AuthUserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
 import guru.qa.niffler.service.AuthUserClient;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;

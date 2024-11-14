@@ -2,8 +2,8 @@ package guru.qa.niffler.page.page.spending;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.CalendarComponent;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.page.BasePage;

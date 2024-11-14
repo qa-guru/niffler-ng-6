@@ -2,7 +2,7 @@ package guru.qa.niffler.test.db.hibernate;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.impl.hibernate.SpendDbClientHibernate;
 import guru.qa.niffler.utils.CategoryUtils;

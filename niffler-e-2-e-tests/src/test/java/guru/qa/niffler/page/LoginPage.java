@@ -12,7 +12,6 @@ import static com.codeborne.selenide.Condition.visible;
 public class LoginPage extends BasePage<LoginPage> {
 
   public static final String URL = CFG.authUrl() + "login";
-  private final SelenideDriver driver;
 
   private final SelenideElement usernameInput;
   private final SelenideElement passwordInput;
@@ -22,7 +21,6 @@ public class LoginPage extends BasePage<LoginPage> {
 
   public LoginPage(SelenideDriver driver) {
     super(driver);
-    this.driver = driver;
     this.usernameInput = driver.$("input[name='username']");
     this.passwordInput = driver.$("input[name='password']");
     this.submitButton = driver.$("button[type='submit']");

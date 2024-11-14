@@ -19,8 +19,6 @@ import static guru.qa.niffler.condition.SpendConditions.spends;
 
 public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SelenideDriver driver;
-
   private final SearchField searchField;
   private final SelenideElement periodMenu;
   private final SelenideElement currencyMenu;
@@ -35,8 +33,7 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
 
 
   public SpendingTable(SelenideDriver driver) {
-    super(driver.$("#spendings"));
-    this.driver = driver;
+    super(driver.$("#spendings"), driver);
 
     this.searchField = new SearchField(driver);
     this.periodMenu = self.$("#period");

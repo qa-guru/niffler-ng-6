@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class ProfilePage extends BasePage<ProfilePage> {
 
     public static final String URL = CFG.frontUrl() + "profile";
-    private final SelenideDriver driver;
 
     private final SelenideElement avatar;
     private final SelenideElement userName;
@@ -37,7 +36,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     public ProfilePage(SelenideDriver driver) {
         super(driver);
-        this.driver = driver;
         this.avatar = driver.$("#image__input").parent().$("img");
         this.userName = driver.$("#username");
         this.nameInput = driver.$("#name");

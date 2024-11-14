@@ -32,17 +32,16 @@ public class BrowserExtension implements
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
     Method requiredTestMethod = context.getRequiredTestMethod();
+    SelenideConfig config = Browsers.CHROME.driver();
     if(requiredTestMethod.isAnnotationPresent(EnumSource.class)) {
       String name = context.getDisplayName();
 
-      SelenideConfig selenideConfig = name.contains(Browsers.CHROME.name())
-              ? Browsers.CHROME.driver()
-              : Browsers.FIREFOX.driver();
-
-      driver.set(new SelenideDriver(selenideConfig));
+        config = name.contains(Browsers.CHROME.name())
+                ? Browsers.CHROME.driver()
+                : Browsers.FIREFOX.driver();
     }
 
-    driver.set(new SelenideDriver(Browsers.CHROME.driver()));
+    driver.set(new SelenideDriver(config));
 
     SelenideLogger.addListener("Allure-selenide", new AllureSelenide()
         .savePageSource(false)

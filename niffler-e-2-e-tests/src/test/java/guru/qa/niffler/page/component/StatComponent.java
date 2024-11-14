@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 
 public class StatComponent extends BaseComponent<StatComponent> {
   public StatComponent(SelenideDriver driver) {
-    super(driver.$("#stat"));
+    super(driver.$("#stat"), driver);
 
     this.bubbles = self.$("#legend-container").$$("li");
     this.chart = driver.$("canvas[role='img']");
@@ -27,7 +27,7 @@ public class StatComponent extends BaseComponent<StatComponent> {
   private final SelenideElement chart;
 
   public StatComponent(SelenideElement self, SelenideDriver driver) {
-    super(self);
+    super(self, driver);
     this.bubbles = self.$("#legend-container").$$("li");
     this.chart = driver.$("canvas[role='img']");
   }

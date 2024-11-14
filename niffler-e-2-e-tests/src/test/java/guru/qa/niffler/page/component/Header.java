@@ -13,14 +13,12 @@ import static com.codeborne.selenide.Condition.text;
 public class Header extends BaseComponent<Header> {
 
   public Header(SelenideDriver driver) {
-    super(driver.$("#root header"));
+    super(driver.$("#root header"), driver);
     this.mainPageLink = self.$("a[href*='/main']");
     this.addSpendingBtn = self.$("a[href*='/spending']");
     this.menuBtn = self.$("button");
     this.menu = driver.$("ul[role='menu']");
     this.menuItems = menu.$$("li");
-
-    this.driver = driver;
   }
 
   private final SelenideElement mainPageLink;
@@ -28,8 +26,6 @@ public class Header extends BaseComponent<Header> {
   private final SelenideElement menuBtn;
   private final SelenideElement menu;
   private final ElementsCollection menuItems;
-
-  private final SelenideDriver driver;
 
   @Step("Open Friends page")
   @Nonnull

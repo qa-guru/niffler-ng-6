@@ -8,12 +8,9 @@ import static com.codeborne.selenide.Condition.text;
 
 public class SelectField extends BaseComponent<SelectField> {
 
-  private final SelenideDriver driver;
-
   public SelectField(SelenideElement self, SelenideDriver driver) {
-    super(self);
+    super(self, driver);
 
-    this.driver = driver;
     this.input = self.$("input");
   }
 

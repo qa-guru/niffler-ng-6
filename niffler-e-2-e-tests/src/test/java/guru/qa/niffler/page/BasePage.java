@@ -11,6 +11,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class BasePage<T extends BasePage<?>> {
 
   protected static final Config CFG = Config.getInstance();
+  protected final SelenideDriver driver;
 
   private final SelenideElement alert;
   private final ElementsCollection formErrors;
@@ -20,6 +21,7 @@ public abstract class BasePage<T extends BasePage<?>> {
   public BasePage(SelenideDriver driver) {
     this.alert = driver.$(".MuiSnackbar-root");
     this.formErrors = driver.$$("p.Mui-error, .input__helper-text");
+    this.driver = driver;
   }
 
   @Step("Check that alert message appears: {expectedText}")

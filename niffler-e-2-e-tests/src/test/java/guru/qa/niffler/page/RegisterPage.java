@@ -13,8 +13,6 @@ public class RegisterPage extends BasePage<RegisterPage> {
 
   public static final String URL = CFG.authUrl() + "register";
 
-  private final SelenideDriver driver;
-
   private final SelenideElement usernameInput;
   private final SelenideElement passwordInput;
   private final SelenideElement passwordSubmitInput;
@@ -24,7 +22,6 @@ public class RegisterPage extends BasePage<RegisterPage> {
 
   public RegisterPage(SelenideDriver driver) {
     super(driver);
-    this.driver = driver;
     this.usernameInput = driver.$("input[name='username']");
     this.passwordInput = driver.$("input[name='password']");
     this.passwordSubmitInput = driver.$("input[name='passwordSubmit']");

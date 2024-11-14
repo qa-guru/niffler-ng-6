@@ -13,8 +13,6 @@ import static java.util.Calendar.*;
 
 public class Calendar extends BaseComponent<Calendar> {
 
-  private final SelenideDriver driver;
-
   private final SelenideElement input;
   private final SelenideElement calendarButton;
   private final SelenideElement prevMonthButton;
@@ -23,8 +21,7 @@ public class Calendar extends BaseComponent<Calendar> {
   private final ElementsCollection dateRows;
 
   public Calendar(SelenideElement self, SelenideDriver driver) {
-    super(self);
-    this.driver = driver;
+    super(self, driver);
     this.input = driver.$("input[name='date']");
     this.calendarButton = driver.$("button[aria-label*='Choose date']");
     this.prevMonthButton = self.$("button[title='Previous month']");
@@ -34,8 +31,7 @@ public class Calendar extends BaseComponent<Calendar> {
   }
 
   public Calendar(SelenideDriver driver) {
-    super(driver.$(".MuiPickersLayout-root"));
-    this.driver = driver;
+    super(driver.$(".MuiPickersLayout-root"), driver);
     this.input = driver.$("input[name='date']");
     this.calendarButton = driver.$("button[aria-label*='Choose date']");
     this.prevMonthButton = self.$("button[title='Previous month']");

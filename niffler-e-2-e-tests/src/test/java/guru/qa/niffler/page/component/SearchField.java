@@ -11,13 +11,13 @@ import static com.codeborne.selenide.Condition.not;
 
 public class SearchField extends BaseComponent<SearchField> {
   public SearchField(@Nonnull SelenideElement self, SelenideDriver driver) {
-    super(self);
+    super(self, driver);
 
     this.clearSearchInputBtn = driver.$("#input-clear");
   }
 
   public SearchField(SelenideDriver driver) {
-    super(driver.$("input[aria-label='search']"));
+    super(driver.$("input[aria-label='search']"), driver);
     this.clearSearchInputBtn = driver.$("#input-clear");
   }
 

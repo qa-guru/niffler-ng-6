@@ -1,6 +1,7 @@
 package guru.qa.niffler.api.core;
 
 import guru.qa.niffler.config.Config;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -19,66 +20,9 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
 @ParametersAreNonnullByDefault
 public abstract class RestClient {
 
-//    protected static final Config CFG = Config.getInstance();
-//    private static final boolean DEFAULT_FOLLOW_REDIRECT = false;
-//    private static final Converter.Factory DEFAULT_CONVERTER = JacksonConverterFactory.create();
-//    private static final Level DEFAULT_LOG_LEVEL = HEADERS;
-//    private static final Interceptor[] DEFAULT_INTERCEPTORS = new Interceptor[0];
-//
-//    private final OkHttpClient okHttpClient;
-//    protected final Retrofit retrofit;
-//
-//    public RestClient(String baseUrl) {
-//        this(baseUrl, DEFAULT_FOLLOW_REDIRECT, DEFAULT_CONVERTER, DEFAULT_LOG_LEVEL, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, boolean followRedirect) {
-//        this(baseUrl, followRedirect, DEFAULT_CONVERTER, DEFAULT_LOG_LEVEL, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, HttpLoggingInterceptor.Level loggingLevel) {
-//        this(baseUrl, DEFAULT_FOLLOW_REDIRECT, DEFAULT_CONVERTER, loggingLevel, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
-//        this(baseUrl, DEFAULT_FOLLOW_REDIRECT, converterFactory, loggingLevel, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, boolean followRedirect, HttpLoggingInterceptor.Level loggingLevel) {
-//        this(baseUrl, followRedirect, DEFAULT_CONVERTER, loggingLevel, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
-//        this(baseUrl, followRedirect, converterFactory, loggingLevel, DEFAULT_INTERCEPTORS);
-//    }
-//
-//    public RestClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel, Interceptor... interceptors) {
-//
-//        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
-//                .followRedirects(followRedirect);
-//        Arrays.stream(interceptors)
-//                .forEach(okHttpBuilder::addInterceptor);
-//        okHttpBuilder.addNetworkInterceptor(
-//                new HttpLoggingInterceptor().setLevel(loggingLevel));
-//        okHttpBuilder.cookieJar(
-//                new JavaNetCookieJar(
-//                        new CookieManager(
-//                                ThreadSafeCookieStore.INSTANCE,
-//                                CookiePolicy.ACCEPT_ALL
-//                        )
-//                )
-//        );
-//
-//        this.okHttpClient = okHttpBuilder.build();
-//
-//        this.retrofit = new Retrofit.Builder()
-//                .client(okHttpClient)
-//                .baseUrl(baseUrl)
-//                .addConverterFactory(converterFactory)
-//                .build();
-//    }
-
     protected static final Config CFG = Config.getInstance();
+    private static final String REQUEST_TPL = "request-attachment.ftl",
+            RESPONSE_TPL = "response-attachment.ftl";
 
     private final OkHttpClient okHttpClient;
     protected final Retrofit retrofit;
@@ -115,7 +59,14 @@ public abstract class RestClient {
             okHttpBuilder.addNetworkInterceptor(interceptor);
         }
 
-        okHttpBuilder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(loggingLevel));
+        okHttpBuilder.addNetworkInterceptor(
+                new HttpLoggingInterceptor()
+                        .setLevel(loggingLevel));
+        okHttpBuilder.addInterceptor(
+                new AllureOkHttp3()
+                        .setRequestTemplate(REQUEST_TPL)
+                        .setResponseTemplate(RESPONSE_TPL));
+
         okHttpBuilder.cookieJar(
                 new JavaNetCookieJar(
                         new CookieManager(

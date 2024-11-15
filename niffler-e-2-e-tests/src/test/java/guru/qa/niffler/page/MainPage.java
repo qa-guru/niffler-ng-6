@@ -12,7 +12,7 @@ public class MainPage {
 
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement iconUser = $("[data-testid='PersonIcon']");
-    private final SelenideElement profileSection = $x(".//div[text()='Profile']");
+    private final SelenideElement profileSection = $x(".//a[text()='Profile']");
     private final SelenideElement statisticsComponent = $x(".//h2[text()='Statistics']");
     private final SelenideElement historyOfSpendingsComponent = $x(".//h2[text()='History of Spendings']");
 

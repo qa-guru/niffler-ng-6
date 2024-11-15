@@ -5,7 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.UserFromQueue;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
-import guru.qa.niffler.model.StaticUser;
+import guru.qa.niffler.model.rest.StaticUser;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

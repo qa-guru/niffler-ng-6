@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;

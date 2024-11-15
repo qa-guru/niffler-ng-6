@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import guru.qa.niffler.enums.UserType;
 import lombok.AllArgsConstructor;

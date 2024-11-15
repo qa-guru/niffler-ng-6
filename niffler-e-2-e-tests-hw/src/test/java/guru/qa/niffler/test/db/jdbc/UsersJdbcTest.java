@@ -2,7 +2,7 @@ package guru.qa.niffler.test.db.jdbc;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.impl.jdbc.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.model.AuthUserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
 import guru.qa.niffler.service.AuthUserClient;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;

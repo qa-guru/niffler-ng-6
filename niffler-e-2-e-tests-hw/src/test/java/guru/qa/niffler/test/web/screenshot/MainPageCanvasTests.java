@@ -7,8 +7,8 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.ScreenshotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import guru.qa.niffler.utils.CategoryUtils;
 import guru.qa.niffler.utils.SpendUtils;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
-import static guru.qa.niffler.model.CurrencyValues.RUB;
+import static guru.qa.niffler.model.rest.CurrencyValues.RUB;
 
 @WebTest
 class MainPageCanvasTests {

@@ -5,7 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.ScreenshotTest;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,7 @@ package guru.qa.niffler.mapper;
 
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.model.AuthAuthorityJson;
+import guru.qa.niffler.model.rest.AuthAuthorityJson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

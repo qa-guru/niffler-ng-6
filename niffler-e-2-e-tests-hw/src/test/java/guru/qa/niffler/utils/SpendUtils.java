@@ -3,8 +3,8 @@ package guru.qa.niffler.utils;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.enums.Period;
 import guru.qa.niffler.helper.EnumHelper;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.LocalDate;

@@ -1,20 +1,18 @@
 package guru.qa.niffler.page.page;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.conditions.And;
 import guru.qa.niffler.enums.Period;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.FloatForm;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.ScreenshotComponent;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.page.spending.EditSpendingPage;
-import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -23,16 +21,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;

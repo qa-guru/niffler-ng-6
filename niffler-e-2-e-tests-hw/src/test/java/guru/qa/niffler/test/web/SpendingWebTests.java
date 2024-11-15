@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
 import org.junit.jupiter.api.Test;

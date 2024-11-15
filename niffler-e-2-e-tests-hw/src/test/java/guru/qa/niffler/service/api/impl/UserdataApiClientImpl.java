@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.api.impl;
 
 import guru.qa.niffler.api.UserdataApiClientRetrofit;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.api.UserdataApiClient;
 
 import javax.annotation.Nonnull;

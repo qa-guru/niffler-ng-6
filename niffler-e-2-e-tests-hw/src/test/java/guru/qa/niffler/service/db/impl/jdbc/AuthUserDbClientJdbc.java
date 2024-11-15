@@ -4,7 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.repository.impl.jdbc.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.mapper.AuthUserMapper;
-import guru.qa.niffler.model.AuthUserJson;
+import guru.qa.niffler.model.rest.AuthUserJson;
 import guru.qa.niffler.service.db.AuthUserDbClient;
 import lombok.extern.slf4j.Slf4j;
 

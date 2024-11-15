@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.api.impl;
 
 import guru.qa.niffler.api.AuthApiClientRetrofit;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.utils.UserUtils;

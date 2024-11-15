@@ -2,8 +2,8 @@ package guru.qa.niffler.api;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Response;
 

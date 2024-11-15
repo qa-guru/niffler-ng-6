@@ -4,9 +4,9 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.ex.InvalidDateException;
 import guru.qa.niffler.helper.DateHelper;
 import guru.qa.niffler.jupiter.annotation.Spending;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

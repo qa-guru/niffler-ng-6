@@ -1,12 +1,11 @@
 package guru.qa.niffler.service.db.impl.springJdbc;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.springJdbc.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.mapper.UserMapper;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcTransactionManager;

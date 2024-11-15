@@ -2,7 +2,7 @@ package guru.qa.niffler.api;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Response;
 

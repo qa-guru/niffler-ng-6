@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class LoginModel {
+public class RegisterModel {
 
     @JsonProperty("_csrf")
     private String csrf;
@@ -22,5 +22,8 @@ public class LoginModel {
 
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("passwordSubmit")
+    private String passwordConfirmation;
 
 }

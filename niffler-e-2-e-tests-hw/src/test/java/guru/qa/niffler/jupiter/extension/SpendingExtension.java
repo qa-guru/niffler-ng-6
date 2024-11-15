@@ -2,10 +2,11 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.SpendMapper;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
+import guru.qa.niffler.service.api.impl.SpendApiClientImpl;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -22,7 +23,7 @@ import java.util.Map;
 public class SpendingExtension implements BeforeEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-    private final SpendClient spendClient = new SpendDbClientSpringJdbc();
+    private final SpendClient spendClient = new SpendApiClientImpl();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -53,13 +54,14 @@ public class SpendingExtension implements BeforeEachCallback {
                                                     spendAnno
                                             );
 
-                                            spend.setCategory(
-                                                    spendClient.findCategoryByUsernameAndName(
-                                                            user.getUsername(),
-                                                            spend.getCategory().getName()
-                                                    ).orElse(
-                                                            spendClient.createCategory(spend.getCategory()))
-                                            );
+                                            // Always creating new category if create new category by orElse(spend.getCategory())
+                                            CategoryJson category = spendClient.findCategoryByUsernameAndName(
+                                                            spend.getUsername(),
+                                                            spend.getCategory().getName())
+                                                    .orElse(null);
+                                            if (category == null)
+                                                spendClient.createCategory(spend.getCategory());
+                                            spend.setCategory(category);
 
                                             spend = spendClient.create(spend);
                                             spendings.add(spend);

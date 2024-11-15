@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 @ExtendWith(ScreenshotTestExtension.class)
 public @interface ScreenshotTest {
     String value();
+    boolean rewriteScreenshot() default false;
 }

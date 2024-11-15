@@ -20,7 +20,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class Header extends BaseComponent<Header> {
 
-    private final SelenideElement logoImg = self.$("a[href='main'] img").as("['Logo' image]"),
+    private final SelenideElement logoImg = self.$("a[href='/main'] img").as("['Logo' image]"),
             newSpendingButton = self.$("a[href='/spending']").as("['New spending' button]"),
             menuIcon = self.$("button[aria-label='Menu']").as("['Menu' button]"),
             accountMenuForm = $("#account-menu").as("['Account menu' form]"),

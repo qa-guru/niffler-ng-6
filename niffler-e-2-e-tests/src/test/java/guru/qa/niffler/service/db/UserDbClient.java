@@ -17,6 +17,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import io.qameta.allure.Step;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
@@ -38,8 +39,8 @@ public class UserDbClient implements UserClient {
     private final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final AuthUserRepository authUserRepository = new AuthUserRepositorySpringJdbc();
-    private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositorySpringJdbc();
+    private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
+    private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryHibernate();
 
     private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
@@ -47,6 +48,7 @@ public class UserDbClient implements UserClient {
     );
 
     @Override
+    @Step("Create user using SQL")
     public UserJson createUser(String username, String password) {
         return xaTxTemplate.execute(() -> {
                     authUserRepository.create(

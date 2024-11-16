@@ -7,6 +7,7 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class UserRestClient implements UserClient {
     private static final String password = "12345";
 
     @Override
+    @Step("Create user using API")
     public UserJson createUser(String username, String password) {
         authUserApiClient.requestRegisterForm();
         authUserApiClient.registerUser(username, password);

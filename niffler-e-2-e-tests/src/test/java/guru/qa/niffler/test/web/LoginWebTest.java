@@ -9,9 +9,7 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.api.parallel.Isolated;
+
 
 @ExtendWith(BrowserExtension.class)
 public class LoginWebTest {

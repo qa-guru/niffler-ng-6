@@ -1,5 +1,6 @@
 package guru.qa.niffler.service;
 
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -54,6 +55,7 @@ public abstract class RestClient {
             }
         }
         okHttpClientBuilder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(loggingLevel));
+        okHttpClientBuilder.addNetworkInterceptor(new AllureOkHttp3());
         okHttpClientBuilder.cookieJar(
                 new JavaNetCookieJar(
                         new CookieManager(

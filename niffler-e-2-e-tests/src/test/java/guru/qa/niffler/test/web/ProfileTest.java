@@ -8,6 +8,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -22,6 +23,7 @@ public class ProfileTest {
             username = "cat",
             archived = false)
     @Test
+    @DisplayName("Archive category should present in categories list")
     void archiveCategoryShouldPresentInCategoriesList(CategoryJson category) {
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -38,6 +40,7 @@ public class ProfileTest {
             username = "cat",
             archived = true)
     @Test
+    @DisplayName("Active category should present in categories list")
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)

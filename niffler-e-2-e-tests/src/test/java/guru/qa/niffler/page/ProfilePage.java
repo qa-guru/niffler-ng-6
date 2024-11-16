@@ -7,6 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import java.time.Duration;
 
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,9 +26,6 @@ public class ProfilePage {
     public ElementsCollection findCategory(String category) {
         ElementsCollection elements = $$(".MuiBox-root").filterBy(Condition.text(category));
         elements.shouldBe(sizeGreaterThan(0), Duration.ofSeconds(5));
-        if (elements.isEmpty()) {
-            throw new AssertionError("Category with name '" + category + "' not found");
-        }
         return elements;
     }
 
@@ -51,11 +49,11 @@ public class ProfilePage {
 
     public void checkThatCategoryIsActive(String category) {
         ElementsCollection elements = findCategory(category);
-        assertTrue(elements.first().$(archiveCategoryButton).exists(), category + " is archived");
+        assertTrue(elements.first().$(archiveCategoryButton).is(visible), category + " is archived");
     }
 
     public void checkThatCategoryIsArchived(String category) {
         ElementsCollection elements = findCategory(category);
-        assertTrue(elements.first().$(activeCategoryButton).exists(), category + "is active");
+        assertTrue(elements.first().$(activeCategoryButton).is(visible), category + "is active");
     }
 }

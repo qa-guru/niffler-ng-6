@@ -14,21 +14,6 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
     private final Faker faker = new Faker();
 
     @Override
-    public void afterTestExecution(ExtensionContext context) {
-        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-
-        if (!category.archived()){
-            CategoryJson archivedCategory = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            );
-            CategoriesApiClient.updateCategory(archivedCategory);
-        }
-    }
-
-    @Override
     public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno -> {
@@ -66,5 +51,20 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext.getStore(CategoryExtension.NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) {
+        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+
+        if (!category.archived()) {
+            CategoryJson archivedCategory = new CategoryJson(
+                    category.id(),
+                    category.name(),
+                    category.username(),
+                    true
+            );
+            CategoriesApiClient.updateCategory(archivedCategory);
+        }
     }
 }

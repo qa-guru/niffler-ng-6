@@ -1,5 +1,6 @@
 package guru.qa.niffler.page.component;
 
+import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.*;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -42,5 +43,9 @@ public class Header extends BaseComponent<Header> {
     public MainPage toMainPage() {
         self.$("a.link").click();
         return new MainPage();
+    }
+
+    public SelenideElement avatar() {
+        return self.$("button img");
     }
 }

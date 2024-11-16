@@ -2,18 +2,24 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement statBlock = $("#stat");
+    private final ElementsCollection deleteSubmitButtons = $$("div[role='dialog'] button");
+    private final ElementsCollection categoryContainerComponents = $$("#legend-container li");
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final SpendingTable spendingTable = new SpendingTable();
 
@@ -22,10 +28,23 @@ public class MainPage extends BasePage<MainPage> {
         return spendingTable.editSpending(spendingDescription);
     }
 
+    @Step("Открываем страницу для редактирования траты ")
+    public MainPage deleteSpending(String spendingDescription) {
+        spendingTable.deleteSpending(spendingDescription);
+        deleteSubmitButtons.find(text("Delete")).click();
+        return this;
+    }
+
     @Step("Проверяем, что в таблице с тратами есть искомая строка по названию траты")
     public void checkThatTableContainsSpending(String spendingDescription) {
         searchField.search(spendingDescription);
         tableRows.find(text(spendingDescription)).should(visible);
+    }
+
+    @Step("Проверяем в блоке статистки ячейку с категорией и суммой")
+    public void checkValueCategory(String  categoryName, String amount) {
+        String amountActual =  categoryContainerComponents.findBy(text(categoryName)).getText();
+        Assertions.assertTrue(amountActual.contains(amount));
     }
 
     @Step("Открываем страницу профиля")

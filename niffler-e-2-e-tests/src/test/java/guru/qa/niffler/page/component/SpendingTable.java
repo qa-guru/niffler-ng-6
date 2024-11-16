@@ -22,12 +22,12 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
 
     public EditSpendingPage editSpending(String description) {
         searchField.search(description);
-        self.$$("td").find(text(description)).$$("td").get(5).click();
+        self.$$("tbody tr").find(text(description)).$$("td").get(5).click();
         return new EditSpendingPage();
     }
 
     public SpendingTable deleteSpending(String description) {
-        self.$$("td").find(text(description)).$$("td").get(0).click();
+        self.$$("tbody tr").find(text(description)).$$("td").get(0).click();
         self.$("#delete").click();
         return this;
     }

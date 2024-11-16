@@ -28,6 +28,6 @@ public class ScreenDiffResult implements BooleanSupplier {
             ScreenShotTestExtension.setActual(actual);
             ScreenShotTestExtension.setDiff(diff.getMarkedImage());
         }
-        return false;
+        return hasDiff;
     }
 }

@@ -9,8 +9,11 @@ import guru.qa.niffler.service.SpendClient;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 @ParametersAreNonnullByDefault
 public class SpendRestClient implements SpendClient {
     private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
@@ -34,13 +37,7 @@ public class SpendRestClient implements SpendClient {
     @Override
     public Optional<CategoryJson> findCategoryByUsernameAndCategoryName(String username,  String name) {
         List<CategoryJson> categiries = categoriesApiClient.getCategories(username);
-        Optional<CategoryJson> categoryJsonOptional = Optional.empty();
-        for(CategoryJson category : categiries){
-            if(name.equals(category.name())){
-                categoryJsonOptional=Optional.of(category);
-            }
-        }
-        return categoryJsonOptional;
+        return Optional.of(categiries.stream().filter(x-> name.equals(x.name())).findFirst().get());
     }
 
     @Override

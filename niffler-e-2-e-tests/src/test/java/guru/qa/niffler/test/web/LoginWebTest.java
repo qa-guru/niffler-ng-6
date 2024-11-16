@@ -33,6 +33,4 @@ public class LoginWebTest {
                 .loginIncorrect("esa1", "12345")
                 .checkButtonSingInIsDisplayed();
     }
-
-
 }

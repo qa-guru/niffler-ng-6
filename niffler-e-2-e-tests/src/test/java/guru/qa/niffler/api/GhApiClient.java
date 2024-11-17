@@ -28,4 +28,5 @@ public class GhApiClient {
                 .body();
         return Objects.requireNonNull(response).get("state").asText();
     }
+
 }

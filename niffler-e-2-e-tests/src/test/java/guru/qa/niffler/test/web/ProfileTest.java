@@ -42,7 +42,6 @@ public class ProfileTest {
             archived = true)
     @Test
     @DisplayName("Active category should present in categories list")
-    @DisabledByIssue("3")
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)

@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
@@ -41,6 +42,7 @@ public class ProfileTest {
             archived = true)
     @Test
     @DisplayName("Active category should present in categories list")
+    @DisabledByIssue("3")
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)

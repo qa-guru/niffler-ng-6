@@ -6,6 +6,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
@@ -22,10 +23,17 @@ public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection categoryContainerComponents = $$("#legend-container li");
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final SpendingTable spendingTable = new SpendingTable();
+    private final StatComponent statComponent = new StatComponent();
 
     @Step("Открываем страницу для редактирования траты ")
     public EditSpendingPage editSpending(String spendingDescription) {
         return spendingTable.editSpending(spendingDescription);
+    }
+
+    @Step("Открываем страницу для редактирования траты ")
+    public StatComponent getStatComponent() {
+        statComponent.getSelf().scrollIntoView(true);;
+        return statComponent;
     }
 
     @Step("Открываем страницу для редактирования траты ")
@@ -42,9 +50,10 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Проверяем в блоке статистки ячейку с категорией и суммой")
-    public void checkValueCategory(String  categoryName, String amount) {
+    public MainPage checkValueCategory(String  categoryName, String amount) {
         String amountActual =  categoryContainerComponents.findBy(text(categoryName)).getText();
         Assertions.assertTrue(amountActual.contains(amount));
+        return this;
     }
 
     @Step("Открываем страницу профиля")

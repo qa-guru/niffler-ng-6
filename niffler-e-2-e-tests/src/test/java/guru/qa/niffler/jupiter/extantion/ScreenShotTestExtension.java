@@ -36,24 +36,27 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+
+
         ScreenShotTest annotation = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
-        if(annotation.rewriteExpected()){
-            try{
-                ImageIO.write(getActual(), "png", new File("niffler-e-2-e-tests/src/test/resources/"+annotation.value()).getAbsoluteFile());
+        if (annotation.rewriteExpected()) {
+            try {
+                ImageIO.write(getActual(), "png", new File("niffler-e-2-e-tests/src/test/resources/" + annotation.value()).getAbsoluteFile());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        if (throwable.getMessage().contains("Screen comparison failure")) {
+            ScreenDiff screenDiff = new ScreenDiff(
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
+            );
 
-        ScreenDiff screenDiff = new ScreenDiff(
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
-        );
-
-        Allure.addAttachment("Screenshot diff",
-                "application/vnd.allure.image.diff",
-                objectMapper.writeValueAsString(screenDiff));
+            Allure.addAttachment("Screenshot diff",
+                    "application/vnd.allure.image.diff",
+                    objectMapper.writeValueAsString(screenDiff));
+        }
         throw throwable;
     }
 

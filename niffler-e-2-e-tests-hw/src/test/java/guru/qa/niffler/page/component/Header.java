@@ -49,7 +49,7 @@ public class Header extends BaseComponent<Header> {
     @Step("Go to \"Add new spending\" page")
     public AddNewSpendingPage goToAddNewSpendingPage() {
         log.info("Go to \"Add new spending\" page");
-        newSpendingButton.click();
+        newSpendingButton.shouldBe(clickable).click();
         return new AddNewSpendingPage();
     }
 

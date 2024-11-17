@@ -12,6 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class SelenideCondition {
 
+    @Nonnull
     public static WebElementCondition child(By childSelector, WebElementCondition condition) {
         return new WebElementCondition("child " + childSelector + " with " + condition.getName()) {
             @Nonnull

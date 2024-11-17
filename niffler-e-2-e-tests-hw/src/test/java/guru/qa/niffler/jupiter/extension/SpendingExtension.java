@@ -60,7 +60,7 @@ public class SpendingExtension implements BeforeEachCallback {
                                                             spend.getCategory().getName())
                                                     .orElse(null);
                                             if (category == null)
-                                                spendClient.createCategory(spend.getCategory());
+                                                category = spendClient.createCategory(spend.getCategory());
                                             spend.setCategory(category);
 
                                             spend = spendClient.create(spend);

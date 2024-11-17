@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @Slf4j
-@WebTest
 @ExtendWith({
         CreateNewUserExtension.class
 })
+@WebTest
 class LoginWebTests {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";

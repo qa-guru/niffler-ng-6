@@ -1,32 +1,28 @@
 package guru.qa.niffler.page.page;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
-import guru.qa.niffler.page.component.ScreenshotComponent;
-import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
+import java.nio.file.Path;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
+import static guru.qa.niffler.conditions.ScreenshotCondition.screenshot;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Slf4j
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
+
+    private static final String PATH_TO_RESOURCES = "niffler-e-2-e-tests-hw/src/test/resources/";
 
     private final SelenideElement usernameInput = $("#username").as("['Username' input]"),
             nameInput = $("#name").as("['Name' input]"),
@@ -153,20 +149,40 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    @SneakyThrows
-    @Step("Should expected avatar image equals actual")
-    public ProfilePage shouldHaveAvatar(BufferedImage expected) {
-        log.info("Should expected spend stats equals actual");
-        ScreenshotComponent.validateElement(avatarImage, expected);
+    /**
+     * @param urlToScreenshot - Example: "/files/img/spend/expected/img_1.png";
+     */
+    @Step("Screenshot of expected and actual avatar should equals: {urlToScreenshot}")
+    public ProfilePage shouldHaveScreenshotAvatar(
+            String urlToScreenshot,
+            double percentOfTolerance,
+            int millis,
+            boolean rewriteExpected
+    ) {
+        log.info("Should have expected avatar screenshot");
+        avatarImage.shouldHave(screenshot(urlToScreenshot, percentOfTolerance, millis, rewriteExpected));
         return this;
     }
 
-    @SneakyThrows
-    @Step("Should expected avatar image equals actual")
-    public ProfilePage shouldHaveAvatar(BufferedImage expected, double diffPercent) {
-        log.info("Should expected spend stats equals actual");
-        ScreenshotComponent.validateElement(avatarImage, expected, diffPercent);
-        return this;
+    /**
+     * @param urlToScreenshot - Example: "/files/img/avatar/expected/img_1.png";
+     */
+    public ProfilePage shouldHaveScreenshotAvatar(String urlToScreenshot, int millis) {
+        return shouldHaveScreenshotAvatar(urlToScreenshot, 0.005, millis, false);
+    }
+
+    /**
+     * @param urlToScreenshot - Example: "/files/img/avatar/expected/img_1.png";
+     */
+    public ProfilePage shouldHaveScreenshotAvatar(String urlToScreenshot) {
+        return shouldHaveScreenshotAvatar(urlToScreenshot, 0.005, 3000, false);
+    }
+
+    /**
+     * @param urlToScreenshot - Example: "/files/img/avatar/expected/img_1.png";
+     */
+    public ProfilePage shouldHaveScreenshotAvatar(String urlToScreenshot, boolean rewriteExpected) {
+        return shouldHaveScreenshotAvatar(urlToScreenshot, 0.005, 3000, rewriteExpected);
     }
 
     @Override

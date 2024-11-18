@@ -2,7 +2,10 @@ package guru.qa.niffler.test.web;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.jupiter.extension.CategoryExtension;
+import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
+import guru.qa.niffler.jupiter.extension.SpendingExtension;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.auth.ConfirmRegistrationPage;
 import guru.qa.niffler.page.page.auth.RegisterPage;
@@ -13,8 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static com.codeborne.selenide.Selenide.open;
 
 @ExtendWith({
-        BrowserExtension.class
+        CreateNewUserExtension.class,
+        CategoryExtension.class,
+        SpendingExtension.class
 })
+@WebTest
 class RegisterWebTests {
 
     static final String REGISTRATION_PAGE_URL = Config.getInstance().authUrl() + "register";

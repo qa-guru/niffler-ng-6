@@ -4,12 +4,13 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.conditions.And;
+import guru.qa.niffler.conditions.Bubble;
 import guru.qa.niffler.enums.Period;
+import guru.qa.niffler.ex.ExpectedImageNotFoundException;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.FloatForm;
 import guru.qa.niffler.page.component.Header;
-import guru.qa.niffler.page.component.ScreenshotComponent;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.page.spending.AddNewSpendingPage;
 import guru.qa.niffler.page.page.spending.EditSpendingPage;
@@ -17,26 +18,33 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.*;
 import static guru.qa.niffler.conditions.SelenideCondition.child;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static guru.qa.niffler.conditions.ScreenshotCondition.*;
+import static guru.qa.niffler.conditions.SpendCondition.spends;
+import static guru.qa.niffler.conditions.SpendCondition.spendsEquals;
+import static guru.qa.niffler.conditions.StatCondition.*;
 
 @Slf4j
 @NoArgsConstructor
@@ -57,7 +65,7 @@ public class MainPage extends BasePage<MainPage> {
             allSpendingsSelector = $x("//thead/input").as("[All spendings selector]");
 
     private final ElementsCollection spendingRows = $$("#spendings tbody tr"),
-            spendingsLegendList = $$("#legend-container li").as("Statistics items list"),
+            statBubblesList = $$("#legend-container li").as("Statistics items list"),
             spendingsPeriodList = $$("#menu-period li").as("Spendings period list"),
             currenciesList = $$("#menu-currency li").as("Currencies list");
 
@@ -228,74 +236,71 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
-    @Step("Should visible spending with description = [{}]")
-    public MainPage shouldHaveSpend(String description) {
-        filterSpendingsByDescription(description);
-        log.info("Should have spend with description = [{}]", description);
-        Allure.step("Should have spend with description = [" + description + "]", () ->
-                getSpendingContainer(description, 0).shouldBe(visible));
+    @Step("Should contains spends")
+    public MainPage shouldContainsSpends(@Nullable String query, SpendJson expectedSpend, @Nullable SpendJson... expectedSpends) {
+
+        if (StringUtils.isEmpty(query)) {
+            query = "";
+        }
+        filterSpendingsByDescription(query);
+
+        List<SpendJson> spends = new ArrayList<>();
+        spends.add(expectedSpend);
+        if (ArrayUtils.isNotEmpty(expectedSpends))
+            spends.addAll(Arrays.asList(expectedSpends));
+        var logText = "Should contains spends: " + spends;
+
+        log.info(logText);
+        Allure.step(logText, () -> spendingRows.shouldHave(spends(expectedSpend, expectedSpends)));
+
         return this;
+
     }
 
-    @Step("Should visible spend by criteria")
-    public MainPage shouldHaveSpend(SpendJson spend) {
+    public MainPage shouldContainsSpends(SpendJson expectedSpend, @Nullable SpendJson... expectedSpends) {
 
-        filterSpendings(spend);
+        List<SpendJson> spends = new ArrayList<>();
+        spends.add(expectedSpend);
+        if (ArrayUtils.isNotEmpty(expectedSpends))
+            spends.addAll(Arrays.asList(expectedSpends));
+        var logText = "Should contains spends: " + spends;
 
-        String logText = "Should visible spend with criteria: category = [%s], amount = [%s %s], description = [%s], date = [%s]"
-                .formatted(
-                        spend.getCategory(),
-                        spend.getAmount(),
-                        spend.getCurrency().getSymbol(),
-                        spend.getDescription(),
-                        new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
         log.info(logText);
-        Allure.step(logText, () -> getSpendingContainer(spend, 0).shouldBe(visible));
+        Allure.step(logText, () -> spendingRows.shouldHave(spends(expectedSpend, expectedSpends)));
 
         return this;
+
     }
 
     @Step("Should have spends")
-    public MainPage shouldHaveSpends(String description, int count) {
-        filterSpendingsByDescription(description);
-        log.info("Should visible [{}] spends with description = [{}]", count, description);
-        Allure.step("Should visible [" + count + "] spends with description = [" + description + "]", () ->
-                spendingRows
-                        .filterBy(child(byXpath(".//td[4]//span"), exactText(description)))
-                        .shouldHave(size(count))
-        );
-        return this;
-    }
+    public MainPage shouldHaveSpends(@Nullable String query, SpendJson expectedSpend, @Nullable SpendJson... expectedSpends) {
 
-    @Step("Should have [{count}] spends with params")
-    public MainPage shouldHaveSpends(SpendJson spend, int count) {
+        if (StringUtils.isEmpty(query)) {
+            query = "";
+        }
+        filterSpendingsByDescription(query);
 
-        filterSpendings(spend);
-
-        var spendConditions = spendConditions(spend);
-        var logText = "Should visible [%d] spends by: category = [%s], amount = [%s %s], description = [%s], date = [%s]"
-                .formatted(
-                        count,
-                        spend.getCategory().getName(),
-                        spend.getAmount(),
-                        spend.getAmount(),
-                        spend.getDescription(),
-                        new SimpleDateFormat("MMM dd, yyy").format(spend.getSpendDate()));
+        List<SpendJson> spends = new ArrayList<>();
+        spends.add(expectedSpend);
+        if (ArrayUtils.isNotEmpty(expectedSpends))
+            spends.addAll(Arrays.asList(expectedSpends));
+        var logText = "Should equals visible spends: " + spends;
 
         log.info(logText);
-        Allure.step(logText,
-                () -> spendingRows
-                        .filterBy(new And("have", spendConditions))
-                        .shouldHave(size(count)));
+        Allure.step(logText, () -> spendingRows.shouldHave(spendsEquals(expectedSpend, expectedSpends)));
 
         return this;
 
+    }
+
+    public MainPage shouldHaveSpends(SpendJson expectedSpend, @Nullable SpendJson... expectedSpends) {
+        return shouldHaveSpends(null, expectedSpend, expectedSpends);
     }
 
     @Step("Should visible spend legend = [{description} {amount} {currency.symbol}]")
     public MainPage shouldHaveSpendLegend(String description, Double amount, CurrencyValues currency) {
         log.info("Should visible spend legend = [{} {} {}]", description, amount, currency);
-        spendingsLegendList
+        statBubblesList
                 .filterBy(text("%s %s %s".formatted(description, amount, currency.getSymbol())))
                 .shouldHave(sizeGreaterThan(0));
         return this;
@@ -309,29 +314,85 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
-    @SneakyThrows
-    @Step("Should expected spend stats equals actual")
-    public MainPage shouldHaveSpendsStatCanvas(BufferedImage expected) {
-        log.info("Should expected spend stats equals actual");
-        ScreenshotComponent.validateElement(statisticsCanvas, expected);
+    /**
+     * @param urlToScreenshot - Example: "/files/img/spend/expected/img_1.png";
+     */
+    @Step("Screenshot of expected and actual spends stat should equals: {urlToScreenshot}")
+    public MainPage shouldHaveScreenshotSpendsStat(
+            String urlToScreenshot,
+            double percentOfTolerance,
+            int millis,
+            boolean rewriteExpected
+    ) {
+        log.info("Screenshot of expected and actual spends stat should equals: " + urlToScreenshot);
+        statisticsCanvas.shouldHave(screenshot(urlToScreenshot, percentOfTolerance, millis, rewriteExpected));
         return this;
     }
 
-    @SneakyThrows
-    @Step("Should expected spend stats equals actual")
-    public MainPage shouldHaveSpendsStatCanvas(BufferedImage expected, double diffPercent) {
-        log.info("Should expected spend stats equals actual");
-        ScreenshotComponent.validateElement(statisticsCanvas, expected);
+    /**
+     * @param urlToScreenshot - Example: "/files/img/spend/expected/img_1.png";
+     */
+    public MainPage shouldHaveScreenshotSpendsStat(String urlToScreenshot, int millis) {
+        return shouldHaveScreenshotSpendsStat(urlToScreenshot, 0.005, millis, false);
+    }
+
+    /**
+     * @param urlToScreenshot - Example: "/files/img/spend/expected/img_1.png";
+     */
+    public MainPage shouldHaveScreenshotSpendsStat(String urlToScreenshot) {
+        return shouldHaveScreenshotSpendsStat(urlToScreenshot, 0.005, 3000, false);
+    }
+
+    /**
+     * @param urlToScreenshot - Example: "/files/img/spend/expected/img_1.png";
+     */
+    public MainPage shouldHaveScreenshotSpendsStat(String urlToScreenshot, boolean rewriteExpected) {
+        return shouldHaveScreenshotSpendsStat(urlToScreenshot, 0.005, 3000, rewriteExpected);
+    }
+
+    @Step("Should contains spend bubbles")
+    public MainPage shouldContainsStatBubbles(Bubble expectedBubble, Bubble... expectedBubbles) {
+        List<Bubble> bubbles = concatBubbles(expectedBubble, expectedBubbles);
+        var logText = "Should contains spend bubbles: " + bubbles;
+        log.info(logText);
+        Allure.step(logText, () -> statBubblesList.shouldHave(statBubblesContains(expectedBubble, expectedBubbles)));
         return this;
+    }
+
+    @Step("Should have stat bubbles in any order")
+    public MainPage shouldHaveStatBubblesInAnyOrder(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = concatBubbles(expectedBubble, expectedBubbles);
+        var logText = "Should have stat bubbles in any order: " + bubbles;
+        log.info(logText);
+        Allure.step(logText, () -> statBubblesList.shouldHave(statBubblesInAnyOrder(expectedBubble, expectedBubbles)));
+        return this;
+    }
+
+    @Step("Should have stat bubbles")
+    public MainPage shouldHaveStatBubbles(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = concatBubbles(expectedBubble, expectedBubbles);
+        var logText = "Should have stat bubbles: " + bubbles;
+        log.info(logText);
+        Allure.step(logText, () -> statBubblesList.shouldHave(statBubblesEquals(expectedBubble, expectedBubbles)));
+        return this;
+    }
+
+    @NotNull
+    private static List<Bubble> concatBubbles(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = new ArrayList<>();
+        bubbles.add(expectedBubble);
+        if (ArrayUtils.isNotEmpty(expectedBubbles))
+            bubbles.addAll(Arrays.asList(expectedBubbles));
+        return bubbles;
     }
 
     @Override
     public MainPage shouldVisiblePageElement() {
         log.info("Assert 'Main' page element visible on start up");
         historyOfSpendingsTitle.shouldBe(visible);
+        statisticsCanvas.shouldBe(visible);
         return this;
     }
-
 
     @Override
     @Step("Should visible main page")

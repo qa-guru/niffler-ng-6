@@ -55,7 +55,7 @@ public class SpendMapper {
                                 .orElseThrow(() -> new InvalidDateException("Can not parse date from text [%s] by pattern [%s]"
                                         .formatted(anno.date(), datePattern))))
                 .category(
-                        anno.category() == null
+                        anno.category().isEmpty()
                                 ? spend.getCategory()
                                 : CategoryJson.builder()
                                 .name(

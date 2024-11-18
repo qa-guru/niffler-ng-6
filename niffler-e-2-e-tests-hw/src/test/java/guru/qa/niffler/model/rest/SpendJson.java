@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 @Data
@@ -37,5 +39,16 @@ public class SpendJson {
 
     @JsonProperty("username")
     private String username;
+
+    public String getAmountWithSymbol() {
+        var amountVal = this.amount % 10 == 0
+                ? this.amount.intValue()
+                : this.amount;
+        return amountVal + " " + this.currency.getSymbol();
+    }
+
+    public String getDateVal() {
+        return new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH).format(this.spendDate);
+    }
 
 }

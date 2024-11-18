@@ -16,8 +16,8 @@ import java.util.Random;
 import static guru.qa.niffler.enums.UserType.*;
 
 @Slf4j
-@WebTest
 @ExtendWith({UsersQueueExtension.class})
+@WebTest
 class PeopleQueueWebTest {
 
     static final String LOGIN_PAGE_URL = Config.getInstance().authUrl();

@@ -4,7 +4,6 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
-import guru.qa.niffler.jupiter.annotation.ScreenshotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.CurrencyValues;
@@ -15,8 +14,6 @@ import guru.qa.niffler.utils.SpendUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
-import java.awt.image.BufferedImage;
-
 import static guru.qa.niffler.model.rest.CurrencyValues.RUB;
 
 @WebTest
@@ -24,22 +21,25 @@ class MainPageCanvasTests {
 
     private static final String LOGIN_PAGE_URL = Config.getInstance().frontUrl();
 
+    private static final String EMPTY = "img/spend-stats/canvas-empty.png",
+            ONE_SPEND = "img/spend-stats/canvas-1-spend.png",
+            TWO_SPENDS_IN_ONE_CATEGORY = "img/spend-stats/canvas-2-spends-1-category.png",
+            TWO_SPENDS_IN_TWO_CATEGORIES = "img/spend-stats/canvas-2-spends-2-categories.png";
+
     private static final CurrencyValues CURRENCY = RUB;
     private static final double AMOUNT_1 = 10.0, AMOUNT_2 = 50.0;
 
     @Test
-    @ScreenshotTest(value = "img/spend-stats/canvas-empty.png")
-    void shouldBeEmptyCanvasTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldBeEmptyCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(EMPTY);
 
     }
 
     @Test
-    @ScreenshotTest(value = "img/spend-stats/canvas-1-spend.png")
-    void shouldHaveOneSpendInCanvasTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldHaveOneSpendInCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .createNewSpending(
@@ -47,12 +47,11 @@ class MainPageCanvasTests {
                                 .setCurrency(CURRENCY)
                                 .setAmount(AMOUNT_1))
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(ONE_SPEND);
     }
 
     @Test
-    @ScreenshotTest(value = "img/spend-stats/canvas-2-spends-1-category.png")
-    void shouldHaveTwoSpendsWithOneCategoryInCanvasTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldHaveTwoSpendsWithOneCategoryInCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
 
         var category = CategoryUtils.generateForUser(user.getUsername());
         var spend1 = SpendUtils.generateForUser(user.getUsername())
@@ -69,13 +68,12 @@ class MainPageCanvasTests {
                 .createNewSpending(spend1)
                 .createNewSpending(spend2)
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(TWO_SPENDS_IN_ONE_CATEGORY);
     }
 
     @Test
     @SneakyThrows
-    @ScreenshotTest(value = "img/spend-stats/canvas-2-spends-2-categories.png")
-    void shouldHaveTwoSpendsInTwoCategoriesTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldHaveTwoSpendsInTwoCategoriesTest(@CreateNewUser(currency = RUB) UserJson user) {
 
         var spend1 = SpendUtils.generateForUser(user.getUsername())
                 .setCurrency(CURRENCY)
@@ -90,13 +88,12 @@ class MainPageCanvasTests {
                 .createNewSpending(spend1)
                 .createNewSpending(spend2)
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(TWO_SPENDS_IN_TWO_CATEGORIES);
     }
 
     @Test
     @SneakyThrows
-    @ScreenshotTest(value = "img/spend-stats/canvas-1-spend.png")
-    void shouldHaveOneSpendAfterRemoveTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldHaveOneSpendAfterRemoveTest(@CreateNewUser(currency = RUB) UserJson user) {
 
         var spend1 = SpendUtils.generateForUser(user.getUsername())
                 .setCurrency(CURRENCY)
@@ -111,13 +108,12 @@ class MainPageCanvasTests {
                 .selectSpending(spend2.getDescription())
                 .deleteSpendings()
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(ONE_SPEND);
     }
 
     @Test
     @SneakyThrows
-    @ScreenshotTest(value = "img/spend-stats/canvas-empty.png")
-    void shouldBeEmptyAfterRemoveTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldBeEmptyAfterRemoveTest(@CreateNewUser(currency = RUB) UserJson user) {
         var spend = SpendUtils.generateForUser(user.getUsername())
                 .setCurrency(RUB);
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
@@ -126,13 +122,12 @@ class MainPageCanvasTests {
                 .selectSpending(spend)
                 .deleteSpendings()
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(EMPTY);
     }
 
     @Test
     @SneakyThrows
-    @ScreenshotTest(value = "img/spend-stats/canvas-1-spend.png")
-    void shouldBeEmptyAfterArchiveCategoryTest(@CreateNewUser(currency = RUB) UserJson user, BufferedImage expected) {
+    void shouldBeEmptyAfterArchiveCategoryTest(@CreateNewUser(currency = RUB) UserJson user) {
         var spend = SpendUtils.generateForUser(user.getUsername()).setCurrency(CURRENCY).setAmount(AMOUNT_1);
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
@@ -143,12 +138,11 @@ class MainPageCanvasTests {
                 .getHeader()
                 .goToMainPage()
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(ONE_SPEND);
     }
 
     @Test
     @SneakyThrows
-    @ScreenshotTest(value = "img/spend-stats/canvas-2-spends-1-category.png")
     void shouldHaveTwoSpendsAfterUnarchieveCategoryTest(
             @CreateNewUser(
                     currency = RUB,
@@ -165,11 +159,10 @@ class MainPageCanvasTests {
                                     category = "travel",
                                     currency = RUB,
                                     amount = 50
-                            ),
-                    }
-            ) UserJson user,
-            BufferedImage expected) {
-
+                            )
+                    })
+            UserJson user
+    ) {
         Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
@@ -179,7 +172,7 @@ class MainPageCanvasTests {
                 .getHeader()
                 .goToMainPage()
                 .shouldVisiblePageElements()
-                .shouldHaveSpendsStatCanvas(expected);
+                .shouldHaveScreenshotSpendsStat(TWO_SPENDS_IN_ONE_CATEGORY);
     }
 
 

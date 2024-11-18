@@ -6,13 +6,15 @@ import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.WebElementsCondition;
 import guru.qa.niffler.ex.BubbleMismatchException;
 import guru.qa.niffler.ex.ColorMismatchException;
-import io.netty.handler.codec.MessageAggregationException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.codeborne.selenide.CheckResult.accepted;
 import static com.codeborne.selenide.CheckResult.rejected;
@@ -99,6 +101,159 @@ public class StatCondition {
         if (ArrayUtils.isNotEmpty(expectedColors))
             colors.addAll(Arrays.asList(expectedColors));
         return colorsEquals(colors);
+    }
+
+    @Nonnull
+    private static WebElementsCondition statBubblesContains(
+            boolean isActualAndExpectedSpendSizesShouldEquals,
+            List<Bubble> expectedBubbles) {
+
+        int delta = expectedBubbles.size() - new HashSet<>(expectedBubbles).size();
+        if (delta != 0) {
+            final String message = "Stat table could not contains duplicated values. Duplicated bubbles count: " + delta;
+            throw new BubbleMismatchException(message);
+        }
+
+        return new WebElementsCondition() {
+
+            private List<Bubble> actualBubbles;
+            private List<Bubble> diffBubbles;
+
+            @Nonnull
+            @Override
+            public CheckResult check(Driver driver, List<WebElement> elements) {
+
+                if (isActualAndExpectedSpendSizesShouldEquals) {
+                    if (expectedBubbles.size() != elements.size()) {
+                        final String message = "Expected list size should equals actual (expected: %s, actual: %s)"
+                                .formatted(expectedBubbles.size(), elements.size());
+                        throw new BubbleMismatchException(message);
+                    }
+                } else {
+                    if (expectedBubbles.size() > elements.size()) {
+                        final String message = "Expected list size should equals or less then actual (expected: %s, actual: %s)"
+                                .formatted(expectedBubbles.size(), elements.size());
+                        throw new BubbleMismatchException(message);
+                    }
+                }
+
+                actualBubbles = elements.stream()
+                        .map(element ->
+                                new Bubble(
+                                        Color.getEnumByRgba(element.getCssValue("background-color")),
+                                        element.getText()
+                                ))
+                        .toList();
+
+                diffBubbles = expectedBubbles.stream()
+                        .filter(expectedBubble -> !actualBubbles.contains(expectedBubble))
+                        .toList();
+
+
+                if (!diffBubbles.isEmpty()) {
+                    final String message = "List colors mismatch (\nexpected: %s,\nactual: %s,\ndiff: %s)".formatted(expectedBubbles, actualBubbles, diffBubbles);
+                    throw new BubbleMismatchException(message);
+                }
+
+                return accepted();
+
+            }
+
+            @Nonnull
+            @Override
+            public String toString() {
+                return "expected bubbles: %s, actual bubbles: %s, diff bubbles: %s."
+                        .formatted(expectedBubbles, actualBubbles, diffBubbles);
+            }
+
+        };
+    }
+
+    @Nonnull
+    public static WebElementsCondition statBubblesContains(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = new ArrayList<>();
+        bubbles.add(expectedBubble);
+        if (ArrayUtils.isNotEmpty(expectedBubbles))
+            bubbles.addAll(Arrays.asList(expectedBubbles));
+        return statBubblesContains(false, bubbles);
+    }
+
+    @Nonnull
+    public static WebElementsCondition statBubblesInAnyOrder(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = new ArrayList<>();
+        bubbles.add(expectedBubble);
+        if (ArrayUtils.isNotEmpty(expectedBubbles)) {
+            bubbles.addAll(Arrays.asList(expectedBubbles));
+        }
+        return statBubblesContains(true, bubbles);
+    }
+
+    @Nonnull
+    private static WebElementsCondition statBubblesEquals(List<Bubble> expectedBubbles) {
+
+        int delta = expectedBubbles.size() - new HashSet<>(expectedBubbles).size();
+        if (delta != 0) {
+            final String message = "Stat table could not contains duplicated values. Duplicated bubbles count: " + delta;
+            throw new BubbleMismatchException(message);
+        }
+
+        return new WebElementsCondition() {
+
+            private List<Bubble> actualBubbles;
+            private List<Bubble> diffBubbles;
+
+            @Nonnull
+            @Override
+            public CheckResult check(Driver driver, List<WebElement> elements) {
+
+                if (expectedBubbles.size() != elements.size()) {
+                    final String message = "List size mismatch (expected: %s, actual: %s)"
+                            .formatted(expectedBubbles.size(), elements.size());
+                    throw new BubbleMismatchException(message);
+                }
+
+                actualBubbles = elements.stream()
+                        .map(element ->
+                                new Bubble(
+                                        Color.getEnumByRgba(element.getCssValue("background-color")),
+                                        element.getText()
+                                ))
+                        .toList();
+
+                diffBubbles = new ArrayList<>();
+                for (int i = 0; i < expectedBubbles.size(); i++) {
+                    if (!actualBubbles.get(i).equals(expectedBubbles.get(i))) {
+                        diffBubbles.add(expectedBubbles.get(i));
+                    }
+                }
+
+                if (!diffBubbles.isEmpty()) {
+                    final String message = "List colors mismatch (expected: %s, actual: %s, diff: %s)"
+                            .formatted(expectedBubbles, actualBubbles, diffBubbles);
+                    return rejected(message, diffBubbles);
+                }
+
+                return accepted();
+
+            }
+
+            @Nonnull
+            @Override
+            public String toString() {
+                return "expected bubbles: %s, actual bubbles: %s, diff bubbles: %s."
+                        .formatted(expectedBubbles, actualBubbles, diffBubbles);
+            }
+
+        };
+    }
+
+    @Nonnull
+    public static WebElementsCondition statBubblesEquals(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = new ArrayList<>();
+        bubbles.add(expectedBubble);
+        if (ArrayUtils.isNotEmpty(expectedBubbles))
+            bubbles.addAll(Arrays.asList(expectedBubbles));
+        return statBubblesEquals(bubbles);
     }
 
 }

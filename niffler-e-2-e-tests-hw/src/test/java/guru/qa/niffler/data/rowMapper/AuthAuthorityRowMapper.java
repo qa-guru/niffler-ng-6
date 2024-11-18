@@ -16,7 +16,8 @@ public class AuthAuthorityRowMapper implements RowMapper<AuthAuthorityEntity> {
 
     public static final AuthAuthorityRowMapper INSTANCE = new AuthAuthorityRowMapper();
 
-    private AuthAuthorityRowMapper() {}
+    private AuthAuthorityRowMapper() {
+    }
 
     @Override
     public @Nonnull AuthAuthorityEntity mapRow(ResultSet rs, int rowNum) throws SQLException {

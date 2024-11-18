@@ -9,37 +9,12 @@ import lombok.SneakyThrows;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
     public static final String CASE_NAME = "Niffler backend logs";
-
-    @SneakyThrows
-    @Override
-    public void afterSuite() {
-
-        final AllureLifecycle allureLifecycle = Allure.getLifecycle();
-        final String caseId = UUID.randomUUID().toString();
-
-        List<Label> labels = List.of(
-                new Label().setName("story").setValue("Niffler backend logs"));
-
-        allureLifecycle.scheduleTestCase(
-                new TestResult()
-                        .setUuid(caseId)
-                        .setName(CASE_NAME)
-                        .setLabels(labels));
-
-        allureLifecycle.startTestCase(caseId);
-
-        addLogsToAllure(allureLifecycle);
-
-        allureLifecycle.stopTestCase(caseId);
-        allureLifecycle.writeTestCase(caseId);
-    }
 
     private static void addLogsToAllure(AllureLifecycle allureLifecycle) throws IOException {
         addLogToAllure(
@@ -74,6 +49,30 @@ public class AllureBackendLogsExtension implements SuiteExtension {
                 ".log",
                 Files.newInputStream(pathToLog)
         );
+    }
+
+    @SneakyThrows
+    @Override
+    public void afterSuite() {
+
+        final AllureLifecycle allureLifecycle = Allure.getLifecycle();
+        final String caseId = UUID.randomUUID().toString();
+
+        List<Label> labels = List.of(
+                new Label().setName("story").setValue("Niffler backend logs"));
+
+        allureLifecycle.scheduleTestCase(
+                new TestResult()
+                        .setUuid(caseId)
+                        .setName(CASE_NAME)
+                        .setLabels(labels));
+
+        allureLifecycle.startTestCase(caseId);
+
+        addLogsToAllure(allureLifecycle);
+
+        allureLifecycle.stopTestCase(caseId);
+        allureLifecycle.writeTestCase(caseId);
     }
 
 }

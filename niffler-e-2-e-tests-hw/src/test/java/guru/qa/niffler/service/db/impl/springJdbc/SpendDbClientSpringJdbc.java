@@ -51,8 +51,8 @@ public class SpendDbClientSpringJdbc implements SpendDbClient {
     public Optional<SpendJson> findFirstSpendByUsernameAndDescription(String username, String description) {
         log.info("Find first spend by username = [{}] and description = [{}]", username, description);
         return txTemplate.execute(status ->
-                        spendRepository.findFirstSpendByUsernameAndDescription(username, description)
-                                .map(spendMapper::toDto));
+                spendRepository.findFirstSpendByUsernameAndDescription(username, description)
+                        .map(spendMapper::toDto));
     }
 
     @Override

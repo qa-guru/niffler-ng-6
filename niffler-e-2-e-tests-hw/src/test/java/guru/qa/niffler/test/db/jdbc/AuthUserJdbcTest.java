@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 class AuthUserJdbcTest {
-    
+
     private final AuthUserClient authUserClient = new AuthUserDbClientJdbc();
-    
+
     @Test
     void shouldCreateNewUserTest() {
         Assertions.assertNotNull(

@@ -41,6 +41,12 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
         super(self);
     }
 
+    private static Calendar getCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
     public void selectDateInCalendar(Date date) {
 
         validateDate(date);
@@ -55,12 +61,6 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
             closeCalendar();
         });
 
-    }
-
-    private static Calendar getCalendar(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
     }
 
     private void validateDate(Date date) {

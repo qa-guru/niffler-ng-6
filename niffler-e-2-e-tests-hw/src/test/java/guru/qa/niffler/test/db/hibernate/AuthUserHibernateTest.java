@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 class AuthUserHibernateTest {
-    
+
     private final AuthUserClient authUserClient = new AuthUserDbClientHibernate();
-    
+
     @Test
     void shouldCreateNewUserTest() {
         Assertions.assertNotNull(

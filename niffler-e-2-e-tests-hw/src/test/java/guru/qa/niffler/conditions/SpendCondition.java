@@ -7,7 +7,6 @@ import guru.qa.niffler.ex.SpendMismatchException;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -18,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.codeborne.selenide.CheckResult.accepted;
+
 @ParametersAreNonnullByDefault
 public class SpendCondition {
 

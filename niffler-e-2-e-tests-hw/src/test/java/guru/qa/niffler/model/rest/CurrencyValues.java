@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
-import java.util.HashMap;
 
 @Getter
 @RequiredArgsConstructor
@@ -17,8 +16,8 @@ public enum CurrencyValues {
     private final String symbol;
 
     @Nullable
-    public static CurrencyValues getEnumBySymbol(String symbol){
-        return Arrays.stream(values()).filter(s->s.symbol.equals(symbol)).findFirst().orElse(null);
+    public static CurrencyValues getEnumBySymbol(String symbol) {
+        return Arrays.stream(values()).filter(s -> s.symbol.equals(symbol)).findFirst().orElse(null);
     }
 
 }

@@ -22,8 +22,8 @@ class SpendSpringJdbcTest {
     void shouldCreateNewSpendTest(@CreateNewUser(categories = @Category) UserJson user) {
         var category = user.getTestData().getCategories().getFirst();
         assertNotNull(spendClient
-                        .create(SpendUtils.generateForUser(user.getUsername()).setCategory(category))
-                        .getId());
+                .create(SpendUtils.generateForUser(user.getUsername()).setCategory(category))
+                .getId());
     }
 
     @Test
@@ -35,16 +35,16 @@ class SpendSpringJdbcTest {
     @Test
     void shouldGetSpendByUsernameAndDescriptionTest(@CreateNewUser(spendings = @Spending) UserJson user) {
         assertNotNull(spendClient
-                        .findAllByUsernameAndDescription(
-                                user.getUsername(),
-                                user.getTestData().getSpendings().getFirst().getDescription()));
+                .findAllByUsernameAndDescription(
+                        user.getUsername(),
+                        user.getTestData().getSpendings().getFirst().getDescription()));
     }
 
     @Test
     void shouldGetAllSpendingsByUsernameTest(@CreateNewUser(spendings = @Spending) UserJson user) {
         assertFalse(spendClient
-                        .findAllByUsername(user.getUsername())
-                        .isEmpty());
+                .findAllByUsername(user.getUsername())
+                .isEmpty());
     }
 
     @Test

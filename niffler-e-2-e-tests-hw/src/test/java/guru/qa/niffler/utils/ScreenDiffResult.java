@@ -1,6 +1,5 @@
 package guru.qa.niffler.utils;
 
-import guru.qa.niffler.model.allure.ScreenDiff;
 import lombok.Getter;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
@@ -23,7 +22,7 @@ public class ScreenDiffResult implements BooleanSupplier {
         this.expected = expected;
         this.actual = actual;
         this.diff = new ImageDiffer().makeDiff(expected, actual);
-        this.hasDiff = hasDiff(expected,percent);
+        this.hasDiff = hasDiff(expected, percent);
     }
 
     private boolean hasDiff(BufferedImage expected, double percent) {

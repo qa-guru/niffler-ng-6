@@ -39,7 +39,7 @@ public class CategoryApiClientRetrofit extends RestClient {
         }
         assertEquals(HttpStatus.CREATED, response.code());
         return Optional.ofNullable(response.body())
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new IllegalStateException("Failed to create new category: " + response.body()));
     }
 
@@ -80,7 +80,7 @@ public class CategoryApiClientRetrofit extends RestClient {
         }
         assertEquals(HttpStatus.OK, response.code());
         return Optional.ofNullable(response.body())
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new IllegalStateException("Failed to update category: " + response.body()));
     }
 

@@ -6,7 +6,9 @@ import guru.qa.niffler.service.db.UserdataDbClient;
 import guru.qa.niffler.service.db.impl.jdbc.UserdataDbClientJdbc;
 import guru.qa.niffler.service.db.impl.jdbc.UsersDbClientJdbc;
 import guru.qa.niffler.utils.UserUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
 @Order(0)

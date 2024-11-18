@@ -1,46 +1,50 @@
-package guru.qa.niffler.page.page.auth;
+package guru.qa.niffler.page.nonstatic;
 
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import guru.qa.niffler.model.rest.UserJson;
-import guru.qa.niffler.page.page.BasePage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
-@NoArgsConstructor
 @ParametersAreNonnullByDefault
-public class RegisterPage extends BasePage<RegisterPage> {
+public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPage> {
 
-    private final SelenideElement
-            title = $("h1").as("[Registration page title]"),
-            usernameInput = $("#username").as("Username input"),
-            passwordInput = $("#password").as("Password input"),
-            showPasswordButton = $("#passwordBtn").as("Show password button"),
-            passwordConfirmationInput = $("#passwordSubmit").as("Submit button"),
-            showPasswordConfirmationButton = $("#passwordSubmitBtn").as("Submit button"),
-            submitButton = $("button[type='submit']").as("Sign up button"),
-            goToLoginPageLink = $("[href$='/main']").as("Log in link");
+    private final SelenideElement title = driver.$("h1").as("[Registration page title]");
+    private final SelenideElement usernameInput = driver.$("#username").as("Username input");
+    private final SelenideElement passwordInput = driver.$("#password").as("Password input");
+    private final SelenideElement showPasswordButton = driver.$("#passwordBtn").as("Show password button");
+    private final SelenideElement passwordConfirmationInput = driver.$("#passwordSubmit").as("Submit button");
+    private final SelenideElement showPasswordConfirmationButton = driver.$("#passwordSubmitBtn").as("Submit button");
+    private final SelenideElement submitButton = driver.$("button[type='submit']").as("Sign up button");
+    private final SelenideElement goToLoginPageLink = driver.$("[href$='/main']").as("Log in link");
 
-    public RegisterPage(boolean checkPageElementVisible) {
-        super(checkPageElementVisible);
+
+    public NonStaticRegisterPage() {
+        super((SelenideDriver) WebDriverRunner.getWebDriver());
+    }
+
+    public NonStaticRegisterPage(SelenideDriver driver) {
+        super(driver);
     }
 
     @Step("Sign up user = [{user.username}]")
-    public ConfirmRegistrationPage signUpSuccess(UserJson user) {
+    public NonStaticConfirmRegistrationPage signUpSuccess(UserJson user) {
         log.info("Sign up user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
         fillPassword(user.getPassword());
         fillPasswordConfirmation(user.getPasswordConfirmation());
         submit();
-        return new ConfirmRegistrationPage();
+        return driver == null
+                ? new NonStaticConfirmRegistrationPage()
+                : new NonStaticConfirmRegistrationPage(driver);
     }
 
     @Step("Sign up user = [{user.username}]")
@@ -68,7 +72,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         passwordConfirmationInput.setValue(passwordConfirmation);
     }
 
-    public RegisterPage showPassword(boolean status) {
+    public NonStaticRegisterPage showPassword(boolean status) {
         if (status != showPasswordButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password text visible = [{}]", status);
             Allure.step("Set show password status = [" + status + "]", () ->
@@ -78,7 +82,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         return this;
     }
 
-    public RegisterPage showPasswordConfirmation(boolean status) {
+    public NonStaticRegisterPage showPasswordConfirmation(boolean status) {
         if (status != showPasswordConfirmationButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password confirmation text visible = [{}]", status);
             Allure.step("Set show password confirmation status = [" + status + "]", () ->
@@ -95,41 +99,34 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Should visible username error with text = [{}]")
-    public RegisterPage assertUsernameHasError(String error) {
+    public NonStaticRegisterPage assertUsernameHasError(String error) {
         usernameInput.parent().$(".form__error").as("Username error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password error with text = [{}]")
-    public RegisterPage assertPasswordHasError(String error) {
+    public NonStaticRegisterPage assertPasswordHasError(String error) {
         passwordInput.parent().$(".form__error").as("Password error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password confirmation error with text = [{}]")
-    public RegisterPage assertPasswordConfirmationHasError(String error) {
+    public NonStaticRegisterPage assertPasswordConfirmationHasError(String error) {
         passwordConfirmationInput.parent().$(".form__error").as("Password confirmation error text").shouldHave(text(error));
         return this;
     }
 
-    @Step("Click 'Log in!' link")
-    public LoginPage goToLoginPage() {
-        log.info("Go to login page");
-        goToLoginPageLink.click();
-        return new LoginPage();
-    }
-
     @Override
-    public RegisterPage shouldVisiblePageElement() {
+    public NonStaticRegisterPage shouldVisiblePageElement() {
         log.info("Assert registration page element is visible");
         title.shouldBe(visible);
         title.shouldHave(text("Sign up"));
-        return null;
+        return this;
     }
 
     @Override
     @Step("Should visible 'Sign up' page")
-    public RegisterPage shouldVisiblePageElements() {
+    public NonStaticRegisterPage shouldVisiblePageElements() {
 
         log.info("Assert registration page elements are visible");
 

@@ -36,7 +36,7 @@ public class TestMethodContextExtension implements BeforeEachCallback, AfterEach
             return store.get();
         }
 
-        public void remove(){
+        public void remove() {
             store.remove();
         }
 

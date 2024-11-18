@@ -55,7 +55,7 @@ public class UserdataDbClientHibernate implements UserdataDbClient {
     }
 
     @Override
-    public @Nonnull  List<UserJson> findAll() {
+    public @Nonnull List<UserJson> findAll() {
         log.info("Get all users");
         return xaTxTemplate.execute(() ->
                 userRepository

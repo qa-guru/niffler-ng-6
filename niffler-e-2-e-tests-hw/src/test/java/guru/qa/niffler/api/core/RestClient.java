@@ -23,9 +23,8 @@ public abstract class RestClient {
     protected static final Config CFG = Config.getInstance();
     private static final String REQUEST_TPL = "request-attachment.ftl",
             RESPONSE_TPL = "response-attachment.ftl";
-
-    private final OkHttpClient okHttpClient;
     protected final Retrofit retrofit;
+    private final OkHttpClient okHttpClient;
 
     public RestClient(String baseUrl) {
         this(baseUrl, false, JacksonConverterFactory.create(), HEADERS, new Interceptor[0]);

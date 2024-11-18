@@ -12,7 +12,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 import static guru.qa.niffler.conditions.SelenideCondition.child;
@@ -22,21 +21,19 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @ParametersAreNonnullByDefault
 public class FriendsPage extends PeoplePage<FriendsPage> {
 
-    public FriendsPage(boolean checkPageElementVisible) {
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement friendRequestsListTitle = $(byText("Friend requests")).as("[Friend requests title]"),
             friendsListTitle = $(byText("My friends")).as("[Friends list title]"),
             friendRequestsTableContainer = $("#requests").as("[Friend requests table container]"),
             friendsTableContainer = $("#friends").as("[Friends list title]"),
             emptyFriendsPageTitle = $x("//p[text()='There are no users yet']").as("[Empty friends page title]"),
             emptyFriendsPageImage = $x("//img[@alt='Lonely niffler']").as("[Empty friends page title]");
-
     private final ElementsCollection friendRequestsList = friendRequestsTableContainer.$$("tr").as("'Friend requests' list"),
             friendsList = friendsTableContainer.$$("tr").as("'Friends' list");
-
     private final FloatForm declineForm = new FloatForm(); // If not found $x(//div[./h2[text()='Decline friendship']])
+
+    public FriendsPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     @Step("Switch to 'All people' page")
     public AllPeoplePage switchToAllPeopleTab() {

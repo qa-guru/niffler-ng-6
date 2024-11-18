@@ -17,7 +17,7 @@ public class SpendMapper {
 
     private final CategoryMapper categoryMapper = new CategoryMapper();
 
-    public @Nonnull SpendEntity toEntity(SpendJson dto){
+    public @Nonnull SpendEntity toEntity(SpendJson dto) {
         return SpendEntity.builder()
                 .id(dto.getId())
                 .username(dto.getUsername())
@@ -29,7 +29,7 @@ public class SpendMapper {
                 .build();
     }
 
-    public @Nonnull SpendJson toDto(SpendEntity entity){
+    public @Nonnull SpendJson toDto(SpendEntity entity) {
         return SpendJson.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())

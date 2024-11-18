@@ -41,9 +41,9 @@ public class SpendUtils {
     }
 
     public static SpendJson generateForUser(String username) {
-         var spend = generate().setUsername(username);
-         spend.setCategory(spend.getCategory().setUsername(username));
-         return spend;
+        var spend = generate().setUsername(username);
+        spend.setCategory(spend.getCategory().setUsername(username));
+        return spend;
     }
 
     private static Date generateDate() {

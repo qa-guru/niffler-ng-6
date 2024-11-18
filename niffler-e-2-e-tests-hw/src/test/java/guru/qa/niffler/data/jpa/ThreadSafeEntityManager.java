@@ -82,13 +82,13 @@ public class ThreadSafeEntityManager implements EntityManager {
     }
 
     @Override
-    public void setFlushMode(FlushModeType flushMode) {
-        threadEm().setFlushMode(flushMode);
+    public FlushModeType getFlushMode() {
+        return threadEm().getFlushMode();
     }
 
     @Override
-    public FlushModeType getFlushMode() {
-        return threadEm().getFlushMode();
+    public void setFlushMode(FlushModeType flushMode) {
+        threadEm().setFlushMode(flushMode);
     }
 
     @Override

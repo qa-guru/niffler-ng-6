@@ -15,11 +15,6 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public abstract class BasePage<T> {
 
-    private final SelenideElement alert = $("div[role='alert']").as("[Alert form]"),
-            closeAlert = alert.$("button").as("[Close alert button]"),
-            icon = alert.$("div[class^=MuiAlert-icon] svg").as("[Alert icon]"),
-            message = alert.$("div[class^=MuiAlert-message] div").as("[Alert message]");
-
     protected BasePage(boolean assertPageElementsOnStart) {
         if (assertPageElementsOnStart)
             try {
@@ -29,10 +24,12 @@ public abstract class BasePage<T> {
             }
     }
 
-    public abstract T shouldVisiblePageElement();
+    public abstract T shouldVisiblePageElement();    private final SelenideElement alert = $("div[role='alert']").as("[Alert form]"),
+            closeAlert = alert.$("button").as("[Close alert button]"),
+            icon = alert.$("div[class^=MuiAlert-icon] svg").as("[Alert icon]"),
+            message = alert.$("div[class^=MuiAlert-message] div").as("[Alert message]");
 
     public abstract T shouldVisiblePageElements();
-
 
     @SuppressWarnings("unchecked")
     @Step("Alert should have message = [{text}]")
@@ -73,5 +70,8 @@ public abstract class BasePage<T> {
         closeAlert.click();
         return (T) this;
     }
+
+
+
 
 }

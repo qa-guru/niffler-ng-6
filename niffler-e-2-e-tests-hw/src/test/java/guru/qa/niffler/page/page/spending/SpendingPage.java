@@ -66,7 +66,7 @@ public abstract class SpendingPage<T> extends BasePage<SpendingPage<T>> {
         return (T) this;
 
     }
-    
+
     @SuppressWarnings("unchecked")
     public T fillSpendingDataWithCalendar(SpendJson spend) {
 
@@ -121,7 +121,7 @@ public abstract class SpendingPage<T> extends BasePage<SpendingPage<T>> {
 
     @SuppressWarnings("unchecked")
     @Step("Set description = [{description}]")
-    protected  T setDescription(String description) {
+    protected T setDescription(String description) {
         log.info("Set description: [{}]", description);
         descriptionInput.setValue(description);
         return (T) this;

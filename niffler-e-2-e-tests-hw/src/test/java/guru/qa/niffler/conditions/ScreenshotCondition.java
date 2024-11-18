@@ -37,10 +37,10 @@ public final class ScreenshotCondition {
     private static final Base64.Encoder encoder = Base64.getEncoder();
 
     /**
-     * @param urlToScreenshot               Path to expected screenshot
-     * @param percentOfTolerance            Allowed percent of difference [0; 0.2].
-     * @param millis                        Wait before making screenshot
-     * @param rewriteExpectedAfterCheck     Create and save new expected screenshot
+     * @param urlToScreenshot           Path to expected screenshot
+     * @param percentOfTolerance        Allowed percent of difference [0; 0.2].
+     * @param millis                    Wait before making screenshot
+     * @param rewriteExpectedAfterCheck Create and save new expected screenshot
      */
     @Nonnull
     public static WebElementCondition screenshot(
@@ -91,9 +91,9 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot       Path to expected screenshot
-     * @param percentOfTolerance    Allowed percent of difference [0; 0.2].
-     * @param millis                Wait before making screenshot
+     * @param urlToScreenshot    Path to expected screenshot
+     * @param percentOfTolerance Allowed percent of difference [0; 0.2].
+     * @param millis             Wait before making screenshot
      */
     @Nonnull
     public static WebElementCondition screenshot(
@@ -105,8 +105,8 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot   Path to expected screenshot
-     * @param millis            Wait before making screenshot
+     * @param urlToScreenshot Path to expected screenshot
+     * @param millis          Wait before making screenshot
      * @apiNote * percentOfTolerance = 0.01.
      */
     @Nonnull
@@ -118,9 +118,9 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot               Path to expected screenshot;
-     * @param millis                        Wait before making screenshot;
-     * @param rewriteExpectedAfterCheck     Create and save new expected screenshot;
+     * @param urlToScreenshot           Path to expected screenshot;
+     * @param millis                    Wait before making screenshot;
+     * @param rewriteExpectedAfterCheck Create and save new expected screenshot;
      * @apiNote * percentOfTolerance = 0.01.
      */
     @Nonnull
@@ -133,8 +133,8 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot               Path to expected screenshot
-     * @param rewriteExpectedAfterCheck     Create and save new expected screenshot
+     * @param urlToScreenshot           Path to expected screenshot
+     * @param rewriteExpectedAfterCheck Create and save new expected screenshot
      * @apiNote * percentOfTolerance = 0.01.
      * <br>
      * * millis = 0
@@ -148,7 +148,7 @@ public final class ScreenshotCondition {
     }
 
     /**
-     * @param urlToScreenshot   Path to expected screenshot
+     * @param urlToScreenshot Path to expected screenshot
      * @apiNote * percentOfTolerance = 0.01.
      * <br>
      * * millis = 0
@@ -176,7 +176,7 @@ public final class ScreenshotCondition {
         return expectedScreenshotFile;
 
     }
-    
+
     private static BufferedImage getExpectedScreenshot(String pathToFile) {
         try {
             return ImageIO.read(new ClassPathResource(pathToFile).getInputStream());

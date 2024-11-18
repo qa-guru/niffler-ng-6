@@ -17,8 +17,8 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 public class FriendshipExtension implements BeforeEachCallback {
 
-    private final UsersClient usersClient = new UsersApiClientImpl();
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
+    private final UsersClient usersClient = new UsersApiClientImpl();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {

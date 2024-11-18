@@ -30,6 +30,10 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
     private final UserdataClient userdataClient = new UserdataApiClientImpl();
     private final SpendClient spendClient = new SpendApiClientImpl();
 
+    public CreateNewUserExtension getThis() {
+        return this;
+    }
+
     @Override
     public void beforeEach(ExtensionContext context) {
 
@@ -93,7 +97,7 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                             user.getTestData().getOutcomeInvitations().forEach(
                                     addressee -> {
                                         userdataClient.declineInvitation(user, addressee);
-                                        if(isDbClient) {
+                                        if (isDbClient) {
                                             usersClient.removeUser(addressee);
                                         }
                                     }

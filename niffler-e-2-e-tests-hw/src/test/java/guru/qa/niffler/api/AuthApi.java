@@ -1,10 +1,12 @@
 package guru.qa.niffler.api;
 
 import retrofit2.Call;
-import retrofit2.http.*;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Map;
 
 @ParametersAreNonnullByDefault
 public interface AuthApi {

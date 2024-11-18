@@ -27,7 +27,7 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
 
 
     public NonStaticRegisterPage() {
-        super ((SelenideDriver) WebDriverRunner.getWebDriver());
+        super((SelenideDriver) WebDriverRunner.getWebDriver());
     }
 
     public NonStaticRegisterPage(SelenideDriver driver) {
@@ -48,7 +48,7 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
     }
 
     @Step("Sign up user = [{user.username}]")
-    public void signInFailed( UserJson user) {
+    public void signInFailed(UserJson user) {
         log.info("Sign up [FAILED] user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -58,12 +58,12 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
     }
 
     @Step("Fill username = [{}]")
-    public void fillUsername( String username) {
+    public void fillUsername(String username) {
         usernameInput.setValue(username);
     }
 
     @Step("Fill password = [{}]")
-    public void fillPassword( String password) {
+    public void fillPassword(String password) {
         passwordInput.setValue(password);
     }
 

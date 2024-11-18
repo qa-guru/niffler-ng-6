@@ -25,10 +25,6 @@ public class NonStaticBrowserTypeExtension implements
 
     private static final ThreadLocal<SelenideDriver> threadSafeDriver = new ThreadLocal<>();
 
-    private SelenideDriver drivers() {
-        return threadSafeDriver.get();
-    }
-
     private static void doScreenshot() {
 
         if (WebDriverRunner.hasWebDriverStarted())
@@ -39,6 +35,10 @@ public class NonStaticBrowserTypeExtension implements
                     )
             );
 
+    }
+
+    private SelenideDriver drivers() {
+        return threadSafeDriver.get();
     }
 
     @Override

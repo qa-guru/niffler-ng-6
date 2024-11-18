@@ -5,7 +5,7 @@ import guru.qa.niffler.enums.NonStaticBrowserType;
 
 public class NonStaticSelenideUtils {
 
-    private static SelenideConfig defaultConfig(){
+    private static SelenideConfig defaultConfig() {
         return new SelenideConfig()
                 .browser(NonStaticBrowserType.chrome.name())
                 .pageLoadStrategy("eager")
@@ -13,15 +13,15 @@ public class NonStaticSelenideUtils {
                 .timeout(5000);
     }
 
-    public static SelenideConfig chromeConfig(){
+    public static SelenideConfig chromeConfig() {
         return defaultConfig();
     }
 
-    public static SelenideConfig firefoxConfig(){
+    public static SelenideConfig firefoxConfig() {
         return defaultConfig().browser(NonStaticBrowserType.firefox.name());
     }
 
-    public static SelenideConfig operaConfig(){
+    public static SelenideConfig operaConfig() {
         return defaultConfig().browser(NonStaticBrowserType.opera.name());
     }
 

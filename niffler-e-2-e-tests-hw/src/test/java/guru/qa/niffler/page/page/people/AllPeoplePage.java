@@ -2,7 +2,6 @@ package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +17,12 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @ParametersAreNonnullByDefault
 public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
 
+    private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
+    private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
+
     public AllPeoplePage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }
-
-    private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
-    private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
 
     @Step("Switch to 'Friends' tab")
     public FriendsPage switchToFriendsTab() {

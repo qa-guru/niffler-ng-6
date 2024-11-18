@@ -114,7 +114,7 @@ public class SpendApiClientRetrofit extends RestClient {
         }
         assertEquals(HttpStatus.OK, response.code());
         return Optional.ofNullable(response.body())
-                .orElseThrow(()-> new IllegalStateException("Failed to update spend: " + response.body()));
+                .orElseThrow(() -> new IllegalStateException("Failed to update spend: " + response.body()));
 
     }
 

@@ -23,17 +23,16 @@ import static com.codeborne.selenide.Selenide.$x;
 @ParametersAreNonnullByDefault
 public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
 
-    public EditSpendingPage(boolean checkPageElementVisible) {
-        super(checkPageElementVisible);
-    }
-
     private final SelenideElement openCalendarButton = $x("//button[./*[@alt='Calendar']]").as("['Date' calendar button]"),
             dateLabel = $("label[for='date']").as("['Date' label]"),
             dateInput = $("input[name='date']").as("['Date' input]");
-
     private final CalendarComponent calendarComponent = new CalendarComponent(
             $("div[class*=MuiDateCalendar-root]").as("Calendar form")
     );
+
+    public EditSpendingPage(boolean checkPageElementVisible) {
+        super(checkPageElementVisible);
+    }
 
     public MainPage editSpending(SpendJson spending) {
         log.info("Edit spending: {}", spending);

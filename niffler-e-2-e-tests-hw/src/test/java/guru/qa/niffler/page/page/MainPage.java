@@ -6,7 +6,6 @@ import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.conditions.And;
 import guru.qa.niffler.conditions.Bubble;
 import guru.qa.niffler.enums.Period;
-import guru.qa.niffler.ex.ExpectedImageNotFoundException;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.FloatForm;
@@ -25,8 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.File;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,8 +37,8 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.*;
+import static guru.qa.niffler.conditions.ScreenshotCondition.screenshot;
 import static guru.qa.niffler.conditions.SelenideCondition.child;
-import static guru.qa.niffler.conditions.ScreenshotCondition.*;
 import static guru.qa.niffler.conditions.SpendCondition.spends;
 import static guru.qa.niffler.conditions.SpendCondition.spendsEquals;
 import static guru.qa.niffler.conditions.StatCondition.*;
@@ -76,6 +73,15 @@ public class MainPage extends BasePage<MainPage> {
 
     public MainPage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
+    }
+
+    @NotNull
+    private static List<Bubble> concatBubbles(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
+        List<Bubble> bubbles = new ArrayList<>();
+        bubbles.add(expectedBubble);
+        if (ArrayUtils.isNotEmpty(expectedBubbles))
+            bubbles.addAll(Arrays.asList(expectedBubbles));
+        return bubbles;
     }
 
     @Step("Filter spendings by description = [{}]")
@@ -375,15 +381,6 @@ public class MainPage extends BasePage<MainPage> {
         log.info(logText);
         Allure.step(logText, () -> statBubblesList.shouldHave(statBubblesEquals(expectedBubble, expectedBubbles)));
         return this;
-    }
-
-    @NotNull
-    private static List<Bubble> concatBubbles(Bubble expectedBubble, @Nullable Bubble... expectedBubbles) {
-        List<Bubble> bubbles = new ArrayList<>();
-        bubbles.add(expectedBubble);
-        if (ArrayUtils.isNotEmpty(expectedBubbles))
-            bubbles.addAll(Arrays.asList(expectedBubbles));
-        return bubbles;
     }
 
     @Override

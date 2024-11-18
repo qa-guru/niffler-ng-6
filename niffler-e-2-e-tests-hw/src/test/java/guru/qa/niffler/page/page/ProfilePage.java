@@ -8,14 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.File;
-import java.nio.file.Path;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 import static guru.qa.niffler.conditions.ScreenshotCondition.screenshot;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Slf4j
 @NoArgsConstructor
@@ -37,6 +34,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
             avatarImage = $("main img[class*='Avatar-img']").as("['Avatar' image]"),
             avatarInput = $("main input[type='file']").as("['Avatar' input]");
     private final ElementsCollection allCategories = categoriesContainer.$$x(".//*[./div[contains(@class, 'clickable')]]");
+
     public ProfilePage(boolean checkPageElementVisible) {
         super(checkPageElementVisible);
     }

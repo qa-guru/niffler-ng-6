@@ -33,7 +33,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public ConfirmRegistrationPage signUpSuccess( UserJson user) {
+    public ConfirmRegistrationPage signUpSuccess(UserJson user) {
         log.info("Sign up user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -44,7 +44,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Sign up user = [{user.username}]")
-    public void signInFailed( UserJson user) {
+    public void signInFailed(UserJson user) {
         log.info("Sign up [FAILED] user by: username = [{}], password = [{}], passwordConfirmation = [{}]",
                 user.getUsername(), user.getPassword(), user.getPasswordConfirmation());
         fillUsername(user.getUsername());
@@ -54,12 +54,12 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Fill username = [{}]")
-    public void fillUsername( String username) {
+    public void fillUsername(String username) {
         usernameInput.setValue(username);
     }
 
     @Step("Fill password = [{}]")
-    public void fillPassword( String password) {
+    public void fillPassword(String password) {
         passwordInput.setValue(password);
     }
 
@@ -95,19 +95,19 @@ public class RegisterPage extends BasePage<RegisterPage> {
     }
 
     @Step("Should visible username error with text = [{}]")
-    public RegisterPage assertUsernameHasError( String error) {
+    public RegisterPage assertUsernameHasError(String error) {
         usernameInput.parent().$(".form__error").as("Username error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password error with text = [{}]")
-    public RegisterPage assertPasswordHasError( String error) {
+    public RegisterPage assertPasswordHasError(String error) {
         passwordInput.parent().$(".form__error").as("Password error text").shouldHave(text(error));
         return this;
     }
 
     @Step("Should visible password confirmation error with text = [{}]")
-    public RegisterPage assertPasswordConfirmationHasError( String error) {
+    public RegisterPage assertPasswordConfirmationHasError(String error) {
         passwordConfirmationInput.parent().$(".form__error").as("Password confirmation error text").shouldHave(text(error));
         return this;
     }

@@ -26,7 +26,7 @@ public interface AuthApi {
       @Field(value = "redirect_uri", encoded = true) String redirectUri,
       @Field("grant_type") String grantType,
       @Field("code") String code,
-      @Field("code_verifier") String codeChallenge);
+      @Field("code_verifier") String codeVerifier);
 
   @POST("login")
   @FormUrlEncoded

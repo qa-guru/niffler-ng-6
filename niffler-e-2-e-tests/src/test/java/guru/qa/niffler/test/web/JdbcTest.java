@@ -6,8 +6,9 @@ import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import guru.qa.niffler.service.impl.AuthApiClient;
 import guru.qa.niffler.service.impl.SpendDbClient;
-import org.junit.jupiter.api.Disabled;
+import guru.qa.niffler.utils.OauthUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,8 +16,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @ExtendWith(UsersClientExtension.class)
-@Disabled
 public class JdbcTest {
 
   private UsersClient usersClient;
@@ -55,5 +57,21 @@ public class JdbcTest {
 
     usersClient.addIncomeInvitation(user, 1);
     usersClient.addOutcomeInvitation(user, 1);
+  }
+
+  @Test
+  void getToken() {
+    String username = "duck";
+    String password = "12345";
+    AuthApiClient authApiClient = new AuthApiClient();
+
+    String codeVerifier = OauthUtils.generateCodeVerifier();
+    String codeChallenge = OauthUtils.generateCodeChallenge(codeVerifier);
+
+
+    authApiClient.preRequest(codeChallenge);
+    String code =  authApiClient.login(username, password);
+    String token = authApiClient.token(username, password, code, codeVerifier);
+    assertNotNull(token);
   }
 }

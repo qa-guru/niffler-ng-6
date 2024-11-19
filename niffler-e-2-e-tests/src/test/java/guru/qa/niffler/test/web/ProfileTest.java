@@ -20,7 +20,7 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomName;
 @WebTest
 public class ProfileTest {
 
-  private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driver());
+  private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driverConfig());
 
   @User(
       categories = @Category(

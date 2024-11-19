@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class SpendingWebTest {
-    private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driver());
+    private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driverConfig());
 
     @User(
             spendings = @Spending(

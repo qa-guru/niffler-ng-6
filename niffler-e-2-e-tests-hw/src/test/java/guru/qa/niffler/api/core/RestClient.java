@@ -1,11 +1,14 @@
 package guru.qa.niffler.api.core;
 
+import guru.qa.niffler.api.core.interceptor.CustomHttpLoggingInterceptor;
 import guru.qa.niffler.config.Config;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -19,6 +22,8 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
 
 @ParametersAreNonnullByDefault
 public abstract class RestClient {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected static final Config CFG = Config.getInstance();
     private static final String REQUEST_TPL = "request-attachment.ftl",
@@ -46,6 +51,10 @@ public abstract class RestClient {
         this(baseUrl, followRedirect, JacksonConverterFactory.create(), loggingLevel, new Interceptor[0]);
     }
 
+    public RestClient(String baseUrl, boolean followRedirect, HttpLoggingInterceptor.Level loggingLevel, @Nonnull Interceptor... interceptors) {
+        this(baseUrl, followRedirect, JacksonConverterFactory.create(), loggingLevel, interceptors);
+    }
+
     public RestClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
         this(baseUrl, followRedirect, converterFactory, loggingLevel, new Interceptor[0]);
     }
@@ -59,12 +68,14 @@ public abstract class RestClient {
         }
 
         okHttpBuilder.addNetworkInterceptor(
-                new HttpLoggingInterceptor()
+                new CustomHttpLoggingInterceptor(getClass())
                         .setLevel(loggingLevel));
+
         okHttpBuilder.addInterceptor(
                 new AllureOkHttp3()
                         .setRequestTemplate(REQUEST_TPL)
                         .setResponseTemplate(RESPONSE_TPL));
+
 
         okHttpBuilder.cookieJar(
                 new JavaNetCookieJar(

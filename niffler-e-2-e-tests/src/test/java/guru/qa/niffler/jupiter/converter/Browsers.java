@@ -12,7 +12,7 @@ public enum Browsers {
         this.name = name;
     }
 
-    public SelenideConfig driver() {
+    public SelenideConfig driverConfig() {
         return new SelenideConfig()
                 .browser(name)
                 .timeout(5000L)

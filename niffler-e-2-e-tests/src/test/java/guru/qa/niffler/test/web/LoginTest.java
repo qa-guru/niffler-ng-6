@@ -21,7 +21,7 @@ public class LoginTest {
     @User
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin(UserJson user) {
-        SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driver());
+        SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driverConfig());
         driver.open(LoginPage.URL);
         new LoginPage(driver)
                 .fillLoginPage(user.username(), user.testData().password())

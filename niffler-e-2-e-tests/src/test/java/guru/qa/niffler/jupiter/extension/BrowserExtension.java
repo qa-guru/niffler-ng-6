@@ -32,13 +32,13 @@ public class BrowserExtension implements
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
     Method requiredTestMethod = context.getRequiredTestMethod();
-    SelenideConfig config = Browsers.CHROME.driver();
+    SelenideConfig config = Browsers.CHROME.driverConfig();
     if(requiredTestMethod.isAnnotationPresent(EnumSource.class)) {
       String name = context.getDisplayName();
 
         config = name.contains(Browsers.CHROME.name())
-                ? Browsers.CHROME.driver()
-                : Browsers.FIREFOX.driver();
+                ? Browsers.CHROME.driverConfig()
+                : Browsers.FIREFOX.driverConfig();
     }
 
     driver.set(new SelenideDriver(config));

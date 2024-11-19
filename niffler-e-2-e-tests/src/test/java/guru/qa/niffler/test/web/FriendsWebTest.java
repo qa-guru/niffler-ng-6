@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 @WebTest
 public class FriendsWebTest {
-    private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driver());
+    private final SelenideDriver driver = new SelenideDriver(Browsers.CHROME.driverConfig());
 
   @User(friends = 1)
   @Test

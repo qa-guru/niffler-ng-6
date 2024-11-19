@@ -10,6 +10,6 @@ public class BrowserConverter implements ArgumentConverter {
     public SelenideDriver convert(Object source, ParameterContext context) throws ArgumentConversionException {
         Browsers browsers = Browsers.valueOf(source.toString());
 
-        return new SelenideDriver(browsers.driver());
+        return new SelenideDriver(browsers.driverConfig());
     }
 }

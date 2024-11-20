@@ -99,5 +99,4 @@ public abstract class RestClient {
         return this.retrofit.create(service);
     }
 
-
 }

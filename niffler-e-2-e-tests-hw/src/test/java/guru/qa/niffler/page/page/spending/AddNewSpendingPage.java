@@ -14,8 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.value;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -52,7 +51,7 @@ public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
         var dateVal = new SimpleDateFormat("MM/dd/yyyy").format(date);
         log.info("Set date: [{}]", dateVal);
         Allure.step("Set date = [" + dateVal + "]", () -> {
-            dateInput.click();
+            dateInput.shouldBe(clickable).click();
             dateInput.sendKeys(Keys.CONTROL + "a");
             dateInput.sendKeys(Keys.BACK_SPACE);
             dateInput.sendKeys(dateVal);
@@ -61,7 +60,7 @@ public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
     }
 
     public AddNewSpendingPage selectDateFromCalendar(Date date) {
-        openCalendarButton.click();
+        openCalendarButton.shouldBe(clickable).click();
         calendarComponent.selectDateInCalendar(date);
         return this;
     }

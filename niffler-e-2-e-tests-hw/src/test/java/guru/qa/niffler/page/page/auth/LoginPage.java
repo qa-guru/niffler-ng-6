@@ -59,7 +59,7 @@ public class LoginPage extends BasePage<LoginPage> {
     @Step("Submit")
     public MainPage submit() {
         log.info("Submitting sign in");
-        submitButton.click();
+        submitButton.shouldBe(clickable).click();
         return new MainPage();
     }
 
@@ -67,7 +67,7 @@ public class LoginPage extends BasePage<LoginPage> {
     public void showPassword(boolean status) {
         if (status != showPasswordButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password visible = [{}]", status);
-            showPasswordButton.click();
+            showPasswordButton.shouldBe(clickable).click();
         } else {
             log.info("Password visible status is already = [{}]", status);
         }
@@ -76,7 +76,7 @@ public class LoginPage extends BasePage<LoginPage> {
     @Step("Click on 'Create new account'")
     public RegisterPage goToRegisterPage() {
         log.info("Go to 'RegisterPage'");
-        createNewAccountButton.click();
+        createNewAccountButton.shouldBe(clickable).click();
         return new RegisterPage();
     }
 

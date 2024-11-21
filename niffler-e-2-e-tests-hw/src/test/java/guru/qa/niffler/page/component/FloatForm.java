@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 @Slf4j
@@ -31,23 +30,23 @@ public class FloatForm extends BaseComponent<FloatForm> {
 
     @Step("Submit")
     public void submit() {
-        submit.click();
+        submit.shouldBe(clickable).click();
     }
 
     @Step("Submit")
     public <T extends BasePage<T>> T submit(Class<T> page) {
-        submit.click();
+        submit.shouldBe(clickable).click();
         return createPageInstance(page);
     }
 
     @Step("Cancel")
     public void cancel() {
-        cancel.click();
+        cancel.shouldBe(clickable).click();
     }
 
     @Step("Cancel")
     public <T extends BasePage<T>> T cancel(Class<T> page) {
-        cancel.click();
+        cancel.shouldBe(clickable).click();
         return createPageInstance(page);
     }
 

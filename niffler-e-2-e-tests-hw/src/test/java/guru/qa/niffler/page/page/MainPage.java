@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.conditions.And;
 import guru.qa.niffler.conditions.Bubble;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.Period;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
@@ -87,7 +88,7 @@ public class MainPage extends BasePage<MainPage> {
     @Step("Filter spendings by description = [{}]")
     public MainPage filterSpendingsByDescription(String query) {
         log.info("Filtering spendings by query {}", query);
-        searchForm.click();
+        searchForm.shouldBe(clickable).click();
         searchField.setValue(query);
         return this;
     }
@@ -95,16 +96,16 @@ public class MainPage extends BasePage<MainPage> {
     @Step("Filter spendings by period = [{}]")
     public MainPage filterSpendingsByPeriod(Period period) {
         log.info("Filtering spendings by period: [{}]", period);
-        spendingsPeriodSelector.click();
-        spendingsPeriodList.findBy(text(period.getValue())).shouldBe(visible).click();
+        spendingsPeriodSelector.shouldBe(clickable).click();
+        spendingsPeriodList.findBy(text(period.getValue())).shouldBe(clickable).click();
         return this;
     }
 
     @Step("Filter spendings by currency = [{}]")
     public MainPage filterSpendingsByCurrency(CurrencyValues currency) {
         log.info("Filtering spendings by currency: [{}]", currency);
-        currencySelector.click();
-        currenciesList.findBy(text(currency.name())).shouldBe(visible).click();
+        currencySelector.shouldBe(clickable).click();
+        currenciesList.findBy(text(currency.name())).shouldBe(clickable).click();
         return this;
     }
 
@@ -144,7 +145,7 @@ public class MainPage extends BasePage<MainPage> {
         log.info("Open edit spending page with description = [{}] and index = [{}]", spendDescription, index);
         Allure.step("Open edit spending page with description = [" + spendDescription + "] and index = [" + index + "]",
                 () -> getSpendingContainer(spendDescription, index).$x(".//button[@aria-label='Edit spending']")
-                        .as("['Spending " + spendDescription + "' edit button]").click());
+                        .as("['Spending " + spendDescription + "' edit button]").shouldBe(clickable).click());
 
         return new EditSpendingPage();
     }
@@ -167,7 +168,7 @@ public class MainPage extends BasePage<MainPage> {
 
         log.info(logText);
         Allure.step(logText, () -> getSpendingContainer(spend, index).$x(".//button[@aria-label='Edit spending']")
-                .as("['Spending " + spend.getDescription() + "' edit button]").click());
+                .as("['Spending " + spend.getDescription() + "' edit button]").shouldBe(clickable).click());
 
         return new EditSpendingPage();
 
@@ -186,7 +187,7 @@ public class MainPage extends BasePage<MainPage> {
         filterSpendingsByDescription(spendingDescription);
         log.info("Select spending by description = [{}]", spendingDescription);
         Allure.step("Select spending by description = [" + spendingDescription + "]", () ->
-                getSpendingContainer(spendingDescription, 0).$x(".//td[1]/span").shouldBe(visible).click());
+                getSpendingContainer(spendingDescription, 0).$x(".//td[1]/span").shouldBe(clickable).click());
         return this;
     }
 
@@ -202,7 +203,7 @@ public class MainPage extends BasePage<MainPage> {
                         new SimpleDateFormat("MMM dd, yyyy").format(spend.getSpendDate()));
         log.info(logText);
         Allure.step(logText, () ->
-                getSpendingContainer(spend, 0).$x(".//td[1]/span").shouldBe(visible).click());
+                getSpendingContainer(spend, 0).$x(".//td[1]/span").shouldBe(clickable).click());
         return this;
     }
 
@@ -216,14 +217,14 @@ public class MainPage extends BasePage<MainPage> {
     @Step("Select all spendings in current spending table page")
     public MainPage selectAllSpendings() {
         log.info("Select all spendings");
-        allSpendingsSelector.shouldBe(visible).click();
+        allSpendingsSelector.shouldBe(clickable).click();
         return this;
     }
 
     @Step("Remove selected spendings")
     public MainPage deleteSpendings() {
         log.info("Delete all spendings");
-        deleteSpendingButton.shouldBe(visible).click();
+        deleteSpendingButton.shouldBe(clickable).click();
         floatForm.submit();
         return this;
     }
@@ -231,14 +232,14 @@ public class MainPage extends BasePage<MainPage> {
     @Step("Go to previous spending table page")
     private MainPage goToPreviousPageOfSpendingsTable() {
         log.info("Go to previous page of spendings table");
-        previousPageButton.shouldBe(visible).click();
+        previousPageButton.shouldBe(clickable).click();
         return this;
     }
 
     @Step("Go to next spending table page")
     private MainPage goToNextPageOfSpendingTable() {
         log.info("Go to next page of spendings table");
-        nextPageButton.shouldBe(visible).click();
+        nextPageButton.shouldBe(clickable).click();
         return this;
     }
 

@@ -67,7 +67,7 @@ public abstract class BasePage<T> {
     @Step("Close alert")
     public T closeAlert() {
         log.info("Close alert");
-        closeAlert.click();
+        closeAlert.shouldBe(clickable).click();
         return (T) this;
     }
 

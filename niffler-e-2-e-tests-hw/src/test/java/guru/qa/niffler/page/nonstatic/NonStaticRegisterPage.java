@@ -76,7 +76,7 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
         if (status != showPasswordButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password text visible = [{}]", status);
             Allure.step("Set show password status = [" + status + "]", () ->
-                    showPasswordButton.click()
+                    showPasswordButton.shouldBe(clickable).click()
             );
         }
         return this;
@@ -86,7 +86,7 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
         if (status != showPasswordConfirmationButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password confirmation text visible = [{}]", status);
             Allure.step("Set show password confirmation status = [" + status + "]", () ->
-                    showPasswordConfirmationButton.click()
+                    showPasswordConfirmationButton.shouldBe(clickable).click()
             );
         }
         return this;
@@ -95,7 +95,7 @@ public class NonStaticRegisterPage extends NonStaticBasePage<NonStaticRegisterPa
     @Step("Submit sign up")
     private void submit() {
         log.info("Submit registration");
-        submitButton.click();
+        submitButton.shouldBe(clickable).click();
     }
 
     @Step("Should visible username error with text = [{}]")

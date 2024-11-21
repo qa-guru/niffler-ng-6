@@ -27,7 +27,7 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
     @Step("Switch to 'Friends' tab")
     public FriendsPage switchToFriendsTab() {
         log.info("Switching to 'Friends' tab");
-        friendsTab.click();
+        friendsTab.shouldBe(clickable).click();
         return new FriendsPage(true);
     }
 
@@ -36,7 +36,7 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
         log.info("Send friend request to user = [{}]", username);
         filterByQuery(username);
         allPeopleList.findBy(child(usernameSelector, exactText(username))).$(addFriendButtonSelector)
-                .as("['Add friend' button of user [" + username + "]]").shouldBe(visible).click();
+                .as("['Add friend' button of user [" + username + "]]").shouldBe(clickable).click();
         return this;
     }
 

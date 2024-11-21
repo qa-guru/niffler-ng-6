@@ -23,7 +23,7 @@ public class SearchField extends BaseComponent<SearchField> {
     }
 
     public void clearByButton() {
-        self.click();
+        self.shouldBe(clickable).click();
         if (!input.getValue().isEmpty())
             inputClearButton.shouldBe(clickable).click();
     }

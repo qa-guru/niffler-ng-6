@@ -80,7 +80,7 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
         if (calendarType != getCalendarType()) {
             log.info("Switching calendar to: {}", calendarType);
             Allure.step("Change calendar type to [" + calendarType + "]", () -> {
-                calendarTypeSwitchButton.click();
+                calendarTypeSwitchButton.shouldBe(clickable).click();
                 // INFO: wait for switch calendar animation ends
                 SelenideElement containerIdentifierElement = (calendarType == CalendarType.CALENDAR)
                         ? moveForwardButton
@@ -104,7 +104,7 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
     @Step("Select year = [{year}]")
     private void selectYear(int year) {
         switchCalendarType(CalendarType.YEAR);
-        yearsList.find(text(String.valueOf(year))).scrollIntoView(false).click();
+        yearsList.find(text(String.valueOf(year))).scrollIntoView(false).shouldBe(clickable).click();
     }
 
     private int getCalendarMonth() {
@@ -123,7 +123,7 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
             delta = Math.abs(delta);
 
             for (int steps = 0; steps < delta; steps++)
-                moveElement.click();
+                moveElement.shouldBe(clickable).click();
 
             log.info("Selected month with number = [{}]", month);
             return;
@@ -134,7 +134,7 @@ public class CalendarComponent extends BaseComponent<CalendarComponent> {
 
     @Step("Select day = [{day}]")
     private void selectDay(int day) {
-        daysList.find(attribute("aria-colindex", String.valueOf(day))).click();
+        daysList.find(attribute("aria-colindex", String.valueOf(day))).shouldBe(clickable).click();
     }
 
     private enum CalendarType {

@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static com.codeborne.selenide.Condition.clickable;
 import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Selectors.byCssSelector;
 import static com.codeborne.selenide.Selectors.byXpath;
@@ -52,7 +53,7 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     @Step("Go to previous page")
     public T previousPage() {
         log.info("Show previous page");
-        previousPageButton.shouldHave(cssClass("colorPrimary")).click();
+        previousPageButton.shouldHave(cssClass("colorPrimary")).shouldBe(clickable).click();
         return (T) this;
     }
 
@@ -60,7 +61,7 @@ public abstract class PeoplePage<T> extends BasePage<T> {
     @Step("Go to next page")
     public T nextPage() {
         log.info("Show next page");
-        nextPageButton.shouldHave(cssClass("colorPrimary")).click();
+        nextPageButton.shouldHave(cssClass("colorPrimary")).shouldBe(clickable).click();
         return (T) this;
     }
 

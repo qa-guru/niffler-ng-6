@@ -51,26 +51,26 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     public ProfilePage uploadAvatar(String pathToFile) {
         avatarInput.uploadFromClasspath(pathToFile);
-        saveChangesButton.click();
+        saveChangesButton.shouldBe(clickable).click();
         return this;
     }
 
     public ProfilePage save() {
         log.info("Save changes");
-        saveChangesButton.click();
+        saveChangesButton.shouldBe(clickable).click();
         return this;
     }
 
     public ProfilePage showArchivedCategories() {
         log.info("Turn on 'Show archived' categories'");
-        showArchivedButton.click();
+        showArchivedButton.shouldBe(clickable).click();
         showArchivedStatusButton.shouldHave(cssClass("Mui-checked"));
         return this;
     }
 
     public ProfilePage showOnlyActiveCategories() {
         log.info("Turn off 'Show archived' categories'");
-        showArchivedButton.click();
+        showArchivedButton.shouldBe(clickable).click();
         showArchivedStatusButton.shouldNotHave(cssClass("Mui-checked"));
         return this;
     }
@@ -87,7 +87,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     public ProfilePage editCategoryName(String oldCategoryName, String newCategoryName) {
         log.info("Change category name = from [{}], to = [{}]", oldCategoryName, newCategoryName);
-        getCategoryContainer(oldCategoryName).$("[aria-label='Edit category']").as("[Category '" + oldCategoryName + " edit button']").click();
+        getCategoryContainer(oldCategoryName).$("[aria-label='Edit category']").as("[Category '" + oldCategoryName + " edit button']").shouldBe(clickable).click();
         editCategoryNameInput.setValue(newCategoryName).pressEnter();
         return this;
     }
@@ -95,16 +95,16 @@ public class ProfilePage extends BasePage<ProfilePage> {
     public ProfilePage setCategoryActive(String categoryName) {
         log.info("Set category active: [{}]", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Unarchive category']")
-                .as("[Category '" + categoryName + " unarchive button']").click();
-        submitUnarchiveCategory.click();
+                .as("[Category '" + categoryName + " unarchive button']").shouldBe(clickable).click();
+        submitUnarchiveCategory.shouldBe(clickable).click();
         return this;
     }
 
     public ProfilePage setCategoryArchive(String categoryName) {
         log.info("Set category archive: [{}]", categoryName);
         getCategoryContainer(categoryName).$x(".//button[@aria-label='Archive category']")
-                .as("[Category '" + categoryName + " archive button']").click();
-        submitArchiveCategory.click();
+                .as("[Category '" + categoryName + " archive button']").shouldBe(clickable).click();
+        submitArchiveCategory.shouldBe(clickable).click();
         return this;
     }
 

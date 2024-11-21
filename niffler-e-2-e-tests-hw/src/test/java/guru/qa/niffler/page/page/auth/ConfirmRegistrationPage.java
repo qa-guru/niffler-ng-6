@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.clickable;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -30,7 +31,7 @@ public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
     @Step("Click on link 'Sign in'")
     public LoginPage goToLoginPage() {
         log.info("Go to login page");
-        signInButton.click();
+        signInButton.shouldBe(clickable).click();
         return new LoginPage();
     }
 

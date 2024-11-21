@@ -72,7 +72,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         if (status != showPasswordButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password text visible = [{}]", status);
             Allure.step("Set show password status = [" + status + "]", () ->
-                    showPasswordButton.click()
+                    showPasswordButton.shouldBe(clickable).click()
             );
         }
         return this;
@@ -82,7 +82,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         if (status != showPasswordConfirmationButton.has(cssClass("form__password-button_active"))) {
             log.info("Set password confirmation text visible = [{}]", status);
             Allure.step("Set show password confirmation status = [" + status + "]", () ->
-                    showPasswordConfirmationButton.click()
+                    showPasswordConfirmationButton.shouldBe(clickable).click()
             );
         }
         return this;
@@ -91,7 +91,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     @Step("Submit sign up")
     private void submit() {
         log.info("Submit registration");
-        submitButton.click();
+        submitButton.shouldBe(clickable).click();
     }
 
     @Step("Should visible username error with text = [{}]")
@@ -115,7 +115,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
     @Step("Click 'Log in!' link")
     public LoginPage goToLoginPage() {
         log.info("Go to login page");
-        goToLoginPageLink.click();
+        goToLoginPageLink.shouldBe(clickable).click();
         return new LoginPage();
     }
 

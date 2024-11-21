@@ -69,7 +69,7 @@ public abstract class NonStaticBasePage<T> {
     @Step("Close alert")
     public T closeAlert() {
         log.info("Close alert");
-        closeAlert.click();
+        closeAlert.shouldBe(clickable).click();
         return (T) this;
     }
 

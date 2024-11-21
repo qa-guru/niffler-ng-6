@@ -42,7 +42,7 @@ public class Header extends BaseComponent<Header> {
     @Step("Go to \"Main\" page")
     public MainPage goToMainPage() {
         log.info("Go to \"Main\" page");
-        logoImg.click();
+        logoImg.shouldBe(clickable).click();
         return new MainPage();
     }
 
@@ -56,38 +56,38 @@ public class Header extends BaseComponent<Header> {
     @Step("Go to \"Profile\" page")
     public ProfilePage goToProfilePage() {
         log.info("Go to \"Profile\" page");
-        menuIcon.click();
-        profileButton.click();
+        menuIcon.shouldBe(clickable).click();
+        profileButton.shouldBe(clickable).click();
         return new ProfilePage();
     }
 
     @Step("Go to \"Friends\" page")
     public FriendsPage goToFriendsPage() {
         log.info("Go to \"Friends\" page");
-        menuIcon.click();
-        friendsButton.click();
+        menuIcon.shouldBe(clickable).click();
+        friendsButton.shouldBe(clickable).click();
         return new FriendsPage();
     }
 
     @Step("Go to \"All people\" page")
     public AllPeoplePage goToAllPeoplePage() {
         log.info("Go to \"All people\" page");
-        menuIcon.click();
-        allPeopleButton.click();
+        menuIcon.shouldBe(clickable).click();
+        allPeopleButton.shouldBe(clickable).click();
         return new AllPeoplePage();
     }
 
     public LoginPage signOut() {
-        menuIcon.click();
+        menuIcon.shouldBe(clickable).click();
         log.info("Open \"Sign out\" form");
         signOutButton.shouldBe(clickable).click();
         return signOutForm.submit(LoginPage.class);
     }
 
     public FloatForm openSignOutForm() {
-        menuIcon.click();
+        menuIcon.shouldBe(clickable).click();
         log.info("Open \"Sign out\" form");
-        signOutButton.click();
+        signOutButton.shouldBe(clickable).click();
         return signOutForm;
     }
 

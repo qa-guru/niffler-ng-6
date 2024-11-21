@@ -23,6 +23,8 @@ import static com.codeborne.selenide.Selenide.$x;
 @ParametersAreNonnullByDefault
 public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
 
+    public static final String URL = BASE_URL + "spending";
+
     private final SelenideElement openCalendarButton = $x("//button[./*[@alt='Calendar']]").as("['Date' calendar button]"),
             dateLabel = $("label[for='date']").as("['Date' label]"),
             dateInput = $("input[name='date']").as("['Date' input]");
@@ -51,7 +53,7 @@ public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
         var dateVal = new SimpleDateFormat("MM/dd/yyyy").format(date);
         log.info("Set date: [{}]", dateVal);
         Allure.step("Set date = [" + dateVal + "]", () -> {
-            dateInput.click();
+            dateInput.shouldBe(clickable).click();
             dateInput.sendKeys(Keys.CONTROL + "a");
             dateInput.sendKeys(Keys.BACK_SPACE);
             dateInput.sendKeys(dateVal);
@@ -61,7 +63,7 @@ public class EditSpendingPage extends SpendingPage<EditSpendingPage> {
 
     public EditSpendingPage selectDateFromCalendar(Date date) {
         log.info("Pick date from calendar: [{}]", date);
-        openCalendarButton.click();
+        openCalendarButton.shouldBe(clickable).click();
         calendarComponent.selectDateInCalendar(date);
         return this;
     }

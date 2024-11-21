@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.clickable;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -17,6 +18,8 @@ import static com.codeborne.selenide.Selenide.$;
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
+
+    public static final String URL = BASE_URL + "register";
 
     private final SelenideElement successfulRegistrationLabel = $(byText("Congratulations! You've registered!"))
             .as("Congratulation text"),
@@ -30,7 +33,7 @@ public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
     @Step("Click on link 'Sign in'")
     public LoginPage goToLoginPage() {
         log.info("Go to login page");
-        signInButton.click();
+        signInButton.shouldBe(clickable).click();
         return new LoginPage();
     }
 

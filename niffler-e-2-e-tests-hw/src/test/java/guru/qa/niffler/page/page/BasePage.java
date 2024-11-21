@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,9 @@ import static com.codeborne.selenide.Selenide.$;
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public abstract class BasePage<T> {
+
+    protected static final Config CFG = Config.getInstance();
+    protected static final String BASE_URL = CFG.frontUrl();
 
     protected BasePage(boolean assertPageElementsOnStart) {
         if (assertPageElementsOnStart)
@@ -67,7 +71,7 @@ public abstract class BasePage<T> {
     @Step("Close alert")
     public T closeAlert() {
         log.info("Close alert");
-        closeAlert.click();
+        closeAlert.shouldBe(clickable).click();
         return (T) this;
     }
 

@@ -102,7 +102,7 @@ public abstract class SpendingPage<T> extends BasePage<SpendingPage<T>> {
     @Step("Select category tag = [{currency}]")
     T selectCategoryFromTags(String category) {
         log.info("Select category tag: [{}]", category);
-        categoryTagsList.find(exactText(category)).click();
+        categoryTagsList.find(exactText(category)).shouldBe(clickable).click();
         return (T) this;
     }
 
@@ -111,7 +111,7 @@ public abstract class SpendingPage<T> extends BasePage<SpendingPage<T>> {
     T selectCurrency(CurrencyValues currency) {
         log.info("Select currency: [{}]", currency);
         currencySelector.click();
-        currenciesList.find(text(currency.toString())).click();
+        currenciesList.find(text(currency.name())).shouldBe(clickable).click();
         return (T) this;
     }
 
@@ -130,13 +130,13 @@ public abstract class SpendingPage<T> extends BasePage<SpendingPage<T>> {
     @Step("Submit")
     public MainPage submit() {
         log.info("Submit spend");
-        saveButton.click();
+        saveButton.shouldBe(clickable).click();
         return new MainPage(true);
     }
 
     @Step("Cancel")
     public MainPage cancel() {
-        cancelButton.click();
+        cancelButton.shouldBe(clickable).click();
         return new MainPage(true);
     }
 

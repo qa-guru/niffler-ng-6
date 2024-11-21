@@ -2,6 +2,7 @@ package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @ParametersAreNonnullByDefault
 public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
 
+    public static final String URL = BASE_URL + "people/all";
+
     private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
     private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");
 
@@ -27,7 +30,7 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
     @Step("Switch to 'Friends' tab")
     public FriendsPage switchToFriendsTab() {
         log.info("Switching to 'Friends' tab");
-        friendsTab.click();
+        friendsTab.shouldBe(clickable).click();
         return new FriendsPage(true);
     }
 
@@ -36,7 +39,7 @@ public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
         log.info("Send friend request to user = [{}]", username);
         filterByQuery(username);
         allPeopleList.findBy(child(usernameSelector, exactText(username))).$(addFriendButtonSelector)
-                .as("['Add friend' button of user [" + username + "]]").shouldBe(visible).click();
+                .as("['Add friend' button of user [" + username + "]]").shouldBe(clickable).click();
         return this;
     }
 

@@ -2,6 +2,7 @@ package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.component.FloatForm;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,8 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @ParametersAreNonnullByDefault
 public class FriendsPage extends PeoplePage<FriendsPage> {
 
+    public static final String URL = BASE_URL + "people/friends";
+
     private final SelenideElement friendRequestsListTitle = $(byText("Friend requests")).as("[Friend requests title]"),
             friendsListTitle = $(byText("My friends")).as("[Friends list title]"),
             friendRequestsTableContainer = $("#requests").as("[Friend requests table container]"),
@@ -38,7 +41,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
     @Step("Switch to 'All people' page")
     public AllPeoplePage switchToAllPeopleTab() {
         log.info("Switching to 'All people' tab");
-        allPeopleTab.click();
+        allPeopleTab.shouldBe(clickable).click();
         return new AllPeoplePage(true);
     }
 
@@ -47,7 +50,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
         log.info("Unfriend user = [{}]", username);
         filterByQuery(username);
         friendsList.filterBy(child(usernameSelector, exactText(username))).get(0)
-                .$x(".//button[text()='Unfriend']").as("['Unfriend' " + username + " button]").click();
+                .$x(".//button[text()='Unfriend']").as("['Unfriend' " + username + " button]").shouldBe(clickable).click();
         return this;
     }
 
@@ -56,7 +59,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
         log.info("Accept friend request from user = [{}]", username);
         filterByQuery(username);
         friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0)
-                .$x(".//button[text()='Accept']").as("['Accept' " + username + " request button]").click();
+                .$x(".//button[text()='Accept']").as("['Accept' " + username + " request button]").shouldBe(clickable).click();
         return this;
     }
 
@@ -65,7 +68,7 @@ public class FriendsPage extends PeoplePage<FriendsPage> {
         log.info("Decline friend request from user = [{}]", username);
         filterByQuery(username);
         friendRequestsList.filterBy(child(usernameSelector, exactText(username))).get(0)
-                .$x(".//button[text()='Decline']").as("['Decline' " + username + " request button]").click();
+                .$x(".//button[text()='Decline']").as("['Decline' " + username + " request button]").shouldBe(clickable).click();
         return declineForm.submit(FriendsPage.class);
     }
 

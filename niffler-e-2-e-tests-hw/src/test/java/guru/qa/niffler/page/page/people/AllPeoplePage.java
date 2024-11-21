@@ -2,6 +2,7 @@ package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public class AllPeoplePage extends PeoplePage<AllPeoplePage> {
+
+    public static final String URL = BASE_URL + "people/all";
 
     private final SelenideElement allPeopleTableContainer = $("#all").as("['All people' table]");
     private final ElementsCollection allPeopleList = allPeopleTableContainer.$$("tr").as("'All people' list");

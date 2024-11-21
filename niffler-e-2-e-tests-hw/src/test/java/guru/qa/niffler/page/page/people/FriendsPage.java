@@ -2,6 +2,7 @@ package guru.qa.niffler.page.page.people;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.component.FloatForm;
 import io.qameta.allure.Step;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ import static guru.qa.niffler.conditions.SelenideCondition.child;
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public class FriendsPage extends PeoplePage<FriendsPage> {
+
+    public static final String URL = BASE_URL + "people/friends";
 
     private final SelenideElement friendRequestsListTitle = $(byText("Friend requests")).as("[Friend requests title]"),
             friendsListTitle = $(byText("My friends")).as("[Friends list title]"),

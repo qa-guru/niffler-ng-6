@@ -19,6 +19,8 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class ConfirmRegistrationPage extends BasePage<ConfirmRegistrationPage> {
 
+    public static final String URL = BASE_URL + "register";
+
     private final SelenideElement successfulRegistrationLabel = $(byText("Congratulations! You've registered!"))
             .as("Congratulation text"),
 

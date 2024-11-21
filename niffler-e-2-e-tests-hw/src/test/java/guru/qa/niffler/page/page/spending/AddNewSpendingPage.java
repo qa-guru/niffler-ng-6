@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.page.spending;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.component.CalendarComponent;
 import guru.qa.niffler.page.page.MainPage;
@@ -22,6 +23,8 @@ import static com.codeborne.selenide.Selenide.$x;
 @NoArgsConstructor
 @ParametersAreNonnullByDefault
 public class AddNewSpendingPage extends SpendingPage<AddNewSpendingPage> {
+
+    public static final String URL = BASE_URL + "spending";
 
     private final SelenideElement openCalendarButton = $x("//button[./*[@alt='Calendar']]").as("['Date' calendar button]"),
             dateLabel = $("label[for='date']").as("['Date' label]"),

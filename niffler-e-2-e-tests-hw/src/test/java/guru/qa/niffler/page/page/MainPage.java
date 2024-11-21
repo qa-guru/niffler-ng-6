@@ -49,6 +49,8 @@ import static guru.qa.niffler.conditions.StatCondition.*;
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
 
+    public static final String URL = BASE_URL + "main";
+
     private final SelenideElement statisticsTitle = $(byText("Statistics")).as("Statistics title"),
             statisticsCanvas = $("canvas[role='img']").as("Spend stats canvas"),
             historyOfSpendingsTitle = $(byText("History of Spendings")).as("History of Spendings title"),

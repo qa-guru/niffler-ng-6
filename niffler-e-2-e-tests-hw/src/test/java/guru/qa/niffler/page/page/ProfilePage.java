@@ -19,6 +19,7 @@ import static guru.qa.niffler.conditions.ScreenshotCondition.screenshot;
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
 
+    public static final String URL = BASE_URL + "profile";
     private static final String PATH_TO_RESOURCES = "niffler-e-2-e-tests-hw/src/test/resources/";
 
     private final SelenideElement usernameInput = $("#username").as("['Username' input]"),

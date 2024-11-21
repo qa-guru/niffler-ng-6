@@ -36,7 +36,7 @@ public class UsersQueueExtensions implements
     static {
         EMPTY_USERS.add(new StaticUser("cat", "12345", null, null, null));
         WITH_FRIENDS_USERS.add(new StaticUser("duck", "12345", "dog", null, null));
-        WITH_INCOME_REQUEST_USERS.add(new StaticUser("dog", "12345", null, "duck", null));
+        WITH_INCOME_REQUEST_USERS.add(new StaticUser("dog", "12345", null, "bill", null));
         WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("wolf", "12345", null, null, "bill"));
     }
 
@@ -109,6 +109,17 @@ public class UsersQueueExtensions implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), StaticUser.class);
+        Map map = extensionContext.getStore(NAMESPACE)
+                .get(extensionContext.getUniqueId(), Map.class);
+
+        if (map == null) {
+            throw new ParameterResolutionException("No user map found in the Store.");
+        }
+        UserType userTypeAnnotation = parameterContext.getParameter().getAnnotation(UserType.class);
+        if (userTypeAnnotation == null) {
+            throw new ParameterResolutionException("No @UserType annotation found on the parameter.");
+        }
+
+        return (StaticUser) map.get(userTypeAnnotation);
     }
 }

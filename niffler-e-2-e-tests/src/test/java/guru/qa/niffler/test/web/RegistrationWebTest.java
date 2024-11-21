@@ -1,12 +1,9 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -14,12 +11,7 @@ import static utils.FakerUtils.*;
 
 @WebTest
 @ExtendWith(BrowserExtension.class)
-public class RegistrationWebTest {
-
-    private static final Config CFG = Config.getInstance();
-    RegisterPage registerPage = new RegisterPage();
-    LoginPage loginPage = new LoginPage();
-    MainPage mainPage = new MainPage();
+public class RegistrationWebTest extends BaseTest {
 
     @Test
     void shouldRegisterNewUser() {

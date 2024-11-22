@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake.api;
 
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;

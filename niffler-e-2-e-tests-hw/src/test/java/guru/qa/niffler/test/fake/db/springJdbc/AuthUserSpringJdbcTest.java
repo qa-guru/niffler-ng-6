@@ -1,7 +1,7 @@
-package guru.qa.niffler.test.db.jdbc;
+package guru.qa.niffler.test.fake.db.springJdbc;
 
 import guru.qa.niffler.service.AuthUserClient;
-import guru.qa.niffler.service.db.impl.jdbc.AuthUserDbClientJdbc;
+import guru.qa.niffler.service.db.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-class AuthUserJdbcTest {
+class AuthUserSpringJdbcTest {
 
-    private final AuthUserClient authUserClient = new AuthUserDbClientJdbc();
+    private final AuthUserClient authUserClient = new AuthUserDbClientSpringJdbc();
 
     @Test
     void shouldCreateNewUserTest() {

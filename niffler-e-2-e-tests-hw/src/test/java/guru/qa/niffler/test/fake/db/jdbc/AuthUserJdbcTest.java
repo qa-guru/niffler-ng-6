@@ -1,27 +1,25 @@
-package guru.qa.niffler.test.db.hibernate;
+package guru.qa.niffler.test.fake.db.jdbc;
 
 import guru.qa.niffler.service.AuthUserClient;
-import guru.qa.niffler.service.db.impl.hibernate.AuthUserDbClientHibernate;
+import guru.qa.niffler.service.db.impl.jdbc.AuthUserDbClientJdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
 
 import static guru.qa.niffler.utils.UserUtils.generateAuthUser;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-class AuthUserHibernateTest {
+class AuthUserJdbcTest {
 
-    private final AuthUserClient authUserClient = new AuthUserDbClientHibernate();
+    private final AuthUserClient authUserClient = new AuthUserDbClientJdbc();
 
     @Test
     void shouldCreateNewUserTest() {
         Assertions.assertNotNull(
                 authUserClient
-                        .create(generateAuthUser().setAuthorities(Collections.emptyList()))
+                        .create(generateAuthUser())
                         .getId());
     }
 
@@ -47,7 +45,8 @@ class AuthUserHibernateTest {
 
     @Test
     void shouldFindAllTest() {
-        authUserClient.create(generateAuthUser());
+        authUserClient
+                .create(generateAuthUser());
         assertFalse(authUserClient
                 .findAll()
                 .isEmpty());
@@ -55,7 +54,8 @@ class AuthUserHibernateTest {
 
     @Test
     void shouldRemoveUserTest() {
-        var authUserJson = authUserClient.create(generateAuthUser());
+        var authUserJson = authUserClient
+                .create(generateAuthUser());
         authUserClient.remove(authUserJson);
         assertTrue(authUserClient
                 .findById(authUserJson.getId())

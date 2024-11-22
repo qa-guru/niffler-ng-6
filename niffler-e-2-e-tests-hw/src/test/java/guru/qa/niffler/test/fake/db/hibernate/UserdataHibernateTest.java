@@ -1,7 +1,7 @@
-package guru.qa.niffler.test.db.springJdbc;
+package guru.qa.niffler.test.fake.db.hibernate;
 
 import guru.qa.niffler.service.UserdataClient;
-import guru.qa.niffler.service.db.impl.springJdbc.UserdataDbClientSpringJdbc;
+import guru.qa.niffler.service.db.impl.hibernate.UserdataDbClientHibernate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-class UserdataSpringJdbcTest {
+class UserdataHibernateTest {
 
-    UserdataClient userdataClient = new UserdataDbClientSpringJdbc();
+    UserdataClient userdataClient = new UserdataDbClientHibernate();
 
     @Test
     void shouldCreateNewUserTest() {

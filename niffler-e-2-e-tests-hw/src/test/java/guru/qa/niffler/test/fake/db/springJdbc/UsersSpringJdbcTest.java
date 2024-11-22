@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.db.springJdbc;
+package guru.qa.niffler.test.fake.db.springJdbc;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.AuthAuthorityDaoSpringJdbc;

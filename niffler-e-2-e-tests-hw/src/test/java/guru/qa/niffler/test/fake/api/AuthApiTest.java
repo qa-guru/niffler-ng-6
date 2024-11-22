@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake.api;
 
 import guru.qa.niffler.api.AuthApiClientRetrofit;
 import guru.qa.niffler.model.rest.UserJson;

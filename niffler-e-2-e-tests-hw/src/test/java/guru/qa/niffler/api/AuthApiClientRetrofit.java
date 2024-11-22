@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.api.core.interceptor.AuthorizedCodeInterceptor;
-import guru.qa.niffler.api.core.store.AuthCodeStore;
+import guru.qa.niffler.api.core.store.AuthStore;
 import guru.qa.niffler.enums.HttpStatus;
-import guru.qa.niffler.enums.Token;
+import guru.qa.niffler.enums.CookieType;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.utils.OAuthUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static guru.qa.niffler.enums.Token.CSRF;
+import static guru.qa.niffler.enums.CookieType.CSRF;
 
 @Slf4j
 @ParametersAreNonnullByDefault
@@ -48,7 +48,9 @@ public class AuthApiClientRetrofit extends RestClient {
     }
 
     public @Nonnull UserJson register(String username, String password) {
-        ThreadSafeCookieStore.INSTANCE.removeAll();
+
+        setUserAndClearCookieStore(username);
+
         log.info("Register user: username = [{}], password = [{}]", username, password);
 
         final Response<Void> response;
@@ -58,7 +60,7 @@ public class AuthApiClientRetrofit extends RestClient {
                             username,
                             password,
                             password,
-                            ThreadSafeCookieStore.INSTANCE.cookieValue(Token.CSRF.getCookieName()))
+                            ThreadSafeCookieStore.INSTANCE.cookieValue(CookieType.CSRF.getCookieName()))
                     .execute();
         } catch (IOException ex) {
             throw new AssertionError(ex);
@@ -73,9 +75,11 @@ public class AuthApiClientRetrofit extends RestClient {
 
     @Nonnull
     public String signIn(String username, String password) {
+
+        setUserAndClearCookieStore(username);
+
         final String codeVerifier = OAuthUtils.generateCodeVerifier();
 
-        ThreadSafeCookieStore.INSTANCE.removeAll();
         log.info("Sign in user by: username = [{}], password = [{}]", username, password);
 
         authorize(OAuthUtils.generateCodeChallenge(codeVerifier));
@@ -118,7 +122,7 @@ public class AuthApiClientRetrofit extends RestClient {
     private String token(String codeVerifier) {
         final Response<JsonNode> response;
         try {
-            var code = Objects.requireNonNull(AuthCodeStore.INSTANCE.getCode());
+            var code = Objects.requireNonNull(AuthStore.INSTANCE.getCurrentUserCode());
             response = authApi.token(
                             CLIENT_ID,
                             REDIRECT_URI,
@@ -131,9 +135,12 @@ public class AuthApiClientRetrofit extends RestClient {
         }
         Assertions.assertEquals(HttpStatus.OK, response.code());
 
-        return response.body()
+        var token = Objects.requireNonNull(response.body())
                 .get("id_token")
                 .asText();
+
+        AuthStore.INSTANCE.setCurrentUserToken(token);
+        return token;
     }
 
     @Nullable
@@ -147,13 +154,18 @@ public class AuthApiClientRetrofit extends RestClient {
                 if (user != null && user.getId() != null) {
                     break;
                 } else {
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
         return user;
+    }
+
+    private static void setUserAndClearCookieStore(String username) {
+        AuthStore.INSTANCE.setCurrentUser(username);
+        ThreadSafeCookieStore.INSTANCE.removeAll();
     }
 
 }

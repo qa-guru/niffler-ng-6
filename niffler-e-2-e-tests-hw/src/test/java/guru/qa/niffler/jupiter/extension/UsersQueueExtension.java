@@ -78,12 +78,7 @@ public class UsersQueueExtension implements
                     );
 
                     user.ifPresentOrElse(
-                            u -> {
-                                @SuppressWarnings("unchecked")
-                                Map<String, StaticUser> usersMap = (Map<String, StaticUser>) context.getStore(NAMESPACE)
-                                        .getOrComputeIfAbsent(context.getUniqueId(), map -> new HashMap<>());
-                                usersMap.put(parameterName, u);
-                            },
+                            u -> setUserByTestParamName(parameterName, u),
                             () -> {
                                 throw new IllegalStateException("Can`t obtain user after 30s.");
                             }
@@ -104,9 +99,7 @@ public class UsersQueueExtension implements
     @Override
     public void afterTestExecution(ExtensionContext context) {
 
-        @SuppressWarnings("unchecked")
-        Map<String, StaticUser> usersMap = (Map<String, StaticUser>) context.getStore(NAMESPACE)
-                .get(context.getUniqueId(), Map.class);
+        Map<String, StaticUser> usersMap = getUsersMap();
 
         if (usersMap != null)
             usersMap.values().forEach(user -> getUsersQueueByStaticUserType(user.getUserType()).add(user));
@@ -121,10 +114,22 @@ public class UsersQueueExtension implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        @SuppressWarnings("unchecked")
-        Map<String, StaticUser> usersMap = (Map<String, StaticUser>) extensionContext.getStore(NAMESPACE)
-                .get(extensionContext.getUniqueId(), Map.class);
-        return usersMap.get(parameterContext.getParameter().getName());
+        return getUserByTestParamName(parameterContext.getParameter().getName());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, StaticUser> getUsersMap() {
+        ExtensionContext extensionContext = TestMethodContextExtension.context();
+        return (Map<String, StaticUser>) extensionContext.getStore(NAMESPACE)
+                .getOrComputeIfAbsent(extensionContext.getUniqueId(), map -> new HashMap<>());
+    }
+
+    public static StaticUser getUserByTestParamName(String paramName) {
+        return getUsersMap().get(paramName);
+    }
+
+    public static void setUserByTestParamName(String paramName, StaticUser testUser) {
+        getUsersMap().put(paramName, testUser);
     }
 
 }

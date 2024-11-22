@@ -5,18 +5,13 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.MainPage;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 @Slf4j
-@ExtendWith({
-        CreateNewUserExtension.class
-})
 @WebTest
 class LoginWebTests {
 

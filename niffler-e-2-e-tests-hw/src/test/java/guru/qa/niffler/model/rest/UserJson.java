@@ -1,5 +1,6 @@
 package guru.qa.niffler.model.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -45,6 +46,7 @@ public class UserJson implements Serializable {
     @JsonProperty("fullname")
     private String fullName;
 
+    @JsonIgnore
     @Builder.Default
     private transient TestData testData = new TestData();
 

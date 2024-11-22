@@ -3,6 +3,7 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.CategoryMapper;
 import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.api.SpendApiClient;
@@ -45,12 +46,8 @@ public class CategoryExtension implements BeforeEachCallback {
                             throw new IllegalArgumentException("More than 8 @Categories annotations in " + CreateNewUser.class.getSimpleName());
                         }
 
-                        @SuppressWarnings("unchecked")
-                        Map<String, UserJson> usersMap = ((Map<String, UserJson>) context
-                                .getStore(CreateNewUserExtension.NAMESPACE)
-                                .get(context.getUniqueId()));
-                        var user = usersMap.get(parameterName);
-                        var username = user.getUsername();
+                        var user = CreateNewUserExtension.getUserByTestParamName(parameterName);
+
                         if (userAnno.categories().length > 0) {
 
                             List<CategoryJson> categories = new ArrayList<>();
@@ -58,7 +55,7 @@ public class CategoryExtension implements BeforeEachCallback {
 
                                 CategoryJson category = new CategoryMapper()
                                         .updateDtoFromAnno(
-                                                CategoryUtils.generateForUser(username),
+                                                CategoryUtils.generateForUser(user.getUsername()),
                                                 categoryAnno);
 
                                 category = spendClient.createCategory(category);
@@ -68,12 +65,9 @@ public class CategoryExtension implements BeforeEachCallback {
 
                             });
 
-
-                            usersMap.put(
-                                    parameterName,
-                                    user.setTestData(user.getTestData().setCategories(categories)));
-
-                            context.getStore(NAMESPACE).put(context.getUniqueId(), usersMap);
+                            var testData = user.getTestData();
+                            testData.setCategories(categories);
+                            CreateNewUserExtension.setUserByTestParamName(parameterName, user.setTestData(testData));
 
                             log.info("Created new categories for user = [{}]: {}",
                                     user.getUsername(),

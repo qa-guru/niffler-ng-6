@@ -1,11 +1,6 @@
 package guru.qa.niffler.jupiter.annotation;
 
-import guru.qa.niffler.jupiter.extension.CategoryExtension;
-import guru.qa.niffler.jupiter.extension.CreateNewUserExtension;
-import guru.qa.niffler.jupiter.extension.FriendshipExtension;
-import guru.qa.niffler.jupiter.extension.SpendingExtension;
 import guru.qa.niffler.model.rest.CurrencyValues;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,7 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-@ExtendWith({CreateNewUserExtension.class, FriendshipExtension.class, CategoryExtension.class, SpendingExtension.class})
 public @interface CreateNewUser {
 
     String username() default "";

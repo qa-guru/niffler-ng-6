@@ -18,4 +18,4 @@ spring:
       ddl-auto: create
 
 niffler-userdata:
-  base-uri: 'http://userdata.niffler.dc:8089'
+  base-uri: 'http://127.0.0.1:8089'

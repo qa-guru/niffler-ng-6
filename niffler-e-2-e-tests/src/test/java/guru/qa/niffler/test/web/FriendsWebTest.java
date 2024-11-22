@@ -29,18 +29,31 @@ public class FriendsWebTest extends BaseTest {
     @ExtendWith(UsersQueueExtensions.class)
     @DisplayName("Friend table should be empty for new user")
     void friendTableShouldBeEmptyForNewUser(@UserType(EMPTY) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.username(), user.password());
 
+        mainPage.openFriendsPage();
+        friendsPage.checkThatFriendsTableIsEmpty();
     }
 
     @Test
     @ExtendWith(UsersQueueExtensions.class)
-    void incomeInvatationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) StaticUser user) {
+    void incomeInvitationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.username(), user.password());
 
+        mainPage.openFriendsPage();
+        friendsPage.checkThatIncomeInvitationInFriendsTable(user.income());
     }
 
     @Test
     @ExtendWith(UsersQueueExtensions.class)
-    void outcomeInvatationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
+    void outcomeInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.username(), user.password());
 
+        mainPage.openFriendsPage();
+        friendsPage.openAllPeopleSection();
+        friendsPage.checkThatOutcomeInvitationInFriendsTable(user.outcome());
     }
 }

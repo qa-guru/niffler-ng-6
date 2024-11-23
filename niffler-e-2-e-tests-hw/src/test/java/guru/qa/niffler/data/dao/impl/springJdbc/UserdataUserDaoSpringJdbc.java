@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.rowMapper.UserdataUserFriendRowMapper;
 import guru.qa.niffler.data.rowMapper.UserdataUserRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -108,6 +109,94 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
                 }
         );
         return user;
+    }
+
+    @Override
+    public List<UserEntity> getIncomeInvitations(UserEntity user) {
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.requester_id = u.id
+                WHERE
+                    fr.addressee_id = ?
+                AND
+                    fr.status = ?""";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        return jdbcTemplate.query(
+                sql,
+                UserdataUserFriendRowMapper.INSTANCE,
+                user.getId(),
+                FriendshipStatus.PENDING.name()
+        );
+    }
+
+    @Override
+    public List<UserEntity> getOutcomeInvitations(UserEntity user) {
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.addressee_id = u.id
+                WHERE
+                    fr.requester_id = ?
+                AND
+                    fr.status = ?""";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        return jdbcTemplate.query(
+                sql,
+                UserdataUserFriendRowMapper.INSTANCE,
+                user.getId(),
+                FriendshipStatus.PENDING.name()
+        );
+    }
+
+    @Override
+    public List<UserEntity> getFriends(UserEntity user) {
+
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.addressee_id = u.id
+                WHERE
+                    fr.requester_id = ?
+                AND
+                    fr.status = ?""";
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(USERDATA_JDBC_URL));
+        return jdbcTemplate.query(
+                sql,
+                UserdataUserFriendRowMapper.INSTANCE,
+                user.getId(),
+                FriendshipStatus.ACCEPTED.name()
+        );
     }
 
     @Override

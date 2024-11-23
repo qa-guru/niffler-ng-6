@@ -88,7 +88,10 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
                         TestData testData = user.getTestData()
                                 .setCategories(spendClient.findAllCategoriesByUsername(user.getUsername()))
-                                .setSpendings(spendClient.findAllByUsername(user.getUsername()));
+                                .setSpendings(spendClient.findAllByUsername(user.getUsername()))
+                                .setIncomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                                .setOutcomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                                .setFriends(userdataClient.getIncomeInvitations(user.getUsername()));
 
                         user.setPassword(fakeUser.getPassword())
                                 .setTestData(testData);

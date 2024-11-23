@@ -4,28 +4,22 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.conditions.Bubble;
 import guru.qa.niffler.conditions.Color;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.enums.CookieType;
-import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
-import guru.qa.niffler.page.page.MainPage;
-import guru.qa.niffler.page.page.ProfilePage;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @WebTest

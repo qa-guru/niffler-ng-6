@@ -33,4 +33,5 @@ public class FriendsController {
                              @RequestParam String targetUsername) {
         userService.removeFriend(username, targetUsername);
     }
+
 }

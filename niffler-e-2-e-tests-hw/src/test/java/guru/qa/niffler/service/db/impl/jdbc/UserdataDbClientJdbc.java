@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.jdbc.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
+import guru.qa.niffler.ex.UserNotFoundException;
 import guru.qa.niffler.mapper.UserMapper;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.db.UserdataDbClient;
@@ -64,6 +65,45 @@ public class UserdataDbClientJdbc implements UserdataDbClient {
                         .map(userMapper::toDto)
                         .toList()
         );
+    }
+
+    @Override
+    public List<UserJson> getIncomeInvitations(String username) {
+        log.info("Get user [{}] income invitations", username);
+        return jdbcTxTemplate.execute(() ->
+                userdataRepository.getIncomeInvitations(userdataRepository
+                                .findByUsername(username)
+                                .orElseThrow(() ->
+                                        new UserNotFoundException("User with username = [" + username + "] not found")))
+                        .stream()
+                        .map(userMapper::toDto)
+                        .toList());
+    }
+
+    @Override
+    public List<UserJson> getOutcomeInvitations(String username) {
+        log.info("Get user [{}] outcome invitations", username);
+        return jdbcTxTemplate.execute(() ->
+                userdataRepository.getOutcomeInvitations(userdataRepository
+                                .findByUsername(username)
+                                .orElseThrow(() ->
+                                        new UserNotFoundException("User with username = [" + username + "] not found")))
+                        .stream()
+                        .map(userMapper::toDto)
+                        .toList());
+    }
+
+    @Override
+    public List<UserJson> getFriends(String username) {
+        log.info("Get user [{}] friends", username);
+        return jdbcTxTemplate.execute(() ->
+                userdataRepository.getFriends(userdataRepository
+                                .findByUsername(username)
+                                .orElseThrow(() ->
+                                        new UserNotFoundException("User with username = [" + username + "] not found")))
+                        .stream()
+                        .map(userMapper::toDto)
+                        .toList());
     }
 
     @Override

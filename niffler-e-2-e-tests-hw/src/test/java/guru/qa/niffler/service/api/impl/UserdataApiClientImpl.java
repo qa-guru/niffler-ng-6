@@ -1,6 +1,7 @@
 package guru.qa.niffler.service.api.impl;
 
 import guru.qa.niffler.api.UserdataApiClientRetrofit;
+import guru.qa.niffler.enums.FriendState;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.api.UserdataApiClient;
 
@@ -43,6 +44,40 @@ public class UserdataApiClientImpl implements UserdataApiClient {
     public @Nonnull List<UserJson> findAll() {
         try {
             return userdataApiClient.findAll();
+        } catch (AssertionError ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public @Nonnull List<UserJson> getIncomeInvitations(String username) {
+        try {
+            return userdataApiClient.friends(username, "").stream()
+                    .filter(user -> user.getFriendState().equals(FriendState.INVITE_RECEIVED))
+                    .toList();
+        } catch (AssertionError ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public @Nonnull List<UserJson> getOutcomeInvitations(String username) {
+        try {
+            return userdataApiClient.findAll(username, "")
+                    .stream()
+                    .filter(user -> user.getFriendState().equals(FriendState.INVITE_SENT))
+                    .toList();
+        } catch (AssertionError ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public @Nonnull List<UserJson> getFriends(String username) {
+        try {
+            return userdataApiClient.friends(username, "").stream()
+                    .filter(user -> user.getFriendState().equals(FriendState.FRIEND))
+                    .toList();
         } catch (AssertionError ex) {
             return Collections.emptyList();
         }

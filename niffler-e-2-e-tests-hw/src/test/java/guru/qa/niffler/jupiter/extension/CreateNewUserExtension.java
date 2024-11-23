@@ -3,6 +3,7 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
+import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserdataClient;
@@ -45,10 +46,14 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                                     UserUtils.generateUser(),
                                     parameter.getAnnotation(CreateNewUser.class)));
 
-                    setUserByTestParamName(parameter.getName(), user);
+                    TestData testData = user.getTestData()
+                            .setCategories(spendClient.findAllCategoriesByUsername(user.getUsername()))
+                            .setSpendings(spendClient.findAllByUsername(user.getUsername()))
+                            .setIncomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                            .setOutcomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                            .setFriends(userdataClient.getIncomeInvitations(user.getUsername()));
 
-                    log.info("Created new user: {}", user);
-
+                    setUserByTestParamName(parameter.getName(), user.setTestData(testData));
                 });
 
     }
@@ -123,8 +128,7 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
     @Override
     public UserJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         String paramName = parameterContext.getParameter().getName();
-        var user = getUserByTestParamName(paramName);
-        return user;
+        return getUserByTestParamName(paramName);
     }
 
     @SuppressWarnings("unchecked")

@@ -5,6 +5,8 @@ import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     private static final String USERDATA_JDBC_URL = Config.getInstance().userdataJdbcUrl();
+    private static final UserMapper userMapper = new UserMapper();
     private final EntityManager em = EntityManagers.em(USERDATA_JDBC_URL);
 
     @Override
@@ -56,6 +59,93 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     }
 
     @Override
+    public List<UserEntity> getIncomeInvitations(UserEntity user) {
+        var hql = """
+                SELECT new guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate.FriendDTO(
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstName
+                    , u.surname
+                    , u.fullName)
+                FROM
+                    UserEntity u
+                INNER JOIN
+                    FriendshipEntity fr
+                ON
+                    fr.requester = u.id
+                WHERE
+                    fr.addressee =: user
+                AND
+                    fr.status =: status""";
+        return em.createQuery(hql, FriendDTO.class)
+                .setParameter("user", user)
+                .setParameter("status", FriendshipStatus.PENDING)
+                .getResultList()
+                .stream()
+                .map(UserdataUserRepositoryHibernate::mapFriendDTOToUserEntity)
+                .toList();
+    }
+
+    @Override
+    public List<UserEntity> getOutcomeInvitations(UserEntity user) {
+        var hql = """
+                SELECT new guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate.FriendDTO(
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstName
+                    , u.surname
+                    , u.fullName)
+                FROM
+                    UserEntity u
+                INNER JOIN
+                    FriendshipEntity fr
+                ON
+                    fr.addressee = u.id
+                WHERE
+                    fr.requester =: user
+                AND
+                    fr.status =: status""";
+        return em.createQuery(hql, FriendDTO.class)
+                .setParameter("user", user)
+                .setParameter("status", FriendshipStatus.PENDING)
+                .getResultList()
+                .stream()
+                .map(UserdataUserRepositoryHibernate::mapFriendDTOToUserEntity)
+                .toList();
+    }
+
+    @Override
+    public List<UserEntity> getFriends(UserEntity user) {
+        var hql = """
+                SELECT new guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate.FriendDTO(
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstName
+                    , u.surname
+                    , u.fullName)
+                FROM
+                    UserEntity u
+                INNER JOIN
+                    FriendshipEntity fr
+                ON
+                    fr.addressee = u.id
+                WHERE
+                    fr.requester =: user
+                AND
+                    fr.status =: status""";
+        return em.createQuery(hql, FriendDTO.class)
+                .setParameter("user", user)
+                .setParameter("status", FriendshipStatus.ACCEPTED)
+                .getResultList()
+                .stream()
+                .map(UserdataUserRepositoryHibernate::mapFriendDTOToUserEntity)
+                .toList();
+    }
+
+    @Override
     public void sendInvitation(UserEntity requester, UserEntity addressee) {
         em.joinTransaction();
         addressee.addFriends(FriendshipStatus.PENDING, requester);
@@ -91,6 +181,27 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     public void removeAll() {
         em.joinTransaction();
         em.createNativeQuery("TRUNCATE TABLE \"user\" CASCADE").executeUpdate();
+    }
+
+    private static UserEntity mapFriendDTOToUserEntity(FriendDTO friendDTO) {
+        return UserEntity.builder()
+                .id(friendDTO.id)
+                .username(friendDTO.username)
+                .currency(friendDTO.currency)
+                .firstName(friendDTO.firstName)
+                .surname(friendDTO.surname)
+                .fullName(friendDTO.fullName)
+                .build();
+    }
+
+    public record FriendDTO(
+            UUID id,
+            String username,
+            CurrencyValues currency,
+            String firstName,
+            String surname,
+            String fullName
+    ) {
     }
 
 }

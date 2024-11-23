@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +31,6 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
     private final UserdataClient userdataClient = new UserdataApiClientImpl();
     private final SpendClient spendClient = new SpendApiClientImpl();
 
-    public CreateNewUserExtension getThis() {
-        return this;
-    }
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -46,10 +44,7 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                                     UserUtils.generateUser(),
                                     parameter.getAnnotation(CreateNewUser.class)));
 
-                    @SuppressWarnings("unchecked")
-                    Map<String, UserJson> usersMap = ((Map<String, UserJson>) context.getStore(NAMESPACE)
-                            .getOrComputeIfAbsent(context.getUniqueId(), map -> new HashMap<>()));
-                    usersMap.put(parameter.getName(), user);
+                    setUserByTestParamName(parameter.getName(), user);
 
                     log.info("Created new user: {}", user);
 
@@ -70,11 +65,7 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                 .forEach(
                         parameter -> {
 
-                            @SuppressWarnings("unchecked")
-                            Map<String, UserJson> usersMap = (Map<String, UserJson>) context.getStore(NAMESPACE)
-                                    .get(context.getUniqueId());
-
-                            UserJson user = usersMap.get(parameter.getName());
+                            UserJson user = getUserByTestParamName(parameter.getName());
 
                             user.getTestData().getFriends().forEach(
                                     friend -> {
@@ -131,6 +122,20 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
         Map<String, UserJson> usersMap = (Map<String, UserJson>) extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class);
         return usersMap.get(parameterContext.getParameter().getName());
+    @SuppressWarnings("unchecked")
+    private static Map<String, UserJson> getUsersMap() {
+        ExtensionContext extensionContext = TestMethodContextExtension.context();
+        log.info("ExtensionContext: {}", extensionContext.getUniqueId());
+        return (Map<String, UserJson>) extensionContext.getStore(NAMESPACE)
+                .getOrComputeIfAbsent(extensionContext.getUniqueId(), map -> new HashMap<>());
+    }
+
+    public static UserJson getUserByTestParamName(String paramName) {
+        return getUsersMap().get(paramName);
+    }
+
+    public static void setUserByTestParamName(String paramName, UserJson testUser) {
+        getUsersMap().put(paramName, testUser);
     }
 
 }

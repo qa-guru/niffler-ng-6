@@ -4,6 +4,7 @@ import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.SpendMapper;
 import guru.qa.niffler.model.rest.CategoryJson;
 import guru.qa.niffler.model.rest.SpendJson;
+import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.api.impl.SpendApiClientImpl;
@@ -16,7 +17,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @ParametersAreNonnullByDefault
@@ -29,21 +29,16 @@ public class SpendingExtension implements BeforeEachCallback {
     public void beforeEach(ExtensionContext context) {
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
-                        && parameter.getType().isAssignableFrom(UserJson.class))
-                .forEach(
-                        parameter -> {
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) &&
+                        parameter.getType().isAssignableFrom(UserJson.class))
+                .forEach(parameter -> {
 
                             var parameterName = parameter.getName();
                             var userAnno = parameter.getAnnotation(CreateNewUser.class);
 
                             if (userAnno.spendings().length > 0) {
 
-                                @SuppressWarnings("unchecked")
-                                Map<String, UserJson> usersMap = (Map<String, UserJson>) context
-                                        .getStore(CreateNewUserExtension.NAMESPACE)
-                                        .get(context.getUniqueId());
-                                UserJson user = usersMap.get(parameterName);
+                                UserJson user = CreateNewUserExtension.getUserByTestParamName(parameterName);
 
                                 List<SpendJson> spendings = new ArrayList<>();
                                 Arrays.stream(userAnno.spendings())
@@ -68,12 +63,8 @@ public class SpendingExtension implements BeforeEachCallback {
 
                                         });
 
-                                usersMap.put(
-                                        parameterName,
-                                        user.setTestData(
-                                                user.getTestData().setSpendings(spendings)));
-
-                                context.getStore(NAMESPACE).put(context.getUniqueId(), usersMap);
+                                var testData = user.getTestData().setSpendings(spendings);
+                                CreateNewUserExtension.setUserByTestParamName(parameterName, user.setTestData(testData));
 
                                 log.info("Created new spendings for user = [{}]: {}",
                                         user.getUsername(),

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith({UsersQueueExtension.class})
+@ExtendWith(UsersQueueExtension.class)
 public @interface UserFromQueue {
     UserType value() default UserType.EMPTY;
 }

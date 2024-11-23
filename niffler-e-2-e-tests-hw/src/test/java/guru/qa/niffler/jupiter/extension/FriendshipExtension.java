@@ -24,19 +24,15 @@ public class FriendshipExtension implements BeforeEachCallback {
     public void beforeEach(ExtensionContext context) throws Exception {
 
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class)
-                        && parameter.getType().isAssignableFrom(UserJson.class))
+                .filter(parameter -> parameter.isAnnotationPresent(CreateNewUser.class) &&
+                        parameter.getType().isAssignableFrom(UserJson.class))
                 .forEach(
                         parameter -> {
 
                             var parameterName = parameter.getName();
                             var userAnno = parameter.getAnnotation(CreateNewUser.class);
 
-                            @SuppressWarnings("unchecked")
-                            Map<String, UserJson> usersMap = (Map<String, UserJson>) context
-                                    .getStore(CreateNewUserExtension.NAMESPACE)
-                                    .get(context.getUniqueId());
-                            UserJson user = usersMap.get(parameterName);
+                            var user = CreateNewUserExtension.getUserByTestParamName(parameterName);
 
                             TestData testData = TestData.builder()
                                     .categories(user.getTestData().getCategories())
@@ -60,8 +56,7 @@ public class FriendshipExtension implements BeforeEachCallback {
                                         .addNewFriends(user, userAnno.incomeInvitations()));
                             }
 
-                            usersMap.put(parameterName, user.setTestData(testData));
-                            context.getStore(NAMESPACE).put(context.getUniqueId(), usersMap);
+                            CreateNewUserExtension.setUserByTestParamName(parameterName, user.setTestData(testData));
 
                             log.info("Created invitations for user = [{}]:\nIncome invitations: {}\nOutcome invitations: {};\nFriends: {}", user.getUsername(), user.getTestData().getIncomeInvitations(), user.getTestData().getOutcomeInvitations(), user.getTestData().getFriends());
 

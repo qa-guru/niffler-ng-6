@@ -1,11 +1,11 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.UserJson;
-import guru.qa.niffler.page.page.auth.LoginPage;
+import guru.qa.niffler.page.page.people.FriendsPage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -13,20 +13,16 @@ import org.junit.jupiter.api.Test;
 @WebTest
 class PeopleWebTest {
 
-    private static final String LOGIN_PAGE_URL = Config.getInstance().authUrl();
-
     @Test
     void shouldAcceptIncomeInvitationTest(
+            @ApiLogin(setupBrowser = true)
             @CreateNewUser(
                     incomeInvitations = 1
             )
             UserJson user
     ) {
         var requester = user.getTestData().getIncomeInvitations().getFirst();
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToFriendsPage()
+        Selenide.open(FriendsPage.URL, FriendsPage.class)
                 .acceptFriendRequest(requester.getUsername())
                 .shouldNotHaveIncomeFriendRequest(requester.getUsername())
                 .shouldHaveFriend(requester.getUsername());
@@ -34,16 +30,14 @@ class PeopleWebTest {
 
     @Test
     void shouldDeclineIncomeInvitation(
+            @ApiLogin(setupBrowser = true)
             @CreateNewUser(
                     incomeInvitations = 1
             )
             UserJson user
     ) {
         var requester = user.getTestData().getIncomeInvitations().getFirst();
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToFriendsPage()
+        Selenide.open(FriendsPage.URL, FriendsPage.class)
                 .declineFriendRequest(requester.getUsername())
                 .shouldNotHaveIncomeFriendRequest(requester.getUsername())
                 .switchToAllPeopleTab()

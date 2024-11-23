@@ -20,8 +20,6 @@ import static guru.qa.niffler.enums.UserType.*;
 @WebTest
 class PeopleQueueWebTest {
 
-    static final String LOGIN_PAGE_URL = Config.getInstance().authUrl();
-
     @Test
     void shouldNotHaveFriendsTest(
             @UserFromQueue(EMPTY) StaticUser user
@@ -29,7 +27,7 @@ class PeopleQueueWebTest {
 
         log.info("Users from queue: user = [{}]", user.getUsername());
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
+        Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToFriendsPage()
@@ -45,7 +43,7 @@ class PeopleQueueWebTest {
 
         log.info("Users from queue: user1 = [{}], user2 = [{}]", user1.getUsername(), user2.getUsername());
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
+        Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user1.getUsername(), user1.getPassword())
                 .getHeader()
                 .goToFriendsPage()
@@ -69,7 +67,7 @@ class PeopleQueueWebTest {
         var usernameWhoSentRequest = user.getIncomeRequestFromUsersList().get(new Random().nextInt(user.getIncomeRequestFromUsersList().size() - 1));
         log.info("User from queue: user = [{}]", user.getUsername());
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
+        Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToFriendsPage()
@@ -86,7 +84,7 @@ class PeopleQueueWebTest {
         var usernameWhoGotFriendRequest = user.getOutcomeRequestToUsersList().get(new Random().nextInt(user.getOutcomeRequestToUsersList().size() - 1));
         log.info("User from queue: user = [{}]", user.getUsername());
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
+        Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToAllPeoplePage()

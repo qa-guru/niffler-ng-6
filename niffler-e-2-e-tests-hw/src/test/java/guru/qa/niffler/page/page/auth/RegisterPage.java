@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class RegisterPage extends BasePage<RegisterPage> {
 
-    public static final String URL = BASE_URL + "register";
+    public static final String URL = AUTH_URL + "register";
 
     private final SelenideElement
             title = $("h1").as("[Registration page title]"),

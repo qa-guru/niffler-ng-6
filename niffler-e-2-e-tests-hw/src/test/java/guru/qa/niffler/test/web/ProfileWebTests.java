@@ -2,31 +2,30 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.page.ProfilePage;
-import guru.qa.niffler.page.page.auth.LoginPage;
 import org.junit.jupiter.api.Test;
 
 @WebTest
 class ProfileWebTests {
 
     static final Faker FAKE = new Faker();
-    static final String LOGIN_PAGE_URL = Config.getInstance().authUrl() + "login";
     final ProfilePage profile = new ProfilePage();
 
     @Test
-    void canAddNameTest(@CreateNewUser UserJson user) {
+    void canAddNameTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser
+            UserJson user
+    ) {
 
         var name = FAKE.name().fullName();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .setName(name);
 
         Selenide.refresh();
@@ -35,12 +34,13 @@ class ProfileWebTests {
     }
 
     @Test
-    void canUploadAvatarTest(@CreateNewUser UserJson user) {
+    void canUploadAvatarTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser
+            UserJson user
+    ) {
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .uploadAvatar("img/cat.jpeg")
                 .save();
 
@@ -50,14 +50,15 @@ class ProfileWebTests {
     }
 
     @Test
-    void canCreateNewCategoryTest(@CreateNewUser UserJson user) {
+    void canCreateNewCategoryTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser
+            UserJson user
+    ) {
 
         var categoryName = FAKE.company().industry();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .addNewCategory(categoryName);
 
         Selenide.refresh();
@@ -66,14 +67,17 @@ class ProfileWebTests {
     }
 
     @Test
-    void canNotCreateCategoryWithExistsNameTest(@CreateNewUser(categories = @Category) UserJson user) {
+    void canNotCreateCategoryWithExistsNameTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser(
+                    categories = @Category
+            )
+            UserJson user
+    ) {
 
         var categoryName = user.getTestData().getCategories().getFirst().getName();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .addNewCategory(categoryName)
                 .shouldBeErrorAlert()
                 .shouldHaveMessageAlert("Error while adding category " + categoryName + ": Cannot save duplicates");
@@ -81,14 +85,17 @@ class ProfileWebTests {
     }
 
     @Test
-    void canEditCategoryNameTest(@CreateNewUser(categories = @Category) UserJson user) {
+    void canEditCategoryNameTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser(
+                    categories = @Category
+            )
+            UserJson user
+    ) {
 
         var newCategoryName = FAKE.company().industry();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .editCategoryName(user.getTestData().getCategories().getFirst().getName(), newCategoryName);
 
         Selenide.refresh();
@@ -97,14 +104,17 @@ class ProfileWebTests {
     }
 
     @Test
-    void canSetCategoryArchivedTest(@CreateNewUser(categories = @Category) UserJson user) {
+    void canSetCategoryArchivedTest(
+            @ApiLogin
+            @CreateNewUser(
+                    categories = @Category
+            )
+            UserJson user
+    ) {
 
         var categoryName = user.getTestData().getCategories().getFirst().getName();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .setCategoryArchive(categoryName);
 
         Selenide.refresh();
@@ -114,14 +124,17 @@ class ProfileWebTests {
     }
 
     @Test
-    void canSetCategoryUnarchivedTest(@CreateNewUser(categories = @Category(isArchived = true)) UserJson user) {
+    void canSetCategoryUnarchivedTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser(
+                    categories = @Category(isArchived = true)
+            )
+            UserJson user
+    ) {
 
         var categoryName = user.getTestData().getCategories().getFirst().getName();
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .showArchivedCategories()
                 .setCategoryActive(categoryName);
 

@@ -14,7 +14,6 @@ import static com.codeborne.selenide.Selenide.open;
 @WebTest
 class RegisterWebTests {
 
-    static final String REGISTRATION_PAGE_URL = Config.getInstance().authUrl() + "register";
     static final Faker FAKE = new Faker();
     final RegisterPage registerPage = new RegisterPage();
     final ConfirmRegistrationPage confirmRegistrationPage = new ConfirmRegistrationPage();
@@ -22,7 +21,7 @@ class RegisterWebTests {
     @Test
     void canRegisterUserWithCorrectCredentialsTest() {
         UserJson user = UserUtils.generateUser();
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user);
 
         confirmRegistrationPage.shouldVisiblePageElements();
@@ -31,7 +30,7 @@ class RegisterWebTests {
     @Test
     void canNotRegisterIfUsernameIsExistTest() {
         var user = UserUtils.generateUser();
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user)
                 .goToLoginPage()
                 .goToRegisterPage()
@@ -43,7 +42,7 @@ class RegisterWebTests {
     @Test
     void canNotRegisterIfPasswordAndPasswordConfirmationNotEqualTest() {
         var user = UserUtils.generateUser();
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signInFailed(user.setPassword(FAKE.internet().password()));
         registerPage.assertPasswordHasError("Passwords should be equal");
     }
@@ -52,7 +51,7 @@ class RegisterWebTests {
     void canNotRegisterIfUsernameIsTooShortTest() {
         var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(2));
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
     }
@@ -61,7 +60,7 @@ class RegisterWebTests {
     void canNotRegisterIfUsernameIsTooLongTest() {
         var user = UserUtils.generateUser();
         user.setUsername(FAKE.lorem().characters(51));
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user);
         registerPage.assertUsernameHasError("Allowed username length should be from 3 to 50 characters");
     }
@@ -73,7 +72,7 @@ class RegisterWebTests {
         var password = FAKE.lorem().characters(2);
         user.setPassword(password).setPasswordConfirmation(password);
 
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user);
 
         registerPage
@@ -88,7 +87,7 @@ class RegisterWebTests {
         var password = FAKE.lorem().characters(13);
         user.setPassword(password).setPasswordConfirmation(password);
 
-        open(REGISTRATION_PAGE_URL, RegisterPage.class)
+        open(RegisterPage.URL, RegisterPage.class)
                 .signUpSuccess(user);
 
         registerPage

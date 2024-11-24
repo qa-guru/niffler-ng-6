@@ -1,11 +1,11 @@
-package guru.qa.niffler.test.db.springJdbc;
+package guru.qa.niffler.test.fake.db.jdbc;
 
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.db.impl.springJdbc.SpendDbClientSpringJdbc;
+import guru.qa.niffler.service.db.impl.jdbc.SpendDbClientJdbc;
 import guru.qa.niffler.utils.CategoryUtils;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class SpendSpringJdbcTest {
+class SpendJdbcTest {
 
-    private final SpendClient spendClient = new SpendDbClientSpringJdbc();
+    private final SpendClient spendClient = new SpendDbClientJdbc();
 
     @Test
     void shouldCreateNewSpendTest(@CreateNewUser(categories = @Category) UserJson user) {

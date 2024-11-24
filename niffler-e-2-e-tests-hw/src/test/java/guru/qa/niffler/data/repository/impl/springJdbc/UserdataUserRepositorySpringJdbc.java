@@ -4,6 +4,8 @@ import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.dao.impl.springJdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
+import guru.qa.niffler.ex.UserNotFoundException;
+import guru.qa.niffler.model.rest.UserJson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,6 +41,21 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     @Override
     public @Nonnull UserEntity update(UserEntity user) {
         return userdataUserDao.update(user);
+    }
+
+    @Override
+    public List<UserEntity> getIncomeInvitations(UserEntity user) {
+        return userdataUserDao.getIncomeInvitations(user);
+    }
+
+    @Override
+    public List<UserEntity> getOutcomeInvitations(UserEntity user) {
+        return userdataUserDao.getOutcomeInvitations(user);
+    }
+
+    @Override
+    public List<UserEntity> getFriends(UserEntity user) {
+        return userdataUserDao.getFriends(user);
     }
 
     @Override

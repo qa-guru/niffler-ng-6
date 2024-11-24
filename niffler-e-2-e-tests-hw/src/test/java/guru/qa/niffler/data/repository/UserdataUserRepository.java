@@ -18,6 +18,12 @@ public interface UserdataUserRepository {
 
     UserEntity update(UserEntity user);
 
+    List<UserEntity> getIncomeInvitations(UserEntity user);
+
+    List<UserEntity> getOutcomeInvitations(UserEntity user);
+
+    List<UserEntity> getFriends(UserEntity user);
+
     void sendInvitation(UserEntity requester, UserEntity addressee);
 
     void removeInvitation(UserEntity requester, UserEntity addressee);

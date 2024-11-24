@@ -1,7 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.mapper.UserMapper;
+import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UserdataClient;
@@ -44,10 +46,14 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
                                     UserUtils.generateUser(),
                                     parameter.getAnnotation(CreateNewUser.class)));
 
-                    setUserByTestParamName(parameter.getName(), user);
+                    TestData testData = user.getTestData()
+                            .setCategories(spendClient.findAllCategoriesByUsername(user.getUsername()))
+                            .setSpendings(spendClient.findAllByUsername(user.getUsername()))
+                            .setIncomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                            .setOutcomeInvitations(userdataClient.getIncomeInvitations(user.getUsername()))
+                            .setFriends(userdataClient.getIncomeInvitations(user.getUsername()));
 
-                    log.info("Created new user: {}", user);
-
+                    setUserByTestParamName(parameter.getName(), user.setTestData(testData));
                 });
 
     }
@@ -113,15 +119,18 @@ public class CreateNewUserExtension implements BeforeEachCallback, AfterEachCall
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(UserJson.class);
+        Parameter parameter = parameterContext.getParameter();
+        return parameter.getType().isAssignableFrom(UserJson.class) &&
+                parameter.isAnnotationPresent(CreateNewUser.class) &&
+                !parameter.isAnnotationPresent(ApiLogin.class);
     }
 
     @Override
     public UserJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        @SuppressWarnings("unchecked")
-        Map<String, UserJson> usersMap = (Map<String, UserJson>) extensionContext.getStore(NAMESPACE)
-                .get(extensionContext.getUniqueId(), Map.class);
-        return usersMap.get(parameterContext.getParameter().getName());
+        String paramName = parameterContext.getParameter().getName();
+        return getUserByTestParamName(paramName);
+    }
+
     @SuppressWarnings("unchecked")
     private static Map<String, UserJson> getUsersMap() {
         ExtensionContext extensionContext = TestMethodContextExtension.context();

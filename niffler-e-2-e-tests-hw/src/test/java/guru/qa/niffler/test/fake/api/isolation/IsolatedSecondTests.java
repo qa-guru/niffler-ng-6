@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api.isolation;
+package guru.qa.niffler.test.fake.api.isolation;
 
 import guru.qa.niffler.service.api.impl.UsersApiClientImpl;
 import guru.qa.niffler.service.db.impl.jdbc.UserdataDbClientJdbc;

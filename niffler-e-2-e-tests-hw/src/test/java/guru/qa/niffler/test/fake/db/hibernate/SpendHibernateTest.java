@@ -1,10 +1,10 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake.db.hibernate;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.api.impl.SpendApiClientImpl;
+import guru.qa.niffler.service.db.impl.hibernate.SpendDbClientHibernate;
 import guru.qa.niffler.utils.CategoryUtils;
 import guru.qa.niffler.utils.SpendUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class SpendApiTest {
+class SpendHibernateTest {
 
-    private final SpendClient spendClient = new SpendApiClientImpl();
+    private final SpendClient spendClient = new SpendDbClientHibernate();
 
     @Test
     void shouldCreateNewSpendTest(
@@ -118,6 +118,20 @@ class SpendApiTest {
     }
 
     @Test
+    void shouldGetAllSpendingsTest(
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
+    ) {
+        var spend1 = spendClient.create(SpendUtils.generateForUser(user1.getUsername()));
+        var spend2 = spendClient.create(SpendUtils.generateForUser(user2.getUsername()));
+        var spends = spendClient.findAll();
+        assertAll("Should contains all users spendings", () -> {
+            assertTrue(spends.contains(spend1));
+            assertTrue(spends.contains(spend2));
+        });
+    }
+
+    @Test
     void shouldRemoveSpendTest(
             @CreateNewUser UserJson user
     ) {
@@ -136,6 +150,17 @@ class SpendApiTest {
         assertNotNull(spendClient
                 .createCategory(CategoryUtils.generateForUser(user.getUsername()))
                 .getId());
+    }
+
+    @Test
+    void shouldGetCategoryByIdTest(
+            @CreateNewUser UserJson user
+    ) {
+        var category = spendClient.createCategory(
+                CategoryUtils.generateForUser(user.getUsername()));
+        assertTrue(
+                spendClient.findCategoryById(category.getId())
+                        .isPresent());
     }
 
     @Test
@@ -166,6 +191,27 @@ class SpendApiTest {
                 () -> assertTrue(categories.contains(category2User1)),
                 () -> assertFalse(categories.contains(categoryUser2))
         );
+    }
+
+    @Test
+    void shouldGetAllCategories(
+            @CreateNewUser UserJson user1,
+            @CreateNewUser UserJson user2
+    ) {
+        var category1 = spendClient.createCategory(CategoryUtils.generateForUser(user1.getUsername()));
+        var category2 = spendClient.createCategory(CategoryUtils.generateForUser(user2.getUsername()));
+        var categories = spendClient.findAllCategories();
+        assertAll("Should contains users categories", () -> {
+            assertTrue(categories.contains(category1));
+            assertTrue(categories.contains(category2));
+        });
+    }
+
+    @Test
+    void shouldRemoveCategoryTest(@CreateNewUser UserJson user) {
+        var category = spendClient.createCategory(CategoryUtils.generateForUser(user.getUsername()));
+        spendClient.removeCategory(category);
+        assertTrue(spendClient.findAllCategoriesByUsername(user.getUsername()).isEmpty());
     }
 
 }

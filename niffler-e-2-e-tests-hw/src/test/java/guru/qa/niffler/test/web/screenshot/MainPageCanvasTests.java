@@ -2,12 +2,15 @@ package guru.qa.niffler.test.web.screenshot;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.UserJson;
+import guru.qa.niffler.page.page.MainPage;
+import guru.qa.niffler.page.page.ProfilePage;
 import guru.qa.niffler.page.page.auth.LoginPage;
 import guru.qa.niffler.utils.CategoryUtils;
 import guru.qa.niffler.utils.SpendUtils;
@@ -19,8 +22,6 @@ import static guru.qa.niffler.model.rest.CurrencyValues.RUB;
 @WebTest
 class MainPageCanvasTests {
 
-    private static final String LOGIN_PAGE_URL = Config.getInstance().frontUrl();
-
     private static final String EMPTY = "img/spend-stats/canvas-empty.png",
             ONE_SPEND = "img/spend-stats/canvas-1-spend.png",
             TWO_SPENDS_IN_ONE_CATEGORY = "img/spend-stats/canvas-2-spends-1-category.png",
@@ -31,8 +32,7 @@ class MainPageCanvasTests {
 
     @Test
     void shouldBeEmptyCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .shouldVisiblePageElements()
                 .shouldHaveScreenshotSpendsStat(EMPTY);
 
@@ -40,8 +40,7 @@ class MainPageCanvasTests {
 
     @Test
     void shouldHaveOneSpendInCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(
                         SpendUtils.generateForUser(user.getUsername())
                                 .setCurrency(CURRENCY)
@@ -51,7 +50,13 @@ class MainPageCanvasTests {
     }
 
     @Test
-    void shouldHaveTwoSpendsWithOneCategoryInCanvasTest(@CreateNewUser(currency = RUB) UserJson user) {
+    void shouldHaveTwoSpendsWithOneCategoryInCanvasTest(
+            @ApiLogin(setupBrowser = true)
+            @CreateNewUser(
+                    currency = RUB
+            )
+            UserJson user
+    ) {
 
         var category = CategoryUtils.generateForUser(user.getUsername());
         var spend1 = SpendUtils.generateForUser(user.getUsername())
@@ -63,8 +68,7 @@ class MainPageCanvasTests {
                 .setCurrency(CURRENCY)
                 .setAmount(AMOUNT_2);
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(spend1)
                 .createNewSpending(spend2)
                 .shouldVisiblePageElements()
@@ -83,8 +87,7 @@ class MainPageCanvasTests {
                 .setCurrency(CURRENCY)
                 .setAmount(AMOUNT_2);
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(spend1)
                 .createNewSpending(spend2)
                 .shouldVisiblePageElements()
@@ -101,8 +104,7 @@ class MainPageCanvasTests {
 
         var spend2 = SpendUtils.generateForUser(user.getUsername());
 
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(spend1)
                 .createNewSpending(spend2)
                 .selectSpending(spend2.getDescription())
@@ -116,8 +118,7 @@ class MainPageCanvasTests {
     void shouldBeEmptyAfterRemoveTest(@CreateNewUser(currency = RUB) UserJson user) {
         var spend = SpendUtils.generateForUser(user.getUsername())
                 .setCurrency(RUB);
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(spend)
                 .selectSpending(spend)
                 .deleteSpendings()
@@ -129,8 +130,7 @@ class MainPageCanvasTests {
     @SneakyThrows
     void shouldBeEmptyAfterArchiveCategoryTest(@CreateNewUser(currency = RUB) UserJson user) {
         var spend = SpendUtils.generateForUser(user.getUsername()).setCurrency(CURRENCY).setAmount(AMOUNT_1);
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .createNewSpending(spend)
                 .getHeader()
                 .goToProfilePage()
@@ -163,10 +163,7 @@ class MainPageCanvasTests {
                     })
             UserJson user
     ) {
-        Selenide.open(LOGIN_PAGE_URL, LoginPage.class)
-                .login(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
+        Selenide.open(ProfilePage.URL, ProfilePage.class)
                 .showArchivedCategories()
                 .setCategoryActive(user.getTestData().getCategories().getFirst().getName())
                 .getHeader()

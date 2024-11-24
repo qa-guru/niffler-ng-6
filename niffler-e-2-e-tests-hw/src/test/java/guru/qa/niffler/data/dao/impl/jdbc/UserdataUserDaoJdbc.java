@@ -152,6 +152,124 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     }
 
     @Override
+    public List<UserEntity> getIncomeInvitations(UserEntity user) {
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.requester_id = u.id
+                WHERE
+                    fr.addressee_id = ?
+                AND
+                    fr.status = ?""";
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(sql)) {
+
+            ps.setObject(1, user.getId());
+            ps.setObject(2, FriendshipStatus.PENDING);
+            ps.execute();
+
+            List<UserEntity> users = new ArrayList<>();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    users.add(fromResultSet(rs));
+                }
+            }
+            return users;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UserEntity> getOutcomeInvitations(UserEntity user) {
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.addressee_id = u.id
+                WHERE
+                    fr.requester_id = ?
+                AND
+                    fr.status = ?""";
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(sql)) {
+
+            ps.setObject(1, user.getId());
+            ps.setObject(2, FriendshipStatus.PENDING);
+            ps.execute();
+
+            List<UserEntity> users = new ArrayList<>();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    users.add(fromResultSet(rs));
+                }
+            }
+            return users;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UserEntity> getFriends(UserEntity user) {
+
+        String sql = """
+                SELECT
+                    u.id
+                    , u.username
+                    , u.currency
+                    , u.firstname
+                    , u.surname
+                    , u.full_name
+                FROM
+                    "friendship" fr
+                INNER JOIN
+                    "user" u
+                ON
+                    fr.addressee_id = u.id
+                WHERE
+                    fr.requester_id = ?
+                AND
+                    fr.status = ?""";
+        try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(sql)) {
+
+            ps.setObject(1, user.getId());
+            ps.setObject(2, FriendshipStatus.ACCEPTED);
+            ps.execute();
+
+            List<UserEntity> users = new ArrayList<>();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    users.add(fromResultSet(rs));
+                }
+            }
+            return users;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void sendInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(USERDATA_JDBC_URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date)  VALUES(?, ?, ?, ?)"
@@ -272,6 +390,16 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
                 .surname(rs.getString("surname"))
                 .photo(rs.getBytes("photo"))
                 .photoSmall(rs.getBytes("photo_small"))
+                .fullName(rs.getString("full_name"))
+                .build();
+    }
+
+    private @Nonnull UserEntity fromResultSetFriend(ResultSet rs) throws SQLException {
+        return UserEntity.builder()
+                .id(rs.getObject("id", UUID.class))
+                .username(rs.getString("username"))
+                .firstName(rs.getString("firstname"))
+                .surname(rs.getString("surname"))
                 .fullName(rs.getString("full_name"))
                 .build();
     }

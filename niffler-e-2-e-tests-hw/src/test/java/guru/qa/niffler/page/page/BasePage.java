@@ -18,6 +18,7 @@ public abstract class BasePage<T> {
 
     protected static final Config CFG = Config.getInstance();
     protected static final String BASE_URL = CFG.frontUrl();
+    protected static final String AUTH_URL = CFG.authUrl();
 
     protected BasePage(boolean assertPageElementsOnStart) {
         if (assertPageElementsOnStart)

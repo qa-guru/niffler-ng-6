@@ -1,12 +1,12 @@
-package guru.qa.niffler.test.db.jdbc;
+package guru.qa.niffler.test.fake.db.hibernate;
 
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
-import guru.qa.niffler.data.dao.impl.jdbc.AuthAuthorityDaoJdbc;
+import guru.qa.niffler.data.dao.impl.springJdbc.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.model.rest.AuthUserJson;
 import guru.qa.niffler.service.AuthUserClient;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.db.impl.jdbc.UsersDbClientJdbc;
+import guru.qa.niffler.service.db.impl.hibernate.UsersDbClientHibernate;
 import guru.qa.niffler.service.db.impl.springJdbc.AuthUserDbClientSpringJdbc;
 import guru.qa.niffler.service.db.impl.springJdbc.UserdataDbClientSpringJdbc;
 import guru.qa.niffler.utils.UserUtils;
@@ -17,11 +17,11 @@ import static guru.qa.niffler.utils.UserUtils.generateUser;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class UsersJdbcTest {
+class UsersHibernateTest {
 
-    private final UsersClient usersClient = new UsersDbClientJdbc();
+    private final UsersClient usersClient = new UsersDbClientHibernate();
 
-    private final AuthAuthorityDao authorityDao = new AuthAuthorityDaoJdbc();
+    private final AuthAuthorityDao authorityDao = new AuthAuthorityDaoSpringJdbc();
     private final AuthUserClient authUserClient = new AuthUserDbClientSpringJdbc();
     private final UserdataClient userdataClient = new UserdataDbClientSpringJdbc();
 

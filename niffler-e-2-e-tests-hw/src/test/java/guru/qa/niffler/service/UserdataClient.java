@@ -16,6 +16,12 @@ public interface UserdataClient {
 
     List<UserJson> findAll();
 
+    List<UserJson> getIncomeInvitations(String username);
+
+    List<UserJson> getOutcomeInvitations(String username);
+
+    List<UserJson> getFriends(String username);
+
     void sendInvitation(UserJson requester, UserJson addressee);
 
     void declineInvitation(UserJson requester, UserJson addressee);

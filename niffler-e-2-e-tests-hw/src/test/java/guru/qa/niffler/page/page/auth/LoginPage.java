@@ -20,7 +20,7 @@ import static com.codeborne.selenide.Selenide.$x;
 @ParametersAreNonnullByDefault
 public class LoginPage extends BasePage<LoginPage> {
 
-    public static final String URL = BASE_URL + "login";
+    public static final String URL = AUTH_URL + "login";
 
     private final SelenideElement title = $("h1").as("['Login Page' title]"),
             usernameInput = $(byName("username")).as("Username input"),

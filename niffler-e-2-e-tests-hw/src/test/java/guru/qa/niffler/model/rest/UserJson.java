@@ -2,6 +2,7 @@ package guru.qa.niffler.model.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.niffler.enums.FriendState;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -45,6 +46,9 @@ public class UserJson implements Serializable {
 
     @JsonProperty("fullname")
     private String fullName;
+
+    @JsonProperty("friendState")
+    FriendState friendState;
 
     @JsonIgnore
     @Builder.Default

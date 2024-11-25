@@ -44,7 +44,7 @@ public class TestData {
         return cookies.stream()
                 .filter(cookie -> cookie.getName().equalsIgnoreCase(cookieName))
                 .findFirst()
-                .orElseThrow(()-> new CookieNotFoundException("Cookie not found with name = [%s]"))
+                .orElseThrow(() -> new CookieNotFoundException("Cookie not found with name = [%s]"))
                 .getValue();
     }
 }

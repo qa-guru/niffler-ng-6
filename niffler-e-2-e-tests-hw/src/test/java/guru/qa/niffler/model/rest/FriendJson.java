@@ -10,18 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterModel {
-
-    @JsonProperty("_csrf")
-    private String csrf;
+public class FriendJson {
 
     @JsonProperty("username")
     private String username;
-
-    @JsonProperty("password")
-    private String password;
-
-    @JsonProperty("passwordSubmit")
-    private String passwordConfirmation;
 
 }

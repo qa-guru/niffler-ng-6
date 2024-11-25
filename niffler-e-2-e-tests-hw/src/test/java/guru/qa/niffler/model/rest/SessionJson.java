@@ -5,23 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterModel {
-
-    @JsonProperty("_csrf")
-    private String csrf;
+@Accessors(chain = true)
+public class SessionJson {
 
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("password")
-    private String password;
+    @JsonProperty("issuedAt")
+    private Date issuedAt;
 
-    @JsonProperty("passwordSubmit")
-    private String passwordConfirmation;
+    @JsonProperty("expiresAt")
+    private Date expiresAt;
 
 }

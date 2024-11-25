@@ -8,6 +8,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import io.qameta.allure.Step;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 
@@ -29,6 +30,7 @@ public class UsersApiClient implements UsersClient {
 
   @NotNull
   @Override
+  @Step("Crete user using API")
   public UserJson createUser(String username, String password) {
     try {
       authApi.requestRegisterForm().execute();

@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.api.rest;
 
-import guru.qa.niffler.api.GatewayApiClient;
+import guru.qa.niffler.api.gateway.v1.UserdataV1ApiClientRetrofit;
 import guru.qa.niffler.enums.FriendState;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.CreateNewUser;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestTest
 class FriendsTest {
 
-    private final GatewayApiClient gatewayApiClient = new GatewayApiClient();
+    private final UserdataV1ApiClientRetrofit userdataV1ApiClient = new UserdataV1ApiClientRetrofit();
 
     @Test
     void allFriendsAndIncomeInvitationsShouldBeReturnedFroUser(
@@ -28,7 +28,7 @@ class FriendsTest {
         final List<UserJson> expectedFriends = user.getTestData().getFriends();
         final List<UserJson> expectedInvitations = user.getTestData().getIncomeInvitations();
 
-        final List<UserJson> result = gatewayApiClient.allFriends(
+        final List<UserJson> result = userdataV1ApiClient.allFriends(
                 user.getTestData().getToken(),
                 null
         );

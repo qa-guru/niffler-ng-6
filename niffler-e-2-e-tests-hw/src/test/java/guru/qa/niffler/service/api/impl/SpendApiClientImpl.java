@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.api.impl;
 
-import guru.qa.niffler.api.CategoryApiClientRetrofit;
-import guru.qa.niffler.api.SpendApiClientRetrofit;
+import guru.qa.niffler.api.internal.CategoryInternalApiClient;
+import guru.qa.niffler.api.internal.SpendApiInternalClient;
 import guru.qa.niffler.model.rest.CategoryJson;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.api.SpendApiClient;
@@ -17,8 +17,8 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class SpendApiClientImpl implements SpendApiClient {
 
-    private final SpendApiClientRetrofit spendClient = new SpendApiClientRetrofit();
-    private final CategoryApiClientRetrofit categoryClient = new CategoryApiClientRetrofit();
+    private final SpendApiInternalClient spendClient = new SpendApiInternalClient();
+    private final CategoryInternalApiClient categoryClient = new CategoryInternalApiClient();
 
     @Override
     public @Nonnull SpendJson create(SpendJson spendJson) {

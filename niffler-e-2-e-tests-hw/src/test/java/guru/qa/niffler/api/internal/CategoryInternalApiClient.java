@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.internal;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class CategoryApiClientRetrofit extends RestClient {
+public class CategoryInternalApiClient extends RestClient {
 
-    private final CategoryApi categoryApi;
+    private final CategoryInternalApi categoryApi;
 
-    public CategoryApiClientRetrofit() {
+    public CategoryInternalApiClient() {
         super(CFG.spendUrl());
-        this.categoryApi = retrofit.create(CategoryApi.class);
+        this.categoryApi = retrofit.create(CategoryInternalApi.class);
     }
 
     public @Nonnull CategoryJson create(CategoryJson category) {

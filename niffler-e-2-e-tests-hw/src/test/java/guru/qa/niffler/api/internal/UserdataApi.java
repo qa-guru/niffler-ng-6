@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.internal;
 
 import guru.qa.niffler.model.rest.UserJson;
 import retrofit2.Call;

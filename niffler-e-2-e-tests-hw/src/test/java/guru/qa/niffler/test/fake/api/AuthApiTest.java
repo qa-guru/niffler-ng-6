@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.fake.api;
 
-import guru.qa.niffler.api.AuthApiClientRetrofit;
+import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 @Slf4j
 class AuthApiTest {
 
-    AuthApiClientRetrofit authClient = new AuthApiClientRetrofit();
+    AuthApiClient authClient = new AuthApiClient();
     UserJson user = UserUtils.generateUser();
 
     @Test

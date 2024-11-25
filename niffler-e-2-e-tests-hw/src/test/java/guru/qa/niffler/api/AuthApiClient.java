@@ -5,8 +5,9 @@ import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.api.core.interceptor.AuthorizedCodeInterceptor;
 import guru.qa.niffler.api.core.store.AuthStore;
-import guru.qa.niffler.enums.HttpStatus;
+import guru.qa.niffler.api.internal.UserdataInternalApiClient;
 import guru.qa.niffler.enums.CookieType;
+import guru.qa.niffler.enums.HttpStatus;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.utils.OAuthUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import static guru.qa.niffler.enums.CookieType.CSRF;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class AuthApiClientRetrofit extends RestClient {
+public class AuthApiClient extends RestClient {
 
     private static final String REDIRECT_URI = CFG.frontUrl() + "authorized",
             RESPONSE_TYPE = "code",
@@ -37,9 +38,9 @@ public class AuthApiClientRetrofit extends RestClient {
             GRANT_TYPE = "authorization_code";
 
     private final AuthApi authApi;
-    private final UserdataApiClientRetrofit userdataApiClient = new UserdataApiClientRetrofit();
+    private final UserdataInternalApiClient userdataApiClient = new UserdataInternalApiClient();
 
-    public AuthApiClientRetrofit() {
+    public AuthApiClient() {
         super(CFG.authUrl(),
                 true,
                 HttpLoggingInterceptor.Level.BODY,

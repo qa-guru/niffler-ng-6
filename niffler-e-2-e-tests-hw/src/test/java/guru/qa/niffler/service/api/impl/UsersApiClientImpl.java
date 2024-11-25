@@ -1,6 +1,6 @@
 package guru.qa.niffler.service.api.impl;
 
-import guru.qa.niffler.api.AuthApiClientRetrofit;
+import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UserdataClient;
 import guru.qa.niffler.service.UsersClient;
@@ -14,7 +14,7 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class UsersApiClientImpl implements UsersClient {
 
-    private final AuthApiClientRetrofit apiClient = new AuthApiClientRetrofit();
+    private final AuthApiClient apiClient = new AuthApiClient();
     private final UserdataClient userdataClient = new UserdataApiClientImpl();
 
     @Override

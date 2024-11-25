@@ -1,6 +1,6 @@
 package guru.qa.niffler.service.api.impl;
 
-import guru.qa.niffler.api.UserdataApiClientRetrofit;
+import guru.qa.niffler.api.internal.UserdataInternalApiClient;
 import guru.qa.niffler.enums.FriendState;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.api.UserdataApiClient;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class UserdataApiClientImpl implements UserdataApiClient {
 
-    private final UserdataApiClientRetrofit userdataApiClient = new UserdataApiClientRetrofit();
+    private final UserdataInternalApiClient userdataApiClient = new UserdataInternalApiClient();
 
     @Override
     public UserJson create(UserJson userJson) {

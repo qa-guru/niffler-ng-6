@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ParametersAreNonnullByDefault
-public class GitHubApiClientRetrofit extends RestClient {
+public class GitHubApiClient extends RestClient {
 
     private static final String GITHUB_TOKEN = Objects.requireNonNull(System.getenv("GITHUB_TOKEN"));
     private static final String GITHUB_TOKEN_NAME = System.getenv("GITHUB_TOKEN_NAME") != null
@@ -25,7 +25,7 @@ public class GitHubApiClientRetrofit extends RestClient {
 
     private final GitHubApi gitHubApi;
 
-    public GitHubApiClientRetrofit() {
+    public GitHubApiClient() {
         super(CFG.gitHubUrl());
         this.gitHubApi = retrofit.create(GitHubApi.class);
     }

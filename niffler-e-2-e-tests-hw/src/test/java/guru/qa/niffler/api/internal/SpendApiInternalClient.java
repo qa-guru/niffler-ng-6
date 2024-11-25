@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.internal;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class SpendApiClientRetrofit extends RestClient {
+public class SpendApiInternalClient extends RestClient {
 
     private final SpendApi spendApi;
 
-    public SpendApiClientRetrofit() {
+    public SpendApiInternalClient() {
         super(CFG.spendUrl());
         this.spendApi = retrofit.create(SpendApi.class);
     }

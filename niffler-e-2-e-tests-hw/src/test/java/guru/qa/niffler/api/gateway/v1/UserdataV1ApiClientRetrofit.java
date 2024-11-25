@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.gateway.v1;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.model.rest.UserJson;
@@ -13,13 +13,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ParametersAreNonnullByDefault
-public class GatewayApiClient extends RestClient {
+public class UserdataV1ApiClientRetrofit extends RestClient {
 
-    private final GatewayApi gatewayApi;
+    private final UserdataV1Api userdataApi;
 
-    public GatewayApiClient() {
+    public UserdataV1ApiClientRetrofit() {
         super(CFG.gatewayUrl());
-        this.gatewayApi = create(GatewayApi.class);
+        this.userdataApi = create(UserdataV1Api.class);
     }
 
     @Step("Send request GET:[niffler-gateway]/api/friends/all")
@@ -27,7 +27,7 @@ public class GatewayApiClient extends RestClient {
                                      @Nullable String searchQuery) {
         final Response<List<UserJson>> response;
         try {
-            response = gatewayApi.allFriends(bearerToken, searchQuery).execute();
+            response = userdataApi.allFriends(bearerToken, searchQuery).execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }

@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.GitHubApiClientRetrofit;
+import guru.qa.niffler.api.GitHubApiClient;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -11,7 +11,7 @@ import org.junit.platform.commons.support.SearchOption;
 
 public class IssueExtension implements ExecutionCondition {
 
-    private static final GitHubApiClientRetrofit gitHubApiClient = new GitHubApiClientRetrofit();
+    private static final GitHubApiClient gitHubApiClient = new GitHubApiClient();
 
     @Override
     public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {

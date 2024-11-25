@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.internal;
 
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.enums.HttpStatus;
@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ParametersAreNonnullByDefault
-public class UserdataApiClientRetrofit extends RestClient {
+public class UserdataInternalApiClient extends RestClient {
 
     private final UserdataApi userdataApi;
 
-    public UserdataApiClientRetrofit() {
+    public UserdataInternalApiClient() {
         super(CFG.userdataUrl());
         this.userdataApi = retrofit.create(UserdataApi.class);
     }

@@ -1,4 +1,4 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.internal;
 
 import guru.qa.niffler.model.rest.CategoryJson;
 import retrofit2.Call;
@@ -8,7 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public interface CategoryApi {
+public interface CategoryInternalApi {
 
     @POST("internal/categories/add")
     Call<CategoryJson> createNewCategory(@Body CategoryJson category);

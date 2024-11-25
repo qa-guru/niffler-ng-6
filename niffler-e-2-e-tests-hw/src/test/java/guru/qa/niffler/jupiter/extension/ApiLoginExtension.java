@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
-import guru.qa.niffler.api.AuthApiClientRetrofit;
+import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.enums.CookieType;
@@ -30,7 +30,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
     private static final Config CFG = Config.getInstance();
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
-    private final AuthApiClientRetrofit authClient = new AuthApiClientRetrofit();
+    private final AuthApiClient authClient = new AuthApiClient();
     private static final UserdataClient userdataClient = new UserdataApiClientImpl();
     private static final SpendClient spendClient = new SpendApiClientImpl();
 

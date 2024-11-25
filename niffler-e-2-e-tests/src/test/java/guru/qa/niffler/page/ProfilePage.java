@@ -43,7 +43,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
     return this;
   }
 
-  @Step("Upload photo from classpath: {path}")
+  @Step("Upload photo from classpath")
   @Nonnull
   public ProfilePage uploadPhotoFromClasspath(String path) {
     photoInput.uploadFromClasspath(path);

@@ -26,6 +26,6 @@ public class UdUserEntityRowMapper implements RowMapper<UdUserEntity> {
     result.setPhoto(rs.getBytes("photo"));
     result.setPhotoSmall(rs.getBytes("photo_small"));
     result.setFullname(rs.getString("full_name"));
-    return null;
+    return result;
   }
 }

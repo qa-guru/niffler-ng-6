@@ -10,6 +10,7 @@ public interface AuthAuthorityDao {
   void create(AuthAuthorityEntity... authority);
 
   Optional<AuthAuthorityEntity> findById(UUID userId);
+
   List<AuthAuthorityEntity> findAll();
 
   void deleteById(UUID id);

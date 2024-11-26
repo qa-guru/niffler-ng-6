@@ -12,7 +12,8 @@ public class AuthAuthorityEntityRowMapper implements RowMapper<AuthAuthorityEnti
 
   public static final AuthAuthorityEntityRowMapper instance = new AuthAuthorityEntityRowMapper();
 
-  public AuthAuthorityEntityRowMapper(){}
+  public AuthAuthorityEntityRowMapper() {
+  }
 
   @Override
   public AuthAuthorityEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -20,6 +21,6 @@ public class AuthAuthorityEntityRowMapper implements RowMapper<AuthAuthorityEnti
     ue.setId(rs.getObject("id", UUID.class));
     ue.setUserId(rs.getObject("user_id", UUID.class));
     ue.setAuthority(AuthorityEnum.valueOf(rs.getString("authority")));
-    return null;
+    return ue;
   }
 }

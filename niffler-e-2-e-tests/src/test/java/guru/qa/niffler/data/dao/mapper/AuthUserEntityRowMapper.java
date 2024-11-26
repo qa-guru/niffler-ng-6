@@ -23,6 +23,6 @@ public class AuthUserEntityRowMapper implements RowMapper<AuthUserEntity> {
     result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
     result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
     result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-    return null;
+    return result;
   }
 }

@@ -11,7 +11,6 @@ import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FriendsPage {
 
@@ -29,8 +28,6 @@ public class FriendsPage {
     @Step("Check that friend present in friends table")
     public void checkThatFriendPresentInFriendsTable(String friend) {
         friendsTableRows.findBy(text(friend)).shouldBe(visible);
-        boolean isFriendPresent = friendsTableRows.findBy(text(friend)).is(visible);
-        assertTrue(isFriendPresent, friend + " is not found in friends table");
     }
 
     @Step("Check that friends table is empty")
@@ -47,12 +44,12 @@ public class FriendsPage {
     @Step("Check that income invitation in friends table")
     public void checkThatIncomeInvitationInFriendsTable(String friendIncome) {
         ElementsCollection elements = findFriend(friendIncome);
-        assertTrue(elements.first().$x(acceptButton).is(visible), friendIncome + " not founded in Friend requests");
+        elements.first().$x(acceptButton).shouldBe(visible);
     }
 
     @Step("Check that income invitation in friends table")
     public void checkThatOutcomeInvitationInFriendsTable(String friendOutcome) {
         ElementsCollection elements = findFriend(friendOutcome);
-        assertTrue(elements.first().$x(waitingMessage).is(visible), friendOutcome + " not founded in Friend outcome");
+        elements.first().$x(waitingMessage).shouldBe(visible);
     }
 }

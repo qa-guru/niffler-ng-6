@@ -61,12 +61,7 @@ public class UsersQueueExtensions implements
                             Optional<StaticUser> user = Optional.empty();
                             StopWatch sw = StopWatch.createStarted();
                             while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                                user = switch (ut.value()) {
-                                    case EMPTY -> Optional.ofNullable(EMPTY_USERS.poll());
-                                    case WITH_FRIENDS -> Optional.ofNullable(WITH_FRIENDS_USERS.poll());
-                                    case WITH_INCOME_REQUEST -> Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
-                                    case WITH_OUTCOME_REQUEST -> Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
-                                };
+                                user = Optional.ofNullable(getQueueByType(ut.value()).poll());
                             }
                             Allure.getLifecycle().updateTestCase(testCase -> {
                                 testCase.setStart(new Date().getTime());
@@ -93,10 +88,9 @@ public class UsersQueueExtensions implements
             StaticUser user = e.getValue();
 
             switch (type) {
-                case EMPTY -> EMPTY_USERS.add(user);
-                case WITH_FRIENDS -> WITH_FRIENDS_USERS.add(user);
-                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(user);
-                case WITH_OUTCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(user);
+                case EMPTY, WITH_FRIENDS, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST -> {
+                    getQueueByType(type).add(user);
+                }
             }
         }
     }
@@ -121,5 +115,15 @@ public class UsersQueueExtensions implements
         }
 
         return (StaticUser) map.get(userTypeAnnotation);
+    }
+
+
+    private static Queue<StaticUser> getQueueByType(UserType.Type type) {
+        return switch (type) {
+            case EMPTY -> EMPTY_USERS;
+            case WITH_FRIENDS -> WITH_FRIENDS_USERS;
+            case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS;
+            case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS;
+        };
     }
 }

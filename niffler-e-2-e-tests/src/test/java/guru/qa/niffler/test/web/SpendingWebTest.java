@@ -7,7 +7,6 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -33,7 +32,7 @@ public class SpendingWebTest extends BaseTest {
                 .setNewSpendingDescription(newDescription)
                 .save();
 
-        new MainPage().checkThatTableContainsSpending(newDescription);
+        mainPage.checkThatTableContainsSpending(newDescription);
     }
 }
 

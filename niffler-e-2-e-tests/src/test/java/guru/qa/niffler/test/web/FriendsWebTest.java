@@ -38,6 +38,7 @@ public class FriendsWebTest extends BaseTest {
 
     @Test
     @ExtendWith(UsersQueueExtensions.class)
+    @DisplayName("Income invitation be present in friends table")
     void incomeInvitationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.username(), user.password());
@@ -48,6 +49,7 @@ public class FriendsWebTest extends BaseTest {
 
     @Test
     @ExtendWith(UsersQueueExtensions.class)
+    @DisplayName("Outcome invitation be present in all peoples table")
     void outcomeInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.username(), user.password());

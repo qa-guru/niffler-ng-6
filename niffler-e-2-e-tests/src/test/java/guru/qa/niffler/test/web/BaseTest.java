@@ -6,9 +6,9 @@ import guru.qa.niffler.page.*;
 public class BaseTest {
 
     protected static final Config CFG = Config.getInstance();
-    MainPage mainPage = new MainPage();
-    ProfilePage profilePage = new ProfilePage();
-    RegisterPage registerPage = new RegisterPage();
-    LoginPage loginPage = new LoginPage();
-    FriendsPage friendsPage = new FriendsPage();
+    protected final MainPage mainPage = new MainPage();
+    protected final ProfilePage profilePage = new ProfilePage();
+    protected final RegisterPage registerPage = new RegisterPage();
+    protected final LoginPage loginPage = new LoginPage();
+    protected final FriendsPage friendsPage = new FriendsPage();
 }

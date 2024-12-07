@@ -30,10 +30,16 @@ public class MainPage extends BasePage<MainPage> {
         return spendingTable.editSpending(spendingDescription);
     }
 
-    @Step("Открываем страницу для редактирования траты ")
+    @Step("Check status component ")
     public StatComponent getStatComponent() {
-        statComponent.getSelf().scrollIntoView(true);;
+        statComponent.getSelf().scrollIntoView(true);
         return statComponent;
+    }
+
+    @Step("Check spending table ")
+    public SpendingTable getSpendingTable() {
+        spendingTable.getSelf().scrollIntoView(true);
+        return spendingTable;
     }
 
     @Step("Открываем страницу для редактирования траты ")

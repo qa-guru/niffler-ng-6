@@ -72,15 +72,15 @@ public class ProfileWebTest {
     @User
    @ScreenShotTest("img/expected1.png")
     void checkCorrectUploadAvatar(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
+        BufferedImage actualAvatar = Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openProfilePage()
-                .uploadAvatar("img/expected-stat.png");
+                .uploadAvatar("img/expected-stat.png")
+                .avatarScreenshot();
 
-        BufferedImage actual = ImageIO.read(new ProfilePage().avatarImage.screenshot());
         Assertions.assertFalse(new ScreenDiffResult(
                 expected,
-                actual
+                actualAvatar
         ));
     }
 

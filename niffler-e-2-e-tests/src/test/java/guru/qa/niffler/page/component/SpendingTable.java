@@ -1,6 +1,9 @@
 package guru.qa.niffler.page.component;
 
+import guru.qa.niffler.condition.SpendCondition;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.CollectionCondition.*;
@@ -48,6 +51,12 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
     public SpendingTable checkTableSize(int expectedSize) {
         self.$$("tr").shouldHave(size(expectedSize));
         return this;
+    }
+
+    @Step("Check what spends match")
+    public SpendingTable checkSpendingMatch(SpendJson ...expectedSpends) {
+        self.$$("tbody tr").should(SpendCondition.spends(expectedSpends));
+        return new SpendingTable();
     }
 
     public enum DataFilterValues {

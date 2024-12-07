@@ -6,7 +6,10 @@ import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -58,6 +61,11 @@ public class ProfilePage extends BasePage<ProfilePage> {
     @Step("Возвращаемся на главную страницу")
     public MainPage returnToMainPage() {
         return  header.toMainPage();
+    }
+
+    @Step("Get screenshot of avatar picture")
+    public BufferedImage avatarScreenshot() throws IOException {
+        return ImageIO.read(new ProfilePage().avatarImage.screenshot());
     }
 
 

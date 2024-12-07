@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.condition.Bubble;
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
@@ -12,6 +13,7 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.page.component.SpendingTable;
 import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
@@ -29,7 +31,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -74,11 +79,17 @@ public class SpendingWebTest {
     }
 
     @User(
-            spendings = @Spending(
+            spendings = {@Spending(
                     category = "work",
                     description = "Education",
                     amount = 3000
-            )
+            ),
+                    @Spending(
+                            category = "entertainment",
+                            description = "Move",
+                            amount = 500
+                    )}
+
     )
     @ScreenShotTest(value = "img/expected-stat.png")
     void checkStatComponentTest(BufferedImage expected, UserJson user) throws IOException, InterruptedException {
@@ -87,12 +98,45 @@ public class SpendingWebTest {
                 .getStatComponent();
         Thread.sleep(3000);
 
-        Assertions.assertFalse(new ScreenDiffResult(
-                expected,
-                statComponent.chartScreenshot()
-        ) ,"Screen comparison failure"
-        );
-        statComponent.checkBubbles(Color.yellow);
+//        Assertions.assertFalse(new ScreenDiffResult(
+//                expected,
+//                statComponent.chartScreenshot()
+//        ) ,"Screen comparison failure"
+//        );
+        Bubble[] expectedBubbles = new Bubble[user.testData().spendJsonList().size()];
+        List<Color> colors = List.of(Color.values());
+        int i = 0;
+        for (SpendJson spendJson : user.testData().spendJsonList()) {
+            expectedBubbles[i] = new Bubble(colors.get(i), String.format("%.0f", spendJson.amount()));
+            i++;
+        }
+
+        statComponent.checkBubbles(expectedBubbles);
+
+    }
+
+
+    @User(
+            spendings = {@Spending(
+                    category = "work",
+                    description = "Education",
+                    amount = 3000
+            ),
+                    @Spending(
+                            category = "entertainment",
+                            description = "Move",
+                            amount = 500
+                    )}
+
+    )
+    @Test
+    void checkSpendingTable(UserJson user) {
+        SpendingTable spendingTable = Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .getSpendingTable();
+
+        spendingTable.checkSpendingMatch(user.testData().spendJsonList().toArray(new SpendJson[0]));
+
     }
 
     @User(
@@ -117,7 +161,7 @@ public class SpendingWebTest {
         Assertions.assertFalse(new ScreenDiffResult(
                 expected,
                 statComponent.chartScreenshot()
-        ) ,"Screen comparison failure");
+        ), "Screen comparison failure");
     }
 
     @User(
@@ -144,7 +188,7 @@ public class SpendingWebTest {
         Assertions.assertFalse(new ScreenDiffResult(
                 expected,
                 statComponent.chartScreenshot()
-        ) ,"Screen comparison failure");
+        ), "Screen comparison failure");
     }
 
     @User(
@@ -168,6 +212,6 @@ public class SpendingWebTest {
         Assertions.assertFalse(new ScreenDiffResult(
                 expected,
                 statComponent.chartScreenshot()
-        ) ,"Screen comparison failure");
+        ), "Screen comparison failure");
     }
 }

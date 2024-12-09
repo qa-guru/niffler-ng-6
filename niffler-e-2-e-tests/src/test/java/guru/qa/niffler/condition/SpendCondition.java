@@ -35,7 +35,7 @@ public class SpendCondition {
                     throw new IllegalArgumentException("No expected colors given");
                 }
 
-                if (expectedSpendingStrings.size() > elements.size()) {
+                if (expectedSpendingStrings.size() != elements.size()) {
                     final String message = String.format("List size expected more than actual (expected: %s, actual: %s)", expectedSpendingStrings.size(), elements.size());
                     return rejected(message, elements);
                 }
@@ -43,9 +43,9 @@ public class SpendCondition {
 
                 List<SpendingString> actualSpendingStrings = new ArrayList<>();
                 for (SpendingString expectedSpendingString : expectedSpendingStrings) {
-                    int i = 1;
-                    for (WebElement element : elements) {
-                        List<WebElement> cells = element.findElements(By.xpath("//tr[" + i + "]/td/span"));
+
+                    for (int i=0; i<elements.size(); i++) {
+                        List<WebElement> cells = elements.get(i).findElements(By.xpath("//tr[" + i + "]/td/span"));
                         if (!cells.get(3).getText().equals(expectedSpendingString.description())) {
                         } else {
                             if (passed) {
@@ -60,7 +60,7 @@ public class SpendCondition {
                                 passed = cells.get(4).getText().equals(expectedSpendingString.date());
                             }
                         }
-                        i++;
+
                     }
                 }
 

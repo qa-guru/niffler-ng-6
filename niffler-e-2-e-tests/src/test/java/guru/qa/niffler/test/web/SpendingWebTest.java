@@ -96,7 +96,7 @@ public class SpendingWebTest {
         StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .getStatComponent();
-        Thread.sleep(3000);
+
 
 //        Assertions.assertFalse(new ScreenDiffResult(
 //                expected,

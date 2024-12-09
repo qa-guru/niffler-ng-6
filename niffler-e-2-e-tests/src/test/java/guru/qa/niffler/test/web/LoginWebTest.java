@@ -7,9 +7,8 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 
 @ExtendWith(BrowserExtension.class)
 public class LoginWebTest {
@@ -31,4 +30,5 @@ public class LoginWebTest {
                 .loginIncorrect("esa1", "12345")
                 .checkButtonSingInIsDisplayed();
     }
+
 }

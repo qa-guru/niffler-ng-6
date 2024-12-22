@@ -44,7 +44,7 @@ public class SpendCondition {
                 List<SpendingString> actualSpendingStrings = new ArrayList<>();
                 for (SpendingString expectedSpendingString : expectedSpendingStrings) {
 
-                    for (int i=0; i<elements.size(); i++) {
+                    for (int i = 0; i < elements.size(); i++) {
                         List<WebElement> cells = elements.get(i).findElements(By.xpath("//tr[" + i + "]/td/span"));
                         if (!cells.get(3).getText().equals(expectedSpendingString.description())) {
                         } else {

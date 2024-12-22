@@ -23,11 +23,11 @@ public abstract class RestClient {
     protected final Retrofit retrofit;
 
     public RestClient(String baseUrl) {
-        this(baseUrl, false, JacksonConverterFactory.create(), HEADERS, null);
+        this(baseUrl, false, JacksonConverterFactory.create(), BODY, null);
     }
 
     public RestClient(String baseUrl, boolean followRedirect) {
-        this(baseUrl, followRedirect, JacksonConverterFactory.create(), HEADERS, null);
+        this(baseUrl, followRedirect, JacksonConverterFactory.create(), BODY, null);
     }
 
     public RestClient(String baseUrl, boolean followRedirect, HttpLoggingInterceptor.Level loggingLevel) {
@@ -65,7 +65,7 @@ public abstract class RestClient {
                 )
         );
 
-        this.okHttpClient = okHttpClientBuilder.build();
+        this.okHttpClient = okHttpClientBuilder.followRedirects(true).build();
 
         this.retrofit = new Retrofit.Builder()
                 .client(okHttpClient)

@@ -20,7 +20,6 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
-
     private final SpendClient spendClient = new SpendDbClient();
 
     @Override
@@ -32,19 +31,19 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         UserJson user = context.getStore(UserExtension.NAMESPACE)
                                 .get(context.getUniqueId(), UserJson.class);
                         for (Spending spendingAnnotation : anno.spendings()) {
-                             SpendJson spend = new SpendJson(
+                            SpendJson spend = new SpendJson(
                                     null,
                                     new Date(),
                                     new CategoryJson(
-                                           null,
+                                            null,
                                             spendingAnnotation.category(),
-                                            user != null ? user.username() :  anno.username(),
+                                            user != null ? user.username() : anno.username(),
                                             false
                                     ),
                                     CurrencyValues.RUB,
                                     spendingAnnotation.amount(),
                                     spendingAnnotation.description(),
-                                     user != null ? user.username() :  anno.username()
+                                    user != null ? user.username() : anno.username()
                             );
                             SpendJson createdSpend = spendClient.create(spend);
                             result.add(createdSpend);

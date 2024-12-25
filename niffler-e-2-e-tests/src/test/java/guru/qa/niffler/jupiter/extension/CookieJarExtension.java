@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.service.ThreadSafeCookieStore;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;

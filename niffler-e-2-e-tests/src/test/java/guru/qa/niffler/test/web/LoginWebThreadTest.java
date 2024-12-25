@@ -4,7 +4,7 @@ import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.api.UserdataApiClient;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.converter.ToDriverArgumentConverter;
-import guru.qa.niffler.jupiter.extantion.NonStaticBrowserExtension;
+import guru.qa.niffler.jupiter.extension.NonStaticBrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.utils.SelenideConfigBrowser;
 import org.junit.jupiter.api.extension.RegisterExtension;

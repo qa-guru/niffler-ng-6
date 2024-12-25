@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.GhApiClient;
 import guru.qa.niffler.jupiter.annotation.DisableByIssue;

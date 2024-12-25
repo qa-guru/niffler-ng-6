@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.jupiter.extantion.UserClientExtension;
+import guru.qa.niffler.jupiter.extension.UserClientExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;

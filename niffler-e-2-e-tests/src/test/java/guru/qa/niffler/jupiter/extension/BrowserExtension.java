@@ -1,45 +1,31 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Allure;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-public class NonStaticBrowserExtension implements
+public class BrowserExtension implements
         BeforeEachCallback,
         AfterEachCallback,
         TestExecutionExceptionHandler,
         LifecycleMethodExecutionExceptionHandler {
 
-
-
-    private final List<SelenideDriver> drivers = new ArrayList<>();
-
-    public List<SelenideDriver> drivers() {
-        return drivers;
-    }
-
-    private static final ThreadLocal<SelenideDriver> driverThreadLocal = new ThreadLocal<>();
-
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        for (SelenideDriver driver : drivers) {
-            driverThreadLocal.set(driver);
-            if (driverThreadLocal.get().hasWebDriverStarted()) {
-                driverThreadLocal.get().close();
-            }
-            driverThreadLocal.remove();
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            Selenide.closeWebDriver();
         }
-
     }
 
     @Override
@@ -68,17 +54,14 @@ public class NonStaticBrowserExtension implements
         throw throwable;
     }
 
-    private void doScreenshot() {
-        for (SelenideDriver driver : drivers) {
-            driverThreadLocal.set(driver);
-            if (driverThreadLocal.get().hasWebDriverStarted()) {
-                Allure.addAttachment(
-                        "Screen on fail" + driverThreadLocal.get().getSessionId(),
-                        new ByteArrayInputStream(
-                                ((TakesScreenshot) driverThreadLocal.get().getWebDriver()).getScreenshotAs(OutputType.BYTES)
-                        )
-                );
-            }
+    private static void doScreenshot() {
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            Allure.addAttachment(
+                    "Screen on fail",
+                    new ByteArrayInputStream(
+                            ((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)
+                    )
+            );
         }
     }
 }

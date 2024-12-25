@@ -1,6 +1,5 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -9,7 +8,6 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.SpendDbClient;
-import guru.qa.niffler.utils.RandomDataUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -17,7 +15,6 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
@@ -54,7 +51,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         }
 
                         if (user != null) {
-                            user.testData().spendJsonList().addAll(result);
+                            user.testData().spends().addAll(result);
                         } else {
                             context.getStore(NAMESPACE).put(
                                     context.getUniqueId(),

@@ -30,6 +30,10 @@ public abstract class RestClient {
         this(baseUrl, followRedirect, JacksonConverterFactory.create(), BODY, null);
     }
 
+    public RestClient(String baseUrl, boolean followRedirect, @Nullable Interceptor... interceptors) {
+        this(baseUrl, followRedirect, JacksonConverterFactory.create(), HEADERS, interceptors);
+    }
+
     public RestClient(String baseUrl, boolean followRedirect, HttpLoggingInterceptor.Level loggingLevel) {
         this(baseUrl, followRedirect, JacksonConverterFactory.create(), loggingLevel, null);
     }
@@ -65,7 +69,7 @@ public abstract class RestClient {
                 )
         );
 
-        this.okHttpClient = okHttpClientBuilder.followRedirects(true).build();
+        this.okHttpClient = okHttpClientBuilder.build();
 
         this.retrofit = new Retrofit.Builder()
                 .client(okHttpClient)

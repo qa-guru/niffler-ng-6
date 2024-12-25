@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -6,7 +6,6 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.SpendDbClient;
-import guru.qa.niffler.service.rest.SpendRestClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
@@ -43,7 +42,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
                             result.add(createdCategory);
                         }
                         if (user != null) {
-                            user.testData().categoryJsonList().addAll(result);
+                            user.testData().categories().addAll(result);
                         } else {
                             context.getStore(NAMESPACE).put(
                                     context.getUniqueId(),
@@ -60,7 +59,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
         UserJson user = context.getStore(UserExtension.NAMESPACE)
                 .get(context.getUniqueId(), UserJson.class);
         List<CategoryJson> categories = user != null
-                ? user.testData().categoryJsonList()
+                ? user.testData().categories()
                 : context.getStore(NAMESPACE).get(context.getUniqueId(), List.class);
         for (CategoryJson category : categories) {
             spendClient.deleteCategory(category);

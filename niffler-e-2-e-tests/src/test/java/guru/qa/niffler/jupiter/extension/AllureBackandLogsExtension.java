@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;

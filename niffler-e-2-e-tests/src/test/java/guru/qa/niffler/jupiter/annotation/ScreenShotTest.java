@@ -1,7 +1,6 @@
 package guru.qa.niffler.jupiter.annotation;
 
-import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import guru.qa.niffler.jupiter.extantion.ScreenShotTestExtension;
+import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

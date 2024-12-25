@@ -2,7 +2,7 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.api.UserdataApiClient;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.jupiter.extantion.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -33,7 +33,7 @@ public class UserRestClient implements UserClient {
         while (sw.getTime(TimeUnit.MILLISECONDS) < limitTime) {
             user = userdataApiClient.getCurrentUser(username);
             if (user != null && user.id() != null) {
-               return user.addTestData(new TestData(password, null, null));
+               return user.addTestData(new TestData(password));
             } else {
                 try {
                     Thread.sleep(100);

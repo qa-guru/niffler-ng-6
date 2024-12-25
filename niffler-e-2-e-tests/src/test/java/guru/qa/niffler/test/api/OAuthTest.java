@@ -1,21 +1,29 @@
 package guru.qa.niffler.test.api;
 
 import guru.qa.niffler.api.AuthApiClient;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.Token;
+import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.UserJson;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@WebTest
 public class OAuthTest {
-    private AuthApiClient authApi = new AuthApiClient();
-
-    private static  String username = "esa";
-    private static String password = "12345";
+    private static final Config CFG = Config.getInstance();
+    private final AuthApiClient authApiClient = new AuthApiClient();
 
     @Test
-    void oauthTest() throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        final  String token = authApi.getToken(username, password);
-        assertNotNull(token);
+    @User(friends = 1)
+    @ApiLogin
+    void oauthTest(@Token String token, UserJson user) {
+        System.out.println(user);
+        Assertions.assertNotNull(token);
     }
 }

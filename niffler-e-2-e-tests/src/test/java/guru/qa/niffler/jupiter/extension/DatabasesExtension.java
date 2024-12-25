@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.data.jpa.EntityManagers;
 import guru.qa.niffler.data.tpl.Connections;

@@ -16,6 +16,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
+
 public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
     private final SelenideElement statBlock = $("#stat");
@@ -24,6 +25,8 @@ public class MainPage extends BasePage<MainPage> {
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final SpendingTable spendingTable = new SpendingTable();
     private final StatComponent statComponent = new StatComponent();
+
+    public static final String URL = CFG.frontUrl() + "main";
 
     @Step("Открываем страницу для редактирования траты ")
     public EditSpendingPage editSpending(String spendingDescription) {

@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.db.UserDbClient;

@@ -7,7 +7,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.jupiter.extantion.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
@@ -17,22 +17,13 @@ import guru.qa.niffler.page.component.SpendingTable;
 import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
-import io.qameta.allure.Allure;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.core.io.ClassPathResource;
-import ru.yandex.qatools.ashot.comparison.ImageDiff;
-import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -103,10 +94,10 @@ public class SpendingWebTest {
 //                statComponent.chartScreenshot()
 //        ) ,"Screen comparison failure"
 //        );
-        Bubble[] expectedBubbles = new Bubble[user.testData().spendJsonList().size()];
+        Bubble[] expectedBubbles = new Bubble[user.testData().spends().size()];
         List<Color> colors = List.of(Color.values());
         int i = 0;
-        for (SpendJson spendJson : user.testData().spendJsonList()) {
+        for (SpendJson spendJson : user.testData().spends()) {
             expectedBubbles[i] = new Bubble(colors.get(i), String.format("%.0f", spendJson.amount()));
             i++;
         }
@@ -135,7 +126,7 @@ public class SpendingWebTest {
                 .login(user.username(), user.testData().password())
                 .getSpendingTable();
 
-        spendingTable.checkSpendingMatch(user.testData().spendJsonList().toArray(new SpendJson[0]));
+        spendingTable.checkSpendingMatch(user.testData().spends().toArray(new SpendJson[0]));
 
     }
 
@@ -151,9 +142,9 @@ public class SpendingWebTest {
         String newAmount = "2000";
         StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
-                .editSpending(user.testData().spendJsonList().get(0).description())
+                .editSpending(user.testData().spends().get(0).description())
                 .setNewSpendingAmount(newAmount)
-                .checkValueCategory(user.testData().spendJsonList().get(0).category().name(), newAmount)
+                .checkValueCategory(user.testData().spends().get(0).category().name(), newAmount)
                 .getStatComponent();
 
         Thread.sleep(5000);
@@ -181,7 +172,7 @@ public class SpendingWebTest {
     void checkStatComponentAfterDeleteSpendingTest(BufferedImage expected, UserJson user) throws IOException, InterruptedException {
         StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
-                .deleteSpending(user.testData().spendJsonList().get(1).description())
+                .deleteSpending(user.testData().spends().get(1).description())
                 .getStatComponent();
         Thread.sleep(5000);
 
@@ -203,7 +194,7 @@ public class SpendingWebTest {
         StatComponent statComponent = Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openProfilePage()
-                .archivedCategory(user.testData().spendJsonList().get(0).category().name())
+                .archivedCategory(user.testData().spends().get(0).category().name())
                 .returnToMainPage()
                 .checkValueCategory("Archived", "3000")
                 .getStatComponent();

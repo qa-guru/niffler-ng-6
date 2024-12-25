@@ -1,6 +1,6 @@
 package guru.qa.niffler.utils;
 
-import guru.qa.niffler.jupiter.extantion.ScreenShotTestExtension;
+import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 

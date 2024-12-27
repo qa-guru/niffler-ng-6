@@ -13,4 +13,7 @@ public interface UserdataApi {
 
     @GET("internal/users/all")
     Call<List<UserJson>> all(@Query("username") String username);
+
+    @GET("internal/friends/all")
+    Call<List<UserJson>> allFriends(@Query("username") String username);
 }

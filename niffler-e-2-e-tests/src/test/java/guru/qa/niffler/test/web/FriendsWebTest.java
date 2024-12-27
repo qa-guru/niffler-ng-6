@@ -21,8 +21,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 
 
-
+import java.util.Arrays;
 import java.util.List;
+
 @Order(2)
 @ExtendWith(BrowserExtension.class)
 @WebTest
@@ -35,27 +36,26 @@ public class FriendsWebTest {
     @ApiLogin
     @Test
     void friendShouldBePresentInFriendsTable(@Token String token, UserJson user) {
-
         Selenide.open(CFG.frontUrl(), MainPage.class)
                 .openFriendsPage()
                 .checkHaveFriend();
     }
 
     @User
+    @ApiLogin
     @Test
-    void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-        authUserClient.createFriends(user, 0);
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.testData().password())
+    void friendsTableShouldBeEmptyForNewUser(@Token String token, UserJson user) {
+        Selenide.open(CFG.frontUrl(), MainPage.class)
                 .openFriendsPage()
                 .checkNotHaveFriend();
         new FriendsPage().openAllPeoplePage().checkNotHaveOutcomeInvitation();
     }
 
-    @User
+    @User(incomeInvitations = 1)
+    @ApiLogin
     @Test
-    void incomeInvitationBePresentInFriendsTable(UserJson user) {
-        List<String> users = authUserClient.createIncomeInvitations(user, 1);
+    void incomeInvitationBePresentInFriendsTable(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
@@ -63,42 +63,38 @@ public class FriendsWebTest {
                 .checkIncomeInvitationFriend();
     }
 
-    @User
+    @User(outcomeInvitations = 1)
+    @ApiLogin
     @Test
-    void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-        List<String> users = authUserClient.createOutcomeInvitations(user, 1);
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.testData().password())
+    void outcomeInvitationBePresentInAllPeoplesTable(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().outcomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
                 .openAllPeoplePage()
                 .toSearch(users.get(0))
                 .checkHaveOutcomeInvitation();
 
     }
 
-    @User
+    @User(incomeInvitations = 1)
+    @ApiLogin
     @Test
-    void acceptFriend(UserJson user) {
-        List<String> users = authUserClient.createIncomeInvitations(user, 1);
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.testData().password())
+    void acceptFriend(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
                 .openFriendsPage()
                 .acceptFriendship(users.get(0))
-                .checkAlert("Invitation of "+users.get(0)+" accepted");
+                .checkAlert("Invitation of " + users.get(0) + " accepted");
         new FriendsPage().checkHaveFriend();
     }
 
-    @User
+    @User(incomeInvitations = 1)
     @Test
-    void declineFriend(UserJson user) {
-        List<String> users = authUserClient.createIncomeInvitations(user, 1);
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.testData().password())
+    void declineFriend(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
                 .openFriendsPage()
                 .declineFriendship(users.get(0))
-                .checkAlert("Invitation of "+users.get(0)+" is declined");
+                .checkAlert("Invitation of " + users.get(0) + " is declined");
         new FriendsPage().checkNotHaveFriend();
     }
-
-
-
 }

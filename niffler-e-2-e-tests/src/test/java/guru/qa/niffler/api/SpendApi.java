@@ -19,8 +19,8 @@ public interface SpendApi {
     @GET("internal/spends/all")
     Call<List<SpendJson>> getSpends(@Query("username") String username,
                                     @Query("filterCurrency") CurrencyValues filterCurrency,
-                                    @Query("from") Date from,
-                                    @Query("to") Date to);
+                                    @Query("from") String from,
+                                    @Query("to") String to);
 
 
     @GET("internal/spends/{id}")

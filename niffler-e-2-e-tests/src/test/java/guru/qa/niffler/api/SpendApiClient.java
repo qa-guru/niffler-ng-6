@@ -53,7 +53,7 @@ public class SpendApiClient extends RestClient {
         return response.body();
     }
 
-    public @Nonnull List<SpendJson> getSpends(String username, @Nullable CurrencyValues filterCurrency, @Nullable Date from, @Nullable Date to) {
+    public @Nonnull List<SpendJson> getSpends(String username, @Nullable CurrencyValues filterCurrency, @Nullable String from, @Nullable String to) {
         final Response<List<SpendJson>> response;
         try {
             response = spendApi.getSpends(username, filterCurrency, from, to)

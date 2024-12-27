@@ -43,4 +43,15 @@ public class UserdataApiClient extends RestClient {
         return response.body();
     }
 
+    public List<UserJson> getAllFriends (String username) {
+        Response<List<UserJson>> response;
+        try {
+            response=userdataApi.allFriends(username).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Assertions.assertEquals(200, response.code());
+        return response.body();
+    }
+
 }

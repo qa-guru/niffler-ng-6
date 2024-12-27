@@ -2,14 +2,13 @@ package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
+import guru.qa.niffler.api.*;
+import guru.qa.niffler.model.*;
 import guru.qa.niffler.service.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
-import guru.qa.niffler.model.TestData;
-import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.api.AuthApiClient;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -18,11 +17,20 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
 public class ApiLoginExtension implements BeforeTestExecutionCallback, ParameterResolver {
     private static final Config CFG = Config.getInstance();
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
 
     private final AuthApiClient authApiClient = new AuthApiClient();
+    private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
+    private final SpendApiClient spendApiClient = new SpendApiClient();
+    private final UserdataApiClient userdataApiClient = new UserdataApiClient();
+
     private final boolean setupBrowser;
 
     private ApiLoginExtension(boolean setupBrowser) {
@@ -50,10 +58,24 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
                         }
                         userToLogin = userFromUserExtension;
                     } else {
+                        List<CategoryJson> categories = categoriesApiClient.getCategories(apiLogin.username());
+                        List<SpendJson> spends = spendApiClient.getSpends(apiLogin.username(), CurrencyValues.RUB, "2024-01-01", "2024-12-30");
+                        List<UserJson> friends = userdataApiClient.getAllFriends(apiLogin.username())
+                                .stream().filter(x -> FriendState.FRIEND.equals(x.friendState())).toList();
+                        List<UserJson> outcomeInvitation = userdataApiClient.getAllPeople(apiLogin.username())
+                                .stream().filter(x -> FriendState.INVITE_SENT.equals(x.friendState())).toList();
+                        List<UserJson> incomeInvitation = userdataApiClient.getAllFriends(apiLogin.username())
+                                .stream().filter(x -> FriendState.INVITE_RECEIVED.equals(x.friendState())).toList();
                         UserJson fakeUser = new UserJson(
                                 apiLogin.username(),
                                 new TestData(
-                                        apiLogin.password()
+                                        apiLogin.password(),
+                                        categories,
+                                        spends,
+                                        friends,
+                                        outcomeInvitation,
+                                        incomeInvitation
+
                                 )
                         );
                         if (userFromUserExtension != null) {

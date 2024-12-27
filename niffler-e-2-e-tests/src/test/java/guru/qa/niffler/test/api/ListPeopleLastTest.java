@@ -1,24 +1,26 @@
-package guru.qa.niffler.test.web;
+package guru.qa.niffler.test.api;
 
 import guru.qa.niffler.api.UserdataApiClient;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
-@Order(1)
 @Isolated
 @ExtendWith(BrowserExtension.class)
-public class ListPeopleFirstTest {
+public class ListPeopleLastTest {
      private UserdataApiClient userdataApiClient = new UserdataApiClient();
+
 
     @User
     @Test
-    void listIsEmpty(UserJson user){
-        Assertions.assertTrue(userdataApiClient.getAllPeople(user.username()).isEmpty());
+    @ResourceLock("11111")
+    public void listNotEmpty(UserJson user){
+        Assertions.assertFalse(userdataApiClient.getAllPeople(user.username()).isEmpty());
     }
+
 }

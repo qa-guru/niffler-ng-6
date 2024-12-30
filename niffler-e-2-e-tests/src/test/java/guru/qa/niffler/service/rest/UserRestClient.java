@@ -51,9 +51,12 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, password);
+                UserJson newUser = createUser(username, password);
                 friendApiClient.sendInvitation(username, targetUser.username());
                 usernames.add(username);
+                targetUser.testData()
+                        .incomeInvitations()
+                        .add(newUser);
             }
         }
         return usernames;
@@ -65,9 +68,12 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, password);
+                UserJson newUser = createUser(username, password);
                 friendApiClient.sendInvitation(targetUser.username(), username);
                 usernames.add(username);
+                targetUser.testData()
+                        .outcomeInvitations()
+                        .add(newUser);
             }
         }
         return usernames;
@@ -78,9 +84,12 @@ public class UserRestClient implements UserClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 String username = RandomDataUtils.randomUsername();
-                createUser(username, password);
+                UserJson newUser = createUser(username, password);
                 friendApiClient.sendInvitation(username, targetUser.username());
                 friendApiClient.acceptInvitation(targetUser.username(), username);
+                targetUser.testData()
+                        .friends()
+                        .add(newUser);
             }
         }
     }

@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.api.UserdataApiClient;
 import guru.qa.niffler.jupiter.annotation.User;

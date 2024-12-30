@@ -55,6 +55,7 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
     public static UserJson getUserJson() {
         final ExtensionContext context = TestMethodContextExtension.context();
+        System.out.println(context.getStore(NAMESPACE).get(context.getUniqueId(), UserJson.class));
         return context.getStore(NAMESPACE).get(context.getUniqueId(), UserJson.class);
     }
 }

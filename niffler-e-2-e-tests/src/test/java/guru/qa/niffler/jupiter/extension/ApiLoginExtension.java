@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -59,7 +60,8 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
                         userToLogin = userFromUserExtension;
                     } else {
                         List<CategoryJson> categories = categoriesApiClient.getCategories(apiLogin.username());
-                        List<SpendJson> spends = spendApiClient.getSpends(apiLogin.username(), CurrencyValues.RUB, "2024-01-01", "2024-12-30");
+                        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+                        List<SpendJson> spends = spendApiClient.getSpends(apiLogin.username(), CurrencyValues.RUB, "2024-01-01", formater.format(new Date()));
                         List<UserJson> friends = userdataApiClient.getAllFriends(apiLogin.username())
                                 .stream().filter(x -> FriendState.FRIEND.equals(x.friendState())).toList();
                         List<UserJson> outcomeInvitation = userdataApiClient.getAllPeople(apiLogin.username())

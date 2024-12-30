@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 
 import guru.qa.niffler.service.ThreadSafeCookieStore;
 

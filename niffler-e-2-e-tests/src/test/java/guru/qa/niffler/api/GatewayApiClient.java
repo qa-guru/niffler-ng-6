@@ -40,7 +40,7 @@ public class GatewayApiClient extends RestClient {
 
     @Step("api/friends/remove DELETE request to niffler-gateway")
     public void removeFriends(@Nonnull String bearerToken,
-                                     @Nullable String targetUser) {
+                                     @Nonnull String targetUser) {
         final Response<Void> response;
         try {
             response = gatewayApi.removeFriend(bearerToken, targetUser).execute();
@@ -52,7 +52,7 @@ public class GatewayApiClient extends RestClient {
 
     @Step("api/invitations/accept POST request to niffler-gateway")
     public UserJson acceptFriends(@Nonnull String bearerToken,
-                              @Nullable FriendJson friend) {
+                              @Nonnull FriendJson friend) {
         final Response<UserJson> response;
         try {
             response = gatewayApi.acceptInvitation(bearerToken, friend).execute();
@@ -66,7 +66,7 @@ public class GatewayApiClient extends RestClient {
 
     @Step("api/invitations/decline POST request to niffler-gateway")
     public UserJson declineInvitation(@Nonnull String bearerToken,
-                                  @Nullable FriendJson friend) {
+                                  @Nonnull FriendJson friend) {
         final Response<UserJson> response;
         try {
             response = gatewayApi.declineInvitation(bearerToken, friend).execute();

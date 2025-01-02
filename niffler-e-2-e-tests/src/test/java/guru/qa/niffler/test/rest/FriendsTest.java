@@ -79,7 +79,6 @@ public class FriendsTest {
         long countFriends = allFriends.stream()
                 .filter(u -> u.friendState() == FriendState.FRIEND)
                 .count();
-
         long countIncomeInvitation = allFriends.stream()
                 .filter(u -> u.friendState() == FriendState.INVITE_RECEIVED)
                 .count();
@@ -132,13 +131,11 @@ public class FriendsTest {
     void checkIncomeAndOutcomeInvitation(@Token String token, UserJson user) {
         String friendName = user.testData().outcomeInvitations().getFirst().username();
         UserJson friendJson = gatewayApiClient.allUsers(token, friendName).getFirst();
-        Assertions.assertTrue(friendJson.friendState() == FriendState.INVITE_SENT,
-                "Target user have income invitation");
+        Assertions.assertTrue(friendJson.friendState() == FriendState.INVITE_SENT, "Target user have income invitation");
         ThreadSafeCookieStore.INSTANCE.removeAll();
         String tokenFriend = "Bearer " + new AuthApiClient().getToken(friendName, "12345");
         UserJson userState = gatewayApiClient.allFriends(tokenFriend, user.username()).getFirst();
-        Assertions.assertTrue(userState.friendState() == FriendState.INVITE_RECEIVED,
-                "Target user have income invitation");
+        Assertions.assertTrue(userState.friendState() == FriendState.INVITE_RECEIVED, "Target user have income invitation");
     }
 
 }

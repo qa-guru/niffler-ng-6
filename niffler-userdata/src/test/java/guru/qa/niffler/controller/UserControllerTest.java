@@ -65,7 +65,6 @@ class UserControllerTest {
                         .param("username", "test")
                 )
                 .andReturn().getResponse().getContentAsString());
-
         ((ObjectNode) userNode).put("fullname", "Stepan");
 
         mockMvc.perform(post("/internal/users/update")

@@ -2,15 +2,12 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static utils.FakerUtils.*;
 
 @WebTest
-@ExtendWith(BrowserExtension.class)
 public class RegistrationWebTest extends BaseTest {
 
     @Test

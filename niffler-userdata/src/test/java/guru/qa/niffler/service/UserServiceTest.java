@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static guru.qa.niffler.model.FriendState.INVITE_SENT;
+import static guru.qa.niffler.model.FriendshipStatus.INVITE_SENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-  private UserService testedObject;
+  private UserService userService;
 
   private final UUID mainTestUserUuid = UUID.randomUUID();
   private final String mainTestUserName = "dima";
@@ -46,9 +46,7 @@ class UserServiceTest {
   private final String thirdTestUserName = "emma";
   private UserEntity thirdTestUser;
 
-
   private final String notExistingUser = "not_existing_user";
-
 
   @BeforeEach
   void init() {
@@ -99,7 +97,7 @@ class UserServiceTest {
     when(userRepository.save(any(UserEntity.class)))
         .thenAnswer(answer -> answer.getArguments()[0]);
 
-    testedObject = new UserService(userRepository);
+    userService = new UserService(userRepository);
 
     final String photoForTest = photo.isEmpty() ? null : photo;
 
@@ -114,7 +112,7 @@ class UserServiceTest {
         null,
         null
     );
-    final UserJson result = testedObject.update(toBeUpdated);
+    final UserJson result = userService.update(toBeUpdated);
     assertEquals(mainTestUserUuid, result.id());
     assertEquals("Test TestSurname", result.fullname());
     assertEquals(CurrencyValues.USD, result.currency());
@@ -128,10 +126,10 @@ class UserServiceTest {
     when(userRepository.findByUsername(eq(notExistingUser)))
         .thenReturn(Optional.empty());
 
-    testedObject = new UserService(userRepository);
+    userService = new UserService(userRepository);
 
     final NotFoundException exception = assertThrows(NotFoundException.class,
-        () -> testedObject.getRequiredUser(notExistingUser));
+        () -> userService.getRequiredUser(notExistingUser));
     assertEquals(
         "Can`t find user by username: '" + notExistingUser + "'",
         exception.getMessage()
@@ -143,17 +141,17 @@ class UserServiceTest {
     when(userRepository.findByUsernameNot(eq(mainTestUserName)))
         .thenReturn(getMockUsersMappingFromDb());
 
-    testedObject = new UserService(userRepository);
+    userService = new UserService(userRepository);
 
-    final List<UserJsonBulk> users = testedObject.allUsers(mainTestUserName, null);
+    final List<UserJsonBulk> users = userService.allUsers(mainTestUserName, null);
     assertEquals(2, users.size());
     final UserJsonBulk invitation = users.stream()
-        .filter(u -> u.friendState() == INVITE_SENT)
+        .filter(u -> u.friendshipStatus() == INVITE_SENT)
         .findFirst()
         .orElseThrow(() -> new AssertionError("Friend with state INVITE_SENT not found"));
 
     final UserJsonBulk friend = users.stream()
-        .filter(u -> u.friendState() == null)
+        .filter(u -> u.friendshipStatus() == null)
         .findFirst()
         .orElseThrow(() -> new AssertionError("user without status not found"));
 

@@ -138,7 +138,7 @@ services:
         condition: service_started
     networks:
       - niffler-network
-        
+
   selenoid:
     profiles:
       - test
@@ -148,6 +148,8 @@ services:
     volumes:
       - ./selenoid:/etc/selenoid
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Europe/Moscow
     restart: unless-stopped
     command: [ "-conf", "/etc/selenoid/browsers.json", "-limit", "3", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "niffler_niffler-network" ]
     ports:
@@ -170,7 +172,7 @@ services:
       - niffler-network
 
   niffler-e-2-e:
-    profiles: [test]
+    profiles: [ test ]
     container_name: niffler-e-2-e
     image: ${PREFIX}/niffler-e-2-e-tests:latest
     build:
@@ -189,7 +191,7 @@ services:
       - niffler-network
 
   allure:
-    profiles: [test]
+    profiles: [ test ]
     container_name: allure
     image: frankescobar/allure-docker-service:2.27.0
     depends_on:
@@ -203,7 +205,7 @@ services:
       - niffler-network
 
   allure-ui:
-    profiles: [test]
+    profiles: [ test ]
     container_name: allure-ui
     image: frankescobar/allure-docker-service-ui:7.0.3
     depends_on:

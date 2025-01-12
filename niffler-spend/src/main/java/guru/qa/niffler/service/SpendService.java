@@ -60,7 +60,9 @@ public class SpendService {
           spendEntity.setAmount(spend.amount());
           spendEntity.setDescription(spend.description());
           spendEntity.setCurrency(spend.currency());
-          return SpendJson.fromEntity(spendRepository.save(spendEntity));
+          return SpendJson.fromEntity(
+              spendRepository.save(spendEntity)
+          );
         }
     ).orElseThrow(() -> new SpendNotFoundException(
         "Can`t find spend by given id: " + spend.id()

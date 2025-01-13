@@ -53,23 +53,28 @@ class UserControllerTest {
 
     @Test
     void editUserEndpoint() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+
         UserEntity userDataEntity = new UserEntity();
         userDataEntity.setUsername("test");
         userDataEntity.setFullname("Ivan");
         userDataEntity.setCurrency(CurrencyValues.RUB);
         usersRepository.save(userDataEntity);
 
-        JsonNode userNode = mapper.readTree(mockMvc.perform(get("/internal/users/current")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("username", "test")
-                )
-                .andReturn().getResponse().getContentAsString());
-        ((ObjectNode) userNode).put("fullname", "Stepan");
+        UserJson userJson = new UserJson(
+                null,
+                userDataEntity.getUsername(),
+                null,
+                null,
+                "Stepan",
+                userDataEntity.getCurrency(),
+                null,
+                null,
+                null
+        );
 
         mockMvc.perform(post("/internal/users/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userNode))
+                        .content(userJson.toString())
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.fullname").value("Stepan"));

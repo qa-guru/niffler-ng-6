@@ -56,13 +56,13 @@ public class SpendDaoSpringJdbc implements SpendDao {
   public Optional<SpendEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     try {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            "SELECT * FROM spend WHERE id = ?",
-            SpendEntityRowMapper.instance,
-            id
-        )
-    );
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              "SELECT * FROM spend WHERE id = ?",
+              SpendEntityRowMapper.instance,
+              id
+          )
+      );
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }

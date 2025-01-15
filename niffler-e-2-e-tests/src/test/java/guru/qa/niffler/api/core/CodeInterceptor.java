@@ -2,7 +2,6 @@ package guru.qa.niffler.api.core;
 
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import okhttp3.Interceptor;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 

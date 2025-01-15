@@ -25,8 +25,8 @@ public interface AuthApi {
   @POST("login")
   @FormUrlEncoded
   Call<Void> login(@Field("username") String username,
-                     @Field("password") String password,
-                     @Field("_csrf") String csrf
+                   @Field("password") String password,
+                   @Field("_csrf") String csrf
   );
 
   @POST("oauth2/token")

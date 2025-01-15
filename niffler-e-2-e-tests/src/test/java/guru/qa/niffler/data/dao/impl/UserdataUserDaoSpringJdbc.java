@@ -102,15 +102,15 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   public Optional<UserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     try {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            """
-                   SELECT * FROM "user" WHERE id = ?
-                """,
-            UserdataUserEntityRowMapper.instance,
-            id
-        )
-    );
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              """
+                     SELECT * FROM "user" WHERE id = ?
+                  """,
+              UserdataUserEntityRowMapper.instance,
+              id
+          )
+      );
     } catch (
         EmptyResultDataAccessException e) {
       return Optional.empty();
@@ -122,15 +122,15 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   public Optional<UserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     try {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            """
-                   SELECT * FROM "user" WHERE username = ?
-                """,
-            UserdataUserEntityRowMapper.instance,
-            username
-        )
-    );
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              """
+                     SELECT * FROM "user" WHERE username = ?
+                  """,
+              UserdataUserEntityRowMapper.instance,
+              username
+          )
+      );
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }

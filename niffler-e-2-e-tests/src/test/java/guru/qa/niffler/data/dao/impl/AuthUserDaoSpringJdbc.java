@@ -57,14 +57,14 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     try {
       return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            """
-                    SELECT * FROM "user" WHERE id = ?
-                """,
-            AuthUserEntityRowMapper.instance,
-            id
-        )
-    );
+          jdbcTemplate.queryForObject(
+              """
+                      SELECT * FROM "user" WHERE id = ?
+                  """,
+              AuthUserEntityRowMapper.instance,
+              id
+          )
+      );
     } catch (
         EmptyResultDataAccessException e) {
       return Optional.empty();
@@ -76,15 +76,15 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
   public Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     try {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            """
-                   SELECT * FROM "user" WHERE username = ?
-                """,
-            AuthUserEntityRowMapper.instance,
-            username
-        )
-    );
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              """
+                     SELECT * FROM "user" WHERE username = ?
+                  """,
+              AuthUserEntityRowMapper.instance,
+              username
+          )
+      );
     } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
     }

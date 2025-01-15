@@ -21,8 +21,8 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
 
   @Query(
       "SELECT new guru.qa.niffler.data.projection.SumByCategory('Archived', s.currency, ROUND(SUM(s.amount), 2), MIN(s.spendDate), MAX(s.spendDate))  FROM SpendEntity s join CategoryEntity c on s.category = c " +
-          "where s.username = :username and s.category.archived = true and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "group by s.currency"
+      "where s.username = :username and s.category.archived = true and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "group by s.currency"
   )
   List<SumByCategory> statisticByArchivedCategory(
       @Nonnull String username,
@@ -32,8 +32,8 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
 
   @Query(
       "SELECT new guru.qa.niffler.data.projection.SumByCategory(c.name, s.currency, ROUND(SUM(s.amount), 2), MIN(s.spendDate), MAX(s.spendDate))  from SpendEntity s join CategoryEntity c on s.category = c " +
-          "where s.username = :username and s.category.archived = false and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "group by c.name, s.currency"
+      "where s.username = :username and s.category.archived = false and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "group by c.name, s.currency"
   )
   List<SumByCategory> statisticByCategory(
       @Nonnull String username,
@@ -59,9 +59,9 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
   @Nonnull
   @Query(
       "select s from SpendEntity s left join CategoryEntity c on s.category = c " +
-          "where s.username = :username " +
-          "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "order by s.spendDate desc "
+      "where s.username = :username " +
+      "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "order by s.spendDate desc "
   )
   Page<SpendEntity> findAll(
       @Nonnull String username,
@@ -73,10 +73,10 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
   @Nonnull
   @Query(
       "select s from SpendEntity s left join CategoryEntity c on s.category = c " +
-          "where s.username = :username " +
-          "and (lower(s.description) like lower(concat('%', :searchQuery, '%')) or lower(c.name) like lower(concat('%', :searchQuery, '%')))" +
-          "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "order by s.spendDate desc "
+      "where s.username = :username " +
+      "and (lower(s.description) like lower(concat('%', :searchQuery, '%')) or lower(c.name) like lower(concat('%', :searchQuery, '%')))" +
+      "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "order by s.spendDate desc "
   )
   Page<SpendEntity> findAll(
       @Nonnull String username,
@@ -89,10 +89,10 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
   @Nonnull
   @Query(
       "select s from SpendEntity s left join CategoryEntity c on s.category = c " +
-          "where s.username = :username " +
-          "and s.currency = :currency " +
-          "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "order by s.spendDate desc "
+      "where s.username = :username " +
+      "and s.currency = :currency " +
+      "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "order by s.spendDate desc "
   )
   Page<SpendEntity> findAll(
       @Nonnull String username,
@@ -105,11 +105,11 @@ public interface SpendRepository extends JpaRepository<SpendEntity, UUID> {
   @Nonnull
   @Query(
       "select s from SpendEntity s left join CategoryEntity c on s.category = c " +
-          "where s.username = :username " +
-          "and s.currency = :currency " +
-          "and (lower(s.description) like lower(concat('%', :searchQuery, '%')) or lower(c.name) like lower(concat('%', :searchQuery, '%')))" +
-          "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
-          "order by s.spendDate desc "
+      "where s.username = :username " +
+      "and s.currency = :currency " +
+      "and (lower(s.description) like lower(concat('%', :searchQuery, '%')) or lower(c.name) like lower(concat('%', :searchQuery, '%')))" +
+      "and s.spendDate >= :dateFrom and s.spendDate <= :dateTo " +
+      "order by s.spendDate desc "
   )
   Page<SpendEntity> findAll(
       @Nonnull String username,

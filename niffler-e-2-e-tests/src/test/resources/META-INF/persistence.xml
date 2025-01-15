@@ -8,8 +8,10 @@
         <class>guru.qa.niffler.data.entity.auth.AuthUserEntity</class>
 
         <properties>
-            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
-            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>
@@ -20,7 +22,8 @@
         <class>guru.qa.niffler.data.entity.userdata.FriendshipEntity</class>
 
         <properties>
-            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
             <property name="hibernate.connection.handling_mode"
                       value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
@@ -35,7 +38,8 @@
         <properties>
             <property name="hibernate.transaction.jta.platform"
                       value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
-            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.connection.handling_mode"
+                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>

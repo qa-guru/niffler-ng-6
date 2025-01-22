@@ -23,6 +23,9 @@ buildscript {
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
                 ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
                 : "http://127.0.0.1:8089/ws/userdata.wsdl"
+        gatewayIntrospectionUrl = System.getProperty("test.env") == "docker"
+                ? "http://gateway.niffler.dc:8090/graphql"
+                : "http://127.0.0.1:8090/graphql"
     }
 }
 
@@ -30,6 +33,7 @@ plugins {
     id 'io.qameta.allure' version '2.12.0'
     id 'io.qameta.allure-adapter' version '2.12.0'
     id 'com.github.edeandrea.xjc-generation' version '1.6'
+    id('com.apollographql.apollo') version '4.1.1'
 }
 
 group = 'guru.qa'
@@ -51,6 +55,14 @@ xjcGeneration {
             javaPackageName = 'jaxb.userdata'
             sourceSet = 'test'
         }
+    }
+}
+
+appolo {
+    service("niffler") {
+        packageName.set("guru.qa")
+        srcDir("src/test/graphql")
+
     }
 }
 

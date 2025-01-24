@@ -145,7 +145,7 @@ public class UserService {
   @Transactional(readOnly = true)
   public @Nonnull
   Page<UserJsonBulk> friends(@Nonnull String username,
-                             @Nonnull Pageable pageable,
+                             @Nonnull Pageable pageable,  
                              @Nullable String searchQuery) {
     Page<UserWithStatus> usersFromDb = searchQuery == null
         ? userRepository.findFriends(getRequiredUser(username), pageable)

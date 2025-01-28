@@ -1,14 +1,6 @@
 package guru.qa.niffler.data.entity.userdata;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -49,7 +41,7 @@ public class FriendshipEntity implements Serializable {
     if (thisEffectiveClass != oEffectiveClass) return false;
     FriendshipEntity that = (FriendshipEntity) o;
     return getRequester() != null && Objects.equals(getRequester(), that.getRequester())
-           && getAddressee() != null && Objects.equals(getAddressee(), that.getAddressee());
+        && getAddressee() != null && Objects.equals(getAddressee(), that.getAddressee());
   }
 
   @Override

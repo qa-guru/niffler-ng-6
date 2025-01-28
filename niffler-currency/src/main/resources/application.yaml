@@ -36,6 +36,8 @@ spring:
     open-in-view: false
 
 logging:
+  file:
+    path: ./logs/niffler-currency
   level:
     root: INFO
     org.springframework.web: INFO

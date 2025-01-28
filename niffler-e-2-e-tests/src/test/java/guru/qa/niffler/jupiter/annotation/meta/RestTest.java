@@ -14,10 +14,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ExtendWith({
-    AllureJunit5.class,
-    UserExtension.class,
-    CategoryExtension.class,
-    SpendingExtension.class,
+        AllureJunit5.class,
+        UserExtension.class,
+        CategoryExtension.class,
+        SpendingExtension.class,
 })
 public @interface RestTest {
 }

@@ -4,14 +4,11 @@
              version="2.1">
     <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/niffler-auth" transaction-type="JTA">
         <jta-data-source>java:comp/env/jdbc/niffler-auth</jta-data-source>
-        <class>guru.qa.niffler.data.entity.auth.AuthorityEntity</class>
+        <class>guru.qa.niffler.data.entity.auth.AuthAuthorityEntity</class>
         <class>guru.qa.niffler.data.entity.auth.AuthUserEntity</class>
-
         <properties>
-            <property name="hibernate.transaction.jta.platform"
-                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
-            <property name="hibernate.connection.handling_mode"
-                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>
@@ -20,26 +17,20 @@
         <jta-data-source>java:comp/env/jdbc/niffler-userdata</jta-data-source>
         <class>guru.qa.niffler.data.entity.userdata.UserEntity</class>
         <class>guru.qa.niffler.data.entity.userdata.FriendshipEntity</class>
-
         <properties>
-            <property name="hibernate.transaction.jta.platform"
-                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
-            <property name="hibernate.connection.handling_mode"
-                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>
 
     <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/niffler-spend" transaction-type="JTA">
         <jta-data-source>java:comp/env/jdbc/niffler-spend</jta-data-source>
-        <class>guru.qa.niffler.data.entity.spend.SpendEntity</class>
         <class>guru.qa.niffler.data.entity.spend.CategoryEntity</class>
-
+        <class>guru.qa.niffler.data.entity.spend.SpendEntity</class>
         <properties>
-            <property name="hibernate.transaction.jta.platform"
-                      value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
-            <property name="hibernate.connection.handling_mode"
-                      value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
+            <property name="hibernate.transaction.jta.platform" value="com.atomikos.icatch.jta.hibernate4.AtomikosPlatform"/>
+            <property name="hibernate.connection.handling_mode" value="DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>

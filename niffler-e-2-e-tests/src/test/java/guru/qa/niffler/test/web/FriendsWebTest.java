@@ -1,123 +1,100 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.config.Config;
+
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
+
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.model.rest.UserJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
-import guru.qa.niffler.page.PeoplePage;
+import guru.qa.niffler.service.UserClient;
+
+import guru.qa.niffler.service.rest.UserRestClient;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 
-import static com.codeborne.selenide.Selenide.open;
 
+import java.util.Arrays;
+import java.util.List;
+
+@Order(2)
+@ExtendWith(BrowserExtension.class)
 @WebTest
 public class FriendsWebTest {
+    static UserClient authUserClient = new UserRestClient();
 
-  @User(friends = 1)
-  @Test
-  void friendShouldBePresentInFriendsTable(UserJson user) {
-    final String friendUsername = user.testData().friendsUsernames()[0];
+    private static final Config CFG = Config.getInstance();
 
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .checkExistingFriends(friendUsername);
-  }
+    @User(friends = 1)
+    @ApiLogin
+    @Test
+    void friendShouldBePresentInFriendsTable(@Token String token, UserJson user) {
+        Selenide.open(CFG.frontUrl(), MainPage.class)
+                .openFriendsPage()
+                .checkHaveFriend();
+    }
 
-  @User
-  @Test
-  void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .checkExistingFriendsCount(0);
-  }
+    @User
+    @ApiLogin
+    @Test
+    void friendsTableShouldBeEmptyForNewUser(@Token String token, UserJson user) {
+        Selenide.open(CFG.frontUrl(), MainPage.class)
+                .openFriendsPage()
+                .checkNotHaveFriend();
+        new FriendsPage().openAllPeoplePage().checkNotHaveOutcomeInvitation();
+    }
 
-  @User(incomeInvitations = 1)
-  @Test
-  void incomeInvitationBePresentInFriendsTable(UserJson user) {
-    final String incomeInvitationUsername = user.testData().incomeInvitationsUsernames()[0];
+    @User(incomeInvitations = 1)
+    @ApiLogin
+    @Test
+    void incomeInvitationBePresentInFriendsTable(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openFriendsPage()
+                .findFriend(users.get(0))
+                .checkIncomeInvitationFriend();
+    }
 
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .checkExistingInvitations(incomeInvitationUsername);
-  }
+    @User(outcomeInvitations = 1)
+    @ApiLogin
+    @Test
+    void outcomeInvitationBePresentInAllPeoplesTable(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().outcomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
+                .openAllPeoplePage()
+                .toSearch(users.get(0))
+                .checkHaveOutcomeInvitation();
 
-  @User(outcomeInvitations = 1)
-  @Test
-  void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-    final String outcomeInvitationUsername = user.testData().outcomeInvitationsUsernames()[0];
+    }
 
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toAllPeoplesPage()
-        .checkInvitationSentToUser(outcomeInvitationUsername);
-  }
+    @User(incomeInvitations = 1)
+    @ApiLogin
+    @Test
+    void acceptFriend(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
+                .openFriendsPage()
+                .acceptFriendship(users.get(0))
+                .checkAlert("Invitation of " + users.get(0) + " accepted");
+        new FriendsPage().checkHaveFriend();
+    }
 
-  @User(friends = 1)
-  @Test
-  void shouldRemoveFriend(UserJson user) {
-    final String userToRemove = user.testData().friendsUsernames()[0];
-
-    Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .removeFriend(userToRemove)
-        .checkExistingFriendsCount(0);
-  }
-
-  @User(incomeInvitations = 1)
-  @Test
-  void shouldAcceptInvitation(UserJson user) {
-    final String userToAccept = user.testData().incomeInvitationsUsernames()[0];
-
-    FriendsPage friendsPage = open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .checkExistingInvitationsCount(1)
-        .acceptFriendInvitationFromUser(userToAccept);
-
-    Selenide.refresh();
-
-    friendsPage.checkExistingInvitationsCount(0)
-        .checkExistingFriendsCount(1)
-        .checkExistingFriends(userToAccept);
-  }
-
-  @User(incomeInvitations = 1)
-  @Test
-  void shouldDeclineInvitation(UserJson user) {
-    final String userToDecline = user.testData().incomeInvitationsUsernames()[0];
-
-    FriendsPage friendsPage = Selenide.open(LoginPage.URL, LoginPage.class)
-        .fillLoginPage(user.username(), user.testData().password())
-        .submit(new MainPage())
-        .getHeader()
-        .toFriendsPage()
-        .checkExistingInvitationsCount(1)
-        .declineFriendInvitationFromUser(userToDecline);
-
-    Selenide.refresh();
-
-    friendsPage.checkExistingInvitationsCount(0)
-        .checkExistingFriendsCount(0);
-
-    open(PeoplePage.URL, PeoplePage.class)
-        .checkExistingUser(userToDecline);
-  }
+    @User(incomeInvitations = 1)
+    @Test
+    void declineFriend(@Token String token, UserJson user) {
+        List<String> users = Arrays.asList(user.testData().incomeInvitationsUsernames());
+        Selenide.open(CFG.frontUrl(), MainPage.class)
+                .openFriendsPage()
+                .declineFriendship(users.get(0))
+                .checkAlert("Invitation of " + users.get(0) + " is declined");
+        new FriendsPage().checkNotHaveFriend();
+    }
 }

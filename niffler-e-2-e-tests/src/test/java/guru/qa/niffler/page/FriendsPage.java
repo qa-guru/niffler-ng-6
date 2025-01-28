@@ -1,93 +1,61 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ElementsCollection;
+import guru.qa.niffler.page.component.FriendsRequestTable;
 import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
-import javax.annotation.Nonnull;
-
-import static com.codeborne.selenide.ClickOptions.usingJavaScript;
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.CollectionCondition.textsInAnyOrder;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class FriendsPage extends BasePage<FriendsPage> {
+    private final SelenideElement buttonToOpenAllPeoplePage = $("a[href='/people/all']");
+    private final ElementsCollection listFriends = $$("#friends tr");
+    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
+    private final FriendsRequestTable friendsRequestTable = new FriendsRequestTable();
+    private final SelenideElement declineFromDialogButton = $("div[role='dialog'] button span svg");
 
-  public static final String URL = CFG.frontUrl() + "people/friends";
+    @Step("Открываем страницу со списком друзей")
+    public AllPeoplePage openAllPeoplePage() {
+        buttonToOpenAllPeoplePage.click();
+        return new AllPeoplePage();
+    }
 
-  private final SelenideElement peopleTab = $("a[href='/people/friends']");
-  private final SelenideElement allTab = $("a[href='/people/all']");
+    @Step("Проверяем, что в таблице с друзьями есть запись ")
+    public void checkHaveFriend() {
+        listFriends.find(text("Unfriend")).should(visible);
+    }
 
-  private final SearchField searchInput = new SearchField();
-  private final SelenideElement popup = $("div[role='dialog']");
+    @Step("Ищем пользователя в таблице друзей")
+    public FriendsPage findFriend(String searchString) {
+        searchField.search(searchString);
+       return this;
+    }
 
-  private final SelenideElement requestsTable = $("#requests");
-  private final SelenideElement friendsTable = $("#friends");
-  private final SelenideElement pagePrevBtn = $("#page-prev");
-  private final SelenideElement pageNextBtn = $("#page-next");
+    @Step("Проверяем, что есть входящее предложение дружбы")
+    public void checkIncomeInvitationFriend() {
+        friendsRequestTable.checkIncomeInvitationFriend();
+    }
 
-  @Step("Check that the page is loaded")
-  @Override
-  @Nonnull
-  public FriendsPage checkThatPageLoaded() {
-    peopleTab.shouldBe(Condition.visible);
-    allTab.shouldBe(Condition.visible);
-    return this;
-  }
+    @Step("Проверяем, что у пользователя нет друзей ")
+    public void checkNotHaveFriend() {
+        listFriends.shouldHave(size(0));
+    }
 
-  @Step("Check that friends count is equal to {expectedCount}")
-  @Nonnull
-  public FriendsPage checkExistingFriendsCount(int expectedCount) {
-    friendsTable.$$("tr").shouldHave(size(expectedCount));
-    return this;
-  }
+    @Step("Принимаем предложение дружбы")
+    public FriendsPage acceptFriendship(String username) {
+        friendsRequestTable.acceptFriendRequest(username);
+        return this;
+    }
 
-  @Step("Check that income invitations count is equal to {expectedCount}")
-  @Nonnull
-  public FriendsPage checkExistingInvitationsCount(int expectedCount) {
-    requestsTable.$$("tr").shouldHave(size(expectedCount));
-    return this;
-  }
+    @Step("Отклоняем предложение дружбы")
+    public FriendsPage declineFriendship(String username) {
+        friendsRequestTable.declineFriendRequest(username);
+        declineFromDialogButton.click();
+        return this;
+    }
 
-  @Step("Check that friends list contains data {0}")
-  @Nonnull
-  public FriendsPage checkExistingFriends(String... expectedUsernames) {
-    friendsTable.$$("tr").shouldHave(textsInAnyOrder(expectedUsernames));
-    return this;
-  }
-
-  @Nonnull
-  public FriendsPage checkExistingInvitations(String... expectedUsernames) {
-    requestsTable.$$("tr").shouldHave(textsInAnyOrder(expectedUsernames));
-    return this;
-  }
-
-  @Step("Delete user from friends: {username}")
-  @Nonnull
-  public FriendsPage removeFriend(String username) {
-    SelenideElement friendRow = friendsTable.$$("tr").find(text(username));
-    friendRow.$("button[type='button']").click();
-    popup.$(byText("Delete")).click(usingJavaScript());
-    return this;
-  }
-
-  @Step("Accept invitation from user: {username}")
-  @Nonnull
-  public FriendsPage acceptFriendInvitationFromUser(String username) {
-    SelenideElement friendRow = requestsTable.$$("tr").find(text(username));
-    friendRow.$(byText("Accept")).click();
-    return this;
-  }
-
-  @Step("Decline invitation from user: {username}")
-  @Nonnull
-  public FriendsPage declineFriendInvitationFromUser(String username) {
-    SelenideElement friendRow = requestsTable.$$("tr").find(text(username));
-    friendRow.$(byText("Decline")).click();
-    popup.$(byText("Decline")).click(usingJavaScript());
-    return this;
-  }
 }

@@ -3,81 +3,62 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
-import javax.annotation.Nonnull;
-
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 
+
 public class RegisterPage extends BasePage<RegisterPage> {
+    private final SelenideElement usernameInput = $("#username");
+    private final SelenideElement passwordInput = $("#password");
+    private final SelenideElement passwordSubmitInput = $("#passwordSubmit");
+    private final SelenideElement submitButton = $("button[type='submit']");
+    private final SelenideElement singInButton = $("a[class='form_sign-in']");
+    private final SelenideElement msgUsernameAlreadyExist = $(withText("already exists"));
+    private final SelenideElement msgPasswordsShouldBeEqual = $(withText("Passwords should be equal"));
 
-  public static final String URL = CFG.authUrl() + "register";
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement passwordSubmitInput = $("input[name='passwordSubmit']");
-  private final SelenideElement submitButton = $("button[type='submit']");
-  private final SelenideElement proceedLoginButton = $(".form_sign-in");
-  private final SelenideElement errorContainer = $(".form__error");
+    @Step("Водим имя пользователя")
+    public RegisterPage setUsername(String username) {
+        usernameInput.setValue(username);
+        return new RegisterPage();
+    }
 
-  @Step("Fill register page with credentials: username: {0}, password: {1}, submit password: {2}")
-  @Nonnull
-  public RegisterPage fillRegisterPage(String login, String password, String passwordSubmit) {
-    setUsername(login);
-    setPassword(password);
-    setPasswordSubmit(passwordSubmit);
-    return this;
-  }
+    @Step("Водим пароль")
+    public RegisterPage setPassword(String password) {
+        passwordInput.setValue(password);
+        return new RegisterPage();
+    }
 
-  @Step("Set username: {0}")
-  @Nonnull
-  public RegisterPage setUsername(String username) {
-    usernameInput.setValue(username);
-    return this;
-  }
+    @Step("Водим проверочный пароль")
+    public RegisterPage setPasswordSubmit(String password) {
+        passwordSubmitInput.setValue(password);
+        return new RegisterPage();
+    }
 
-  @Step("Set password: {0}")
-  @Nonnull
-  public RegisterPage setPassword(String password) {
-    passwordInput.setValue(password);
-    return this;
-  }
+    @Step("Подтверждаем регистрацию нового пользователя")
+    public LoginPage submitRegistration() {
+        submitButton.click();
+        return new LoginPage();
+    }
 
-  @Step("Confirm password: {0}")
-  @Nonnull
-  public RegisterPage setPasswordSubmit(String password) {
-    passwordSubmitInput.setValue(password);
-    return this;
-  }
+    @Step("Регистрируем нового пользователя в системе")
+    public LoginPage createUser(String username, String password) {
+        usernameInput.setValue(username);
+        passwordInput.setValue(password);
+        passwordSubmitInput.setValue(password);
+        submitButton.click();
+        singInButton.click();
+        return new LoginPage();
+    }
 
-  @Step("Submit register")
-  @Nonnull
-  public LoginPage successSubmit() {
-    submitButton.click();
-    proceedLoginButton.click();
-    return new LoginPage();
-  }
+    @Step("Проверяем отображение сообщения о, том что пользователь уже зарегистрирован в системе")
+    public void checkMsgUserAlreadyExistIsDisplayed() {
+        msgUsernameAlreadyExist.should(visible);
+    }
 
-  @Step("Submit register")
-  @Nonnull
-  public RegisterPage errorSubmit() {
-    submitButton.click();
-    return this;
-  }
-
-  @Step("Check that page is loaded")
-  @Override
-  @Nonnull
-  public RegisterPage checkThatPageLoaded() {
-    usernameInput.should(visible);
-    passwordInput.should(visible);
-    passwordSubmitInput.should(visible);
-    return this;
-  }
-
-  @Nonnull
-  public RegisterPage checkAlertMessage(String errorMessage) {
-    errorContainer.shouldHave(text(errorMessage));
-    return this;
-  }
+    @Step("Проверяем, что пароли совпадают ")
+    public void checkPasswordsShouldBeEqual() {
+        msgPasswordsShouldBeEqual.should(visible);
+    }
 }

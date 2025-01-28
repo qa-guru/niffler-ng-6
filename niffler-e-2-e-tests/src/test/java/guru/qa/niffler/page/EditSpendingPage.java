@@ -1,102 +1,48 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.rest.CurrencyValues;
-import guru.qa.niffler.model.rest.SpendJson;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.component.Calendar;
-import guru.qa.niffler.page.component.SelectField;
+import guru.qa.niffler.utils.RandomDataUtils;
 import io.qameta.allure.Step;
+import org.openqa.selenium.By;
 
-import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.Date;
 
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 
 public class EditSpendingPage extends BasePage<EditSpendingPage> {
+    private final SelenideElement descriptionInput = $("#description");
+    private final SelenideElement saveBtn = $("#save");
+    private final SelenideElement amountInput = $("#amount");
+    private final SelenideElement categoryNameBtn = $(By.xpath("//span[text()='Gregg']"));
+    private final SelenideElement amount = $("#amount");
+    private final Calendar calendar = new Calendar($("input[name='date']"));
 
-  public static final String URL = CFG.frontUrl() + "spending";
+    @Step("Редактируем описание траты")
+    public MainPage setNewSpendingDescription(String description) {
+        descriptionInput.clear();
+        descriptionInput.setValue(description);
+        saveBtn.click();
+        return new MainPage();
+    }
 
-  private final Calendar calendar = new Calendar();
-  private final SelectField currencySelect = new SelectField($("#currency"));
+    @Step("Редактируем сумму траты")
+    public MainPage setNewSpendingAmount(String amount) {
+        amountInput.clear();
+        amountInput.setValue(amount);
+        saveBtn.click();
+        return new MainPage();
+    }
 
-  private final SelenideElement amountInput = $("#amount");
-  private final SelenideElement categoryInput = $("#category");
-  private final ElementsCollection categories = $$(".MuiChip-root");
-  private final SelenideElement descriptionInput = $("#description");
-
-  private final SelenideElement cancelBtn = $("#cancel");
-  private final SelenideElement saveBtn = $("#save");
-
-  @Override
-  @Nonnull
-  public EditSpendingPage checkThatPageLoaded() {
-    amountInput.should(visible);
-    return this;
-  }
-
-  @Step("Fill spending data from object")
-  @Nonnull
-  public EditSpendingPage fillPage(SpendJson spend) {
-    return setNewSpendingDate(spend.spendDate())
-        .setNewSpendingAmount(spend.amount())
-        .setNewSpendingCurrency(spend.currency())
-        .setNewSpendingCategory(spend.category().name())
-        .setNewSpendingDescription(spend.description());
-  }
-
-  @Step("Select new spending currency: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingCurrency(CurrencyValues currency) {
-    currencySelect.setValue(currency.name());
-    return this;
-  }
-
-  @Step("Select new spending category: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingCategory(String category) {
-    categoryInput.clear();
-    categoryInput.setValue(category);
-    return this;
-  }
-
-  @Step("Set new spending amount: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingAmount(double amount) {
-    amountInput.clear();
-    amountInput.setValue(String.valueOf(amount));
-    return this;
-  }
-
-  @Step("Set new spending amount: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingAmount(int amount) {
-    amountInput.clear();
-    amountInput.setValue(String.valueOf(amount));
-    return this;
-  }
-
-  @Step("Set new spending date: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingDate(Date date) {
-    calendar.selectDateInCalendar(date);
-    return this;
-  }
-
-  @Step("Set new spending description: {0}")
-  @Nonnull
-  public EditSpendingPage setNewSpendingDescription(String description) {
-    descriptionInput.clear();
-    descriptionInput.setValue(description);
-    return this;
-  }
-
-  @Step("Click submit button to create new spending")
-  @Nonnull
-  public EditSpendingPage saveSpending() {
-    saveBtn.click();
-    return this;
-  }
+    @Step("Создаем новую трату")
+    public MainPage createNewSpending(SpendJson spend) {
+        amountInput.setValue(spend.amount().toString());
+        categoryNameBtn.click();
+        calendar.selectDateInCalendar(spend.spendDate());
+        descriptionInput.setValue(spend.description());
+        saveBtn.click();
+        return new MainPage();
+    }
 }

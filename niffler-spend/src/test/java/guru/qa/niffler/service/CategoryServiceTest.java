@@ -4,119 +4,281 @@ import guru.qa.niffler.data.CategoryEntity;
 import guru.qa.niffler.data.repository.CategoryRepository;
 import guru.qa.niffler.ex.CategoryNotFoundException;
 import guru.qa.niffler.ex.InvalidCategoryNameException;
+import guru.qa.niffler.ex.TooManyCategoriesException;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
 
-  @Test
-  void categoryNotFoundExceptionShouldBeThrown(@Mock CategoryRepository categoryRepository) {
-    final String username = "not_found";
-    final UUID id = UUID.randomUUID();
+    @Test
+    void getAllCategoriesExcludeArchived(@Mock CategoryRepository categoryRepository) {
 
-    Mockito.when(categoryRepository.findByUsernameAndId(eq(username), eq(id)))
-        .thenReturn(Optional.empty());
+        final String username = "Ignat";
+        final boolean excludeArchived = true;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final List<CategoryEntity> categoryList = new ArrayList<>();
+        final CategoryEntity categoryArchived = new CategoryEntity();
+        categoryArchived.setId(UUID.randomUUID());
+        categoryArchived.setName("Category is archived");
+        categoryArchived.setUsername(username);
+        categoryArchived.setArchived(true);
+        categoryList.add(categoryArchived);
+        final CategoryEntity categoryNotArchived = new CategoryEntity();
+        categoryNotArchived.setId(UUID.randomUUID());
+        categoryNotArchived.setName("Category is not archived");
+        categoryNotArchived.setUsername(username);
+        categoryNotArchived.setArchived(false);
+        categoryList.add(categoryNotArchived);
+        Mockito.when(categoryRepository.findAllByUsernameOrderByName(eq(username)))
+                .thenReturn(categoryList);
+        List<CategoryJson> categoryJsonListResult = categoryService.getAllCategories(username, excludeArchived);
 
-    CategoryService categoryService = new CategoryService(categoryRepository);
+        Assertions.assertEquals(categoryJsonListResult.getFirst(), CategoryJson.fromEntity(categoryNotArchived));
+    }
 
-    CategoryJson categoryJson = new CategoryJson(
-        id,
-        "",
-        username,
-        true
-    );
+    @Test
+    void getAllCategoriesIncludeArchived(@Mock CategoryRepository categoryRepository) {
 
-    CategoryNotFoundException ex = Assertions.assertThrows(
-        CategoryNotFoundException.class,
-        () -> categoryService.update(categoryJson)
-    );
-    Assertions.assertEquals(
-        "Can`t find category by id: '" + id + "'",
-        ex.getMessage()
-    );
-  }
+        final String username = "Ignat";
+        final boolean excludeArchived = false;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final List<CategoryEntity> categoryList = new ArrayList<>();
+        final CategoryEntity categoryArchived = new CategoryEntity();
+        categoryArchived.setId(UUID.randomUUID());
+        categoryArchived.setName("Category is archived");
+        categoryArchived.setUsername(username);
+        categoryArchived.setArchived(true);
+        categoryList.add(categoryArchived);
+        final CategoryEntity categoryNotArchived = new CategoryEntity();
+        categoryNotArchived.setId(UUID.randomUUID());
+        categoryNotArchived.setName("Category is not archived");
+        categoryNotArchived.setUsername(username);
+        categoryNotArchived.setArchived(false);
+        categoryList.add(categoryNotArchived);
+        Mockito.when(categoryRepository.findAllByUsernameOrderByName(eq(username)))
+                .thenReturn(categoryList);
+        List<CategoryJson> categoryJsonListResult = categoryService.getAllCategories(username, excludeArchived);
 
-  @ValueSource(strings = {"Archived", "ARCHIVED", "ArchIved"})
-  @ParameterizedTest
-  void categoryNameArchivedShouldBeDenied(String catName, @Mock CategoryRepository categoryRepository) {
-    final String username = "duck";
-    final UUID id = UUID.randomUUID();
-    final CategoryEntity cat = new CategoryEntity();
+        Assertions.assertEquals(categoryJsonListResult.getFirst(), CategoryJson.fromEntity(categoryArchived));
+    }
 
-    Mockito.when(categoryRepository.findByUsernameAndId(eq(username), eq(id)))
-        .thenReturn(Optional.of(
-            cat
-        ));
 
-    CategoryService categoryService = new CategoryService(categoryRepository);
+    @Test
+    void updateShouldCantFindCategory(@Mock CategoryRepository categoryRepository) {
 
-    CategoryJson categoryJson = new CategoryJson(
-        id,
-        catName,
-        username,
-        true
-    );
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Move",
+                "Ignat",
+                false
+        );
 
-    InvalidCategoryNameException ex = Assertions.assertThrows(
-        InvalidCategoryNameException.class,
-        () -> categoryService.update(categoryJson)
-    );
-    Assertions.assertEquals(
-        "Can`t add category with name: '" + catName + "'",
-        ex.getMessage()
-    );
-  }
+        CategoryService categoryService = new CategoryService(categoryRepository);
 
-  @Test
-  void onlyTwoFieldsShouldBeUpdated(@Mock CategoryRepository categoryRepository) {
-    final String username = "duck";
-    final UUID id = UUID.randomUUID();
-    final CategoryEntity cat = new CategoryEntity();
-    cat.setId(id);
-    cat.setUsername(username);
-    cat.setName("Магазины");
-    cat.setArchived(false);
+        CategoryNotFoundException ex = Assertions.assertThrows(
+                CategoryNotFoundException.class,
+                () -> categoryService.update(categoryJson)
+        );
 
-    Mockito.when(categoryRepository.findByUsernameAndId(eq(username), eq(id)))
-        .thenReturn(Optional.of(
-            cat
-        ));
-    Mockito.when(categoryRepository.save(any(CategoryEntity.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+        Assertions.assertEquals(
+                ex.getMessage(),
+                "Can`t find category by id: '" + categoryJson.id() + "'"
+        );
+    }
 
-    CategoryService categoryService = new CategoryService(categoryRepository);
+    @Test
+    void updateShouldCantAddCategoryWithName(@Mock CategoryRepository categoryRepository) {
 
-    CategoryJson categoryJson = new CategoryJson(
-        id,
-        "Бары",
-        username,
-        true
-    );
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Archived",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 7;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final CategoryEntity categoryArchived = new CategoryEntity();
+        categoryArchived.setId(UUID.randomUUID());
+        categoryArchived.setName("Archived");
+        categoryArchived.setUsername("Ignat");
+        categoryArchived.setArchived(false);
 
-    categoryService.update(categoryJson);
-    ArgumentCaptor<CategoryEntity> argumentCaptor = ArgumentCaptor.forClass(CategoryEntity.class);
-    verify(categoryRepository).save(argumentCaptor.capture());
-    assertEquals("Бары", argumentCaptor.getValue().getName());
-    assertEquals("duck", argumentCaptor.getValue().getUsername());
-    assertTrue(argumentCaptor.getValue().isArchived());
-    assertEquals(id, argumentCaptor.getValue().getId());
-  }
+        Mockito.when(categoryRepository.findByUsernameAndId(eq(categoryJson.username()), eq(categoryJson.id())))
+                .thenReturn(Optional.of(categoryArchived));
+
+        InvalidCategoryNameException ex = Assertions.assertThrows(
+                InvalidCategoryNameException.class,
+                () -> categoryService.update(categoryJson)
+        );
+
+        Assertions.assertEquals(
+                ex.getMessage(),
+                "Can`t add category with name: '" + categoryJson.name() + "'"
+        );
+    }
+
+
+    @Test
+    void updateShouldMaxCategoriesSizeIsExceeded(@Mock CategoryRepository categoryRepository) {
+
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Move",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 8;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final CategoryEntity categoryNotArchived = new CategoryEntity();
+        categoryNotArchived.setId(UUID.randomUUID());
+        categoryNotArchived.setName("Move");
+        categoryNotArchived.setUsername("Ignat");
+        categoryNotArchived.setArchived(true);
+
+        Mockito.when(categoryRepository.findByUsernameAndId(eq(categoryJson.username()), eq(categoryJson.id())))
+                .thenReturn(Optional.of(categoryNotArchived));
+
+
+        Mockito.when(categoryRepository.countByUsernameAndArchived(eq(categoryJson.username()), eq(false)))
+                .thenReturn(maxCategoriesSize);
+
+        TooManyCategoriesException ex = Assertions.assertThrows(
+                TooManyCategoriesException.class,
+                () -> categoryService.update(categoryJson)
+        );
+
+        Assertions.assertEquals(
+                ex.getMessage(),
+                "Can`t unarchive category for user: '" + categoryJson.username() + "'"
+        );
+    }
+
+    @Test
+    void updateCorrectSave(@Mock CategoryRepository categoryRepository) {
+
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Move",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 6;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(UUID.randomUUID());
+        categoryEntity.setName("Move");
+        categoryEntity.setUsername("Ignat");
+        categoryEntity.setArchived(false);
+
+        Mockito.when(categoryRepository.findByUsernameAndId(eq(categoryJson.username()), eq(categoryJson.id())))
+                .thenReturn(Optional.of(categoryEntity));
+
+        Mockito.when(categoryRepository.save(any(CategoryEntity.class)))
+                .thenReturn(categoryEntity);
+
+        CategoryJson result = categoryService.update(categoryJson);
+
+        Assertions.assertEquals(result.username(), categoryJson.username());
+    }
+
+
+    @Test
+    void saveShouldCantAddCategoryWithName(@Mock CategoryRepository categoryRepository) {
+
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Archived",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 7;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+
+        InvalidCategoryNameException ex = Assertions.assertThrows(
+                InvalidCategoryNameException.class,
+                () -> categoryService.save(categoryJson)
+        );
+
+        Assertions.assertEquals(
+                ex.getMessage(),
+                "Can`t add category with name: '" + categoryJson.name() + "'"
+        );
+    }
+
+
+    @Test
+    void saveShouldMaxCategoriesSizeIsExceeded(@Mock CategoryRepository categoryRepository) {
+
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Move",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 8;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(UUID.randomUUID());
+        categoryEntity.setName("Move");
+        categoryEntity.setUsername("Ignat");
+        categoryEntity.setArchived(true);
+
+        Mockito.when(categoryRepository.countByUsernameAndArchived(eq(categoryJson.username()), eq(false)))
+                .thenReturn(maxCategoriesSize);
+
+        TooManyCategoriesException ex = Assertions.assertThrows(
+                TooManyCategoriesException.class,
+                () -> categoryService.save(categoryJson)
+        );
+
+        Assertions.assertEquals(
+                ex.getMessage(),
+                "Can`t add over than 8 categories for user: '" + categoryJson.username() + "'"
+        );
+    }
+
+    @Test
+    void saveCorrectSave(@Mock CategoryRepository categoryRepository) {
+
+        final CategoryJson categoryJson = new CategoryJson(
+                UUID.randomUUID(),
+                "Move",
+                "Ignat",
+                false
+        );
+        final long maxCategoriesSize = 6;
+        CategoryService categoryService = new CategoryService(categoryRepository);
+        final CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(UUID.randomUUID());
+        categoryEntity.setName("Move");
+        categoryEntity.setUsername("Ignat");
+        categoryEntity.setArchived(false);
+
+        Mockito.when(categoryRepository.countByUsernameAndArchived(eq(categoryJson.username()), eq(false)))
+                .thenReturn(maxCategoriesSize);
+
+        Mockito.when(categoryRepository.save((any(CategoryEntity.class))))
+                .thenReturn(categoryEntity);
+
+        CategoryEntity result = categoryService.save(categoryJson);
+
+        Assertions.assertEquals(categoryEntity.getName(), result.getName());
+
+    }
+
 }

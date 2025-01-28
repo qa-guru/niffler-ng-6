@@ -1,56 +1,76 @@
 package guru.qa.niffler.data.repository.impl;
 
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.UserdataUserDaoSpringJdbc;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.FriendshipDao;
+import guru.qa.niffler.data.dao.UserDao;
+import guru.qa.niffler.data.dao.impl.FriendshipDaoJdbc;
+import guru.qa.niffler.data.dao.impl.UserDaoSpringJdbc;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.mapper.UserEntityRowMapper;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
+import guru.qa.niffler.data.tpl.DataSources;
+import guru.qa.niffler.model.CurrencyValues;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
 @ParametersAreNonnullByDefault
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
+    private static final Config CFG = Config.getInstance();
 
-  private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc();
+    private final UserDao userDao = new UserDaoSpringJdbc();
+    private final FriendshipDao friendshipDao = new FriendshipDaoJdbc();
 
-  @Nonnull
-  @Override
-  public UserEntity create(UserEntity user) {
-    return userdataUserDao.create(user);
-  }
+    @Override
+    public UserEntity create(UserEntity authUser) {
+       userDao.createUser(authUser);
+       return authUser;
+    }
 
-  @Nonnull
-  @Override
-  public UserEntity update(UserEntity user) {
-    return userdataUserDao.update(user);
-  }
+    @Override
+    public UserEntity update(UserEntity authUser) {
+        userDao.update(authUser);
+        return authUser;
+    }
 
-  @Nonnull
-  @Override
-  public Optional<UserEntity> findById(UUID id) {
-    return userdataUserDao.findById(id);
-  }
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+        friendshipDao.createFriendshipAccepted(requester, addressee);
+    }
 
-  @Nonnull
-  @Override
-  public Optional<UserEntity> findByUsername(String username) {
-    return userdataUserDao.findByUsername(username);
-  }
+    @Override
+    public void addInvitation(UserEntity requester, UserEntity addressee) {
+        friendshipDao.createFriendshipPending(requester, addressee);
+    }
 
-  @Override
-  public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
-    requester.addFriends(FriendshipStatus.PENDING, addressee);
-    userdataUserDao.update(requester);
-  }
+    @Override
+    public Optional<UserEntity> findById(UUID id) {
+        return  userDao.findById(id);
+    }
 
-  @Override
-  public void addFriend(UserEntity requester, UserEntity addressee) {
-    requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-    addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
-    userdataUserDao.update(requester);
-    userdataUserDao.update(addressee);
-  }
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return  userDao.findByUsername(username);
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        return userDao.findAll();
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        userDao.delete(user);
+    }
 }

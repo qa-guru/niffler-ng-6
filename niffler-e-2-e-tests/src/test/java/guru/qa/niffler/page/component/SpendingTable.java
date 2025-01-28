@@ -1,87 +1,65 @@
 package guru.qa.niffler.page.component;
 
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.rest.DataFilterValues;
+import guru.qa.niffler.condition.SpendCondition;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 
-import javax.annotation.Nonnull;
-
-import static com.codeborne.selenide.ClickOptions.usingJavaScript;
-import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 
 public class SpendingTable extends BaseComponent<SpendingTable> {
 
-  private final SearchField searchField = new SearchField();
-  private final SelenideElement periodMenu = self.$("#period");
-  private final SelenideElement currencyMenu = self.$("#currency");
-  private final ElementsCollection menuItems = $$(".MuiList-padding li");
-  private final SelenideElement deleteBtn = self.$("#delete");
-  private final SelenideElement popup = $("div[role='dialog']");
+    private final SearchField searchField = new SearchField($("input[placeholder='Search']"));
 
-  private final SelenideElement tableHeader = self.$(".MuiTableHead-root");
-  private final ElementsCollection headerCells = tableHeader.$$(".MuiTableCell-root");
+    public SpendingTable() {
+        super($("#spendings"));
+    }
 
-  private final ElementsCollection tableRows = self.$("tbody").$$("tr");
+    public SpendingTable selectPeriod(DataFilterValues period) {
+        self.$("#period").click();
+        $("#menu-period li[data-value='" + period + "']").click();
+        return this;
+    }
 
+    public EditSpendingPage editSpending(String description) {
+        searchField.search(description);
+        self.$$("tbody tr").find(text(description)).$$("td").get(5).click();
+        return new EditSpendingPage();
+    }
 
-  public SpendingTable() {
-    super($("#spendings"));
-  }
+    public SpendingTable deleteSpending(String description) {
+        self.$$("tbody tr").find(text(description)).$$("td").get(0).click();
+        self.$("#delete").click();
+        return this;
+    }
 
-  @Step("Select table period {0}")
-  @Nonnull
-  public SpendingTable selectPeriod(DataFilterValues period) {
-    periodMenu.click();
-    menuItems.find(text(period.text)).click();
-    return this;
-  }
+    public SpendingTable searchSpendingByDescription(String description) {
+        searchField.search(description);
+        return this;
+    }
 
-  @Step("Edit spending with description {0}")
-  @Nonnull
-  public EditSpendingPage editSpending(String description) {
-    searchSpendingByDescription(description);
-    SelenideElement row = tableRows.find(text(description));
-    row.$$("td").get(5).click();
-    return new EditSpendingPage();
-  }
+    public SpendingTable checkTableContains(String... expectedSpends) {
+        for (String expectedSpend : expectedSpends) {
+            searchField.search(expectedSpend);
+            self.$$("td").find(text(expectedSpend)).should(visible);
+        }
+        return this;
+    }
 
-  @Step("Delete spending with description {0}")
-  @Nonnull
-  public SpendingTable deleteSpending(String description) {
-    searchSpendingByDescription(description);
-    SelenideElement row = tableRows.find(text(description));
-    row.$$("td").get(0).click();
-    deleteBtn.click();
-    popup.$(byText("Delete")).click(usingJavaScript());
-    return this;
-  }
+    public SpendingTable checkTableSize(int expectedSize) {
+        self.$$("tr").shouldHave(size(expectedSize));
+        return this;
+    }
 
-  @Step("Search spending with description {0}")
-  @Nonnull
-  public SpendingTable searchSpendingByDescription(String description) {
-    searchField.search(description);
-    return this;
-  }
+    @Step("Check what spends match")
+    public SpendingTable checkSpendingMatch(SpendJson ...expectedSpends) {
+        self.$$("tbody tr").should(SpendCondition.spends(expectedSpends));
+        return new SpendingTable();
+    }
 
-  @Step("Check that table contains data {0}")
-  @Nonnull
-  public SpendingTable checkTableContains(String expectedSpend) {
-    searchSpendingByDescription(expectedSpend);
-    tableRows.find(text(expectedSpend)).should(visible);
-    return this;
-  }
-
-  @Step("Check that table have size {0}")
-  @Nonnull
-  public SpendingTable checkTableSize(int expectedSize) {
-    tableRows.should(size(expectedSize));
-    return this;
-  }
+    public enum DataFilterValues {
+        ALL, MONTH, WEEK, TODAY
+    }
 }

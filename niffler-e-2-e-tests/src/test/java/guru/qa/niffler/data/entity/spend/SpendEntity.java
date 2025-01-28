@@ -1,18 +1,8 @@
 package guru.qa.niffler.data.entity.spend;
 
-import guru.qa.niffler.model.rest.CurrencyValues;
-import guru.qa.niffler.model.rest.SpendJson;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.SpendJson;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -54,13 +44,6 @@ public class SpendEntity implements Serializable {
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private CategoryEntity category;
 
-  public SpendEntity(UUID id) {
-    this.id = id;
-  }
-
-  public SpendEntity() {
-  }
-
   public static SpendEntity fromJson(SpendJson json) {
     SpendEntity se = new SpendEntity();
     se.setId(json.id());
@@ -70,9 +53,9 @@ public class SpendEntity implements Serializable {
     se.setAmount(json.amount());
     se.setDescription(json.description());
     se.setCategory(
-        CategoryEntity.fromJson(
-            json.category()
-        )
+            CategoryEntity.fromJson(
+                    json.category()
+            )
     );
     return se;
   }

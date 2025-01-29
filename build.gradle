@@ -38,6 +38,7 @@ subprojects {
         thumbnailatorVersion = '0.4.20'
         h2Version = '2.3.232'
         mockitoVersion = '5.12.0'
+        wiremockVersion = '3.10.0'
 
         dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
                 ? "arm64v8/eclipse-temurin:21-jdk"

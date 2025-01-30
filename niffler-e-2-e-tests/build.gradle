@@ -33,7 +33,7 @@ plugins {
     id 'io.qameta.allure' version '2.12.0'
     id 'io.qameta.allure-adapter' version '2.12.0'
     id 'com.github.edeandrea.xjc-generation' version '1.6'
-    id('com.apollographql.apollo') version '4.1.1'
+    id 'com.apollographql.apollo' version '4.1.1'
 }
 
 group = 'guru.qa'
@@ -58,11 +58,19 @@ xjcGeneration {
     }
 }
 
-appolo {
+apollo {
     service("niffler") {
+        generateKotlinModels.set(false)
         packageName.set("guru.qa")
         srcDir("src/test/graphql")
-
+        mapScalar("Date", "java.util.Date")
+        introspection {
+            endpointUrl.set("${gatewayIntrospectionUrl}")
+            schemaFile.set(file("src/test/graphql/schema.graphqls"))
+        }
+        outputDirConnection {
+            connectToJavaSourceSet("test")
+        }
     }
 }
 
@@ -71,6 +79,7 @@ sourceSets {
         java {
             srcDir('src/test/java')
             srcDir("$buildDir/generated-sources/test/xjc")
+            srcDir("$buildDir/generated/source/apollo/niffler")
         }
     }
 }
@@ -87,6 +96,10 @@ dependencies {
     testImplementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
     testImplementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
+    //GraphQL
+    testImplementation "com.apollographql.java:client:0.0.2"
+    testImplementation "com.apollographql.java:rx2:0.0.2"
+    testImplementation "com.apollographql.adapters:apollo-adapters-core-jvm:0.0.4"
     // DB
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
@@ -141,6 +154,10 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+tasks.named { it == "generateNifflerApolloSources" }.configureEach {
+    dependsOn("downloadNifflerApolloSchemaFromIntrospection")
 }
 
 tasks.register('printVersion') {

@@ -1,3 +1,4 @@
+
 buildscript {
     ext {
         grpcVersion = '1.66.0'
@@ -5,7 +6,7 @@ buildscript {
         allureVersion = '2.29.0'
         selenideVersion = '7.4.2'
         retrofitVersion = '2.11.0'
-        okhttp3Version = '3.14.9'
+        okhttp3Version = '4.11.0'
         logbackVersion = '1.4.11'
         slf4jVersion = '2.0.9'
         springJdbcVersion = '6.1.12'
@@ -16,7 +17,7 @@ buildscript {
         saajVersion = '3.0.4'
         jakartaJaxbVersion = '4.0.2'
         springDataCommonsVersion = '3.3.3'
-        atomikosVersion = '6.0.0'
+        atomicosVersion = '6.0.0'
         wiremockVersion = '3.0.1'
         fakerVersion = '1.0.2'
         ashotVersion = '1.5.4'
@@ -33,7 +34,7 @@ plugins {
     id 'io.qameta.allure' version '2.12.0'
     id 'io.qameta.allure-adapter' version '2.12.0'
     id 'com.github.edeandrea.xjc-generation' version '1.6'
-    id 'com.apollographql.apollo' version '4.1.1'
+    id 'com.apollographql.apollo' version '4.1.0'
 }
 
 group = 'guru.qa'
@@ -65,7 +66,7 @@ apollo {
         srcDir("src/test/graphql")
         mapScalar("Date", "java.util.Date")
         introspection {
-            endpointUrl.set("${gatewayIntrospectionUrl}")
+            endpointUrl.set("$gatewayIntrospectionUrl")
             schemaFile.set(file("src/test/graphql/schema.graphqls"))
         }
         outputDirConnection {
@@ -93,20 +94,22 @@ dependencies {
     // REST
     testImplementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     testImplementation "com.squareup.retrofit2:converter-jackson:${retrofitVersion}"
+    testImplementation "com.squareup.retrofit2:converter-scalars:${retrofitVersion}"
+    testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
     testImplementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
-    //GraphQL
-    testImplementation "com.apollographql.java:client:0.0.2"
-    testImplementation "com.apollographql.java:rx2:0.0.2"
-    testImplementation "com.apollographql.adapters:apollo-adapters-core-jvm:0.0.4"
+    // GraphQL
+    testImplementation 'com.apollographql.java:client:0.0.2'
+    testImplementation 'com.apollographql.java:rx2:0.0.2'
+    testImplementation 'com.apollographql.adapters:apollo-adapters-core:0.0.4'
     // DB
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
+    testImplementation "com.atomikos:transactions-jta:${atomicosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-hibernate4:${atomicosVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-jdbc:${atomicosVersion}"
     testImplementation "p6spy:p6spy:${p6spyVersion}"
-    testImplementation "com.atomikos:transactions-jta:${atomikosVersion}:jakarta"
-    testImplementation "com.atomikos:transactions-hibernate4:${atomikosVersion}:jakarta"
-    testImplementation "com.atomikos:transactions-jdbc:${atomikosVersion}"
     testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
     testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
     // Allure
@@ -122,6 +125,7 @@ dependencies {
     // WEB
     testImplementation "com.codeborne:selenide:${selenideVersion}"
     // Utils
+    testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {
         exclude group: 'org.yaml'
     }
@@ -129,15 +133,15 @@ dependencies {
     testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
     testImplementation 'com.github.h-thurow:simple-jndi:0.24.0'
-    testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     // gRPC
-    testImplementation "io.grpc:grpc-protobuf:${project.ext.grpcVersion}"
+    testImplementation "io.grpc:grpc-api:${project.ext.grpcVersion}"
     testImplementation "io.grpc:grpc-stub:${project.ext.grpcVersion}"
     testImplementation "io.grpc:grpc-netty:${project.ext.grpcVersion}"
     testImplementation "com.google.protobuf:protobuf-java:${project.ext.protobufVersion}"
     testImplementation "com.google.protobuf:protobuf-java-util:${project.ext.protobufVersion}"
-    testImplementation project(':niffler-grpc-common')
     compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5' // Java 9+ compatibility - Do NOT update to 2.0.0
+
+    testImplementation project(':niffler-grpc-common')
     // SOAP
     testImplementation "com.sun.xml.messaging.saaj:saaj-impl:${saajVersion}"
     testImplementation "jakarta.xml.bind:jakarta.xml.bind-api:${jakartaJaxbVersion}"
@@ -156,14 +160,14 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-tasks.named { it == "generateNifflerApolloSources" }.configureEach {
-    dependsOn("downloadNifflerApolloSchemaFromIntrospection")
-}
-
 tasks.register('printVersion') {
     doLast {
         println project.version
     }
+}
+
+tasks.named { it == "generateNifflerApolloSources" }.configureEach {
+    dependsOn("downloadNifflerApolloSchemaFromIntrospection")
 }
 
 test {

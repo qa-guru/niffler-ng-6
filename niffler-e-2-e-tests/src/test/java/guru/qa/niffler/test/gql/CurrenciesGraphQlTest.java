@@ -7,7 +7,7 @@ import guru.qa.CurrenciesQuery;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

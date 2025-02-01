@@ -49,6 +49,11 @@ enum DockerConfig implements Config {
     }
 
     @Override
+    public String currencyGrpcAddress() {
+        return "";
+    }
+
+    @Override
     public String ghUrl() {
         return "https://api.github.com/";
     }

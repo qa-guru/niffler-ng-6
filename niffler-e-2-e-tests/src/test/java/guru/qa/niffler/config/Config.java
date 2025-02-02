@@ -1,6 +1,7 @@
 package guru.qa.niffler.config;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public interface Config {
 
@@ -40,6 +41,9 @@ public interface Config {
   @Nonnull
   String currencyGrpcAddress();
 
+  @Nonnull
+  String kafkaAddress();
+
   default int currencyGrpcPort() {
     return 8092;
   }
@@ -47,5 +51,9 @@ public interface Config {
   @Nonnull
   default String ghUrl() {
     return "https://api.github.com/";
+  }
+
+  default List<String> kafkaTopcis() {
+    return List.of("users");
   }
 }

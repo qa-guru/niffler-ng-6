@@ -45,5 +45,7 @@ public interface Config {
   }
 
   @Nonnull
-  String ghUrl();
+  default String ghUrl() {
+    return "https://api.github.com/";
+  }
 }

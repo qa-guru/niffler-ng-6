@@ -30,6 +30,9 @@ dependencies {
     xjc "org.glassfish.jaxb:jaxb-xjc:${project.ext.jakartaJaxbVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test:6.4.2'
+    testImplementation "org.wiremock:wiremock:${project.ext.wiremockVersion}"
+    testImplementation "org.wiremock:wiremock-jetty12:${project.ext.wiremockVersion}"
 }
 
 xjcGeneration {

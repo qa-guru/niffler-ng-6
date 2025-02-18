@@ -4,6 +4,7 @@ import guru.qa.niffler.data.jdbc.DataSources;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -23,7 +24,8 @@ public class EntityManagers {
             jdbcUrl,
             key -> {
               DataSources.dataSource(jdbcUrl);
-              return Persistence.createEntityManagerFactory(jdbcUrl);
+              final String persistenceUnitName = StringUtils.substringAfter(jdbcUrl, "5432/");
+              return Persistence.createEntityManagerFactory(persistenceUnitName);
             }
         ).createEntityManager()
     );

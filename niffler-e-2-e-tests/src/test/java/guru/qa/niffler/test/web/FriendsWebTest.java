@@ -90,12 +90,12 @@ public class FriendsWebTest {
         .getHeader()
         .toFriendsPage()
         .checkExistingInvitationsCount(1)
-        .acceptFriendInvitationFromUser(userToAccept);
+        .acceptFriendInvitationFromUser(userToAccept)
+        .checkExistingInvitationsCount(0);
 
     Selenide.refresh();
 
-    friendsPage.checkExistingInvitationsCount(0)
-        .checkExistingFriendsCount(1)
+    friendsPage.checkExistingFriendsCount(1)
         .checkExistingFriends(userToAccept);
   }
 
@@ -110,12 +110,12 @@ public class FriendsWebTest {
         .getHeader()
         .toFriendsPage()
         .checkExistingInvitationsCount(1)
-        .declineFriendInvitationFromUser(userToDecline);
+        .declineFriendInvitationFromUser(userToDecline)
+        .checkExistingInvitationsCount(0);
 
     Selenide.refresh();
 
-    friendsPage.checkExistingInvitationsCount(0)
-        .checkExistingFriendsCount(0);
+    friendsPage.checkExistingFriendsCount(0);
 
     open(PeoplePage.URL, PeoplePage.class)
         .checkExistingUser(userToDecline);

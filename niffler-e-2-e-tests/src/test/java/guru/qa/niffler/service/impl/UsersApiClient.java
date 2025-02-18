@@ -14,6 +14,7 @@ import retrofit2.Response;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 import static java.util.Objects.requireNonNull;
@@ -27,6 +28,11 @@ public class UsersApiClient implements UsersClient {
 
   private final AuthApi authApi = new EmptyClient(CFG.authUrl()).create(AuthApi.class);
   private final UserdataApi userdataApi = new EmptyClient(CFG.userdataUrl()).create(UserdataApi.class);
+
+  @Override
+  public List<UserJson> all() {
+    throw new UnsupportedOperationException();
+  }
 
   @NotNull
   @Override

@@ -8,6 +8,7 @@ import jakarta.persistence.NoResultException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,5 +49,11 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     } catch (NoResultException e) {
       return Optional.empty();
     }
+  }
+
+  @Override
+  public List<AuthUserEntity> all() {
+    return entityManager.createQuery("select u from AuthUserEntity u", AuthUserEntity.class)
+        .getResultList();
   }
 }

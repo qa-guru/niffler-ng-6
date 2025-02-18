@@ -10,6 +10,7 @@ import guru.qa.niffler.data.repository.AuthUserRepository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,5 +51,10 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         )
     );
     return userEntity;
+  }
+
+  @Override
+  public List<AuthUserEntity> all() {
+    throw new UnsupportedOperationException();
   }
 }

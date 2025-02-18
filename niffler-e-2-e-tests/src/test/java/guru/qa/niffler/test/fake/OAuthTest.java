@@ -7,9 +7,11 @@ import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.service.impl.AuthApiClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ApiLoginExtension.class)
+@DisabledIfSystemProperty(named = "test.env", matches = "docker")
 public class OAuthTest {
 
   private static final Config CFG = Config.getInstance();

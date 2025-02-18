@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,5 +81,10 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
             username
         )
     );
+  }
+
+  @Override
+  public List<AuthUserEntity> all() {
+    throw new UnsupportedOperationException();
   }
 }

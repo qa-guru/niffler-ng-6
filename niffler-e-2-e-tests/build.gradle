@@ -148,7 +148,6 @@ dependencies {
     testImplementation "org.apache.kafka:kafka-clients:${kafkaClientsVersion}"
     // Wiremock
     testImplementation "org.wiremock:wiremock:${project.ext.wiremockVersion}"
-    testImplementation "org.wiremock:wiremock-jetty12:${project.ext.wiremockVersion}"
     // Lombok
     testAnnotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     testCompileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"

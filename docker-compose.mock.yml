@@ -1,6 +1,6 @@
 services:
-  currency.niffler.dc:
-    container_name: currency.niffler.dc
+  currencymock.niffler.dc:
+    container_name: currencymock.niffler.dc
     image: adven27/grpc-wiremock:latest
     volumes:
       - ./wiremock/grpc:/wiremock                     #stubs
@@ -22,6 +22,15 @@ services:
     command: [ "--port", "8089", "--global-response-templating", "--enable-stub-cors" ]
     volumes:
       - ./wiremock/rest:/home/wiremock
+    networks:
+      - niffler-network
+
+  spendmock.niffler.dc:
+    container_name: spendmock.niffler.dc
+    image: wiremock/wiremock:3.10.0
+    ports:
+      - 8093:8093
+    entrypoint: ["/docker-entrypoint.sh", "--port", "8093", "--global-response-templating", "--verbose"]
     networks:
       - niffler-network
 

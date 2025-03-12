@@ -11,6 +11,11 @@ public interface Config {
   }
 
   @Nonnull
+  default String projectId() {
+    return "niffler-ng-6";
+  }
+
+  @Nonnull
   String frontUrl();
 
   @Nonnull
@@ -48,4 +53,6 @@ public interface Config {
   default String ghUrl() {
     return "https://api.github.com/";
   }
+
+  String allureDockerServiceUrl();
 }
